@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ease_location_recv">[The location of %1$s]</string>
+    <string name="ease_location_prefix">[My location]</string>
+    <string name="ease_picture">[Picture]</string>
+    <string name="ease_video">[Video]</string>
+    <string name="ease_file">[File]</string>
+    <string name="ease_custom">[Custom message]</string>
+    <string name="ease_voice_prefix">[Voice]</string>
+    <string name="ease_dynamic_expression">[Dynamic expression]</string>
+
+    <string name="ease_list_no_data_text">No data</string>
+</resources>

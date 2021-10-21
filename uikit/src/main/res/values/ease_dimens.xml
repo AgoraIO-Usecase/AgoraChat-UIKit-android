@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="em_toolbar_title_size">18sp</dimen>
+    <dimen name="em_toolbar_title_right_size">16sp</dimen>
+    <dimen name="ease_common_title_bar_height">44dp</dimen>
+
+</resources>

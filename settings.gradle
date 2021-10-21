@@ -1,0 +1,3 @@
+include ':uikit'
+include ':app'
+rootProject.name = "AgoraChatUIKit"
