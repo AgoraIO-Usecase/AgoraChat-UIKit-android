@@ -5,9 +5,13 @@ import android.content.Context;
 import android.util.Log;
 
 import io.agora.chat.ChatClient;
+import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatOptions;
+import io.agora.chat.uikit.manager.EaseChatPresenter;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
+import io.agora.chat.uikit.manager.EaseNotifier;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
+import io.agora.chat.uikit.provider.EaseSettingsProvider;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 
 
@@ -19,9 +23,21 @@ public class EaseUIKit {
      */
     private EaseUserProfileProvider userProvider;
     /**
+     * Message system settings
+     */
+    private EaseSettingsProvider settingsProvider;
+    /**
      * chat avatar options which we can easily control the style
      */
     private EaseAvatarOptions avatarOptions;
+    /**
+     * the notifier
+     */
+    private EaseNotifier notifier = null;
+    /**
+     * Chat presenter which implement {@link io.agora.MessageListener}
+     */
+    private EaseChatPresenter presenter;
     /**
      * init flag: test if the sdk has been inited before, we don't need to init again
      */
@@ -34,6 +50,11 @@ public class EaseUIKit {
      * Configuration Management
      */
     private EaseConfigsManager configsManager;
+    /**
+     * Whether to send image message as original picture
+     */
+    private boolean sendOriginalImage;
+
     private EaseUIKit() {}
 
     public static EaseUIKit getInstance() {
@@ -93,7 +114,9 @@ public class EaseUIKit {
         }
         configsManager = new EaseConfigsManager(context);
         ChatClient.getInstance().init(context, options);
-        //initNotifier();
+        initNotifier();
+        presenter = new EaseChatPresenter();
+        presenter.attachApp(appContext);
         sdkInited = true;
         return true;
     }
@@ -112,6 +135,23 @@ public class EaseUIKit {
         return options;
     }
 
+    public Context getContext() {
+        return appContext;
+    }
+
+    private void initNotifier(){
+        notifier = new EaseNotifier(appContext);
+    }
+
+    public void addChatPresenter(EaseChatPresenter presenter) {
+        this.presenter = presenter;
+        this.presenter.attachApp(appContext);
+    }
+
+    public EaseChatPresenter getChatPresenter() {
+        return presenter;
+    }
+
     public EaseUIKit setAvatarOptions(EaseAvatarOptions avatarOptions) {
         this.avatarOptions = avatarOptions;
         return this;
@@ -119,5 +159,63 @@ public class EaseUIKit {
 
     public EaseAvatarOptions getAvatarOptions() {
         return this.avatarOptions;
+    }
+
+    public EaseNotifier getNotifier(){
+        return notifier;
+    }
+
+    public EaseUIKit setSendMessageAsOriginalImage(boolean sendOriginalImage) {
+        this.sendOriginalImage = sendOriginalImage;
+        return this;
+    }
+
+    public boolean isSendMessageAsOriginalImage() {
+        return this.sendOriginalImage;
+    }
+
+    /**
+     * get settings provider
+     * @return
+     */
+    public EaseSettingsProvider getSettingsProvider() {
+        if(settingsProvider == null) {
+            settingsProvider = getDefaultSettingsProvider();
+        }
+        return settingsProvider;
+    }
+
+    /**
+     * set settting provider
+     * @param settingsProvider
+     * @return
+     */
+    public EaseUIKit setSettingsProvider(EaseSettingsProvider settingsProvider) {
+        this.settingsProvider = settingsProvider;
+        return this;
+    }
+
+    private EaseSettingsProvider getDefaultSettingsProvider() {
+        return new EaseSettingsProvider() {
+            @Override
+            public boolean isMsgNotifyAllowed(ChatMessage message) {
+                return false;
+            }
+
+            @Override
+            public boolean isMsgSoundAllowed(ChatMessage message) {
+                return false;
+            }
+
+            @Override
+            public boolean isMsgVibrateAllowed(ChatMessage message) {
+                return false;
+            }
+
+            @Override
+            public boolean isSpeakerOpened() {
+                return false;
+            }
+        };
     }
 }

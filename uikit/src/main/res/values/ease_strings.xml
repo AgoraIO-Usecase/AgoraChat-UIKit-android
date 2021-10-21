@@ -10,4 +10,6 @@
     <string name="ease_dynamic_expression">[Dynamic expression]</string>
 
     <string name="ease_list_no_data_text">No data</string>
+    <string name="ease_all_members">All members</string>
+
 </resources>
