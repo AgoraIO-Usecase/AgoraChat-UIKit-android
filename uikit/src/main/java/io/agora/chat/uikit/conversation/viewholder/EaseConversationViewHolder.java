@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 
@@ -41,9 +40,6 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
         Conversation item = (Conversation) bean.getInfo();
         Context context = itemView.getContext();
         String username = item.conversationId();
-        listIteaseLayout.setBackground(!TextUtils.isEmpty(item.getExtField())
-                ? ContextCompat.getDrawable(context, R.drawable.ease_conversation_top_bg)
-                : null);
         mentioned.setVisibility(View.GONE);
         int defaultAvatar = 0;
         String showName = null;

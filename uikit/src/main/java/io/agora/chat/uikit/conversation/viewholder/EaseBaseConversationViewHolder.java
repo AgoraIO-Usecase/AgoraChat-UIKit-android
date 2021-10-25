@@ -25,6 +25,8 @@ public class EaseBaseConversationViewHolder extends EaseBaseRecyclerViewAdapter.
     public ImageView mMsgState;
     public TextView mentioned;
     public TextView message;
+    public ImageView msgMute;
+    public ImageView ivTopLabel;
     public Context mContext;
     private Drawable bgDrawable;
 
@@ -44,23 +46,26 @@ public class EaseBaseConversationViewHolder extends EaseBaseRecyclerViewAdapter.
         mMsgState = findViewById(R.id.msg_state);
         mentioned = findViewById(R.id.mentioned);
         message = findViewById(R.id.message);
+        msgMute = findViewById(R.id.msg_mute);
+        ivTopLabel = findViewById(R.id.iv_top_label);
         EaseUserUtils.setUserAvatarStyle(avatar);
         bgDrawable = itemView.getBackground();
     }
 
     @Override
     public void setData(EaseConversationInfo item, int position) {
+        if(item.isTop()) {
+            ivTopLabel.setVisibility(View.VISIBLE);
+        }else {
+            ivTopLabel.setVisibility(View.GONE);
+        }
         item.setOnSelectListener(new EaseConversationInfo.OnSelectListener() {
             @Override
             public void onSelect(boolean isSelected) {
                 if(isSelected) {
                     itemView.setBackgroundResource(R.drawable.ease_conversation_item_selected);
                 }else {
-                    if(item.isTop()) {
-                        itemView.setBackgroundResource(R.drawable.ease_conversation_top_bg);
-                    }else {
-                        itemView.setBackground(bgDrawable);
-                    }
+                    itemView.setBackground(bgDrawable);
                 }
             }
         });
