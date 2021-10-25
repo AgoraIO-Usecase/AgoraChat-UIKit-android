@@ -12,4 +12,20 @@
     <string name="ease_list_no_data_text">No data</string>
     <string name="ease_all_members">All members</string>
 
+    <string name="action_copy">复制</string>
+    <string name="action_forward">转发</string>
+    <string name="action_recall">撤回</string>
+    <string name="action_delete">删除</string>
+
+    <string name="ease_conversation_menu_make_read">Make read</string>
+    <string name="ease_conversation_menu_make_top">Make top</string>
+    <string name="ease_conversation_menu_cancel_top">Cancel top</string>
+    <string name="ease_conversation_menu_delete">Delete</string>
+
+    <string name="ease_conversation_delete_item_fail">Delete failed!</string>
+    <string name="ease_list_no_conversation_data_text">No data</string>
+
+    <string name="ease_chat_were_mentioned"> someone @ You </string>
+    <string name="ease_chat_were_not_send_msg"> draft </string>
+
 </resources>

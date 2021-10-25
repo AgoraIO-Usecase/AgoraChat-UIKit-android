@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.domain;
+package io.agora.chat.uikit.models;
 
 import android.text.TextUtils;
 
@@ -19,11 +19,7 @@ import io.agora.chat.uikit.utils.HanziToPinyin;
 
 public class EaseUser implements Serializable {
     /**
-     * \~chinese
-     * 此用户的唯一标示名, 即用户的环信id
-     *
-     * \~english
-     * the user name assigned from app, which should be unique in the application
+     * The user name assigned from app, which should be unique in the application
      */
     @NonNull
     private String username;
@@ -290,7 +286,7 @@ public class EaseUser implements Serializable {
         private String defaultLetter = "#";
 
         /**
-         * 获取首字母
+         * Get the first letter
          * @param name
          * @return
          */

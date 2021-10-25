@@ -11,7 +11,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.domain.EaseUser;
+import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 import io.agora.chat.uikit.widget.EaseImageView;

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ids for long click of chat -->
+    <!--copy-->
+    <item name="action_chat_copy" type="id"/>
+    <!--delete-->
+    <item name="action_chat_delete" type="id"/>
+    <!--recall-->
+    <item name="action_chat_recall" type="id"/>
+    <!--long click-->
+    <item name="action_chat_long_click" type="id"/>
+
+    <!-- Ids for long click of conversation -->
+    <!-- make conversation as read -->
+    <item name="action_con_make_read" type="id"/>
+    <!-- make conversation to top -->
+    <item name="action_con_make_top" type="id"/>
+    <!-- 会话列表条目取消置顶 -->
+    <item name="action_con_cancel_top" type="id"/>
+    <!-- 会话列表条目删除 -->
+    <item name="action_con_delete" type="id"/>
+</resources>

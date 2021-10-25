@@ -40,6 +40,8 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
+    // swipe refresh layout
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     api 'io.hyphenate:chat-sdk:3.8.5'
 }

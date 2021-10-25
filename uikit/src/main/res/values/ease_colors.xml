@@ -7,6 +7,15 @@
     <color name="gray">#ffe9e9e9</color>
     <color name="blue">#FF5A5DD0</color>
 
+    <color name="color_alert">#FF14CC</color>
+    <color name="color_divider">#fff2f2f2</color>
+
     <color name="em_toolbar_color_title">@color/black</color>
     <color name="em_toolbar_color_title_right">@color/black</color>
+
+    <color name="ease_conversation_color_item_name">#ff333333</color>
+    <color name="ease_conversation_color_item_mention">#ffff2b2b</color>
+    <color name="ease_conversation_color_item_message">#ff999999</color>
+    <color name="ease_conversation_color_item_time">#ff999999</color>
+
 </resources>

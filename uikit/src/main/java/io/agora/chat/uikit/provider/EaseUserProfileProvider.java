@@ -1,6 +1,6 @@
 package io.agora.chat.uikit.provider;
 
-import io.agora.chat.uikit.domain.EaseUser;
+import io.agora.chat.uikit.models.EaseUser;
 
 /**
  * User profile provider

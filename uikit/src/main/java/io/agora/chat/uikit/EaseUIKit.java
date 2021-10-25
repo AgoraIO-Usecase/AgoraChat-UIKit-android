@@ -11,6 +11,8 @@ import io.agora.chat.uikit.manager.EaseChatPresenter;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseNotifier;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
+import io.agora.chat.uikit.provider.EaseConversationInfoProvider;
+import io.agora.chat.uikit.provider.EaseEmojiconInfoProvider;
 import io.agora.chat.uikit.provider.EaseSettingsProvider;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 
@@ -27,9 +29,14 @@ public class EaseUIKit {
      */
     private EaseSettingsProvider settingsProvider;
     /**
+     * conversation info settings
+     */
+    private EaseConversationInfoProvider conversationInfoProvider;
+    /**
      * chat avatar options which we can easily control the style
      */
     private EaseAvatarOptions avatarOptions;
+    private EaseEmojiconInfoProvider mEmojiconInfoProvider;
     /**
      * the notifier
      */
@@ -172,6 +179,42 @@ public class EaseUIKit {
 
     public boolean isSendMessageAsOriginalImage() {
         return this.sendOriginalImage;
+    }
+
+    /**
+     * get conversation info provider
+     * @return
+     */
+    public EaseConversationInfoProvider getConversationInfoProvider() {
+        return conversationInfoProvider;
+    }
+
+    /**
+     * set conversation provider
+     * @param provider
+     * @return
+     */
+    public EaseUIKit setConversationInfoProvider(EaseConversationInfoProvider provider) {
+        this.conversationInfoProvider = provider;
+        return this;
+    }
+
+    /**
+     * get emojicon provider
+     * @return
+     */
+    public EaseEmojiconInfoProvider getEmojiconInfoProvider() {
+        return mEmojiconInfoProvider;
+    }
+
+    /**
+     * set emojicon provider
+     * @param emojiconInfoProvider
+     * @return
+     */
+    public EaseUIKit setEmojiconInfoProvider(EaseEmojiconInfoProvider emojiconInfoProvider) {
+        mEmojiconInfoProvider = emojiconInfoProvider;
+        return this;
     }
 
     /**
