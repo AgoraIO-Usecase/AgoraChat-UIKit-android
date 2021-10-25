@@ -21,19 +21,13 @@ import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import io.agora.chat.Conversation;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.adapter.EaseAdapterDelegate;
-import io.agora.chat.uikit.adapter.EaseBaseRecyclerViewAdapter;
 import io.agora.chat.uikit.base.EaseBaseLayout;
 import io.agora.chat.uikit.conversation.adapter.EaseConversationListAdapter;
-import io.agora.chat.uikit.conversation.delegate.EaseBaseConversationDelegate;
-import io.agora.chat.uikit.conversation.delegate.EaseConversationDelegate;
-import io.agora.chat.uikit.conversation.delegate.EaseSystemMsgDelegate;
 import io.agora.chat.uikit.conversation.interfaces.IConversationListLayout;
 import io.agora.chat.uikit.conversation.interfaces.IConversationStyle;
 import io.agora.chat.uikit.conversation.interfaces.OnConversationChangeListener;
@@ -236,8 +230,6 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
     }
 
     public void init() {
-        listAdapter.addDelegate(new EaseSystemMsgDelegate(setModel));
-        listAdapter.addDelegate(new EaseConversationDelegate(setModel));
         rvConversationList.setAdapter(adapter);
     }
 
@@ -270,13 +262,6 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
      */
     public void notifyDataSetChanged() {
         if(listAdapter != null) {
-            List<EaseAdapterDelegate<Object, EaseBaseRecyclerViewAdapter.ViewHolder>> delegates = listAdapter.getAllDelegate();
-            if (delegates != null && !delegates.isEmpty()) {
-                for(int i = 0; i < delegates.size(); i++) {
-                    EaseBaseConversationDelegate delegate = (EaseBaseConversationDelegate) delegates.get(i);
-                    delegate.setSetModel(setModel);
-                }
-            }
             listAdapter.notifyDataSetChanged();
         }
     }

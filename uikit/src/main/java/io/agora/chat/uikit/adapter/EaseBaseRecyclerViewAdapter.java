@@ -18,13 +18,13 @@ import io.agora.chat.uikit.interfaces.OnItemClickListener;
 import io.agora.chat.uikit.interfaces.OnItemLongClickListener;
 
 /**
- * 作为RecyclerView Adapter的基类，有默认空白布局
- * 如果要修改默认布局可以采用以下两种方式：1、在app layout中新建ease_layout_default_no_data.xml覆盖。
- * 2、继承EaseBaseRecyclerViewAdapter后，重写getEmptyLayoutId()方法，返回自定义的布局即可。
- * 3、{@link #VIEW_TYPE_EMPTY}建议设置成负值，以防占用{@link EaseAdapterDelegatesManager#addDelegate(EaseAdapterDelegate, String)}中相应的position
+ * As a base class of RecyclerView Adapter, there is a default blank layout
+ * You can modify the default layout in the following two ways:
+ * 1、Create a new ease_layout_default_no_data.xml overlay in app Layout.
+ * 2、Inheriting EaseBaseRecyclerViewAdapter, rewrite getEmptyLayoutId () method, return to the layout of the custom.
  * @param <T>
  */
-public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<EaseBaseRecyclerViewAdapter.ViewHolder> {
+public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<EaseBaseRecyclerViewAdapter.ViewHolder<T>> {
     public static final int VIEW_TYPE_EMPTY = -1;
     public static final int VIEW_TYPE_ITEM = 0;
     protected OnItemClickListener mOnItemClickListener;
@@ -37,12 +37,12 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         if(viewType == VIEW_TYPE_EMPTY) {
             return getEmptyViewHolder(parent);
         }
-        ViewHolder holder = getViewHolder(parent, viewType);
+        ViewHolder<T> holder = getViewHolder(parent, viewType);
         if(isItemClickEnable()) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -63,7 +63,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EaseBaseRecyclerViewAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull EaseBaseRecyclerViewAdapter.ViewHolder<T> holder, final int position) {
         holder.setAdapter(this);
         //增加viewType类型的判断
         if(isEmptyViewType(position)) {
@@ -78,7 +78,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 判断是否是空布局类型
+     * Check if it is an empty layout type
      * @param position
      * @return
      */
@@ -105,8 +105,8 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 条目单击事件是否可用
-     * 默认为true，如果需要自己设置请设置为false
+     * Check if item click can be used
+     * Default is true
      * @return
      */
     public boolean isItemClickEnable() {
@@ -114,8 +114,8 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 条目长按事件是否可用
-     * 默认为true
+     * Check if long click can be used
+     * Default is true
      * @return
      */
     public boolean isItemLongClickEnable() {
@@ -124,7 +124,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
 
 
     /**
-     * 点击事件
+     * Click event
      * @param v
      * @param position
      */
@@ -135,11 +135,11 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 返回数据为空时的布局
+     * Returns the layout with null data
      * @param parent
      * @return
      */
-    private ViewHolder getEmptyViewHolder(ViewGroup parent) {
+    private ViewHolder<T> getEmptyViewHolder(ViewGroup parent) {
         View emptyView = getEmptyView(parent);
         if(this.emptyView != null) {
             emptyView = this.emptyView;
@@ -165,7 +165,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 隐藏空白布局
+     * Hide blank layout
      * @param hide
      */
     public void hideEmptyView(boolean hide) {
@@ -174,7 +174,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 设置空白布局
+     * Setting a blank layout
      * @param emptyView
      */
     public void setEmptyView(View emptyView) {
@@ -183,7 +183,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 设置空白布局
+     * Setting a blank layout
      * @param emptyViewId
      */
     public void setEmptyView(@LayoutRes int emptyViewId) {
@@ -192,7 +192,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 获取空白布局
+     * Getting a blank view
      * @param parent
      * @return
      */
@@ -201,15 +201,15 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 获取ViewHolder
+     * Getting ViewHolder
      * @param parent
      * @param viewType
      * @return
      */
-    public abstract ViewHolder getViewHolder(ViewGroup parent, int viewType);
+    public abstract ViewHolder<T> getViewHolder(ViewGroup parent, int viewType);
 
     /**
-     * 根据position获取相应的data
+     * Get the corresponding data according to position
      * @param position
      * @return
      */
@@ -218,7 +218,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 添加数据
+     * Set data
      * @param data
      */
     public void setData(List<T> data) {
@@ -227,7 +227,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 添加单个数据
+     * Add a single piece of data
      * @param item
      */
     public void addData(T item) {
@@ -241,7 +241,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 添加更多数据
+     * Add more data
      * @param data
      */
     public void addData(List<T> data) {
@@ -259,8 +259,8 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 添加更多数据
-     * @param position 插入位置
+     * Add more data
+     * @param position
      * @param data
      */
     public void addData(int position, List<T> data) {
@@ -278,7 +278,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 添加更多数据
+     * Add more data
      * @param position
      * @param data
      * @param refresh
@@ -300,7 +300,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 获取数据
+     * Get data
      * @return
      */
     public List<T> getData() {
@@ -308,7 +308,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     /**
-     * 清除数据
+     * Clear data
      */
     public void clearData() {
         if(mData != null) {
@@ -334,7 +334,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     }
 
     public abstract static class ViewHolder<T> extends RecyclerView.ViewHolder {
-        private EaseBaseAdapter adapter;
+        private EaseBaseAdapter<ViewHolder<T>> adapter;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -342,13 +342,13 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         }
 
         /**
-         * 初始化控件
+         * Initialize the views
          * @param itemView
          */
         public abstract void initView(View itemView);
 
         /**
-         * 设置数据
+         * Set data
          * @param item
          * @param position
          */
@@ -364,31 +364,31 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         }
 
         /**
-         * 设置数据，提供数据集合
+         * Set data to provide a data set
          * @param data
          * @param position
          */
         public void setDataList(List<T> data, int position) { }
 
         /**
-         * 设置 adapter
+         * Set adapter
          * @param adapter
          */
-        private void setAdapter(EaseBaseRecyclerViewAdapter adapter) {
+        private void setAdapter(EaseBaseRecyclerViewAdapter<T> adapter) {
             this.adapter = adapter;
         }
 
         /**
-         * get adapter
+         * Get adapter
          * @return
          */
-        public EaseBaseAdapter getAdapter() {
+        public EaseBaseAdapter<ViewHolder<T>> getAdapter() {
             return adapter;
         }
     }
 
     /**
-     * 返回空白布局
+     * Return the blank layout
      * @return
      */
     public int getEmptyLayoutId() {

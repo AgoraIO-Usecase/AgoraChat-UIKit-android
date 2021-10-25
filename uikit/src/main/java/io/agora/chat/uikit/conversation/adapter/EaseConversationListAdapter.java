@@ -1,12 +1,30 @@
 package io.agora.chat.uikit.conversation.adapter;
 
 
-import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.adapter.EaseBaseDelegateAdapter;
-import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 
-public class EaseConversationListAdapter extends EaseBaseDelegateAdapter<EaseConversationInfo> {
+import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.adapter.EaseBaseRecyclerViewAdapter;
+import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
+import io.agora.chat.uikit.conversation.viewholder.EaseConversationType;
+import io.agora.chat.uikit.conversation.viewholder.EaseConversationViewHolderFactory;
+
+public class EaseConversationListAdapter extends EaseBaseRecyclerViewAdapter<EaseConversationInfo> {
     private int emptyLayoutId;
+
+    @Override
+    public int getItemViewType(int position) {
+        if(mData != null && mData.size() > 0) {
+            return EaseConversationViewHolderFactory.getViewType(mData.get(position));
+        }
+        return super.getItemViewType(position);
+    }
+
+    @Override
+    public ViewHolder<EaseConversationInfo> getViewHolder(ViewGroup parent, int viewType) {
+        return EaseConversationViewHolderFactory.createViewHolder(LayoutInflater.from(parent.getContext()), parent, EaseConversationType.from(viewType));
+    }
 
     @Override
     public int getEmptyLayoutId() {
