@@ -2,7 +2,6 @@ package io.agora.chat.uikit.conversation.presenter;
 
 import android.text.TextUtils;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,65 +10,101 @@ import java.util.Map;
 
 import io.agora.chat.ChatClient;
 import io.agora.chat.Conversation;
+import io.agora.chat.PushManager;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
+import io.agora.chat.uikit.manager.EaseNotificationMsgManager;
 import io.agora.chat.uikit.utils.EaseUtils;
+import io.agora.exceptions.ChatException;
 
 public class EaseConversationPresenterImpl extends EaseConversationPresenter {
 
     /**
-     * 注意：默认conversation中设置extField值为时间戳后，是将该会话置顶
-     * 如果有不同的逻辑，请自己实现，并调用{@link #sortData(List)}方法即可
+     * Note：The default setting extField values for the timestamp in the conversation, is the conversation placed at the top
+     * If you have different logic, implement it yourself and call {@link #sortData(List)}
      */
     @Override
-    public void loadData() {
+    public void loadData(boolean fetchConfig) {
         // get all conversations
-        Map<String, Conversation> conversations = ChatClient.getInstance().chatManager().getAllConversations();
-        if(conversations.isEmpty()) {
-            runOnUI(() -> {
-                if(!isDestroy()) {
-                    mView.loadConversationListNoData();
-                }
-            });
-            return;
-        }
-        List<EaseConversationInfo> infos = new ArrayList<>();
-        synchronized (this) {
-            EaseConversationInfo info = null;
-            for (Conversation conversation : conversations.values()) {
-                if(conversation.getAllMessages().size() != 0) {
-                    //如果不展示系统消息，则移除相关系统消息
-                    if(!showSystemMessage) {
-                        if(TextUtils.equals(conversation.conversationId(), EaseConstant.DEFAULT_SYSTEM_MESSAGE_ID)) {
-                            continue;
-                        }
+        runOnIO(()-> {
+            Map<String, Conversation> conversations = ChatClient.getInstance().chatManager().getAllConversations();
+            if(conversations.isEmpty()) {
+                runOnUI(() -> {
+                    if(!isDestroy()) {
+                        mView.loadConversationListNoData();
                     }
-                    info = new EaseConversationInfo();
-                    info.setInfo(conversation);
-                    String extField = conversation.getExtField();
-                    long lastMsgTime=conversation.getLastMessage().getMsgTime();
-                    if(!TextUtils.isEmpty(extField) && EaseUtils.isTimestamp(extField)) {
-                        info.setTop(true);
-                        long makeTopTime=Long.parseLong(extField);
-                        if(makeTopTime>lastMsgTime) {
-                            info.setTimestamp(makeTopTime);
+                });
+                return;
+            }
+            List<EaseConversationInfo> infos = new ArrayList<>();
+            synchronized (this) {
+                EaseConversationInfo info = null;
+                for (Conversation conversation : conversations.values()) {
+                    if(conversation.getAllMessages().size() != 0) {
+                        //如果不展示系统消息，则移除相关系统消息
+                        if(!showSystemMessage) {
+                            if(EaseNotificationMsgManager.getInstance().isNotificationConversation(conversation)) {
+                                continue;
+                            }
+                        }
+                        info = new EaseConversationInfo();
+                        info.setInfo(conversation);
+                        String extField = conversation.getExtField();
+                        long lastMsgTime=conversation.getLastMessage().getMsgTime();
+                        if(!TextUtils.isEmpty(extField) && EaseUtils.isTimestamp(extField)) {
+                            info.setTop(true);
+                            long makeTopTime=Long.parseLong(extField);
+                            if(makeTopTime>lastMsgTime) {
+                                info.setTimestamp(makeTopTime);
+                            }else{
+                                info.setTimestamp(lastMsgTime);
+                            }
                         }else{
                             info.setTimestamp(lastMsgTime);
                         }
-                    }else{
-                        info.setTimestamp(lastMsgTime);
+                        infos.add(info);
                     }
-                    infos.add(info);
                 }
             }
-        }
-        if(isActive()) {
-            runOnUI(()-> mView.loadConversationListSuccess(infos));
-        }
+            if(isActive()) {
+                runOnUI(()-> mView.loadConversationListSuccess(infos));
+            }
+            // Get the no push groups
+            PushManager pushManager = ChatClient.getInstance().pushManager();
+            try {
+                // Should update from server first.
+                if(fetchConfig) {
+                    pushManager.getPushConfigsFromServer();
+                }
+                List<String> noPushGroups = pushManager.getNoPushGroups();
+                List<String> noPushUsers = pushManager.getNoPushUsers();
+                if((noPushGroups == null || noPushGroups.size() <= 0) && (noPushUsers == null || noPushUsers.size() <= 0)) {
+                    return;
+                }
+                for (EaseConversationInfo info : infos){
+                    info.setMute(false);
+                    Object item = info.getInfo();
+                    if(item instanceof Conversation) {
+                        if((noPushGroups != null && noPushGroups.contains(((Conversation) item).conversationId()))
+                                || (noPushUsers != null && noPushUsers.contains(((Conversation) item).conversationId())) ) {
+                            info.setMute(true);
+                        }
+                    }
+                }
+
+                if(isActive()) {
+                    runOnUI(()-> mView.loadMuteDataSuccess(infos));
+                }
+
+            } catch (ChatException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
     /**
-     * 排序数据
+     * Sort conversation info by timestamp
      * @param data
      */
     @Override
@@ -105,7 +140,7 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
     }
 
     /**
-     * 排序
+     * Sort
      * @param list
      */
     private void sortByTimestamp(List<EaseConversationInfo> list) {
@@ -164,7 +199,6 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
     @Override
     public void deleteConversation(int position, EaseConversationInfo info) {
         if(info.getInfo() instanceof Conversation) {
-            //如果是系统通知，则不删除系统消息
             boolean isDelete = ChatClient.getInstance().chatManager()
                                 .deleteConversation(((Conversation) info.getInfo()).conversationId()
                                         , !TextUtils.equals(((Conversation) info.getInfo()).conversationId(), EaseConstant.DEFAULT_SYSTEM_MESSAGE_ID));

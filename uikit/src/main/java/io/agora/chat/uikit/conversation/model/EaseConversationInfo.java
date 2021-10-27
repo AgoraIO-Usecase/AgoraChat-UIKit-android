@@ -2,20 +2,18 @@ package io.agora.chat.uikit.conversation.model;
 
 import java.io.Serializable;
 
-/**
- * 做为会话列表的条目对象
- */
 public class EaseConversationInfo implements Serializable, Comparable<EaseConversationInfo> {
-    //会话列表条目对象，可以是会话消息，可以是系统消息等
+    // Default is conversation, maybe other entity
     private Object info;
-    //条目是否选中
+    // Whether the item is selected
     private boolean isSelected;
-    //时间戳
     private long timestamp;
-    //是否置顶
+    // Whether bo be make top
     private boolean isTop;
-    //是否是群组
+    // Whether is group
     private boolean isGroup;
+    // Whether to enable offline push
+    private boolean isMute;
 
     private OnSelectListener listener;
 
@@ -60,6 +58,14 @@ public class EaseConversationInfo implements Serializable, Comparable<EaseConver
 
     public void setGroup(boolean group) {
         isGroup = group;
+    }
+
+    public boolean isMute() {
+        return isMute;
+    }
+
+    public void setMute(boolean mute) {
+        isMute = mute;
     }
 
     public void setOnSelectListener(OnSelectListener listener) {

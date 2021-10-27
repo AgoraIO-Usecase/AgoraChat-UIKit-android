@@ -27,6 +27,12 @@ public interface IConversationListLayout extends IRecyclerView {
     void showItemDefaultMenu(boolean showDefault);
 
     /**
+     * Set custom list adapter
+     * @param listAdapter
+     */
+    void setListAdapter(EaseConversationListAdapter listAdapter);
+
+    /**
      * 获取数据适配器
      * @return
      */

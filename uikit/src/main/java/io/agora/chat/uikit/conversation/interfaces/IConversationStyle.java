@@ -38,4 +38,10 @@ public interface IConversationStyle extends IAvatarSet, IConversationTextStyle {
      * @param position
      */
     void showUnreadDotPosition(EaseConversationSetStyle.UnreadDotPosition position);
+
+    /**
+     * Set unread view's style , see {@link io.agora.chat.uikit.conversation.model.EaseConversationSetStyle.UnreadStyle}
+     * @param style
+     */
+    void setUnreadStyle(EaseConversationSetStyle.UnreadStyle style);
 }

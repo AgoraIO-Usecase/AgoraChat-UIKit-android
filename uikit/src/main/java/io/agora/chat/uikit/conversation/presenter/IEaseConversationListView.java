@@ -31,6 +31,12 @@ public interface IEaseConversationListView extends ILoadDataView {
     void sortConversationListSuccess(List<EaseConversationInfo> data);
 
     /**
+     * Load mute data for conversation successful
+     * @param data
+     */
+    void loadMuteDataSuccess(List<EaseConversationInfo> data);
+
+    /**
      * 刷新列表
      */
     void refreshList();

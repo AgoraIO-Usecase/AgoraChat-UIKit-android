@@ -14,6 +14,7 @@ public class EaseConversationSetStyle extends EaseBaseSetStyle {
     private float mentionTextSize;
     private boolean hideUnreadDot;
     private UnreadDotPosition unreadDotPosition;
+    private UnreadStyle style;
     private boolean showSystemMessage;
 
     public int getTitleTextColor() {
@@ -96,6 +97,14 @@ public class EaseConversationSetStyle extends EaseBaseSetStyle {
         this.unreadDotPosition = unreadDotPosition;
     }
 
+    public UnreadStyle getStyle() {
+        return style;
+    }
+
+    public void setStyle(UnreadStyle style) {
+        this.style = style;
+    }
+
     public boolean isShowSystemMessage() {
         return showSystemMessage;
     }
@@ -106,6 +115,10 @@ public class EaseConversationSetStyle extends EaseBaseSetStyle {
 
     public enum UnreadDotPosition {
         LEFT, RIGHT
+    }
+    
+    public enum UnreadStyle {
+        NUM, DOT
     }
 }
 
