@@ -29,4 +29,7 @@
     <string name="ease_chat_were_mentioned">Someone @ You </string>
     <string name="ease_chat_were_not_send_msg"> draft </string>
 
+    <string name="msg_recall_by_self">您撤回了一条消息</string>
+    <string name="msg_recall_by_user">%1$s 撤回了一条消息</string>
+
 </resources>
