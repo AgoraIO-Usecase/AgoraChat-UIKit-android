@@ -8,7 +8,6 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatOptions;
 import io.agora.chat.uikit.manager.EaseChatPresenter;
-import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseNotifier;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
 import io.agora.chat.uikit.provider.EaseConversationInfoProvider;
@@ -53,10 +52,6 @@ public class EaseUIKit {
      * application context
      */
     private Context appContext = null;
-    /**
-     * Configuration Management
-     */
-    private EaseConfigsManager configsManager;
     /**
      * Whether to send image message as original picture
      */
@@ -119,7 +114,6 @@ public class EaseUIKit {
         if(options == null) {
             options = initChatOptions();
         }
-        configsManager = new EaseConfigsManager(context);
         ChatClient.getInstance().init(context, options);
         initNotifier();
         presenter = new EaseChatPresenter();

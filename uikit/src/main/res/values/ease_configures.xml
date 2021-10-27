@@ -4,4 +4,7 @@
     <!--Whether to use the sending channel_ack message function.
     This function is enabled to reduce the sending of read_ack messages. It is enabled by default-->
     <bool name="ease_enable_send_channel_ack">true</bool>
+
+    <!--Whether show notification in conversation list, default is false-->
+    <bool name="ease_conversation_show_system_notification">false</bool>
 </resources>

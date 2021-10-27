@@ -36,6 +36,18 @@
         tools:text="4"
         android:visibility="gone"/>
 
+    <View
+        android:id="@+id/unread_msg_dot"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        app:layout_constraintCircle="@id/avatar"
+        app:layout_constraintCircleAngle="45"
+        app:layout_constraintCircleRadius="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/ease_unread_dot_bg"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
@@ -164,6 +176,14 @@
             android:textColor="@android:color/white"
             android:textSize="12sp"
             tools:text="5"
+            android:visibility="gone"/>
+
+        <View
+            android:id="@+id/unread_msg_dot_right"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ease_unread_dot_bg"
             android:visibility="gone"/>
 
     </RelativeLayout>

@@ -9,17 +9,18 @@ import io.agora.chat.Conversation;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.adapter.EaseBaseRecyclerViewAdapter;
 import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
+import io.agora.chat.uikit.conversation.model.EaseConversationSetStyle;
 import io.agora.chat.uikit.manager.EaseNotificationMsgManager;
 
 public class EaseConversationViewHolderFactory {
     public static EaseBaseRecyclerViewAdapter.ViewHolder<EaseConversationInfo> createViewHolder(@NonNull LayoutInflater inflater
-            , @NonNull ViewGroup parent, EaseConversationType viewType) {
+            , @NonNull ViewGroup parent, EaseConversationType viewType, EaseConversationSetStyle style) {
 
         switch (viewType) {
             case VIEW_TYPE_CONVERSATION_NOTIFICATION:
-                return new EaseNotificationViewHolder(inflater.inflate(R.layout.ease_item_row_chat_history, parent, false));
+                return new EaseNotificationViewHolder(inflater.inflate(R.layout.ease_item_row_chat_history, parent, false), style);
             default:
-                return new EaseConversationViewHolder(inflater.inflate(R.layout.ease_item_row_chat_history, parent, false));
+                return new EaseConversationViewHolder(inflater.inflate(R.layout.ease_item_row_chat_history, parent, false), style);
         }
     }
 

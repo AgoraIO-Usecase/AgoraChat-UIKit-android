@@ -278,6 +278,11 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         return titleView;
     }
     
+    public void setDisplayHomeAsUpEnabled(boolean displayHomeAsUpEnabled) {
+        this.mDisplayHomeAsUpEnabled = displayHomeAsUpEnabled;
+        initToolbar();
+    }
+    
     public void setBackgroundColor(int color){
         titleLayout.setBackgroundColor(color);
     }

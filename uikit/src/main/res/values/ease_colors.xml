@@ -9,6 +9,7 @@
 
     <color name="color_alert">#FF14CC</color>
     <color name="color_divider">#fff2f2f2</color>
+    <color name="color_conversation_title">#005FFF</color>
 
     <color name="em_toolbar_color_title">@color/black</color>
     <color name="em_toolbar_color_title_right">@color/black</color>

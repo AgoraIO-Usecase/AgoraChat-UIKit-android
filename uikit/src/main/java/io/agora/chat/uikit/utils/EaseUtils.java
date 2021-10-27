@@ -16,6 +16,7 @@ package io.agora.chat.uikit.utils;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
@@ -23,6 +24,9 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.WindowManager;
+
+import androidx.annotation.BoolRes;
+import androidx.annotation.IdRes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -346,6 +350,22 @@ public class EaseUtils {
             }
             return defaultLetter;
         }
+    }
+
+    /**
+     * Get the boolean settings from resource
+     * @param context
+     * @param resourceId
+     * @return
+     */
+    public static boolean getBooleanResource(Context context, @BoolRes int resourceId) {
+        boolean enable = false;
+        try {
+            enable = context.getResources().getBoolean(resourceId);
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
+        return enable;
     }
 
 }

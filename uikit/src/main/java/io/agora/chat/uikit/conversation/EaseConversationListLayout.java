@@ -173,6 +173,10 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
             setModel.setUnreadDotPosition(unreadDotPosition == 0 ? EaseConversationSetStyle.UnreadDotPosition.LEFT
                     : EaseConversationSetStyle.UnreadDotPosition.RIGHT);
 
+            int unreadStyle = a.getInteger(R.styleable.EaseConversationListLayout_ease_con_item_unread_style, 0);
+            setModel.setStyle(unreadStyle == 0 ? EaseConversationSetStyle.UnreadStyle.NUM
+                    : EaseConversationSetStyle.UnreadStyle.DOT);
+
             boolean showSystemMessage = a.getBoolean(R.styleable.EaseConversationListLayout_ease_con_item_show_system_message, true);
             setModel.setShowSystemMessage(showSystemMessage);
             presenter.setShowSystemMessage(showSystemMessage);
@@ -188,7 +192,7 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
 
         rvConversationList.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ConcatAdapter();
-        listAdapter = new EaseConversationListAdapter();
+        listAdapter = new EaseConversationListAdapter(setModel);
         adapter.addAdapter(listAdapter);
 
         menuHelper = new EasePopupMenuHelper();
@@ -234,7 +238,11 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
     }
 
     public void loadDefaultData() {
-        presenter.loadData();
+        presenter.loadData(true);
+    }
+
+    public void refreshData() {
+        presenter.loadData(false);
     }
 
     /**
@@ -262,7 +270,7 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
      */
     public void notifyDataSetChanged() {
         if(listAdapter != null) {
-            listAdapter.notifyDataSetChanged();
+            listAdapter.setConversationSetStyle(setModel);
         }
     }
 
@@ -363,12 +371,6 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
         rvConversationList.removeItemDecoration(decor);
     }
 
-//    @Override
-//    public void addDelegate(EaseBaseConversationDelegate delegate) {
-//        delegate.setSetModel(setModel);
-//        listAdapter.addDelegate(delegate);
-//    }
-
     @Override
     public void setPresenter(EaseConversationPresenter presenter) {
         this.presenter = presenter;
@@ -382,6 +384,17 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
     @Override
     public void showItemDefaultMenu(boolean showDefault) {
         showDefaultMenu = showDefault;
+    }
+
+    @Override
+    public void setListAdapter(EaseConversationListAdapter listAdapter) {
+        this.listAdapter = listAdapter;
+        this.listAdapter.setConversationSetStyle(setModel);
+        if(this.listAdapter != null) {
+            int index = this.adapter.getAdapters().indexOf(this.listAdapter);
+            this.adapter.removeAdapter(this.listAdapter);
+            this.adapter.addAdapter(index, this.listAdapter);
+        }
     }
 
     @Override
@@ -422,6 +435,12 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
     @Override
     public void showUnreadDotPosition(EaseConversationSetStyle.UnreadDotPosition position) {
         setModel.setUnreadDotPosition(position);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void setUnreadStyle(EaseConversationSetStyle.UnreadStyle style) {
+        setModel.setStyle(style);
         notifyDataSetChanged();
     }
 
@@ -517,6 +536,11 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
             loadListener.loadDataFinish(data);
         }
         listAdapter.setData(data);
+    }
+
+    @Override
+    public void loadMuteDataSuccess(List<EaseConversationInfo> data) {
+        listAdapter.notifyDataSetChanged();
     }
 
     @Override

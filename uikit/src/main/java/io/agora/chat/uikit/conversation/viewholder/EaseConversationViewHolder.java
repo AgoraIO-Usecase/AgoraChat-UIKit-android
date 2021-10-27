@@ -19,6 +19,7 @@ import io.agora.chat.Group;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
+import io.agora.chat.uikit.conversation.model.EaseConversationSetStyle;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.manager.EasePreferenceManager;
 import io.agora.chat.uikit.models.EaseConvSet;
@@ -30,8 +31,8 @@ import io.agora.chat.uikit.utils.EaseSmileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 
 public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
-    public EaseConversationViewHolder(@NonNull View itemView) {
-        super(itemView);
+    public EaseConversationViewHolder(@NonNull View itemView, EaseConversationSetStyle style) {
+        super(itemView, style);
     }
 
     @Override
@@ -98,8 +99,7 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
                 }
             }
         }
-        // TODO: 2021/10/25 add configures
-        if(true) {
+        if(!setModel.isHideUnreadDot()) {
             showUnreadNum(item.getUnreadMsgCount());
         }
 

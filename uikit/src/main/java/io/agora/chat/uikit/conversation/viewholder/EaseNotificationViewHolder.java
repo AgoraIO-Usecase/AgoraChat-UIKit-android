@@ -16,6 +16,7 @@ import io.agora.chat.Conversation;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
+import io.agora.chat.uikit.conversation.model.EaseConversationSetStyle;
 import io.agora.chat.uikit.models.EaseConvSet;
 import io.agora.chat.uikit.provider.EaseConversationInfoProvider;
 import io.agora.chat.uikit.utils.EaseDateUtils;
@@ -23,8 +24,8 @@ import io.agora.chat.uikit.utils.EaseSmileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 
 public class EaseNotificationViewHolder extends EaseBaseConversationViewHolder{
-    public EaseNotificationViewHolder(@NonNull View itemView) {
-        super(itemView);
+    public EaseNotificationViewHolder(@NonNull View itemView, EaseConversationSetStyle style) {
+        super(itemView, style);
     }
 
     @Override
