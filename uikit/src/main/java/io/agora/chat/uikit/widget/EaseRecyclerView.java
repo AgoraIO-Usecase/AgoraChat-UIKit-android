@@ -13,13 +13,19 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Refer to：https://github.com/idisfkj/EnhanceRecyclerView
+ * 可以添加header和footer
+ * 参考：https://github.com/idisfkj/EnhanceRecyclerView
  */
 public class EaseRecyclerView extends RecyclerView {
+    private static final int BASE_HEADER_VIEW_TYPE = -1 << 10;
+    private static final int BASE_FOOTER_VIEW_TYPE = -1 << 11;
     private RecyclerViewContextMenuInfo mContextMenuInfo;
+    private List<FixedViewInfo> mHeaderViewInfos = new ArrayList<>();
+    private List<FixedViewInfo> mFooterViewInfos = new ArrayList<>();
     private Adapter mAdapter;
     private boolean isStaggered;
     private boolean isShouldSpan;
@@ -34,6 +40,46 @@ public class EaseRecyclerView extends RecyclerView {
 
     public EaseRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    // TODO: 2020/1/11 添加移除头布局的方法
+    /**
+     * 如果view的初始化中的parent用的是recyclerView, 该方法的调用应该放在setLayoutManager之后,
+     * 否则需要自己对view添加LayoutParams
+     * @param view
+     */
+    public void addHeaderView(View view) {
+        FixedViewInfo info = new FixedViewInfo();
+        info.view = view;
+        info.viewType = BASE_HEADER_VIEW_TYPE + mHeaderViewInfos.size();
+        mHeaderViewInfos.add(info);
+
+        if(mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 移除所有的头布局
+     */
+    public void removeHeaderViews() {
+        if(mHeaderViewInfos != null) {
+            mHeaderViewInfos.clear();
+        }
+        if(mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void addFooterView(View view) {
+        FixedViewInfo info = new FixedViewInfo();
+        info.view = view;
+        info.viewType = BASE_FOOTER_VIEW_TYPE + mFooterViewInfos.size();
+        mFooterViewInfos.add(info);
+
+        if(mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -91,6 +137,14 @@ public class EaseRecyclerView extends RecyclerView {
         return super.getChildViewHolder(child);
     }
 
+    public int getFootersCount() {
+        return mFooterViewInfos.size();
+    }
+
+    public int getHeadersCount() {
+        return mHeaderViewInfos.size();
+    }
+
     public class FixedViewInfo {
         public View view;
         public int viewType;
@@ -106,11 +160,22 @@ public class EaseRecyclerView extends RecyclerView {
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            if(viewType >= BASE_HEADER_VIEW_TYPE && viewType < BASE_HEADER_VIEW_TYPE + getHeadersCount()) {
+                View view = mHeaderViewInfos.get(viewType - BASE_HEADER_VIEW_TYPE).view;
+                return viewHolder(view);
+            }else if(viewType >= BASE_FOOTER_VIEW_TYPE && viewType < BASE_FOOTER_VIEW_TYPE + getFootersCount()) {
+                View view = mFooterViewInfos.get(viewType - BASE_FOOTER_VIEW_TYPE).view;
+                return viewHolder(view);
+            }
             return mAdapter.onCreateViewHolder(parent, viewType);
         }
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if(isHeaderOrFooter(holder)) {
+                return;
+            }
+            position -= getHeadersCount();
             mAdapter.onBindViewHolder(holder, position);
         }
 
@@ -139,21 +204,47 @@ public class EaseRecyclerView extends RecyclerView {
 
         @Override
         public long getItemId(int position) {
+            if(isHeaderOrFooter(position)) {
+                return -1;
+            }
+            position -= getHeadersCount();
             return mAdapter.getItemId(position);
         }
 
         @Override
         public int getItemCount() {
-            return getContentCount();
+            return getHeadersCount() + getFootersCount() + getContentCount();
         }
 
         @Override
         public int getItemViewType(int position) {
-            return mAdapter.getItemViewType(position);
+            if(isHeader(position)) {
+                return mHeaderViewInfos.get(position).viewType;
+            }
+            if(isFooter(position)) {
+                return mFooterViewInfos.get(position - getHeadersCount() - getContentCount()).viewType;
+            }
+            return mAdapter.getItemViewType(position - getHeadersCount());
         }
 
         public int getContentCount() {
             return mAdapter == null ? 0 : mAdapter.getItemCount();
+        }
+
+        public boolean isHeader(int position) {
+            return position < getHeadersCount();
+        }
+
+        public boolean isFooter(int position) {
+            return position >= getHeadersCount() + getContentCount();
+        }
+
+        public boolean isHeaderOrFooter(RecyclerView.ViewHolder holder) {
+            return holder instanceof ViewHolder || isHeaderOrFooter(holder.getAdapterPosition());
+        }
+
+        public boolean isHeaderOrFooter(int position) {
+            return isHeader(position) || isFooter(position);
         }
 
         public void adjustSpanSize(RecyclerView recyclerView) {
@@ -162,7 +253,12 @@ public class EaseRecyclerView extends RecyclerView {
                 manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int position) {
-                        return manager.getSpanCount();
+                        int headersCount = getHeadersCount();
+                        int adjPosition = position - headersCount;
+                        if(position < headersCount || adjPosition >= mAdapter.getItemCount()) {
+                            return manager.getSpanCount();
+                        }
+                        return 1;
                     }
                 });
             }
@@ -202,31 +298,37 @@ public class EaseRecyclerView extends RecyclerView {
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
+            positionStart += getHeadersCount();
             mAdapter.notifyItemRangeChanged(positionStart, itemCount);
         }
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
+            positionStart += getHeadersCount();
             mAdapter.notifyItemRangeChanged(positionStart, itemCount, payload);
         }
 
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
+            positionStart += getHeadersCount();
             mAdapter.notifyItemRangeInserted(positionStart, itemCount);
         }
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
+            positionStart += getHeadersCount();
             mAdapter.notifyItemRangeRemoved(positionStart, itemCount);
         }
 
         @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            fromPosition += getHeadersCount();
+            toPosition += getHeadersCount();
             mAdapter.notifyItemMoved(fromPosition, toPosition);
         }
     };
 
-//=====================Fix add item shortcut menu======================================
+//=====================解决添加条目快捷菜单的问题======================================
     public static class RecyclerViewContextMenuInfo implements ContextMenu.ContextMenuInfo {
         public int position;
         public long id;
