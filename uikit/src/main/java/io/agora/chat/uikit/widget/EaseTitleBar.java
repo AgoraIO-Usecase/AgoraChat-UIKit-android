@@ -277,6 +277,9 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     public TextView getTitle() {
         return titleView;
     }
+    public void setTitleSize(float sp){
+        titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP,sp);
+    }
     
     public void setDisplayHomeAsUpEnabled(boolean displayHomeAsUpEnabled) {
         this.mDisplayHomeAsUpEnabled = displayHomeAsUpEnabled;
@@ -375,5 +378,9 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
      */
     public static float sp2px(Context context, float value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, context.getResources().getDisplayMetrics());
+    }
+
+    public <T> T getView(int viewId){
+        return (T) findViewById(viewId);
     }
 }
