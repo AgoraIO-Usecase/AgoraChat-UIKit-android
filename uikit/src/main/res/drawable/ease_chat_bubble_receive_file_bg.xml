@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/ease_chat_receive_bg_color" />
+    <solid android:color="#F2F2F2"/>
     <corners
         android:topLeftRadius="16dp"
         android:topRightRadius="16dp"
         android:bottomLeftRadius="4dp"
         android:bottomRightRadius="16dp" />
-    <size android:height="38dp"/>
 </shape>

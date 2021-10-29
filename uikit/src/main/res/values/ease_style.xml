@@ -16,7 +16,7 @@
         <item name="android:paddingBottom">2dip</item>
         <item name="android:paddingLeft">12dip</item>
         <item name="android:paddingRight">12dip</item>
-        <item name="android:textColor">@color/btn_gray_normal</item>
+        <item name="android:textColor">@color/ease_msg_text_timestamp_color</item>
         <item name="android:textSize">12sp</item>
         <!--<item name="android:background">@drawable/ease_timestampe_bg</item>-->
     </style>
@@ -52,37 +52,47 @@
     <style name="ease_row_sent_iv_fail_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginRight">@dimen/ease_msg_status_icon_margin_bubble</item>
         <item name="android:clickable">true</item>
         <item name="android:src">@drawable/ease_msg_state_failed_resend</item>
-        <item name="android:visibility">invisible</item>
+        <item name="android:visibility">visible</item>
     </style>
 
     <style name="ease_row_sent_iv_userhead_style">
-        <item name="android:layout_width">@dimen/size_avatar</item>
-        <item name="android:layout_height">@dimen/size_avatar</item>
+        <item name="android:layout_width">@dimen/ease_chat_avatar_size</item>
+        <item name="android:layout_height">@dimen/ease_chat_avatar_size</item>
         <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_marginRight">@dimen/ease_chat_avatar_margin</item>
         <item name="android:src">@drawable/ease_default_avatar</item>
         <item name="android:scaleType">fitXY</item>
+        <item name="android:visibility">visible</item>
     </style>
 
     <style name="ease_row_receive_iv_userhead_style">
-        <item name="android:layout_width">@dimen/size_avatar</item>
-        <item name="android:layout_height">@dimen/size_avatar</item>
+        <item name="android:layout_width">@dimen/ease_chat_avatar_size</item>
+        <item name="android:layout_height">@dimen/ease_chat_avatar_size</item>
         <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_marginLeft">@dimen/ease_chat_avatar_margin</item>
         <item name="android:src">@drawable/ease_default_avatar</item>
         <item name="android:scaleType">fitXY</item>
     </style>
 
     <style name="ease_chat_input_button_size">
-        <item name="android:layout_width">34dp</item>
-        <item name="android:layout_height">34dp</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:layout_width">36dp</item>
+        <item name="android:layout_height">36dp</item>
+    </style>
+
+    <style name="ease_msg_text_file_name">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/ease_msg_file_name_color</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>
