@@ -345,7 +345,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
          * Initialize the views
          * @param itemView
          */
-        public abstract void initView(View itemView);
+        public void initView(View itemView){}
 
         /**
          * Set data
