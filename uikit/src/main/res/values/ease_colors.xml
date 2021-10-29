@@ -10,6 +10,7 @@
     <color name="color_alert">#FF14CC</color>
     <color name="color_divider">#fff2f2f2</color>
     <color name="color_conversation_title">#005FFF</color>
+    <color name="color_chat_receive">#F2F2F2</color>
 
     <color name="gray_normal">#666667</color>
     <color name="btn_gray_normal">#c0c0c0</color>
@@ -24,6 +25,14 @@
     <color name="ease_conversation_color_item_time">#666666</color>
     <color name="btn_blue_normal">#1e90ff</color>
     <color name="btn_blue_pressed">#0066FF</color>
+    <color name="ease_chat_receive_bg_color">@color/color_chat_receive</color>
+    <color name="ease_chat_send_bg_start_color">#FF14CC</color>
+    <color name="ease_chat_send_bg_end_color">#154DFE</color>
+    <color name="ease_msg_send_message_color">@color/white</color>
+    <color name="ease_msg_name_color">#999999</color>
+    <color name="ease_msg_file_name_color">#000000</color>
+    <color name="ease_msg_file_size_color">#666666</color>
+    <color name="ease_msg_text_timestamp_color">#999999</color>
 
     <color name="emojicon_tab_selected">#D9D9D9</color>
     <color name="emojicon_tab_nomal">#ffffff</color>

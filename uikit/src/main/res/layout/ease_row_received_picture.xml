@@ -14,13 +14,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_chat_activity" >
 
         <io.agora.chat.uikit.widget.EaseImageView
             android:id="@+id/iv_userhead"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             style="@style/ease_row_receive_iv_userhead_style"/>
 
         <RelativeLayout
@@ -28,8 +30,8 @@
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_chat_activity"
-            android:layout_toRightOf="@id/iv_userhead"
-            android:layout_below="@+id/tv_userid"
+            app:layout_constraintStart_toEndOf="@id/iv_userhead"
+            app:layout_constraintBottom_toBottomOf="parent"
              >
 
             <io.agora.chat.uikit.widget.EaseImageView
@@ -52,6 +54,8 @@
 
                 <ProgressBar
                     android:id="@+id/progress_bar"
+                    style="?android:attr/progressBarStyle"
+                    android:indeterminateDrawable="@drawable/ease_chat_loading_progress_bar"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:visibility="visible" />
@@ -74,8 +78,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/chat_nick_margin_left"
             android:textSize="@dimen/chat_nick_text_size"
-            android:layout_toRightOf="@id/iv_userhead"
+             app:layout_constraintBottom_toTopOf="@id/bubble"
+             app:layout_constraintStart_toStartOf="@id/bubble"
             android:visibility="gone" />
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

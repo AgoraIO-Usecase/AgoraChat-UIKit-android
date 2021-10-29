@@ -70,9 +70,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp"
             android:layout_weight="1"
             android:focusable="true"
+            android:layout_gravity="center_vertical"
             android:focusableInTouchMode="true"
             android:visibility="visible">
 
@@ -84,7 +84,7 @@
                 android:focusableInTouchMode="true"
                 android:imeOptions="actionSend"
                 android:maxLines="4"
-                android:minHeight="32dp"
+                android:minHeight="36dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="3dp"
                 android:paddingRight="10dp"
@@ -107,7 +107,6 @@
                 android:layout_height="@dimen/ease_chat_primary_menu_icon_size"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ease_chatting_biaoqing_btn_normal"
-                android:padding="5dp"
                 android:visibility="visible" />
 
             <ImageView
@@ -116,7 +115,6 @@
                 android:layout_height="@dimen/ease_chat_primary_menu_icon_size"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ease_chatting_setmode_keyboard_btn"
-                android:padding="5dp"
                 android:visibility="invisible" />
 
         </RelativeLayout>
@@ -125,10 +123,10 @@
             android:id="@+id/btn_more"
             android:layout_width="@dimen/ease_chat_primary_menu_more_icon_size"
             android:layout_height="@dimen/ease_chat_primary_menu_more_icon_size"
-            android:layout_marginBottom="5dp"
             android:layout_marginRight="@dimen/ease_chat_primary_margin_right"
             android:button="@null"
             android:visibility="visible"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/ease_type_select_btn" />
 
         <FrameLayout
