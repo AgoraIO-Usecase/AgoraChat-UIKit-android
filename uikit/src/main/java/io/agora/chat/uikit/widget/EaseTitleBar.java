@@ -171,9 +171,9 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
 
     private void initToolbar() {
         rightLayout.setOnClickListener(this);
+        leftLayout.setOnClickListener(this);
         if(leftImage.getDrawable() != null) {
             leftImage.setVisibility(mDisplayHomeAsUpEnabled ? VISIBLE : GONE);
-            leftLayout.setOnClickListener(this);
         }else {
             if(getContext() instanceof AppCompatActivity) {
                 AppCompatActivity activity = (AppCompatActivity) getContext();
@@ -219,6 +219,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
 
     public void setLeftImageResource(int resId) {
         leftImage.setImageResource(resId);
+        leftLayout.setVisibility(View.VISIBLE);
     }
     
     public void setRightImageResource(int resId) {
