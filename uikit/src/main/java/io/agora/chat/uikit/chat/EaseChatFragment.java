@@ -2,7 +2,6 @@ package io.agora.chat.uikit.chat;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -67,6 +65,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     private OnChatLayoutListener listener;
 
     protected File cameraFile;
+    private EaseTitleBar.OnBackPressListener backPressListener;
     private OnChatExtendMenuItemClickListener extendMenuItemClickListener;
     private OnChatInputChangeListener chatInputChangeListener;
     private OnChatItemClickListener chatItemClickListener;
@@ -74,6 +73,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     private OnOtherTypingListener otherTypingListener;
     private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
     private OnChatRecordTouchListener recordTouchListener;
+    private EaseMessageAdapter messageAdapter;
 
     @Nullable
     @Override
@@ -107,6 +107,9 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     public void initView() {
         titleBar = findViewById(R.id.title_bar);
         chatLayout = findViewById(R.id.layout_chat);
+        if(this.messageAdapter != null) {
+            chatLayout.getChatMessageListLayout().setMessageAdapter(this.messageAdapter);
+        }
         chatLayout.getChatMessageListLayout().setItemShowType(EaseChatMessageListLayout.ShowType.NORMAL);
 
         Bundle bundle = getArguments();
@@ -122,7 +125,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             boolean canBack = bundle.getBoolean(Constant.KEY_ENABLE_BACK, false);
             titleBar.setDisplayHomeAsUpEnabled(canBack);
 
-            titleBar.setOnBackPressListener(new EaseTitleBar.OnBackPressListener() {
+            titleBar.setOnBackPressListener(backPressListener != null ? backPressListener : new EaseTitleBar.OnBackPressListener() {
                 @Override
                 public void onBackPress(View view) {
                     mContext.onBackPressed();
@@ -153,9 +156,12 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                     chatLayout.getChatMessageListLayout().setItemShowType(showType);
                 }
             }
-            // TODO: 2021/10/29 需要添加逻辑
-            boolean hideLeftAvatar = bundle.getBoolean(Constant.KEY_HIDE_LEFT_AVATAR, true);
-            boolean hideRightAvatar = bundle.getBoolean(Constant.KEY_HIDE_RIGHT_AVATAR, true);
+            boolean hideReceiveAvatar = bundle.getBoolean(Constant.KEY_HIDE_RECEIVE_AVATAR, false);
+            chatLayout.getChatMessageListLayout().hideChatReceiveAvatar(hideReceiveAvatar);
+            boolean hideSendAvatar = bundle.getBoolean(Constant.KEY_HIDE_SEND_AVATAR, false);
+            chatLayout.getChatMessageListLayout().hideChatSendAvatar(hideSendAvatar);
+            boolean turnOnTypingMonitor = bundle.getBoolean(Constant.KEY_TURN_ON_TYPING_MONITOR, false);
+            chatLayout.turnOnTypingMonitor(turnOnTypingMonitor);
             int chatBg = bundle.getInt(Constant.KEY_CHAT_BACKGROUND, -1);
             if(chatBg != -1) {
                 chatLayout.getChatMessageListLayout().setBackgroundResource(chatBg);
@@ -174,6 +180,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             String inputHint = bundle.getString(Constant.KEY_CHAT_MENU_INPUT_HINT, "");
             if(!TextUtils.isEmpty(inputHint)) {
                 chatLayout.getChatInputMenu().getPrimaryMenu().getEditText().setHint(inputHint);
+            }
+            int emptyLayout = bundle.getInt(Constant.KEY_EMPTY_LAYOUT, -1);
+            if(emptyLayout != -1) {
+                chatLayout.getChatMessageListLayout().getMessageAdapter().setEmptyView(emptyLayout);
             }
         }
     }
@@ -208,6 +218,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
     }
 
+    private void setHeaderBackPressListener(EaseTitleBar.OnBackPressListener listener) {
+        this.backPressListener = listener;
+    }
+
     private void setOnChatLayoutListener(OnChatLayoutListener listener) {
         this.listener = listener;
     }
@@ -238,6 +252,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     private void setOnChatRecordTouchListener(OnChatRecordTouchListener recordTouchListener) {
         this.recordTouchListener = recordTouchListener;
+    }
+
+    private void setCustomAdapter(EaseMessageAdapter adapter) {
+        this.messageAdapter = adapter;
     }
 
     @Override
@@ -487,6 +505,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         private OnOtherTypingListener otherTypingListener;
         private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
         private OnChatRecordTouchListener recordTouchListener;
+        private EaseChatFragment customFragment;
 
         public Builder(String conversationId, int chatType) {
             this.bundle = new Bundle();
@@ -551,6 +570,11 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             return this;
         }
 
+        public Builder turnOnTypingMonitor(boolean turnOn) {
+            this.bundle.putBoolean(Constant.KEY_TURN_ON_TYPING_MONITOR, turnOn);
+            return this;
+        }
+
         public Builder setOnOtherTypingListener(OnOtherTypingListener listener) {
             this.otherTypingListener = listener;
             return this;
@@ -596,13 +620,13 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             return this;
         }
 
-        public Builder hideChatLeftAvatar(boolean hide) {
-            this.bundle.putBoolean(Constant.KEY_HIDE_LEFT_AVATAR, hide);
+        public Builder hideChatReceiveAvatar(boolean hide) {
+            this.bundle.putBoolean(Constant.KEY_HIDE_RECEIVE_AVATAR, hide);
             return this;
         }
 
-        public Builder hideChatRightAvatar(boolean hide) {
-            this.bundle.putBoolean(Constant.KEY_HIDE_RIGHT_AVATAR, hide);
+        public Builder hideChatSendAvatar(boolean hide) {
+            this.bundle.putBoolean(Constant.KEY_HIDE_SEND_AVATAR, hide);
             return this;
         }
 
@@ -631,14 +655,29 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             return this;
         }
 
+        public <T extends EaseChatFragment> Builder setCustomFragment(T fragment) {
+            this.customFragment = fragment;
+            return this;
+        }
+
         public Builder setCustomAdapter(EaseMessageAdapter adapter) {
             this.adapter = adapter;
             return this;
         }
 
         public EaseChatFragment build() {
-            EaseChatFragment fragment = new EaseChatFragment();
+            EaseChatFragment fragment = this.customFragment != null ? this.customFragment : new EaseChatFragment();
             fragment.setArguments(this.bundle);
+            fragment.setHeaderBackPressListener(this.backPressListener);
+            fragment.setOnChatLayoutListener(this.listener);
+            fragment.setOnChatExtendMenuItemClickListener(this.extendMenuItemClickListener);
+            fragment.setOnChatInputChangeListener(this.chatInputChangeListener);
+            fragment.setOnChatItemClickListener(this.chatItemClickListener);
+            fragment.setOnMessageSendCallBack(this.messageSendCallBack);
+            fragment.setOnOtherTypingListener(this.otherTypingListener);
+            fragment.setOnAddMsgAttrsBeforeSendEvent(this.sendMsgEvent);
+            fragment.setOnChatRecordTouchListener(this.recordTouchListener);
+            fragment.setCustomAdapter(this.adapter);
             return fragment;
         }
     }
@@ -654,12 +693,13 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         public static final String KEY_MSG_RIGHT_BUBBLE = "key_msg_right_bubble";
         public static final String KEY_SHOW_NICKNAME = "key_show_nickname";
         public static final String KEY_MESSAGE_LIST_SHOW_TYPE = "key_message_list_show_type";
-        public static final String KEY_HIDE_LEFT_AVATAR = "key_hide_left_avatar";
-        public static final String KEY_HIDE_RIGHT_AVATAR = "key_hide_right_avatar";
+        public static final String KEY_HIDE_RECEIVE_AVATAR = "key_hide_left_avatar";
+        public static final String KEY_HIDE_SEND_AVATAR = "key_hide_right_avatar";
         public static final String KEY_CHAT_BACKGROUND = "key_chat_background";
         public static final String KEY_CHAT_MENU_STYLE = "key_chat_menu_style";
         public static final String KEY_CHAT_MENU_INPUT_BG = "key_chat_menu_input_bg";
         public static final String KEY_CHAT_MENU_INPUT_HINT = "key_chat_menu_input_hint";
+        public static final String KEY_TURN_ON_TYPING_MONITOR = "key_turn_on_typing_monitor";
     }
 }
 

@@ -108,5 +108,12 @@ public class EaseChatItemStyleHelper {
     public void setItemShowType(int itemShowType) {
         style.setItemShowType(itemShowType);
     }
+    public void setHideReceiveAvatar(boolean hideReceiveAvatar) {
+        style.setHideReceiveAvatar(hideReceiveAvatar);
+    }
+
+    public void setHideSendAvatar(boolean hideSendAvatar) {
+        style.setHideSendAvatar(hideSendAvatar);
+    }
 }
 
