@@ -93,7 +93,7 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
             titleBar.setOnBackPressListener(new EaseTitleBar.OnBackPressListener() {
                 @Override
                 public void onBackPress(View view) {
-
+                    mContext.onBackPressed();
                 }
             });
 
