@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.chat;
+package io.agora.chat.uikit.chat.model;
 
 
 import android.graphics.drawable.Drawable;

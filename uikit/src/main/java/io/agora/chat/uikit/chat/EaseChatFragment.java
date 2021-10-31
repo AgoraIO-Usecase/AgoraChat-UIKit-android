@@ -34,6 +34,8 @@ import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageSendCallBack;
 import io.agora.chat.uikit.chat.interfaces.OnOtherTypingListener;
+import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
+import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;

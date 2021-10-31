@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.chat;
+package io.agora.chat.uikit.chat.widget;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.interfaces.EaseChatPrimaryMenuListener;
 import io.agora.chat.uikit.chat.interfaces.IChatPrimaryMenu;
+import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
 
 
 public class EaseChatPrimaryMenu extends RelativeLayout implements IChatPrimaryMenu, View.OnClickListener, EaseInputEditText.OnEditTextChangeListener, TextWatcher {

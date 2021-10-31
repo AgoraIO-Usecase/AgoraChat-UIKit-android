@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.chat;
+package io.agora.chat.uikit.chat.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

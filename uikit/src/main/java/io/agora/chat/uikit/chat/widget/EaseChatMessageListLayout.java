@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.chat;
+package io.agora.chat.uikit.chat.widget;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -31,6 +31,7 @@ import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
 import io.agora.chat.uikit.chat.interfaces.IChatMessageItemSet;
 import io.agora.chat.uikit.chat.interfaces.IChatMessageListLayout;
 import io.agora.chat.uikit.chat.interfaces.IRecyclerViewHandle;
+import io.agora.chat.uikit.chat.model.EaseChatItemStyleHelper;
 import io.agora.chat.uikit.chat.presenter.EaseChatMessagePresenter;
 import io.agora.chat.uikit.chat.presenter.EaseChatMessagePresenterImpl;
 import io.agora.chat.uikit.chat.presenter.IChatMessageListView;

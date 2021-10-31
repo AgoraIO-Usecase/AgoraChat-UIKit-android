@@ -4,8 +4,7 @@ import android.graphics.drawable.Drawable;
 
 import androidx.annotation.ColorInt;
 
-import io.agora.chat.uikit.chat.EaseChatFragment;
-import io.agora.chat.uikit.chat.EaseChatMessageListLayout;
+import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 
 
 public interface IChatMessageItemSet {

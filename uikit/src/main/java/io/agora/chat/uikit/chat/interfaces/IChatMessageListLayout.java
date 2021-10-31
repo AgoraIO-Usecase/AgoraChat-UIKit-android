@@ -1,7 +1,7 @@
 package io.agora.chat.uikit.chat.interfaces;
 
 
-import io.agora.chat.uikit.chat.EaseChatMessageListLayout;
+import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
 import io.agora.chat.uikit.chat.presenter.EaseChatMessagePresenter;
 import io.agora.chat.uikit.interfaces.IRecyclerView;
