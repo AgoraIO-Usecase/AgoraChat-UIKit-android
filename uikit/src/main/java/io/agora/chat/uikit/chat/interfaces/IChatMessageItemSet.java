@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 
 import androidx.annotation.ColorInt;
 
+import io.agora.chat.uikit.chat.EaseChatFragment;
 import io.agora.chat.uikit.chat.EaseChatMessageListLayout;
 
 
@@ -79,4 +80,16 @@ public interface IChatMessageItemSet {
      * @param type
      */
     void setItemShowType(EaseChatMessageListLayout.ShowType type);
+
+    /**
+     * Hide receiver's avatar, default is false
+     * @param hide
+     */
+    void hideChatReceiveAvatar(boolean hide);
+
+    /**
+     * Hide sender's avatar, default is false
+     * @param hide
+     */
+    void hideChatSendAvatar(boolean hide);
 }

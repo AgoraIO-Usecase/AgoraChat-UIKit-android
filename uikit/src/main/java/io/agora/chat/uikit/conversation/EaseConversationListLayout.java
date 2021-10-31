@@ -388,13 +388,15 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
 
     @Override
     public void setListAdapter(EaseConversationListAdapter listAdapter) {
-        this.listAdapter = listAdapter;
-        this.listAdapter.setConversationSetStyle(setModel);
-        if(this.listAdapter != null) {
+        if(this.listAdapter  != null && this.adapter.getAdapters().contains(this.listAdapter)) {
             int index = this.adapter.getAdapters().indexOf(this.listAdapter);
             this.adapter.removeAdapter(this.listAdapter);
-            this.adapter.addAdapter(index, this.listAdapter);
+            this.adapter.addAdapter(index, listAdapter);
+        }else {
+            this.adapter.addAdapter(listAdapter);
         }
+        this.listAdapter = listAdapter;
+        this.listAdapter.setConversationSetStyle(setModel);
     }
 
     @Override

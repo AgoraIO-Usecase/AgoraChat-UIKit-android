@@ -240,6 +240,18 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
     }
 
+    public void setMessageAdapter(EaseMessageAdapter adapter) {
+        if(this.messageAdapter != null && baseAdapter.getAdapters().contains(this.messageAdapter)) {
+            int index = baseAdapter.getAdapters().indexOf(this.messageAdapter);
+            baseAdapter.removeAdapter(this.messageAdapter);
+            baseAdapter.addAdapter(index, adapter);
+        }else {
+            baseAdapter.addAdapter(adapter);
+        }
+        this.messageAdapter = adapter;
+        setAdapterListener();
+    }
+
     /**
      * 加载更多的更早一些的数据，下拉加载更多
      */
@@ -352,6 +364,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             }
         });
 
+        setAdapterListener();
+    }
+
+    private void setAdapterListener() {
         messageAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -669,6 +685,18 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             chatSetHelper.setItemShowType(type.ordinal());
             notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void hideChatReceiveAvatar(boolean hide) {
+        chatSetHelper.setHideReceiveAvatar(hide);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void hideChatSendAvatar(boolean hide) {
+        chatSetHelper.setHideSendAvatar(hide);
+        notifyDataSetChanged();
     }
 
     @Override

@@ -354,6 +354,12 @@ public abstract class EaseChatRow extends LinearLayout {
         } else {
             userAvatarView.setVisibility(View.GONE);
         }
+        if(itemStyle.isHideReceiveAvatar() && message.direct() == ChatMessage.Direct.RECEIVE) {
+            userAvatarView.setVisibility(GONE);
+        }
+        if(itemStyle.isHideSendAvatar() && message.direct() == ChatMessage.Direct.SEND) {
+            userAvatarView.setVisibility(GONE);
+        }
     }
 
     /**
