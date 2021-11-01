@@ -43,14 +43,6 @@
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="EaseSidebar">
-        <attr name="ease_side_bar_top_text" format="reference|string"/>
-        <attr name="ease_side_bar_text_color" format="reference|color"/>
-        <attr name="ease_side_bar_text_size" format="dimension"/>
-        <attr name="ease_side_bar_background" format="reference|color"/>
-        <attr name="ease_side_bar_head_arrays" format="reference"/>
-    </declare-styleable>
-
     <declare-styleable name="EaseChatExtendMenu">
         <attr name="numColumns" format="integer"/>
         <attr name="numRows" format="integer"/>
