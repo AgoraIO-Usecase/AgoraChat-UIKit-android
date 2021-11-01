@@ -29,6 +29,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     public static final int VIEW_TYPE_ITEM = 0;
     protected OnItemClickListener mOnItemClickListener;
     protected OnItemLongClickListener mOnItemLongClickListener;
+    protected OnItemSubViewClickListener mItemSubViewListener;
     public Context mContext;
     public List<T> mData;
     private boolean hideEmptyView;
@@ -333,6 +334,14 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         mOnItemLongClickListener = longClickListener;
     }
 
+    /**
+     * set item sub view click
+     * @param mItemSubViewListener
+     */
+    public void setOnItemSubViewClickListener(OnItemSubViewClickListener mItemSubViewListener) {
+        this.mItemSubViewListener = mItemSubViewListener;
+    }
+
     public abstract static class ViewHolder<T> extends RecyclerView.ViewHolder {
         private EaseBaseAdapter<ViewHolder<T>> adapter;
 
@@ -395,5 +404,11 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         return R.layout.ease_layout_default_no_data;
     }
 
+    /**
+     * item sub view interface
+     */
+    public interface OnItemSubViewClickListener {
+        void onItemSubViewClick(View view, int position);
+    }
 
 }
