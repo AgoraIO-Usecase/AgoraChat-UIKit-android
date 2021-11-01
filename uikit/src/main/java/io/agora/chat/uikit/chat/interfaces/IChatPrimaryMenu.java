@@ -3,7 +3,7 @@ package io.agora.chat.uikit.chat.interfaces;
 import android.graphics.drawable.Drawable;
 import android.widget.EditText;
 
-import io.agora.chat.uikit.chat.EaseInputMenuStyle;
+import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
 
 
 public interface IChatPrimaryMenu {

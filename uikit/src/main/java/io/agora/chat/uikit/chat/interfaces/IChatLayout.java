@@ -3,8 +3,8 @@ package io.agora.chat.uikit.chat.interfaces;
 import android.net.Uri;
 
 import io.agora.chat.ChatMessage;
-import io.agora.chat.uikit.chat.EaseChatInputMenu;
-import io.agora.chat.uikit.chat.EaseChatMessageListLayout;
+import io.agora.chat.uikit.chat.widget.EaseChatInputMenu;
+import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 
 
 public interface IChatLayout {

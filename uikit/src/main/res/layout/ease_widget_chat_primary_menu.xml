@@ -76,7 +76,7 @@
             android:focusableInTouchMode="true"
             android:visibility="visible">
 
-            <io.agora.chat.uikit.chat.EaseInputEditText
+            <io.agora.chat.uikit.chat.widget.EaseInputEditText
                 android:id="@+id/et_sendmessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

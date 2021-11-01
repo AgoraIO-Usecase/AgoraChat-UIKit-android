@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.adapter.EaseBaseChatExtendMenuAdapter;
-import io.agora.chat.uikit.chat.EaseChatExtendMenu;
+import io.agora.chat.uikit.chat.widget.EaseChatExtendMenu;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
 
 
