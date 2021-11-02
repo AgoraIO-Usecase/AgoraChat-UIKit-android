@@ -19,11 +19,6 @@ import io.agora.chat.uikit.widget.EaseImageView;
 
 public class EaseUserUtils {
 
-    static {
-        // TODO: 2019/12/30 0030 how to provide userProfileProvider
-//        userProvider = EaseUI.getInstance().getUserProfileProvider();
-    }
-    
     /**
      * get EaseUser according username
      * @param username

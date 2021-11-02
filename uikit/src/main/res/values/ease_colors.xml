@@ -11,6 +11,7 @@
     <color name="color_divider">#fff2f2f2</color>
     <color name="color_conversation_title">#005FFF</color>
     <color name="color_chat_receive">#F2F2F2</color>
+    <color name="color_download_video">#fcfcfc</color>
 
     <color name="gray_normal">#666667</color>
     <color name="btn_gray_normal">#c0c0c0</color>
@@ -40,5 +41,6 @@
     <!--alert-->
     <color name="btn_gray_pressed_status">#b5b5b6</color>
     <color name="btn_gray_pressed">#666667</color>
+    <color name="dialog_chat_extend_cancel">#037BFD</color>
 
 </resources>

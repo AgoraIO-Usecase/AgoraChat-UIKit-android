@@ -4,9 +4,12 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.util.Log;
 
+import io.agora.ConnectionListener;
+import io.agora.Error;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatOptions;
+import io.agora.chat.uikit.interfaces.OnEaseChatConnectionListener;
 import io.agora.chat.uikit.manager.EaseChatPresenter;
 import io.agora.chat.uikit.manager.EaseNotifier;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
@@ -56,6 +59,7 @@ public class EaseUIKit {
      * Whether to send image message as original picture
      */
     private boolean sendOriginalImage;
+    private OnEaseChatConnectionListener chatConnectionListener;
 
     private EaseUIKit() {}
 
@@ -115,6 +119,8 @@ public class EaseUIKit {
             options = initChatOptions();
         }
         ChatClient.getInstance().init(context, options);
+        // add connection listener
+        ChatClient.getInstance().addConnectionListener(connectionListener);
         initNotifier();
         presenter = new EaseChatPresenter();
         presenter.attachApp(appContext);
@@ -210,6 +216,50 @@ public class EaseUIKit {
         mEmojiconInfoProvider = emojiconInfoProvider;
         return this;
     }
+
+    public EaseUIKit setOnEaseChatConnectionListener(OnEaseChatConnectionListener listener) {
+        this.chatConnectionListener = listener;
+        return this;
+    }
+
+    private ConnectionListener connectionListener = new ConnectionListener() {
+        @Override
+        public void onConnected() {
+            if(EaseUIKit.this.chatConnectionListener != null) {
+                chatConnectionListener.onConnected();
+            }
+        }
+
+        @Override
+        public void onDisconnected(int error) {
+            if(chatConnectionListener != null) {
+                chatConnectionListener.onDisconnect(error);
+            }
+            if (error == Error.USER_REMOVED
+                    || error == Error.USER_LOGIN_ANOTHER_DEVICE
+                    || error == Error.SERVER_SERVICE_RESTRICTED
+                    || error == Error.USER_KICKED_BY_CHANGE_PASSWORD
+                    || error == Error.USER_KICKED_BY_OTHER_DEVICE) {
+                if(chatConnectionListener != null) {
+                    chatConnectionListener.onAccountLogout(error);
+                }
+            }
+        }
+
+        @Override
+        public void onTokenExpired() {
+            if(chatConnectionListener != null) {
+                chatConnectionListener.onTokenExpired();
+            }
+        }
+
+        @Override
+        public void onTokenWillExpire() {
+            if(chatConnectionListener != null) {
+                chatConnectionListener.onTokenWillExpire();
+            }
+        }
+    };
 
     /**
      * get settings provider

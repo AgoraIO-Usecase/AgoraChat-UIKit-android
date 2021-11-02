@@ -1,6 +1,8 @@
 package io.agora.chat.uikit.chat.widget;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -178,6 +180,27 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
             extendMenuContainer.setVisibility(VISIBLE);
             extendMenuContainer.removeAllViews();
             extendMenuContainer.addView((View) extendMenu);
+            extendMenu.setEaseChatExtendMenuItemClickListener(this);
+        }
+        if(extendMenu instanceof Dialog) {
+            extendMenuContainer.setVisibility(GONE);
+            ((Dialog) extendMenu).show();
+            ((Dialog) extendMenu).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    if(primaryMenu != null) {
+                        primaryMenu.hideExtendStatus();
+                    }
+                }
+            });
+            ((Dialog) extendMenu).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    if(primaryMenu != null) {
+                        primaryMenu.hideExtendStatus();
+                    }
+                }
+            });
             extendMenu.setEaseChatExtendMenuItemClickListener(this);
         }
         if(extendMenu instanceof Fragment && getContext() instanceof AppCompatActivity) {

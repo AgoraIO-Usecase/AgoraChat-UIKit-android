@@ -1,16 +1,3 @@
-/**
- * Copyright (C) 2016 Hyphenate Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.agora.chat.uikit.widget;
 
 import android.app.Dialog;
@@ -24,7 +11,7 @@ import android.widget.TextView;
 import io.agora.chat.uikit.R;
 
 
-public class EaseAlertDialog extends Dialog {
+public class EaseDialog extends Dialog {
 	
 	public interface AlertDialogUser {
 		void onResult(boolean confirmed, Bundle bundle);
@@ -36,35 +23,35 @@ public class EaseAlertDialog extends Dialog {
 	private Bundle bundle;
 	private boolean showCancel = false;
 
-	public EaseAlertDialog(Context context, int msgId) {
+	public EaseDialog(Context context, int msgId) {
 		super(context);
 		this.title = context.getResources().getString(R.string.prompt);
 		this.msg = context.getResources().getString(msgId);
 		this.setCanceledOnTouchOutside(true);
 	}
 	
-	public EaseAlertDialog(Context context, String msg) {
+	public EaseDialog(Context context, String msg) {
 		super(context);
 		this.title = context.getResources().getString(R.string.prompt);
 		this.msg = msg;
 		this.setCanceledOnTouchOutside(true);
 	}
 	
-	public EaseAlertDialog(Context context, int titleId, int msgId) {
+	public EaseDialog(Context context, int titleId, int msgId) {
 		super(context);
 		this.title = context.getResources().getString(titleId);
 		this.msg = context.getResources().getString(msgId);
 		this.setCanceledOnTouchOutside(true);
 	}
 	
-	public EaseAlertDialog(Context context, String title, String msg) {
+	public EaseDialog(Context context, String title, String msg) {
 		super(context);
 		this.title = title;
 		this.msg = msg;
 		this.setCanceledOnTouchOutside(true);
 	}
 
-	public EaseAlertDialog(Context context, int titleId, int msgId, Bundle bundle, AlertDialogUser user, boolean showCancel) {
+	public EaseDialog(Context context, int titleId, int msgId, Bundle bundle, AlertDialogUser user, boolean showCancel) {
 		super(context);
 		this.title = context.getResources().getString(titleId);
 		this.msg = context.getResources().getString(msgId);
@@ -74,7 +61,7 @@ public class EaseAlertDialog extends Dialog {
 		this.setCanceledOnTouchOutside(true);
 	}
 	
-	public EaseAlertDialog(Context context, String title, String msg, Bundle bundle, AlertDialogUser user, boolean showCancel) {
+	public EaseDialog(Context context, String title, String msg, Bundle bundle, AlertDialogUser user, boolean showCancel) {
 		super(context);
 		this.title = title;
 		this.msg = msg;

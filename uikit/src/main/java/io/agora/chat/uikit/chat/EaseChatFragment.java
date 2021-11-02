@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,6 +35,7 @@ import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageSendCallBack;
 import io.agora.chat.uikit.chat.interfaces.OnOtherTypingListener;
+import io.agora.chat.uikit.chat.widget.EaseChatExtendMenuDialog;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
 import io.agora.chat.uikit.constants.EaseConstant;
@@ -45,6 +47,7 @@ import io.agora.chat.uikit.utils.EaseCompat;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseTitleBar;
+import io.agora.chat.uikit.widget.dialog.EaseAlertDialog;
 import io.agora.util.EMLog;
 import io.agora.util.PathUtil;
 import io.agora.util.VersionUtils;
@@ -76,6 +79,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
     private OnChatRecordTouchListener recordTouchListener;
     private EaseMessageAdapter messageAdapter;
+    private boolean sendOriginalImage;
 
     @Nullable
     @Override
@@ -183,11 +187,22 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             if(!TextUtils.isEmpty(inputHint)) {
                 chatLayout.getChatInputMenu().getPrimaryMenu().getEditText().setHint(inputHint);
             }
+            sendOriginalImage = bundle.getBoolean(Constant.KEY_SEND_ORIGINAL_IMAGE_MESSAGE, false);
             int emptyLayout = bundle.getInt(Constant.KEY_EMPTY_LAYOUT, -1);
             if(emptyLayout != -1) {
                 chatLayout.getChatMessageListLayout().getMessageAdapter().setEmptyView(emptyLayout);
             }
         }
+
+        EaseChatExtendMenuDialog chatMenuDialog = new EaseChatExtendMenuDialog(mContext);
+        chatMenuDialog.init();
+        EaseChatExtendMenuDialog dialog = new EaseAlertDialog.Builder<EaseChatExtendMenuDialog>(mContext)
+                .setCustomDialog(chatMenuDialog)
+                .setFullWidth()
+                .setGravity(Gravity.BOTTOM)
+                .setFromBottomAnimation()
+                .create();
+        chatLayout.getChatInputMenu().setCustomExtendMenu(dialog);
     }
 
     public void initListener() {
@@ -409,7 +424,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
      */
     protected void onActivityResultForCamera(Intent data) {
         if (cameraFile != null && cameraFile.exists()) {
-            chatLayout.sendImageMessage(Uri.parse(cameraFile.getAbsolutePath()));
+            chatLayout.sendImageMessage(Uri.parse(cameraFile.getAbsolutePath()), sendOriginalImage);
         }
     }
 
@@ -423,10 +438,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             if (selectedImage != null) {
                 String filePath = EaseFileUtils.getFilePath(mContext, selectedImage);
                 if(!TextUtils.isEmpty(filePath) && new File(filePath).exists()) {
-                    chatLayout.sendImageMessage(Uri.parse(filePath));
+                    chatLayout.sendImageMessage(Uri.parse(filePath), sendOriginalImage);
                 }else {
                     EaseFileUtils.saveUriPermission(mContext, selectedImage, data);
-                    chatLayout.sendImageMessage(selectedImage);
+                    chatLayout.sendImageMessage(selectedImage, sendOriginalImage);
                 }
             }
         }
@@ -652,6 +667,11 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             return this;
         }
 
+        public Builder sendMessageByOriginalImage(boolean sendOriginalImage) {
+            this.bundle.putBoolean(Constant.KEY_SEND_ORIGINAL_IMAGE_MESSAGE, sendOriginalImage);
+            return this;
+        }
+
         public Builder setEmptyLayout(@LayoutRes int emptyLayout) {
             this.bundle.putInt(Constant.KEY_EMPTY_LAYOUT, emptyLayout);
             return this;
@@ -702,6 +722,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         public static final String KEY_CHAT_MENU_INPUT_BG = "key_chat_menu_input_bg";
         public static final String KEY_CHAT_MENU_INPUT_HINT = "key_chat_menu_input_hint";
         public static final String KEY_TURN_ON_TYPING_MONITOR = "key_turn_on_typing_monitor";
+        public static final String KEY_SEND_ORIGINAL_IMAGE_MESSAGE = "key_send_original_image_message";
     }
 }
 

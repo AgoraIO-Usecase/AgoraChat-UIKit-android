@@ -55,8 +55,7 @@ public class EaseNotificationViewHolder extends EaseBaseConversationViewHolder{
                 }
             }
         }
-        // TODO: 2021/10/25 add configures
-        if(true) {
+        if(!setModel.isHideUnreadDot()) {
             showUnreadNum(item.getUnreadMsgCount());
         }
 

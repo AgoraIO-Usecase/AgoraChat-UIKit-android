@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/ease_bg_menu_popupwindow">
+    android:background="@drawable/ease_menu_popupwindow_layer_bg">
 
     <TextView
         android:id="@+id/tv_title"

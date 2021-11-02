@@ -59,7 +59,7 @@ import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
-import io.agora.chat.uikit.widget.EaseAlertDialog;
+import io.agora.chat.uikit.widget.EaseDialog;
 import io.agora.chat.uikit.widget.EaseVoiceRecorderView;
 import io.agora.exceptions.ChatException;
 import io.agora.util.EMLog;
@@ -771,7 +771,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public boolean onResendClick(ChatMessage message) {
         EMLog.i(TAG, "onResendClick");
-        new EaseAlertDialog(getContext(), R.string.resend, R.string.confirm_resend, null, new EaseAlertDialog.AlertDialogUser() {
+        new EaseDialog(getContext(), R.string.resend, R.string.confirm_resend, null, new EaseDialog.AlertDialogUser() {
             @Override
             public void onResult(boolean confirmed, Bundle bundle) {
                 if (!confirmed) {

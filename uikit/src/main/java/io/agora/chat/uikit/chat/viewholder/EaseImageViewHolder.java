@@ -3,7 +3,6 @@ package io.agora.chat.uikit.chat.viewholder;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
@@ -11,11 +10,10 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.FileMessageBody;
 import io.agora.chat.ImageMessageBody;
-import io.agora.chat.uikit.EaseUIKit;
+import io.agora.chat.uikit.activities.EaseShowBigImageActivity;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.utils.EaseFileUtils;
-import io.agora.chat.uikit.widget.chatrow.EaseChatRowImage;
 import io.agora.util.EMLog;
 
 
@@ -45,21 +43,20 @@ public class EaseImageViewHolder extends EaseChatRowViewHolder {
                 return;
             }
         }
-        // TODO: 2021/10/27  
-        //Intent intent = new Intent(getContext(), EaseShowBigImageActivity.class);
+        Intent intent = new Intent(getContext(), EaseShowBigImageActivity.class);
         Uri imgUri = imgBody.getLocalUri();
         //检查Uri读权限
         EaseFileUtils.takePersistableUriPermission(getContext(), imgUri);
         EMLog.e("Tag", "big image uri: " + imgUri + "  exist: "+EaseFileUtils.isFileExistByUri(getContext(), imgUri));
         if(EaseFileUtils.isFileExistByUri(getContext(), imgUri)) {
-            //intent.putExtra("uri", imgUri);
+            intent.putExtra("uri", imgUri);
         } else{
             // The local full size pic does not exist yet.
             // ShowBigImage needs to download it from the server
             // first
             String msgId = message.getMsgId();
-//            intent.putExtra("messageId", msgId);
-//            intent.putExtra("filename", imgBody.getFileName());
+            intent.putExtra("messageId", msgId);
+            intent.putExtra("filename", imgBody.getFileName());
         }
         if(!EaseConfigsManager.enableSendChannelAck()) {
             //此处不再单独发送read_ack消息，改为进入聊天页面发送channel_ack
@@ -74,7 +71,7 @@ public class EaseImageViewHolder extends EaseChatRowViewHolder {
             }
         }
 
-        //getContext().startActivity(intent);
+        getContext().startActivity(intent);
     }
 
     @Override

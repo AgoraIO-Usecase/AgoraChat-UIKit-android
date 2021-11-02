@@ -172,8 +172,11 @@ public class EasePopupWindowHelper {
     }
 
     public void show(View parent, View v) {
+        show(parent, v, false);
+    }
+    
+    public void show(View parent, View v, boolean isTop) {
         showPre();
-        //根据条目选择spanCount
         if(menuItems.size() <= 0) {
             Log.e("EasePopupWindowHelper", "Span count should be at least 1. Provided " + menuItems.size());
             return;
@@ -184,38 +187,44 @@ public class EasePopupWindowHelper {
             rvMenuList.setLayoutManager(new GridLayoutManager(context, SPAN_COUNT, RecyclerView.VERTICAL, false));
         }
         getView().measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        int popupWidth = getView().getMeasuredWidth();    //  获取测量后的宽度
-        int popupHeight = getView().getMeasuredHeight();  //获取测量后的高度
+        int popupWidth = getView().getMeasuredWidth();
+        int popupHeight = getView().getMeasuredHeight();
 
-        //获取依附view的坐标
+        //Gets the coordinates attached to the view
         int[] location = new int[2];
-        v.getLocationOnScreen(location);
+        v.getLocationInWindow(location);
 
-        //获取父布局的坐标
+        //Gets the coordinates of the parent layout
         int[] location2 = new int[2];
-        parent.getLocationOnScreen(location2);
+        parent.getLocationInWindow(location2);
 
-        //设定与依附view之间的间距
+        //Sets the spacing between attached views
         int margin = (int) EaseUtils.dip2px(context, 5);
 
-        //获取StatusBar的高度
-        //int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        //int statusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
+        float[] screenInfo = EaseUtils.getScreenInfo(context);
 
         int yOffset = 0;
-        if(location[1] - popupHeight - margin < location2[1]) {
-            yOffset = location[1] + v.getHeight() + margin;
+        if(isTop) {
+            if(location[1] - popupHeight - margin < location2[1]) {
+                yOffset = location[1] + v.getHeight() + margin;
+            }else {
+                yOffset = location[1] - popupHeight - margin;
+            }
         }else {
-            yOffset = location[1] - popupHeight - margin;
-
+            if(location[1] + v.getHeight() + popupHeight + margin > screenInfo[1]) {
+                yOffset = location[1] - popupHeight - margin;
+            }else {
+                yOffset = location[1] + v.getHeight() + margin;
+            }
         }
+        
         int xOffset = 0;
         if(location[0] + v.getWidth() / 2 + popupWidth / 2 + EaseUtils.dip2px(context, 10) > parent.getWidth()) {
             xOffset = (int) (parent.getWidth() - EaseUtils.dip2px(context, 10) - popupWidth);
         }else {
             xOffset = location[0] + v.getWidth() / 2 - popupWidth / 2;
         }
-        //增加对左侧的判断
+        // Add left judgment
         if(xOffset < EaseUtils.dip2px(context, 10)) {
             xOffset = (int) EaseUtils.dip2px(context, 10);
         }
@@ -234,7 +243,7 @@ public class EasePopupWindowHelper {
 
 
     /**
-     * 设置条目点击事件
+     * Set item click listener
      * @param listener
      */
     public void setOnPopupMenuItemClickListener(EasePopupWindow.OnPopupWindowItemClickListener listener) {
@@ -242,7 +251,7 @@ public class EasePopupWindowHelper {
     }
 
     /**
-     * 监听PopupMenu dismiss事件
+     * Listener the dismiss event
      * @param listener
      */
     public void setOnPopupMenuDismissListener(EasePopupWindow.OnPopupWindowDismissListener listener) {

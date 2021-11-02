@@ -10,15 +10,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.adapter.EaseBaseChatExtendMenuAdapter;
 import io.agora.chat.uikit.chat.widget.EaseChatExtendMenu;
+import io.agora.chat.uikit.chat.widget.EaseChatExtendMenuDialog;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
 
 
 public class EaseChatExtendMenuAdapter extends EaseBaseChatExtendMenuAdapter<EaseChatExtendMenuAdapter.ViewHolder, EaseChatExtendMenu.ChatMenuItemModel> {
+    private boolean isHorizontal;
     private OnItemClickListener itemListener;
+    
+    public EaseChatExtendMenuAdapter() {}
+    
+    public EaseChatExtendMenuAdapter(boolean isHorizontal) {
+        this.isHorizontal = isHorizontal;
+    }
 
     @Override
     protected int getItemLayoutId() {
-        return R.layout.ease_chat_menu_item;
+        return isHorizontal? R.layout.ease_chat_menu_item_horizontal : R.layout.ease_chat_menu_item;
     }
 
     @Override

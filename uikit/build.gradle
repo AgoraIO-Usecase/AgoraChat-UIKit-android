@@ -43,5 +43,5 @@ dependencies {
     // swipe refresh layout
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
-    api 'io.hyphenate:chat-sdk:3.8.5'
+    api 'io.hyphenate:chat-sdk:3.8.7'
 }

@@ -13,20 +13,16 @@ import android.view.WindowManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-/**
- * 页面沉浸式工具，需要用到RomUtils
- */
-
 public class StatusBarCompat {
 
     private static final int INVALID_VAL = -1;
     private static final int COLOR_DEFAULT = Color.parseColor("#20000000");
 
     /**
-     * 设置页面是否是沉浸式，并可以修改状态栏的颜色
+     * Can set the status bar's status and change the color of status background
      * @param activity
-     * @param fitSystemForTheme 是否设置为沉浸式 true 则页面侵入状态栏; false 保留状态栏
-     * @param color 状态栏的颜色
+     * @param fitSystemForTheme If is FALSE, you can see the status bar; Or not see.
+     * @param color status color
      */
     public static void setFitSystemForTheme(Activity activity, boolean fitSystemForTheme, String color) {
         setFitSystemForTheme(activity, fitSystemForTheme, Color.parseColor(color));
