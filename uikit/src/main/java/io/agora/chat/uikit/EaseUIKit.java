@@ -15,6 +15,7 @@ import io.agora.chat.uikit.manager.EaseNotifier;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
 import io.agora.chat.uikit.provider.EaseConversationInfoProvider;
 import io.agora.chat.uikit.provider.EaseEmojiconInfoProvider;
+import io.agora.chat.uikit.provider.EaseFileIconProvider;
 import io.agora.chat.uikit.provider.EaseSettingsProvider;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 
@@ -39,6 +40,10 @@ public class EaseUIKit {
      */
     private EaseAvatarOptions avatarOptions;
     private EaseEmojiconInfoProvider mEmojiconInfoProvider;
+    /**
+     * The file icon provider
+     */
+    private EaseFileIconProvider fileIconProvider;
     /**
      * the notifier
      */
@@ -196,6 +201,24 @@ public class EaseUIKit {
      */
     public EaseUIKit setConversationInfoProvider(EaseConversationInfoProvider provider) {
         this.conversationInfoProvider = provider;
+        return this;
+    }
+
+    /**
+     * get file icon provider
+     * @return
+     */
+    public EaseFileIconProvider getFileIconProvider() {
+        return fileIconProvider;
+    }
+
+    /**
+     * set file icon provider
+     * @param provider
+     * @return
+     */
+    public EaseUIKit setFileIconProvider(EaseFileIconProvider provider) {
+        this.fileIconProvider = provider;
         return this;
     }
 

@@ -1,14 +1,19 @@
 package io.agora.chat.uikit.widget.chatrow;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import io.agora.chat.ChatMessage;
 import io.agora.chat.NormalFileMessageBody;
+import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.provider.EaseFileIconProvider;
 import io.agora.chat.uikit.utils.EaseEditTextUtils;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.util.TextFormater;
@@ -31,6 +36,7 @@ public class EaseChatRowFile extends EaseChatRow {
      */
     protected TextView fileStateView;
     private NormalFileMessageBody fileMessageBody;
+    private ImageView ivFileIcon;
 
     public EaseChatRowFile(Context context, boolean isSender) {
         super(context, isSender);
@@ -52,6 +58,7 @@ public class EaseChatRowFile extends EaseChatRow {
         fileSizeView = (TextView) findViewById(R.id.tv_file_size);
         fileStateView = (TextView) findViewById(R.id.tv_file_state);
         percentageView = (TextView) findViewById(R.id.percentage);
+        ivFileIcon = findViewById(R.id.iv_file_icon);
 	}
 
 	@Override
@@ -59,14 +66,8 @@ public class EaseChatRowFile extends EaseChatRow {
 	    fileMessageBody = (NormalFileMessageBody) message.getBody();
         Uri filePath = fileMessageBody.getLocalUri();
         fileNameView.setText(fileMessageBody.getFileName());
-        fileNameView.post(()-> {
-            String content = EaseEditTextUtils.ellipsizeMiddleString(fileNameView,
-                        fileMessageBody.getFileName(),
-                        fileNameView.getMaxLines(),
-                        fileNameView.getWidth() - fileNameView.getPaddingLeft() - fileNameView.getPaddingRight());
-            fileNameView.setText(content);
-        });
         fileSizeView.setText(TextFormater.getDataSize(fileMessageBody.getFileSize()));
+        setFileIcon(fileMessageBody.getFileName());
         if (message.direct() == ChatMessage.Direct.SEND){
             if (EaseFileUtils.isFileExistByUri(context, filePath)
                     && message.status() == ChatMessage.Status.SUCCESS) {
@@ -130,5 +131,15 @@ public class EaseChatRowFile extends EaseChatRow {
         }
         if (statusView != null)
             statusView.setVisibility(View.INVISIBLE);
+    }
+
+    private void setFileIcon(String fileName) {
+        EaseFileIconProvider provider = EaseUIKit.getInstance().getFileIconProvider();
+        if(provider != null) {
+            Drawable icon = provider.getFileIcon(fileName);
+            if(icon != null) {
+                ivFileIcon.setImageDrawable(icon);
+            }
+        }
     }
 }

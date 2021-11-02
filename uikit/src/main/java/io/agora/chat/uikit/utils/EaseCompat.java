@@ -422,7 +422,7 @@ public class EaseCompat {
      * @param fileSuffix
      * @return
      */
-    private static boolean checkSuffix(String filename, String[] fileSuffix) {
+    public static boolean checkSuffix(String filename, String[] fileSuffix) {
         if(TextUtils.isEmpty(filename) || fileSuffix == null || fileSuffix.length <= 0) {
             return false;
         }

@@ -41,6 +41,7 @@
             android:background="@drawable/ease_chat_bubble_send_file_bg" >
 
             <ImageView
+                android:id="@+id/iv_file_icon"
                 android:layout_width="@dimen/ease_chat_file_icon_size"
                 android:layout_height="@dimen/ease_chat_file_icon_size"
                 android:layout_marginLeft="@dimen/ease_chat_file_icon_margin"

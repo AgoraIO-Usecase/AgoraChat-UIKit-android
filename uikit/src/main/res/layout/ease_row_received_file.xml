@@ -46,16 +46,12 @@
             app:layout_constraintStart_toEndOf="@id/iv_userhead"
             app:layout_constraintBottom_toBottomOf="parent"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:background="@drawable/ease_chat_bubble_receive_file_bg" >
 
-            <ImageView
-                android:layout_width="@dimen/ease_chat_file_icon_size"
-                android:layout_height="@dimen/ease_chat_file_icon_size"
-                android:layout_marginLeft="@dimen/ease_chat_file_icon_margin"
-                android:src="@drawable/ease_chat_item_file" />
-
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
@@ -101,6 +97,13 @@
                 </RelativeLayout>
 
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_file_icon"
+                android:layout_width="@dimen/ease_chat_file_icon_size"
+                android:layout_height="@dimen/ease_chat_file_icon_size"
+                android:layout_marginLeft="@dimen/ease_chat_file_icon_margin"
+                android:src="@drawable/ease_chat_item_file" />
 
         </LinearLayout>
 

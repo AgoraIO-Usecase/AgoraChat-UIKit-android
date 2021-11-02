@@ -42,31 +42,37 @@
                 app:ease_radius="@dimen/ease_chat_image_corner_radius"
                 android:scaleType="fitCenter" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/chatting_video_data_area"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/ease_chat_video_mask_to"
-                android:gravity="bottom"
-                android:orientation="horizontal" >
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/chatting_size_iv"
-                    android:layout_width="0.0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
                     android:textColor="@android:color/white"
-                    android:textSize="12.0sp"
-                    android:visibility="visible" />
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="12sp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/ease_msg_video_length_bg"
+                    android:layout_marginBottom="7dp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/chatting_length_iv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="end"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginEnd="8dp"
                     android:textColor="@android:color/white"
-                    android:textSize="12.0sp" />
-            </LinearLayout>
+                    android:background="@drawable/ease_msg_video_length_bg"
+                    android:textSize="12sp" />
+            </RelativeLayout>
 
             <ImageView
                 android:id="@+id/chatting_status_btn"
