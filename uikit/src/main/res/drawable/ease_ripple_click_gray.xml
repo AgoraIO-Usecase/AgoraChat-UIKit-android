@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/color_chat_receive" android:state_pressed="true"/>
+    <item android:drawable="@color/white" android:state_pressed="false"/>
+</selector>
