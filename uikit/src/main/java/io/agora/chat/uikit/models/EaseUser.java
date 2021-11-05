@@ -4,16 +4,9 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import io.agora.chat.ChatClient;
-import io.agora.chat.UserInfo;
 import io.agora.chat.uikit.utils.HanziToPinyin;
 
 
@@ -227,59 +220,6 @@ public class EaseUser implements Serializable {
                 ", ext='" + ext + '\'' +
                 ", contact=" + contact +
                 '}';
-    }
-
-    public static List<EaseUser> parse(List<String> ids) {
-        List<EaseUser> users = new ArrayList<>();
-        if(ids == null || ids.isEmpty()) {
-            return users;
-        }
-        EaseUser user;
-        for (String id : ids) {
-            user = new EaseUser(id);
-            users.add(user);
-        }
-        return users;
-    }
-
-    public static List<EaseUser> parse(String[] ids) {
-        List<EaseUser> users = new ArrayList<>();
-        if(ids == null || ids.length == 0) {
-            return users;
-        }
-        EaseUser user;
-        for (String id : ids) {
-            user = new EaseUser(id);
-            users.add(user);
-        }
-        return users;
-    }
-
-    public static List<EaseUser> parseUserInfo(Map<String, UserInfo> userInfos) {
-        List<EaseUser> users = new ArrayList<>();
-        if(userInfos == null || userInfos.isEmpty()) {
-            return users;
-        }
-        EaseUser user;
-        Set<String> userSet = userInfos.keySet();
-        Iterator<String> it=userSet.iterator();
-        while(it.hasNext()){
-            String userId=it.next();
-            UserInfo info = userInfos.get(userId);
-            user = new EaseUser(info.getUserId());
-            user.setNickname(info.getNickName());
-            user.setAvatar(info.getAvatarUrl());
-            user.setEmail(info.getEmail());
-            user.setGender(info.getGender());
-            user.setBirth(info.getBirth());
-            user.setSign(info.getSignature());
-            user.setExt(info.getExt());
-            if(!info.getUserId().equals(ChatClient.getInstance().getCurrentUser())){
-                users.add(user);
-            }
-
-        }
-        return users;
     }
 
     public class GetInitialLetter {
