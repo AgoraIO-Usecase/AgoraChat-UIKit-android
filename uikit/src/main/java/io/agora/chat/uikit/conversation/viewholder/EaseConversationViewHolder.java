@@ -22,9 +22,9 @@ import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
 import io.agora.chat.uikit.conversation.model.EaseConversationSetStyle;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.manager.EasePreferenceManager;
-import io.agora.chat.uikit.models.EaseConvSet;
+import io.agora.chat.uikit.models.EaseGroupInfo;
 import io.agora.chat.uikit.models.EaseUser;
-import io.agora.chat.uikit.provider.EaseConversationInfoProvider;
+import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
@@ -62,19 +62,16 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
         }
         avatar.setImageResource(defaultAvatar);
         this.name.setText(showName);
-        EaseConversationInfoProvider infoProvider = EaseUIKit.getInstance().getConversationInfoProvider();
+        EaseGroupInfoProvider infoProvider = EaseUIKit.getInstance().getGroupInfoProvider();
         if(infoProvider != null) {
-            EaseConvSet convSet = infoProvider.getConversationInfo(username);
-            if(convSet != null) {
-                String name = convSet.getName();
+            EaseGroupInfo info = infoProvider.getGroupInfo(username, item.getType().ordinal());
+            if(info != null) {
+                String name = info.getName();
                 if(!TextUtils.isEmpty(name)) {
                     this.name.setText(name);
                 }
-                Drawable icon = convSet.getIcon();
-                if(icon != null) {
-                    Glide.with(mContext).load(icon).error(defaultAvatar).into(avatar);
-                }
-                Drawable background = convSet.getBackground();
+                Glide.with(mContext).load(info.getIconUrl()).error(defaultAvatar).into(avatar);
+                Drawable background = info.getBackground();
                 if(background != null) {
                     itemView.setBackground(background);
                 }

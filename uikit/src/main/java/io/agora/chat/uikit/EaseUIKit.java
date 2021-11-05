@@ -13,7 +13,7 @@ import io.agora.chat.uikit.interfaces.OnEaseChatConnectionListener;
 import io.agora.chat.uikit.manager.EaseChatPresenter;
 import io.agora.chat.uikit.manager.EaseNotifier;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
-import io.agora.chat.uikit.provider.EaseConversationInfoProvider;
+import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
 import io.agora.chat.uikit.provider.EaseEmojiconInfoProvider;
 import io.agora.chat.uikit.provider.EaseFileIconProvider;
 import io.agora.chat.uikit.provider.EaseSettingsProvider;
@@ -34,7 +34,7 @@ public class EaseUIKit {
     /**
      * conversation info settings
      */
-    private EaseConversationInfoProvider conversationInfoProvider;
+    private EaseGroupInfoProvider conversationInfoProvider;
     /**
      * chat avatar options which we can easily control the style
      */
@@ -190,7 +190,7 @@ public class EaseUIKit {
      * get conversation info provider
      * @return
      */
-    public EaseConversationInfoProvider getConversationInfoProvider() {
+    public EaseGroupInfoProvider getGroupInfoProvider() {
         return conversationInfoProvider;
     }
 
@@ -199,7 +199,7 @@ public class EaseUIKit {
      * @param provider
      * @return
      */
-    public EaseUIKit setConversationInfoProvider(EaseConversationInfoProvider provider) {
+    public EaseUIKit setConversationInfoProvider(EaseGroupInfoProvider provider) {
         this.conversationInfoProvider = provider;
         return this;
     }
