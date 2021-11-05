@@ -9,6 +9,7 @@ import java.io.Serializable;
  */
 public class EaseConvSet implements Serializable {
     private Drawable icon;
+    private String iconUrl;
     private Drawable background;
     private String name;
     private String id;
@@ -43,5 +44,13 @@ public class EaseConvSet implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 }

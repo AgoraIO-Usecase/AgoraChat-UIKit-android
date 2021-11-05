@@ -28,6 +28,8 @@
         <attr name="titleBarTitleTextSize" format="dimension"/>
         <!-- 标题文本的字体颜色 -->
         <attr name="titleBarTitleTextColor" format="reference|color"/>
+        <attr name="titleBarIcon" format="reference"/>
+        <attr name="titleBarIconSize" format="reference|dimension"/>
     </declare-styleable>
 
     <declare-styleable name="EaseImageView">

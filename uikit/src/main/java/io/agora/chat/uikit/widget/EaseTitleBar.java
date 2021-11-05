@@ -17,12 +17,15 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.utils.EaseUtils;
 
 
 /**
@@ -47,6 +50,9 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     private int mWidth;
     private int mHeight;
     private boolean mDisplayHomeAsUpEnabled;
+    private ConstraintLayout clTitle;
+    private EaseImageView ivIcon;
+    private OnIconClickListener iconClickListener;
 
     public EaseTitleBar(Context context) {
         this(context, null);
@@ -87,6 +93,8 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         titleView = (TextView) findViewById(R.id.title);
         titleLayout = (RelativeLayout) findViewById(R.id.root);
         titleMenu = findViewById(R.id.right_menu);
+        clTitle = findViewById(R.id.cl_title);
+        ivIcon = findViewById(R.id.iv_icon);
         parseStyle(context, attrs);
 
         initToolbar();
@@ -147,20 +155,35 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
             }
             titleView.setTextColor(mTitleTextColor);
 
+            int arrowSrcResourceId = ta.getResourceId(R.styleable.EaseTitleBar_titleBarIcon, -1);
+            if(arrowSrcResourceId != -1) {
+                ivIcon.setImageResource(arrowSrcResourceId);
+            }
+
+            int iconSizeId = ta.getResourceId(R.styleable.EaseTitleBar_titleBarIconSize, -1);
+            float size = ta.getDimension(R.styleable.EaseTitleBar_titleBarIconSize, EaseUtils.dip2px(getContext(), 34));
+            if(iconSizeId != -1) {
+                size = getResources().getDimension(iconSizeId);
+            }
+
             ta.recycle();
+
+            ViewGroup.LayoutParams params = ivIcon.getLayoutParams();
+            params.height = (int) size;
+            params.width = (int) size;
         }
     }
 
     private void setTitlePosition(int titlePosition) {
-        ViewGroup.LayoutParams params = titleView.getLayoutParams();
+        ViewGroup.LayoutParams params = clTitle.getLayoutParams();
         if(params instanceof LayoutParams) {
-            if(titlePosition == 0) { //居中
+            if(titlePosition == 0) { //Middle
                 ((LayoutParams) params).addRule(RelativeLayout.CENTER_IN_PARENT);
-            }else if(titlePosition == 1) { //居左
+            }else if(titlePosition == 1) { //Left
                 ((LayoutParams) params).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 ((LayoutParams) params).addRule(RelativeLayout.CENTER_VERTICAL);
                 ((LayoutParams) params).addRule(RelativeLayout.RIGHT_OF, leftLayout.getId());
-            }else { //居右
+            }else { //Right
                 ((LayoutParams) params).addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 ((LayoutParams) params).addRule(RelativeLayout.CENTER_VERTICAL);
                 ((LayoutParams) params).addRule(LEFT_OF, rightLayout.getId());
@@ -172,16 +195,18 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     private void initToolbar() {
         rightLayout.setOnClickListener(this);
         leftLayout.setOnClickListener(this);
+        ivIcon.setOnClickListener(this);
         if(leftImage.getDrawable() != null) {
             leftImage.setVisibility(mDisplayHomeAsUpEnabled ? VISIBLE : GONE);
+            leftLayout.setVisibility(mDisplayHomeAsUpEnabled ? VISIBLE : GONE);
         }else {
             if(getContext() instanceof AppCompatActivity) {
                 AppCompatActivity activity = (AppCompatActivity) getContext();
                 activity.setSupportActionBar(toolbar);
                 if(activity.getSupportActionBar() != null) {
-                    // 显示返回按钮
+                    // Show back icon
                     activity.getSupportActionBar().setDisplayHomeAsUpEnabled(mDisplayHomeAsUpEnabled);
-                    // 不显示标题
+                    // Not show title
                     activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
                 }
                 toolbar.setNavigationOnClickListener(new OnClickListener() {
@@ -239,8 +264,22 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         }
     }
 
+    public void setIcon(Drawable icon) {
+        if(icon != null) {
+            ivIcon.setImageDrawable(icon);
+            ivIcon.setVisibility(VISIBLE);
+        }
+    }
+
+    public void setIcon(@DrawableRes int icon) {
+        if(icon != 0) {
+            ivIcon.setImageResource(icon);
+            ivIcon.setVisibility(VISIBLE);
+        }
+    }
+
     /**
-     * 设置标题位置
+     * Set title's position, see {@link TitlePosition}
      * @param position
      */
     public void setTitlePosition(TitlePosition position) {
@@ -262,7 +301,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     public void setRightLayoutClickListener(OnClickListener listener){
         rightLayout.setOnClickListener(listener);
     }
-    
+
     public void setLeftLayoutVisibility(int visibility){
         leftLayout.setVisibility(visibility);
     }
@@ -311,6 +350,10 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         return toolbar;
     }
 
+    public EaseImageView getIcon() {
+        return ivIcon;
+    }
+
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.left_layout) {
@@ -321,11 +364,15 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
             if(mOnRightClickListener != null) {
                 mOnRightClickListener.onRightClick(v);
             }
+        }else if(v.getId() == R.id.iv_icon) {
+            if(iconClickListener != null) {
+                iconClickListener.onIconClick(v);
+            }
         }
     }
 
     /**
-     * 设置返回按钮的点击事件
+     * Set back event listener
      * @param listener
      */
     public void setOnBackPressListener(OnBackPressListener listener) {
@@ -333,29 +380,40 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     }
 
     /**
-     * 设置右侧更多的点击事件
+     * Set Right region click listener
      * @param listener
      */
     public void setOnRightClickListener(OnRightClickListener listener) {
         this.mOnRightClickListener = listener;
     }
 
+    public void setOnIconClickListener(OnIconClickListener iconClickListener) {
+        this.iconClickListener = iconClickListener;
+    }
+
     /**
-     * 点击返回按钮的监听
+     * Back event listener
      */
     public interface OnBackPressListener {
         void onBackPress(View view);
     }
 
     /**
-     * 设置右侧的点击事件
+     * Click right region listener
      */
     public interface OnRightClickListener {
         void onRightClick(View view);
     }
 
     /**
-     * 标题位置
+     * Click icon listener
+     */
+    public interface OnIconClickListener {
+        void onIconClick(View view);
+    }
+
+    /**
+     * Title position enum
      */
     public enum TitlePosition {
         Center, Left, Right
