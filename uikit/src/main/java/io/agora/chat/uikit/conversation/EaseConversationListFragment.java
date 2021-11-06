@@ -15,7 +15,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
-import io.agora.ConversationListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.uikit.R;
@@ -206,8 +205,10 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
         }
     }
 
-    private void refreshList() {
-        conversationListLayout.refreshData();
+    public void refreshList() {
+        if(conversationListLayout != null) {
+            conversationListLayout.refreshData();
+        }
     }
 
     @Override
