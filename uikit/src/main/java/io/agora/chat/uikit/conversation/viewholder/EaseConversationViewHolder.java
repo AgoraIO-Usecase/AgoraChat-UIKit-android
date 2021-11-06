@@ -62,21 +62,35 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
         }
         avatar.setImageResource(defaultAvatar);
         this.name.setText(showName);
-        EaseGroupInfoProvider infoProvider = EaseUIKit.getInstance().getGroupInfoProvider();
-        if(infoProvider != null) {
-            EaseGroupInfo info = infoProvider.getGroupInfo(username, item.getType().ordinal());
-            if(info != null) {
-                String name = info.getName();
-                if(!TextUtils.isEmpty(name)) {
-                    this.name.setText(name);
-                }
-                Glide.with(mContext).load(info.getIconUrl()).error(defaultAvatar).into(avatar);
-                Drawable background = info.getBackground();
-                if(background != null) {
-                    itemView.setBackground(background);
+        if(item.getType() != Conversation.ConversationType.Chat) {
+            EaseGroupInfoProvider infoProvider = EaseUIKit.getInstance().getGroupInfoProvider();
+            if(infoProvider != null) {
+                EaseGroupInfo info = infoProvider.getGroupInfo(username, item.getType().ordinal());
+                if(info != null) {
+                    String name = info.getName();
+                    if(!TextUtils.isEmpty(name)) {
+                        this.name.setText(name);
+                    }
+                    Glide.with(mContext).load(info.getIconUrl()).error(defaultAvatar).into(avatar);
+                    Drawable background = info.getBackground();
+                    if(background != null) {
+                        itemView.setBackground(background);
+                    }
+                    EaseGroupInfo.AvatarSettings settings = info.getAvatarSettings();
+                    if(settings != null && avatar != null) {
+                        if(settings.getAvatarShapeType() != 0)
+                            avatar.setShapeType(settings.getAvatarShapeType());
+                        if(settings.getAvatarBorderWidth() != 0)
+                            avatar.setBorderWidth(settings.getAvatarBorderWidth());
+                        if(settings.getAvatarBorderColor() != 0)
+                            avatar.setBorderColor(settings.getAvatarBorderColor());
+                        if(settings.getAvatarRadius() != 0)
+                            avatar.setRadius(settings.getAvatarRadius());
+                    }
                 }
             }
         }
+
         // add judgement for conversation type
         if(item.getType() == Conversation.ConversationType.Chat) {
             EaseUserProfileProvider userProvider = EaseUIKit.getInstance().getUserProvider();

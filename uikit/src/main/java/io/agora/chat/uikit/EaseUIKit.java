@@ -34,7 +34,7 @@ public class EaseUIKit {
     /**
      * conversation info settings
      */
-    private EaseGroupInfoProvider conversationInfoProvider;
+    private EaseGroupInfoProvider groupInfoProvider;
     /**
      * chat avatar options which we can easily control the style
      */
@@ -191,7 +191,7 @@ public class EaseUIKit {
      * @return
      */
     public EaseGroupInfoProvider getGroupInfoProvider() {
-        return conversationInfoProvider;
+        return groupInfoProvider;
     }
 
     /**
@@ -199,8 +199,8 @@ public class EaseUIKit {
      * @param provider
      * @return
      */
-    public EaseUIKit setConversationInfoProvider(EaseGroupInfoProvider provider) {
-        this.conversationInfoProvider = provider;
+    public EaseUIKit setGroupInfoProvider(EaseGroupInfoProvider provider) {
+        this.groupInfoProvider = provider;
         return this;
     }
 
