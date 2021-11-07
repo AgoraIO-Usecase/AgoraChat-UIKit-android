@@ -43,8 +43,8 @@
 
         <io.agora.chat.uikit.widget.EaseImageView
             android:id="@+id/iv_icon"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/title"
             app:layout_constraintTop_toTopOf="parent"

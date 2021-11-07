@@ -10,7 +10,6 @@
         android:id="@+id/title_chats"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ease_common_title_bar_height"
-        app:titleBarTitle="@string/ease_conversation_default_title"
         app:titleBarTitleTextColor="@color/color_conversation_title"
         app:titleBarDisplayHomeAsUpEnabled="false"/>
 
