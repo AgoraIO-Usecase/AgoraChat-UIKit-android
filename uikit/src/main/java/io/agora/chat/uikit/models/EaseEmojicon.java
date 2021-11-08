@@ -67,6 +67,11 @@ public class EaseEmojicon {
      * path of big icon
      */
     private String bigIconPath;
+
+    /**
+     * Label whether item can be click
+     */
+    private boolean enableClick = true;
     
     
     /**
@@ -205,6 +210,14 @@ public class EaseEmojicon {
      */
     public void setIdentityCode(String identityCode) {
         this.identityCode = identityCode;
+    }
+
+    public boolean isEnableClick() {
+        return enableClick;
+    }
+
+    public void setEnableClick(boolean enableClick) {
+        this.enableClick = enableClick;
     }
 
     public static String newEmojiText(int codePoint) {

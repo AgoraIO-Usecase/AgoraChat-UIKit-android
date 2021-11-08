@@ -177,6 +177,13 @@ public class EaseEmojiconMenu extends LinearLayout implements IChatEmojiconMenu 
                 listener.onExpressionClicked(emojicon);
             }
         }
+
+        @Override
+        public void onSendIconClicked() {
+            if(listener != null){
+                listener.onSendIconClicked();
+            }
+        }
     }
 }
 

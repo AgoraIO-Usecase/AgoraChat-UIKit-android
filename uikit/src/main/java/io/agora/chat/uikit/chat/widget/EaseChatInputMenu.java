@@ -3,6 +3,7 @@ package io.agora.chat.uikit.chat.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -313,6 +314,21 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
     public void onDeleteImageClicked() {
         EMLog.i(TAG, "onDeleteImageClicked");
         primaryMenu.onEmojiconDeleteEvent();
+    }
+
+    @Override
+    public void onSendIconClicked() {
+        EMLog.i(TAG, "onSendIconClicked");
+        if(getPrimaryMenu() != null && getPrimaryMenu().getEditText() != null) {
+            String content = getPrimaryMenu().getEditText().getText().toString().trim();
+            if(TextUtils.isEmpty(content)) {
+                return;
+            }
+            if(menuListener != null) {
+                getPrimaryMenu().getEditText().setText("");
+                menuListener.onSendMessage(content);
+            }
+        }
     }
 
     @Override

@@ -3,9 +3,11 @@ package io.agora.chat.uikit.widget.emojicon;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.ImageView;
 
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -21,6 +23,7 @@ import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.models.EaseEmojicon.Type;
 import io.agora.chat.uikit.models.EaseEmojiconGroupEntity;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
+import io.agora.chat.uikit.utils.EaseUtils;
 
 public class EaseEmojiconPagerView extends ViewPager {
 
@@ -108,55 +111,75 @@ public class EaseEmojiconPagerView extends ViewPager {
      */
     public List<View> getGroupGridViews(EaseEmojiconGroupEntity groupEntity){
         List<EaseEmojicon> emojiconList = groupEntity.getEmojiconList();
-        int itemSize = emojiconColumns * emojiconRows -1;
-        int totalSize = emojiconList.size();
         Type emojiType = groupEntity.getType();
-        if(emojiType == Type.BIG_EXPRESSION){
-            itemSize = bigEmojiconColumns * bigEmojiconRows;
-        }
-        int pageSize = totalSize % itemSize == 0 ? totalSize/itemSize : totalSize/itemSize + 1;   
         List<View> views = new ArrayList<View>();
-        for(int i = 0; i < pageSize; i++){
-            View view = View.inflate(context, R.layout.ease_expression_gridview, null);
-            GridView gv = (GridView) view.findViewById(R.id.gridview);
-            if(emojiType == Type.BIG_EXPRESSION){
-                gv.setNumColumns(bigEmojiconColumns);
-            }else{
-                gv.setNumColumns(emojiconColumns);
-            }
-            List<EaseEmojicon> list = new ArrayList<EaseEmojicon>();
-            if(i != pageSize -1){
-                list.addAll(emojiconList.subList(i * itemSize, (i+1) * itemSize));
-            }else{
-                list.addAll(emojiconList.subList(i * itemSize, totalSize));
-            }
-            if(emojiType != Type.BIG_EXPRESSION){
-                EaseEmojicon deleteIcon = new EaseEmojicon();
-                deleteIcon.setEmojiText(EaseSmileUtils.DELETE_KEY);
-                list.add(deleteIcon);
-            }
-            final EmojiconGridAdapter gridAdapter = new EmojiconGridAdapter(context, 1, list, emojiType);
-            gv.setAdapter(gridAdapter);
-            gv.setOnItemClickListener(new OnItemClickListener() {
 
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    EaseEmojicon emojicon = gridAdapter.getItem(position);
-                    if(pagerViewListener != null){
-                        String emojiText = emojicon.getEmojiText();
-                        if(emojiText != null && emojiText.equals(EaseSmileUtils.DELETE_KEY)){
-                            pagerViewListener.onDeleteImageClicked();
-                        }else{
-                            pagerViewListener.onExpressionClicked(emojicon);
-                        }
-                        
-                    }
-                    
-                }
-            });
-            
-            views.add(view);
+        // Set viewPager's item view
+        View view = View.inflate(context, R.layout.ease_expression_gridview, null);
+        GridView gv = (GridView) view.findViewById(R.id.gridview);
+        ViewGroup ll_action = view.findViewById(R.id.ll_action);
+        ImageView iv_emoji_delete = view.findViewById(R.id.iv_emoji_delete);
+        ImageView iv_emoji_send = view.findViewById(R.id.iv_emoji_send);
+        int columns = 0;
+        if(emojiType == Type.BIG_EXPRESSION){
+            columns = bigEmojiconColumns;
+        }else{
+            columns = emojiconColumns;
         }
+        gv.setVerticalSpacing((int) EaseUtils.dip2px(getContext(), 20));
+        gv.setNumColumns(columns);
+        // To prevent the emoji from being obscured
+        int addItems = emojiconList.size() % columns == 0 ? columns + 1 : (columns * 2 - emojiconList.size() % columns) + 1;
+        List<EaseEmojicon> list = new ArrayList<>();
+        list.addAll(emojiconList);
+//        if(emojiType != Type.BIG_EXPRESSION){
+//            EaseEmojicon deleteIcon = new EaseEmojicon();
+//            deleteIcon.setEmojiText(EaseSmileUtils.DELETE_KEY);
+//            list.add(deleteIcon);
+//        }
+        for(int i = 0; i < addItems; i++) {
+            EaseEmojicon icon = new EaseEmojicon();
+            icon.setEnableClick(false);
+            list.add(icon);
+        }
+        final EmojiconGridAdapter gridAdapter = new EmojiconGridAdapter(context, 1, list, emojiType);
+        gv.setAdapter(gridAdapter);
+        iv_emoji_delete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pagerViewListener.onDeleteImageClicked();
+            }
+        });
+        iv_emoji_send.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pagerViewListener.onSendIconClicked();
+            }
+        });
+        if(emojiType == Type.BIG_EXPRESSION){
+            ll_action.setVisibility(GONE);
+        }else{
+            ll_action.setVisibility(VISIBLE);
+        }
+        gv.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                EaseEmojicon emojicon = gridAdapter.getItem(position);
+                if(pagerViewListener != null){
+                    String emojiText = emojicon.getEmojiText();
+                    if(emojiText != null && emojiText.equals(EaseSmileUtils.DELETE_KEY)){
+                        pagerViewListener.onDeleteImageClicked();
+                    }else{
+                        pagerViewListener.onExpressionClicked(emojicon);
+                    }
+
+                }
+
+            }
+        });
+
+        views.add(view);
         return views;
     }
     
@@ -294,6 +317,11 @@ public class EaseEmojiconPagerView extends ViewPager {
     	
     	void onDeleteImageClicked();
     	void onExpressionClicked(EaseEmojicon emojicon);
+
+        /**
+         * Click send icon which you can send your emoji in editText
+         */
+    	void onSendIconClicked();
     	
     }
 

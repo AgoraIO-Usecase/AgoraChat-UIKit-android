@@ -3,32 +3,30 @@
     android:id="@+id/ll_face_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
+    <io.agora.chat.uikit.widget.emojicon.EaseEmojiconScrollTabBar
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/tab_bar"
+        android:visibility="visible"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#CFCFCF"
+        android:visibility="gone"/>
 
     <io.agora.chat.uikit.widget.emojicon.EaseEmojiconPagerView
         android:layout_width="match_parent"
-        android:layout_height="142dp"
-        android:id="@+id/pager_view"
-        />
+        android:layout_height="255dp"
+        android:id="@+id/pager_view" />
     
     <io.agora.chat.uikit.widget.emojicon.EaseEmojiconIndicatorView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/indicator_view"
         android:layout_marginBottom="2dp"
-        />
-    
-    <View 
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#CFCFCF"
-        />
-    
-    <io.agora.chat.uikit.widget.emojicon.EaseEmojiconScrollTabBar
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:id="@+id/tab_bar"
-         />
-    
+        android:visibility="gone"/>
+
 </LinearLayout>

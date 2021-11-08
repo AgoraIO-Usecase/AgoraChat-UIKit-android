@@ -11,4 +11,9 @@ public interface EaseEmojiconMenuListener{
          * on delete image clicked
          */
         default void onDeleteImageClicked() {}
+
+        /**
+         * On send icon clicked
+         */
+        default void onSendIconClicked() {}
 }
