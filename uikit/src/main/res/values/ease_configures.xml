@@ -7,4 +7,9 @@
 
     <!--Whether show notification in conversation list, default is false-->
     <bool name="ease_conversation_show_system_notification">false</bool>
+
+    <!--Set default maxLines for input menu's EditText-->
+    <integer name="ease_input_edit_text_max_lines">4</integer>
+    <!--Set whether to show send button in input menu-->
+    <bool name="ease_input_show_send_button">false</bool>
 </resources>

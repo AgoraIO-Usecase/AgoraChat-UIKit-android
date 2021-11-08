@@ -9,7 +9,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class EaseInputEditText extends EditText implements View.OnKeyListener, TextView.OnEditorActionListener {
+public class EaseInputEditText extends androidx.appcompat.widget.AppCompatEditText implements View.OnKeyListener, TextView.OnEditorActionListener {
     private boolean ctrlPress = false;
     private OnEditTextChangeListener listener;
 

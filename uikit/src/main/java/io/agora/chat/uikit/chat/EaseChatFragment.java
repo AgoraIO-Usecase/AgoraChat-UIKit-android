@@ -193,16 +193,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                 chatLayout.getChatMessageListLayout().getMessageAdapter().setEmptyView(emptyLayout);
             }
         }
-
-        EaseChatExtendMenuDialog chatMenuDialog = new EaseChatExtendMenuDialog(mContext);
-        chatMenuDialog.init();
-        EaseChatExtendMenuDialog dialog = new EaseAlertDialog.Builder<EaseChatExtendMenuDialog>(mContext)
-                .setCustomDialog(chatMenuDialog)
-                .setFullWidth()
-                .setGravity(Gravity.BOTTOM)
-                .setFromBottomAnimation()
-                .create();
-        chatLayout.getChatInputMenu().setCustomExtendMenu(dialog);
+        setCustomExtendMenu();
     }
 
     public void initListener() {
@@ -225,6 +216,21 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             chatLayout.loadDefaultData();
         }
         isMessageInit = true;
+    }
+
+    /**
+     * Set custom extend menu
+     */
+    public void setCustomExtendMenu() {
+        EaseChatExtendMenuDialog chatMenuDialog = new EaseChatExtendMenuDialog(mContext);
+        chatMenuDialog.init();
+        EaseChatExtendMenuDialog dialog = new EaseAlertDialog.Builder<EaseChatExtendMenuDialog>(mContext)
+                .setCustomDialog(chatMenuDialog)
+                .setFullWidth()
+                .setGravity(Gravity.BOTTOM)
+                .setFromBottomAnimation()
+                .create();
+        chatLayout.getChatInputMenu().setCustomExtendMenu(dialog);
     }
 
     @Override

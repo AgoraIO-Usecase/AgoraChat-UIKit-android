@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="2dip">
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/gray_normal"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/rl_bottom"
@@ -83,7 +82,8 @@
                 android:background="@drawable/ease_send_message_et_bg"
                 android:focusableInTouchMode="true"
                 android:imeOptions="actionSend"
-                android:maxLines="4"
+                android:gravity="center_vertical"
+                android:inputType="text"
                 android:minHeight="36dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="3dp"

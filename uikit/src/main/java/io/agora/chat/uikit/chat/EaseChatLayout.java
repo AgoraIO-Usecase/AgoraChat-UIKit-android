@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -138,6 +139,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      * 是否是首次发送，默认true
      */
     private boolean isNotFirstSend;
+    private Drawable preBackground;
+    // To flag whether has get the background drawable of input menu
+    private boolean hasGetInputBgFlag;
 
     public EaseChatLayout(Context context) {
         this(context, null);
@@ -756,8 +760,18 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void onViewDragging() {
+        if(!hasGetInputBgFlag) {
+            preBackground = inputMenu.getBackground();
+            hasGetInputBgFlag = true;
+        }
+        inputMenu.setBackgroundResource(R.drawable.ease_chat_input_bg);
         inputMenu.hideSoftKeyboard();
         inputMenu.showExtendMenu(false);
+    }
+
+    @Override
+    public void onReachBottom() {
+        inputMenu.setBackground(preBackground);
     }
 
     @Override

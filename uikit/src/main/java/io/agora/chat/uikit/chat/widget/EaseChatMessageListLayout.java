@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -330,6 +331,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if(!rvList.canScrollVertically(1)) {
+                        if(messageTouchListener != null) {
+                            messageTouchListener.onReachBottom();
+                        }
+                    }
                     //判断状态及是否还有更多数据
                    if(loadDataType == LoadDataType.HISTORY
                            && loadMoreStatus == LoadMoreStatus.HAS_MORE
@@ -906,6 +912,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
          * 控件正在被拖拽
          */
         void onViewDragging();
+
+        /**
+         * RecyclerView scroll to bottom
+         */
+        void onReachBottom();
     }
 
     public interface OnChatErrorListener {

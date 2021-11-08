@@ -12,6 +12,7 @@
     <!--已送达距离bubble的距离-->
     <dimen name="ease_chat_ack_margin_bubble">5dp</dimen>
     <dimen name="ease_msg_status_icon_margin_bubble">8dp</dimen>
+    <dimen name="ease_msg_status_icon_margin_bottom_bubble">8dp</dimen>
     <dimen name="ease_msg_file_bubble_default_width">254dp</dimen>
 
     <dimen name="chat_nick_margin_left">12dp</dimen>

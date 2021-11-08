@@ -42,9 +42,10 @@ public class EaseChatPrimaryMenu extends RelativeLayout implements IChatPrimaryM
     private Button buttonSend;
 
     private EaseChatPrimaryMenuListener listener;
-    private EaseInputMenuStyle menuType = EaseInputMenuStyle.All;//菜单展示形式
+    private EaseInputMenuStyle menuType = EaseInputMenuStyle.All;
     protected InputMethodManager inputManager;
     protected Activity activity;
+    private boolean isShowSendButton;
 
     public EaseChatPrimaryMenu(Context context) {
         this(context, null);
@@ -75,7 +76,11 @@ public class EaseChatPrimaryMenu extends RelativeLayout implements IChatPrimaryM
         buttonMore = findViewById(R.id.btn_more);
         buttonSend = findViewById(R.id.btn_send);
 
+        isShowSendButton = getResources().getBoolean(R.bool.ease_input_show_send_button);
+
         editText.requestFocus();
+
+        setEditTextModel();
 
         showNormalStatus();
 
@@ -103,13 +108,8 @@ public class EaseChatPrimaryMenu extends RelativeLayout implements IChatPrimaryM
     }
 
     private void checkSendButton() {
-        if(TextUtils.isEmpty(editText.getText().toString().trim())) {
-            buttonMore.setVisibility(VISIBLE);
-            buttonSend.setVisibility(GONE);
-        }else {
-            buttonMore.setVisibility(GONE);
-            buttonSend.setVisibility(VISIBLE);
-        }
+        Editable content = editText.getText();
+        setSendButtonVisible(content);
     }
 
     @Override
@@ -303,14 +303,35 @@ public class EaseChatPrimaryMenu extends RelativeLayout implements IChatPrimaryM
     }
 
     private void showSendButton(CharSequence s) {
-        if (!TextUtils.isEmpty(s)) {
-            buttonMore.setVisibility(View.GONE);
-            buttonSend.setVisibility(View.VISIBLE);
-        } else {
+        setSendButtonVisible(s);
+        checkMenuType();
+    }
+
+    private void setSendButtonVisible(CharSequence content) {
+        if(isShowSendButton) {
+            if(TextUtils.isEmpty(content)) {
+                buttonMore.setVisibility(View.VISIBLE);
+                buttonSend.setVisibility(View.GONE);
+            }else {
+                buttonMore.setVisibility(View.GONE);
+                buttonSend.setVisibility(View.VISIBLE);
+            }
+        }else {
             buttonMore.setVisibility(View.VISIBLE);
             buttonSend.setVisibility(View.GONE);
         }
-        checkMenuType();
+    }
+
+    private void setEditTextModel() {
+        if(!isShowSendButton) {
+            editText.setHorizontallyScrolling(false);
+            // set max lines
+            int maxLines = getResources().getInteger(R.integer.ease_input_edit_text_max_lines);
+            if(maxLines <= 0) {
+                maxLines = 4;
+            }
+            editText.setMaxLines(maxLines);
+        }
     }
 
     private void showNormalFaceImage(){
