@@ -53,7 +53,7 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
             Group group = ChatClient.getInstance().groupManager().getGroup(username);
             showName = group != null ? group.getGroupName() : username;
         }else if(item.getType() == Conversation.ConversationType.ChatRoom) {
-            defaultAvatar = R.drawable.ease_default_group_avatar;
+            defaultAvatar = R.drawable.ease_default_chatroom_avatar;
             ChatRoom chatRoom = ChatClient.getInstance().chatroomManager().getChatRoom(username);
             showName = chatRoom != null && !TextUtils.isEmpty(chatRoom.getName()) ? chatRoom.getName() : username;
         }else {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ease_configure_app_key">Your Appkey</string>
     <!--Whether to use the sending channel_ack message function.
     This function is enabled to reduce the sending of read_ack messages. It is enabled by default-->
     <bool name="ease_enable_send_channel_ack">true</bool>
