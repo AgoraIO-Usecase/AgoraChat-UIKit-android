@@ -2,33 +2,31 @@
 <resources>
 
     <declare-styleable name="EaseTitleBar">
-        <!-- 标题文本 -->
+        <!-- title -->
         <attr name="titleBarTitle" format="reference|string"/>
-        <!-- 左侧图片 -->
         <attr name="titleBarLeftImage" format="reference"/>
-        <!-- 右侧图片 -->
         <attr name="titleBarRightImage" format="reference"/>
-        <!-- 右标题文本 -->
         <attr name="titleBarRightTitle" format="reference|string"/>
-        <!-- Toolbar返回箭头颜色 -->
+        <!-- Toolbar home as up indicator's color -->
         <attr name="titleBarArrowColor" format="reference|color"/>
-        <!-- Toolbar右侧菜单更多的图标 -->
+        <!-- Toolbar Overflow Icon -->
         <attr name="titleBarMenuResource" format="reference"/>
-        <!-- Toolbar是否可见返回按钮 -->
         <attr name="titleBarDisplayHomeAsUpEnabled" format="boolean"/>
-        <!-- 右侧布局是否可见 -->
+        <!-- Right region visible -->
         <attr name="titleBarRightVisible" format="boolean"/>
-        <!-- 标题文本的位置-->
+        <!-- title's position-->
         <attr name="titleBarTitlePosition" format="enum">
             <enum name="center" value="0"/>
             <enum name="left" value="1"/>
             <enum name="right" value="2"/>
         </attr>
-        <!-- 标题文本的字体大小 -->
+        <!-- Title size -->
         <attr name="titleBarTitleTextSize" format="dimension"/>
-        <!-- 标题文本的字体颜色 -->
+        <!-- Title color -->
         <attr name="titleBarTitleTextColor" format="reference|color"/>
+        <!-- Title icon-->
         <attr name="titleBarIcon" format="reference"/>
+        <!-- Title icon size-->
         <attr name="titleBarIconSize" format="reference|dimension"/>
     </declare-styleable>
 
@@ -76,20 +74,21 @@
         <attr name="ease_con_item_date_text_color" format="reference|color"/>
         <attr name="ease_con_item_mention_text_size" format="dimension"/>
         <attr name="ease_con_item_mention_text_color" format="reference|color"/>
-        <!-- 头像大小 宽和高一样 -->
+        <!-- avatar size -->
         <attr name="ease_con_item_avatar_size" format="dimension"/>
-        <!-- 头像形状 -->
+        <!-- avatar shape type -->
         <attr name="ease_con_item_avatar_shape_type" format="enum">
             <enum name="none" value="0" />
             <enum name="round" value="1" />
             <enum name="rectangle" value="2" />
         </attr>
-        <!-- 头像圆角半径 -->
+        <!-- avatar radius if set shape type is round -->
         <attr name="ease_con_item_avatar_radius" format="dimension"/>
-        <!-- 描边宽度 -->
+        <!-- border width -->
         <attr name="ease_con_item_avatar_border_width" format="dimension"/>
-        <!-- 描边颜色 -->
+        <!-- border color -->
         <attr name="ease_con_item_avatar_border_color" format="reference|color"/>
+        <!-- conversation item height -->
         <attr name="ease_con_item_height" format="dimension"/>
         <attr name="ease_con_item_background" format="reference|color"/>
         <attr name="ease_con_item_unread_dot_position" format="enum">
@@ -100,7 +99,7 @@
             <enum name="num" value="0"/>
             <enum name="dot" value="1"/>
         </attr>
-        <!-- 是否展示系统消息 -->
+        <!-- Whether show system message, you should set system message yourself -->
         <attr name="ease_con_item_show_system_message" format="boolean"/>
     </declare-styleable>
 
@@ -110,63 +109,54 @@
         <attr name="ease_contact_item_header_text_size" format="dimension"/>
         <attr name="ease_contact_item_header_text_color" format="reference|color"/>
         <attr name="ease_contact_item_header_background" format="reference|color"/>
-        <!-- 设置默认头像 -->
+        <!-- default avatar -->
         <attr name="ease_contact_item_avatar_default_src" format="reference"/>
-        <!-- 头像大小 宽和高一样 -->
+        <!-- avatar size -->
         <attr name="ease_contact_item_avatar_size" format="dimension"/>
-        <!-- 头像形状 -->
+        <!-- avatar shape type -->
         <attr name="ease_contact_item_avatar_shape_type" format="enum">
             <enum name="none" value="0" />
             <enum name="round" value="1" />
             <enum name="rectangle" value="2" />
         </attr>
-        <!-- 头像圆角半径 -->
+        <!-- avatar radius if set shape type is round -->
         <attr name="ease_contact_item_avatar_radius" format="dimension"/>
-        <!-- 描边宽度 -->
+        <!-- border width -->
         <attr name="ease_contact_item_avatar_border_width" format="dimension"/>
-        <!-- 描边颜色 -->
+        <!-- border color -->
         <attr name="ease_contact_item_avatar_border_color" format="reference|color"/>
         <attr name="ease_contact_item_height" format="dimension"/>
         <attr name="ease_contact_item_background" format="reference|color"/>
     </declare-styleable>
 
     <declare-styleable name="EaseChatMessageListLayout">
-        <!-- 文本消息文本字体大小 -->
+        <!-- Text size of text message -->
         <attr name="ease_chat_item_text_size" format="dimension"/>
-        <!-- 文本消息文本颜色 -->
+        <!-- Text color of text message  -->
         <attr name="ease_chat_item_text_color" format="reference|color"/>
-        <!-- 文本消息文本最小高度 -->
+        <!-- Min height of text message -->
         <attr name="ease_chat_item_min_height" format="dimension"/>
-        <!-- 时间线文本字体大小 -->
+        <!-- Text size of time -->
         <attr name="ease_chat_item_time_text_size" format="dimension"/>
-        <!-- 时间线文本字体颜色 -->
+        <!-- Text color of time -->
         <attr name="ease_chat_item_time_text_color" format="reference|color"/>
-        <!-- 时间线背景色 -->
+        <!-- Background of time -->
         <attr name="ease_chat_item_time_background" format="reference|color"/>
-        <!-- 设置默认头像 -->
+        <!-- Default avatar -->
         <attr name="ease_chat_item_avatar_default_src" format="reference"/>
-        <!-- 头像大小 宽和高一样 -->
         <!--<attr name="ease_chat_item_avatar_size" format="dimension"/>-->
-        <!-- 头像形状 -->
+        <!-- avatar shape type -->
         <attr name="ease_chat_item_avatar_shape_type" format="enum">
             <enum name="none" value="0" />
             <enum name="round" value="1" />
             <enum name="rectangle" value="2" />
         </attr>
-        <!-- 头像圆角半径 -->
-        <!--<attr name="ease_chat_item_avatar_radius" format="dimension"/>-->
-        <!-- 描边宽度 -->
-        <!--<attr name="ease_chat_item_avatar_border_width" format="dimension"/>-->
-        <!-- 描边颜色 -->
-        <!--<attr name="ease_chat_item_avatar_border_color" format="reference|color"/>-->
-        <!-- 条目背景资源 -->
+        <!-- Background of item -->
         <attr name="ease_chat_item_receiver_background" format="reference|color"/>
         <attr name="ease_chat_item_sender_background" format="reference|color"/>
-        <!-- 是否展示头像 -->
-        <!--<attr name="ease_chat_item_show_avatar" format="boolean"/>-->
-        <!-- 是否展示昵称 -->
+        <!-- Whether to show nickname -->
         <attr name="ease_chat_item_show_nickname" format="boolean"/>
-        <!-- 条目的展示形式 -->
+        <!-- Item show type -->
         <attr name="ease_chat_item_show_type" format="enum">
             <enum name="normal" value="0"/>
             <enum name="left" value="1"/>

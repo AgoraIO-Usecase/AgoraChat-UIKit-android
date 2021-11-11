@@ -5,11 +5,8 @@
     <dimen name="ease_common_title_bar_height">44dp</dimen>
 
     <dimen name="margin_chat_activity">10dp</dimen>
-    <!--头像距离左边或者右边的距离-->
     <dimen name="ease_chat_avatar_margin">15dp</dimen>
-    <!--内容布局距离头像的距离-->
     <dimen name="ease_chat_bubble_margin_avatar">10dp</dimen>
-    <!--已送达距离bubble的距离-->
     <dimen name="ease_chat_ack_margin_bubble">5dp</dimen>
     <dimen name="ease_msg_status_icon_margin_bubble">8dp</dimen>
     <dimen name="ease_msg_status_icon_margin_bottom_bubble">8dp</dimen>

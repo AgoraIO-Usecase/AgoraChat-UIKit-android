@@ -71,7 +71,18 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
                     if(!TextUtils.isEmpty(name)) {
                         this.name.setText(name);
                     }
-                    Glide.with(mContext).load(info.getIconUrl()).error(defaultAvatar).into(avatar);
+                    String iconUrl = info.getIconUrl();
+                    if(!TextUtils.isEmpty(iconUrl)) {
+                        try {
+                            int resourceId = Integer.parseInt(iconUrl);
+                            Glide.with(mContext).load(resourceId).error(defaultAvatar).into(avatar);
+                        } catch (NumberFormatException e) {
+                            Glide.with(mContext).load(iconUrl).error(defaultAvatar).into(avatar);
+                        }
+                    }else {
+                        Glide.with(mContext).load(info.getIcon()).error(defaultAvatar).into(avatar);
+                    }
+                    
                     Drawable background = info.getBackground();
                     if(background != null) {
                         itemView.setBackground(background);
