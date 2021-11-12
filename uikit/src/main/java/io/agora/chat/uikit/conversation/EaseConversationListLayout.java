@@ -45,7 +45,6 @@ import io.agora.chat.uikit.menu.OnPopupMenuDismissListener;
 import io.agora.chat.uikit.menu.OnPopupMenuItemClickListener;
 import io.agora.chat.uikit.menu.OnPopupMenuPreShowListener;
 import io.agora.chat.uikit.widget.EaseImageView;
-import io.agora.chat.uikit.widget.EaseRecyclerView;
 
 
 /**
@@ -53,7 +52,7 @@ import io.agora.chat.uikit.widget.EaseRecyclerView;
  */
 public class EaseConversationListLayout extends EaseBaseLayout implements IConversationListLayout, IConversationStyle
                                                                         , IEaseConversationListView, IPopupMenu {
-    private EaseRecyclerView rvConversationList;
+    private RecyclerView rvConversationList;
 
     private ConcatAdapter adapter;
     private EaseConversationListAdapter listAdapter;
@@ -191,8 +190,12 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
         rvConversationList = findViewById(R.id.rv_conversation_list);
 
         rvConversationList.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ConcatAdapter();
+        ConcatAdapter.Config build = new ConcatAdapter.Config.Builder()
+                .setStableIdMode(ConcatAdapter.Config.StableIdMode.ISOLATED_STABLE_IDS)
+                .build();
+        adapter = new ConcatAdapter(build);
         listAdapter = new EaseConversationListAdapter(setModel);
+        listAdapter.setHasStableIds(true);
         adapter.addAdapter(listAdapter);
 
         menuHelper = new EasePopupMenuHelper();
@@ -388,6 +391,10 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
 
     @Override
     public void setListAdapter(EaseConversationListAdapter listAdapter) {
+        if(listAdapter == null) {
+            return;
+        }
+        listAdapter.setHasStableIds(true);
         if(this.listAdapter  != null && this.adapter.getAdapters().contains(this.listAdapter)) {
             int index = this.adapter.getAdapters().indexOf(this.listAdapter);
             this.adapter.removeAdapter(this.listAdapter);

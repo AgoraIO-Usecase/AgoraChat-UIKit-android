@@ -16,6 +16,7 @@ import java.util.List;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
 import io.agora.chat.uikit.interfaces.OnItemLongClickListener;
+import io.agora.util.EMLog;
 
 /**
  * As a base class of RecyclerView Adapter, there is a default blank layout
@@ -39,6 +40,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     @NonNull
     @Override
     public ViewHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        EMLog.i("Adapter", "onCreateViewHolder()");
         mContext = parent.getContext();
         if(viewType == VIEW_TYPE_EMPTY) {
             return getEmptyViewHolder(parent);
@@ -103,6 +105,11 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     @Override
     public int getItemViewType(int position) {
         return (mData == null || mData.isEmpty()) ? VIEW_TYPE_EMPTY : VIEW_TYPE_ITEM;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     /**

@@ -75,12 +75,12 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
                     if(!TextUtils.isEmpty(iconUrl)) {
                         try {
                             int resourceId = Integer.parseInt(iconUrl);
-                            Glide.with(mContext).load(resourceId).error(defaultAvatar).into(avatar);
+                            Glide.with(mContext).load(resourceId).placeholder(defaultAvatar).error(defaultAvatar).into(avatar);
                         } catch (NumberFormatException e) {
-                            Glide.with(mContext).load(iconUrl).error(defaultAvatar).into(avatar);
+                            Glide.with(mContext).load(iconUrl).placeholder(defaultAvatar).error(defaultAvatar).into(avatar);
                         }
                     }else {
-                        Glide.with(mContext).load(info.getIcon()).error(defaultAvatar).into(avatar);
+                        Glide.with(mContext).load(info.getIcon()).placeholder(defaultAvatar).error(defaultAvatar).into(avatar);
                     }
                     
                     Drawable background = info.getBackground();
@@ -115,6 +115,7 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
                         Drawable drawable = avatar.getDrawable();
                         Glide.with(mContext)
                                 .load(user.getAvatar())
+                                .placeholder(defaultAvatar)
                                 .error(drawable)
                                 .into(avatar);
                     }
