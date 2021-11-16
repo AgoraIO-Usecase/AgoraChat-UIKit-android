@@ -38,18 +38,22 @@
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
         android:layout_centerInParent="true"
+        android:layout_toEndOf="@id/left_layout"
+        android:layout_toStartOf="@id/right_layout"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <io.agora.chat.uikit.widget.EaseImageView
             android:id="@+id/iv_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/title"
             app:layout_constraintTop_toTopOf="parent"
             android:visibility="gone"
             app:ease_shape_type="round"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
@@ -66,6 +70,7 @@
             android:textSize="@dimen/ease_toolbar_title_size"
             android:maxLines="1"
             android:ellipsize="end"
+            app:layout_constrainedWidth="true"
             tools:text="Title"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
