@@ -62,8 +62,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="12dp"
             app:layout_goneMarginStart="0dp"
-            android:textColor="@color/em_toolbar_color_title"
-            android:textSize="@dimen/em_toolbar_title_size"
+            android:textColor="@color/ease_toolbar_color_title"
+            android:textSize="@dimen/ease_toolbar_title_size"
             android:maxLines="1"
             android:ellipsize="end"
             tools:text="Title"/>
@@ -92,11 +92,11 @@
             android:layout_centerVertical="true"
             android:paddingRight="15dp"
             android:paddingLeft="15dp"
-            android:textSize="@dimen/em_toolbar_title_right_size"
+            android:textSize="@dimen/ease_toolbar_title_right_size"
             android:maxLines="1"
             tools:text="cancel"
             android:maxLength="10"
-            android:textColor="@color/em_toolbar_color_title_right"/>
+            android:textColor="@color/ease_toolbar_color_title_right"/>
 
     </RelativeLayout>
 

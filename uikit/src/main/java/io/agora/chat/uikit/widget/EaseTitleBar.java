@@ -151,7 +151,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
             if(titleTextColor != -1) {
                 mTitleTextColor = ContextCompat.getColor(getContext(), titleTextColor);
             }else {
-                mTitleTextColor = ta.getColor(R.styleable.EaseTitleBar_titleBarTitleTextColor, ContextCompat.getColor(getContext(), R.color.em_toolbar_color_title));
+                mTitleTextColor = ta.getColor(R.styleable.EaseTitleBar_titleBarTitleTextColor, ContextCompat.getColor(getContext(), R.color.ease_toolbar_color_title));
             }
             titleView.setTextColor(mTitleTextColor);
 

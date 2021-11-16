@@ -128,7 +128,7 @@ public class EaseEditTextUtils {
             return null;
         }
         SpannableStringBuilder builder = new SpannableStringBuilder(str);
-        builder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.em_color_brand)), str.indexOf(keyword), str.indexOf(keyword) + keyword.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.ease_color_brand)), str.indexOf(keyword), str.indexOf(keyword) + keyword.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
     }
 

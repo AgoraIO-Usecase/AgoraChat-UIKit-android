@@ -76,8 +76,8 @@
     <string name="Video_expired">Video is out of date!</string>
     <string name="downwaiting">Downloading file, please wait</string>
     <string name="Failed_to_download_file">Failed to download file:</string>
-    <string name="File_expired">文件已过期:</string>
-    <string name="Download_the_pictures">下载图片: 0%</string>
-    <string name="Download_the_pictures_new">下载图片:</string>
+    <string name="File_expired">Picture is out of date:</string>
+    <string name="Download_the_pictures">Download picture: 0%</string>
+    <string name="Download_the_pictures_new">Downloading picture:</string>
 
 </resources>
