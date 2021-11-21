@@ -112,12 +112,25 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
                         this.name.setText(user.getNickname());
                     }
                     if(!TextUtils.isEmpty(user.getAvatar())) {
-                        Drawable drawable = avatar.getDrawable();
-                        Glide.with(mContext)
-                                .load(user.getAvatar())
-                                .placeholder(defaultAvatar)
-                                .error(drawable)
-                                .into(avatar);
+                        Drawable drawable = this.avatar.getDrawable();
+                        String avatar = user.getAvatar();
+
+                        try {
+                            //Compatible with local images
+                            Integer intAvatar = Integer.valueOf(avatar);
+                            Glide.with(mContext)
+                                    .load(intAvatar)
+                                    .placeholder(defaultAvatar)
+                                    .error(drawable)
+                                    .into(this.avatar);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                            Glide.with(mContext)
+                                    .load(avatar)
+                                    .placeholder(defaultAvatar)
+                                    .error(drawable)
+                                    .into(this.avatar);
+                        }
                     }
                 }
             }
