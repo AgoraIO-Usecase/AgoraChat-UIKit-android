@@ -113,11 +113,10 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
                     }
                     if(!TextUtils.isEmpty(user.getAvatar())) {
                         Drawable drawable = this.avatar.getDrawable();
-                        String avatar = user.getAvatar();
 
                         try {
                             //Compatible with local images
-                            Integer intAvatar = Integer.valueOf(avatar);
+                            Integer intAvatar = Integer.valueOf(user.getAvatar());
                             Glide.with(mContext)
                                     .load(intAvatar)
                                     .placeholder(defaultAvatar)
@@ -126,7 +125,7 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                             Glide.with(mContext)
-                                    .load(avatar)
+                                    .load(user.getAvatar())
                                     .placeholder(defaultAvatar)
                                     .error(drawable)
                                     .into(this.avatar);

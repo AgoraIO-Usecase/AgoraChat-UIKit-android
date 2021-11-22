@@ -57,6 +57,11 @@ public class EaseBaseConversationViewHolder extends EaseBaseRecyclerViewAdapter.
         ivTopLabel = findViewById(R.id.iv_top_label);
         unreadMsgDot = findViewById(R.id.unread_msg_dot);
         unreadMsgDotRight = findViewById(R.id.unread_msg_dot_right);
+
+    }
+
+    @Override
+    public void setData(EaseConversationInfo item, int position) {
         EaseUserUtils.setUserAvatarStyle(avatar);
         if(setModel != null) {
             float titleTextSize = setModel.getTitleTextSize();
@@ -140,10 +145,8 @@ public class EaseBaseConversationViewHolder extends EaseBaseRecyclerViewAdapter.
             }
         }
         bgDrawable = itemView.getBackground();
-    }
 
-    @Override
-    public void setData(EaseConversationInfo item, int position) {
+
         if(item.isTop()) {
             ivTopLabel.setVisibility(View.VISIBLE);
         }else {
