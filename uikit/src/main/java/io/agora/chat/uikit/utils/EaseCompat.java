@@ -171,7 +171,7 @@ public class EaseCompat {
      */
     public static void openFile(Context context, String filePath) {
         if(TextUtils.isEmpty(filePath) || !new File(filePath).exists()) {
-            EMLog.e(TAG, "文件不存在！");
+            EMLog.e(TAG, "File does not exist！");
             return;
         }
         openFile(context, new File(filePath));

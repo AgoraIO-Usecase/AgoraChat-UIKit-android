@@ -44,7 +44,7 @@
                 android:paddingTop="4dp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                tools:text="环信"
+                tools:text="Agora Chat"
                 android:textSize="14sp"
                 android:textColor="#ff333333"
                 android:visibility="gone"
@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
-                tools:text="北京市海淀区中关村南大街2号A座31层3102"
+                tools:text="Location"
                 android:background="@drawable/ease_chat_location_content_receive_bg"
                 android:textColor="#ff999999" />
 

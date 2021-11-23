@@ -52,8 +52,8 @@
                 android:maxWidth="225.0dip"
                 android:minHeight="@dimen/ease_chat_text_min_height"
                 android:textColor="@color/ease_msg_send_message_color"
-                tools:text="Hello, Agora Chat!"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                tools:text="Hello, Agora Chat!" />
 
         </RelativeLayout>
 
