@@ -12,10 +12,6 @@ import java.util.List;
 public abstract class EaseBaseChatExtendMenuAdapter<VH extends RecyclerView.ViewHolder, T> extends RecyclerView.Adapter<VH> {
     public List<T> mData;
 
-    /**
-     * 设置数据
-     * @param data
-     */
     public void setData(List<T> data) {
         mData = data;
         notifyDataSetChanged();
@@ -33,14 +29,10 @@ public abstract class EaseBaseChatExtendMenuAdapter<VH extends RecyclerView.View
         return easeCreateViewHolder(view);
     }
 
-    /**
-     * 获取条目布局
-     * @return
-     */
     protected abstract int getItemLayoutId();
 
     /**
-     * 获取ViewHolder
+     * Get ViewHolder
      * @param view
      * @return
      */

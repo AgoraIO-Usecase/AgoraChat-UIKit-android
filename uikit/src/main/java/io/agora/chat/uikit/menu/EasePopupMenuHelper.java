@@ -29,7 +29,7 @@ public class EasePopupMenuHelper implements PopupMenu.OnMenuItemClickListener, P
     }
 
     /**
-     * 此方法需要在{@link #show(int, int)}之前调用
+     * This method needs to be called before {@link #show(int, int)}
      * @param view
      */
     public void initMenu(@NonNull View view) {
@@ -130,7 +130,7 @@ public class EasePopupMenuHelper implements PopupMenu.OnMenuItemClickListener, P
     }
 
     /**
-     * 设置条目点击事件
+     * Set item click event
      * @param listener
      */
     public void setOnPopupMenuItemClickListener(OnPopupMenuItemClickListener listener) {
@@ -138,7 +138,7 @@ public class EasePopupMenuHelper implements PopupMenu.OnMenuItemClickListener, P
     }
 
     /**
-     * 监听PopupMenu dismiss事件
+     * Listener the event of PopupMenu dismiss
      * @param listener
      */
     public void setOnPopupMenuDismissListener(OnPopupMenuDismissListener listener) {

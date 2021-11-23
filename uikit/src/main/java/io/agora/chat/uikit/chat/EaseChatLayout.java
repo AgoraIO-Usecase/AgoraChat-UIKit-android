@@ -85,58 +85,54 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     private EaseChatInputMenu inputMenu;
     private EaseVoiceRecorderView voiceRecorder;
     /**
-     * "正在输入"功能的开关，打开后本设备发送消息将持续发送cmd类型消息通知对方"正在输入"
+     * The switch of the "inputting" function.
+     * When it is turned on, the device will continue to send cmd type messages
+     * to notify the other party of "inputting" when sending messages
      */
     private boolean turnOnTyping;
     /**
-     * 用于处理用户是否正在输入的handler
+     * The handler used to process whether the user is typing
      */
     private Handler typingHandler;
     /**
-     * 会话id，可能是对方环信id，也可能是群id或者聊天室id
+     * The conversation id, which may be the ring letter id of the other party, or the group id or chat room id
      */
     private String conversationId;
     /**
-     * 聊天类型
+     * Chat type
      */
     private int chatType;
     /**
-     * 用于监听消息的变化
+     * Used to monitor changes in messages
      */
     private OnChatLayoutListener listener;
     /**
-     * 用于监听发送语音的触摸事件
+     * Used to monitor touch events for sending voice
      */
     private OnChatRecordTouchListener recordTouchListener;
     private EaseHandleMessagePresenter presenter;
     /**
-     * 是否展示默认菜单
+     * Whether to show the default menu
      */
     private boolean showDefaultMenu = true;
     /**
-     * 长按条目菜单帮助类
+     * Long press entry menu help category
      */
     private EasePopupWindowHelper menuHelper;
     private ClipboardManager clipboard;
     private OnMenuChangeListener menuChangeListener;
     /**
-     * 撤回监听
+     * Withdraw monitoring
      */
     private OnRecallMessageResultListener recallMessageListener;
-    /**
-     * 聊天室监听
-     */
     private ChatRoomListener chatRoomListener;
-    /**
-     * 群组监听
-     */
     private GroupListener groupListener;
     /**
-     * 发送消息前添加消息属性事件
+     * Add a message attribute event before sending a message
      */
     private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
     /**
-     * 是否是首次发送，默认true
+     * Whether it is the first time to send, the default is true
      */
     private boolean isNotFirstSend;
     private Drawable preBackground;
@@ -204,19 +200,20 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     /**
-     * 初始化
-     * @param username 环信id
-     * @param chatType 聊天类型，单聊，群聊或者聊天室
+     * initialization
+     * @param username chat id
+     * @param chatType Chat type, single chat, group chat or chat room
      */
     public void init(String username, int chatType) {
         init(EaseChatMessageListLayout.LoadDataType.LOCAL, username, chatType);
     }
 
     /**
-     * 初始化
-     * @param loadDataType 加载数据模式
-     * @param conversationId 会话id，可能是对方环信id，也可能是群id或者聊天室id
-     * @param chatType 聊天类型，单聊，群聊或者聊天室
+     * initialization
+     * @param loadDataType Load data mode
+     * @param conversationId      The conversation id, which may be the ring letter id of the other party,
+     *                            or the group id or chat room id
+     * @param chatType Chat type, single chat, group chat or chat room
      */
     public void init(EaseChatMessageListLayout.LoadDataType loadDataType, String conversationId, int chatType) {
         this.conversationId = conversationId;
@@ -235,7 +232,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     /**
-     * 初始化历史消息搜索模式
+     * Initialize historical message search mode
      * @param toChatUsername
      * @param chatType
      */
@@ -283,10 +280,10 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     /**
-     * 发送channel ack消息
-     * (1)如果是1v1会话，对方将收到channel ack的回调，回调方法为{@link io.agora.ConversationListener#onConversationRead(String, String)},
-     * SDK内部将会将该会话的发送消息的isAcked置为true.
-     * (2)如果是多端设备，另一端将会收到channel ack的回调，SDK内部将会把该会话置为已读。
+     * Send channel ack message
+     * (1) If it is a 1v1 session, the other party will receive a channel ack callback, the callback method is {@link io.agora.ConversationListener#onConversationRead(String, String)}
+     * The SDK will set the isAcked of the message sent for this session to true.
+     * (2) If it is a multi-terminal device, the other end will receive a channel ack callback, and the SDK will set the session as read.
      */
     private void sendChannelAck() {
         if(EaseConfigsManager.enableSendChannelAck()) {
@@ -303,7 +300,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     /**
-     * 对方输入状态中止
+     * The other party's input status is aborted
      * @param handler
      */
     private void setOtherTypingEnd(Handler handler) {
@@ -320,7 +317,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     /**
-     * 处理“正在输入”开始
+     * Processing "input in progress" begins
      * @param handler
      */
     private void setTypingBeginMsg(Handler handler) {
@@ -334,7 +331,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     /**
-     * 处理“正在输入”结束
+     * End of processing "input in progress"
      * @param handler
      */
     private void setTypingEndMsg(Handler handler) {
@@ -352,7 +349,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     /**
-     * 是否是聊天室
+     * Determine whether it is a chat room
      * @return
      */
     public boolean isChatRoomCon() {
@@ -360,7 +357,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     /**
-     * 是否是群聊
+     * Determine whether it is a group chat
      * @return
      */
     public boolean isGroupCon() {
@@ -493,8 +490,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     /**
-     * 发送逻辑：如果正在输入，第一次发送一条cmd消息，然后每隔10s发送一次；
-     * 如果停止发送超过10s后，则状态需重置。
+     * Sending logic: If you are typing, send a cmd message for the first time, and then send it every 10s;
+     * If you stop sending more than 10 seconds later, the status needs to be reset.
      * @param s
      * @param start
      * @param before
@@ -575,18 +572,14 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         }
     }
 
-    /**
-     * 发送群组已读回执
-     * @param message
-     */
     public void sendReadAck(ChatMessage message) {
         if(EaseConfigsManager.enableSendChannelAck()) {
-            //是接收的消息，未发送过read ack消息且是单聊
+            //It is a received message, a read ack message has not been sent and it is a single chat
             if(message.direct() == ChatMessage.Direct.RECEIVE
                     && !message.isAcked()
                     && message.getChatType() == ChatMessage.ChatType.Chat) {
                 ChatMessage.Type type = message.getType();
-                //视频，语音及文件需要点击后再发送
+                //Video, voice and files need to be clicked before sending
                 if(type == ChatMessage.Type.VIDEO || type == ChatMessage.Type.VOICE || type == ChatMessage.Type.FILE) {
                     return;
                 }
@@ -600,7 +593,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     /**
-     * 发送群组已读回执
+     * Send group read receipt
      * @param message
      */
     private void sendGroupReadAck(ChatMessage message) {
@@ -614,13 +607,12 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     /**
-     * 接收到正在输入动作的处理逻辑：
-     * 如果接收到正在输入的消息，则开始计时，5s内如果没有接收到新的消息，则输入状态结束
+     * The processing logic of the input action is received:
+     * If a message that is being input is received, the timing starts, and if no new message is received within 5s, the input state ends
      * @param messages
      */
     @Override
     public void onCmdMessageReceived(List<ChatMessage> messages) {
-        // 对方是否正在输入的消息回调
         for (final ChatMessage msg : messages) {
             final CmdMessageBody body = (CmdMessageBody) msg.getBody();
             EMLog.i(TAG, "Receive cmd message: " + body.action() + " - " + body.isDeliverOnlineOnly());
@@ -740,7 +732,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onPresenterMessageError(ChatMessage message, int code, String error) {
         EMLog.i(TAG, "send message onPresenterMessageError code: "+code + " error: "+error);
-        //刷新条目
         refreshMessage(message);
         if(listener != null) {
             listener.onChatError(code, error);
@@ -830,10 +821,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void onMessageCreate(ChatMessage message) {
-        //发送失败的消息再次进行发送
-        // send message
         EMLog.i(TAG, "onMessageCreate");
-        //sendMessage(message);
     }
 
     @Override

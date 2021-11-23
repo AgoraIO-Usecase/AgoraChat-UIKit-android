@@ -15,7 +15,7 @@ import io.agora.chat.uikit.manager.EaseThreadManager;
 
 public class EaseBaseFragment extends Fragment {
     public Activity mContext;
-    public boolean onClickBackPress;//是否点击了返回操作
+    public boolean onClickBackPress;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -24,7 +24,8 @@ public class EaseBaseFragment extends Fragment {
     }
 
     /**
-     * 通过id获取当前view控件，需要在onViewCreated()之后的生命周期调用
+     * Get the current view control by id,
+     * which needs to be called in the life cycle after onViewCreated()
      * @param id
      * @param <T>
      * @return
@@ -58,7 +59,7 @@ public class EaseBaseFragment extends Fragment {
     }
 
     /**
-     * 判断当前activity是否可用
+     * Determine whether the current activity is available
      * @return
      */
     public boolean isActivityDisable() {
@@ -67,7 +68,7 @@ public class EaseBaseFragment extends Fragment {
 
 
     /**
-     * 切换到UI线程
+     * Switch to UI thread
      * @param runnable
      */
     public void runOnUiThread(Runnable runnable) {

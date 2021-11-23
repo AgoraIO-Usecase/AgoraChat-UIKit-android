@@ -45,10 +45,10 @@ import io.agora.util.EasyUtils;
  * this class is subject to be inherited and implement the relative APIs
  * <p>
  * <p>
- * 在Android 8.0之前的设备上:
- * 通知栏通知的声音和震动可以被demo设置中的'声音'和'震动'开关控制
- * 在Android 8.0设备上:
- * 通知栏通知的声音和震动不受demo设置中的'声音'和'震动'开关控制
+ * On devices prior to Android 8.0:
+ * The sound and vibration of notifications in the notification bar can be controlled by the'sound' and'vibration' switches in the demo settings
+ * On Android 8.0 devices:
+ * The sound and vibration of notifications in the notification bar are not controlled by the'sound' and'vibration' switches in the demo settings
  */
 public class EaseNotifier {
     private final static String TAG = "EaseNotifier";
@@ -179,7 +179,7 @@ public class EaseNotifier {
     }
 
     /**
-     * 适用于android10以后，从后台启动 Activity 的限制
+     * Applicable to Android10, the limitation of starting Activity from the background
      * @param fullScreenIntent
      * @param title
      * @param content

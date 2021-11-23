@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 
 /**
- * 为了解决出现“trying to use a recycled bitmap android.graphics.Bitmap@2d46e6b”的异常
+ * To resolve the exception of “trying to use a recycled bitmap android.graphics.Bitmap@2d46e6b”
  */
 public class EImageView extends ImageView {
     public EImageView(Context context) {

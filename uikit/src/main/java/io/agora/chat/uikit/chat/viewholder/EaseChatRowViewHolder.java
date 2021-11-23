@@ -25,7 +25,6 @@ public class EaseChatRowViewHolder extends EaseMessageAdapter.ViewHolder<ChatMes
 
     public EaseChatRowViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
         super(itemView);
-        // 解决view宽和高不显示的问题
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         itemView.setLayoutParams(params);
         this.context = itemView.getContext();

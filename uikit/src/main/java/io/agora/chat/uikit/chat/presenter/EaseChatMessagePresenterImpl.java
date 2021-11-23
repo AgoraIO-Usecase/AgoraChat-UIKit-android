@@ -121,7 +121,6 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                 new ValueCallBack<CursorResult<ChatMessage>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
-                        //需要从数据将下载的数据放到缓存中
                         conversation.loadMoreMsgFromDB("", pageSize);
                         runOnUI(() -> {
                             if(isActive()) {
@@ -155,7 +154,6 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                 new ValueCallBack<CursorResult<ChatMessage>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
-                        //需要从数据将下载的数据放到缓存中
                         conversation.loadMoreMsgFromDB(msgId, pageSize);
                         runOnUI(() -> {
                             if(isActive()) {
@@ -201,13 +199,13 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
     }
 
     /**
-     * 判断是否是消息id
+     * Determine whether it is a message id
      * @param msgId
      * @return
      */
     public boolean isMessageId(String msgId) {
         if(TextUtils.isEmpty(msgId)) {
-            //可以允许消息id为空
+            //Can allow message id to be empty
             return true;
         }
         ChatMessage message = conversation.getMessage(msgId, false);

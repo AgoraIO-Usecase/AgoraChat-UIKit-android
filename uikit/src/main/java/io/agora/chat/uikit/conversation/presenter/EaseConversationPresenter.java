@@ -32,7 +32,7 @@ public abstract class EaseConversationPresenter extends EaseBasePresenter {
     }
 
     /**
-     * 是否展示系统消息
+     * Whether to display notification messages
      * @param showSystemMessage
      */
     public void setShowSystemMessage(boolean showSystemMessage) {
@@ -40,39 +40,39 @@ public abstract class EaseConversationPresenter extends EaseBasePresenter {
     }
 
     /**
-     * 加载数据
+     * load data
      */
     public abstract void loadData(boolean fetchConfig);
 
     /**
-     * 对数据排序
+     * Sort data
      * @param data
      */
     public abstract void sortData(List<EaseConversationInfo> data);
 
     /**
-     * 将对话置为已读
+     * Make conversation read
      * @param position
      * @param info
      */
     public abstract void makeConversionRead(int position, EaseConversationInfo info);
 
     /**
-     * 置顶
+     * Pin conversation
      * @param position
      * @param info
      */
     public abstract void makeConversationTop(int position, EaseConversationInfo info);
 
     /**
-     * 取消置顶
+     * Unpin conversation
      * @param position
      * @param info
      */
     public abstract void cancelConversationTop(int position, EaseConversationInfo info);
 
     /**
-     * 删除会话
+     * Delete conversation
      * @param position
      * @param info
      */

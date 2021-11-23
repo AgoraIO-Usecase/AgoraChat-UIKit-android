@@ -27,7 +27,6 @@ public class EaseFileViewHolder extends EaseChatRowViewHolder {
         super.onBubbleClick(message);
         NormalFileMessageBody fileMessageBody = (NormalFileMessageBody) message.getBody();
         Uri filePath = fileMessageBody.getLocalUri();
-        //检查Uri读权限
         EaseFileUtils.takePersistableUriPermission(getContext(), filePath);
         if(EaseFileUtils.isFileExistByUri(getContext(), filePath)){
             EaseCompat.openFile(getContext(), filePath);

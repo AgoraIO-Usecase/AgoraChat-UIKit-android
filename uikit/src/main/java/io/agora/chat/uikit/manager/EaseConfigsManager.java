@@ -12,7 +12,8 @@ public class EaseConfigsManager {
     private static final String TAG = EaseConfigsManager.class.getSimpleName();
 
     /**
-     * 是否使用发送channel_ack消息功能，此功能启动旨在减少发送read_ack消息，默认为开启
+     * Whether to use the sending channel_ack message function, this function is activated to reduce the sending of read_ack messages,
+     * and it is enabled by default
      * @return
      */
     public static boolean enableSendChannelAck() {

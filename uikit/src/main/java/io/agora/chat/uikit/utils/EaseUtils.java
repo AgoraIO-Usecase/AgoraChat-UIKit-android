@@ -256,7 +256,7 @@ public class EaseUtils {
     }
 
     /**
-     * 获取屏幕的基本信息
+     * Get basic information of the screen
      * @param context
      * @return
      */
@@ -296,7 +296,7 @@ public class EaseUtils {
     }
 
     /**
-     * 判断是否是时间戳
+     * Determine whether it is a timestamp
      * @param time
      * @return
      */
@@ -314,7 +314,7 @@ public class EaseUtils {
     }
 
     /**
-     * 获取首字母
+     * Get initials
      * @param name
      * @return
      */
@@ -326,7 +326,7 @@ public class EaseUtils {
         private String defaultLetter = "#";
 
         /**
-         * 获取首字母
+         * Get initials
          * @param name
          * @return
          */

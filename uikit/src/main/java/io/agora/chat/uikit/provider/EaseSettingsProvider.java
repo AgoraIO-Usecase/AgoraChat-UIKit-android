@@ -9,28 +9,28 @@ import io.agora.chat.ChatMessage;
  */
 public interface EaseSettingsProvider {
     /**
-     * 是否允许消息提醒
+     * Whether to allow message reminders
      * @param message
      * @return
      */
     boolean isMsgNotifyAllowed(ChatMessage message);
 
     /**
-     * 是否设置声音
+     * Whether to set the sound
      * @param message
      * @return
      */
     boolean isMsgSoundAllowed(ChatMessage message);
 
     /**
-     * 是否允许震动
+     * Whether to allow vibration
      * @param message
      * @return
      */
     boolean isMsgVibrateAllowed(ChatMessage message);
 
     /**
-     * 是否使用扬声器播放声音
+     * Whether to use the speaker to play sound
      * @return
      */
     boolean isSpeakerOpened();

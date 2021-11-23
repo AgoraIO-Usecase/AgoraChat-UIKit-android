@@ -3,71 +3,71 @@ package io.agora.chat.uikit.chat.interfaces;
 public interface IChatInputMenu {
 
     /**
-     * 设置自定义菜单
+     * Set custom menu
      * @param menu
      */
     void setCustomPrimaryMenu(IChatPrimaryMenu menu);
 
     /**
-     * 设置自定义表情
+     * Set up a custom emoji
      * @param menu
      */
     void setCustomEmojiconMenu(IChatEmojiconMenu menu);
 
     /**
-     * 设置自定义扩展菜单
+     * Set up a custom extended menu
      * @param menu
      */
     void setCustomExtendMenu(IChatExtendMenu menu);
 
     /**
-     * 隐藏扩展区域（包含表情和扩展菜单）
+     * Hide extended area (including emoticons and extended menu)
      */
     void hideExtendContainer();
 
     /**
-     * 是否展示表情菜单
+     * Whether to show the emoji menu
      * @param show
      */
     void showEmojiconMenu(boolean show);
 
     /**
-     * 是否展示扩展菜单
+     * Whether to show the extended menu
      * @param show
      */
     void showExtendMenu(boolean show);
 
     /**
-     * 隐藏软键盘
+     * Hide soft keyboard
      */
     void hideSoftKeyboard();
 
     /**
-     * 设置菜单监听事件
+     * Set menu listener
      * @param listener
      */
     void setChatInputMenuListener(ChatInputMenuListener listener);
 
     /**
-     * 获取菜单
+     * Get menu
      * @return
      */
     IChatPrimaryMenu getPrimaryMenu();
 
     /**
-     * 获取表情菜单
+     * Get emoji menu
      * @return
      */
     IChatEmojiconMenu getEmojiconMenu();
 
     /**
-     * 获取扩展菜单
+     * Get extended menu
      * @return
      */
     IChatExtendMenu getChatExtendMenu();
 
     /**
-     * 点击返回
+     * Click back
      * @return
      */
     boolean onBackPressed();

@@ -5,13 +5,13 @@ import io.agora.chat.ChatMessage;
 
 public interface OnRecallMessageResultListener {
     /**
-     * 撤回成功
+     * Recall successful
      * @param message
      */
     void recallSuccess(ChatMessage message);
 
     /**
-     * 撤回失败
+     * Recall failed
      * @param code
      * @param errorMsg
      */

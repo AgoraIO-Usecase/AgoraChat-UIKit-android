@@ -6,14 +6,14 @@ import io.agora.chat.ChatMessage;
 
 public interface OnChatItemClickListener {
     /**
-     * 点击消息bubble区域
+     * Click on the message bubble area
      * @param message
      * @return
      */
     boolean onBubbleClick(ChatMessage message);
 
     /**
-     * 长按消息bubble区域
+     * Long press the message bubble area
      * @param v
      * @param message
      * @return
@@ -21,13 +21,13 @@ public interface OnChatItemClickListener {
     boolean onBubbleLongClick(View v, ChatMessage message);
 
     /**
-     * 点击头像
+     * Click on the avatar
      * @param username
      */
     void onUserAvatarClick(String username);
 
     /**
-     * 长按头像
+     * Long press on the avatar
      * @param username
      */
     void onUserAvatarLongClick(String username);

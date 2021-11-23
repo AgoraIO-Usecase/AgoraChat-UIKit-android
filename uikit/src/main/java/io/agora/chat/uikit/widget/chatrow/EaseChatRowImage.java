@@ -62,13 +62,13 @@ public class EaseChatRowImage extends EaseChatRowFile {
     @Override
     protected void onViewUpdate(ChatMessage msg) {
         super.onViewUpdate(msg);
-        //此方法中省略掉了之前的有关非自动下载缩略图后展示图片的逻辑
     }
 
     @Override
     protected void onMessageSuccess() {
         super.onMessageSuccess();
-        //即使是sender，发送成功后也要在执行，防止出现图片尺寸不对的问题
+        //Even if it's the sender, it needs to be executed after 
+        // it's successfully sent to prevent the image size from being wrong
         showImageView(message);
     }
 

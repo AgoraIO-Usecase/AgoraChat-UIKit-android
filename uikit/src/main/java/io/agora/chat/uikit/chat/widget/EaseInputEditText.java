@@ -65,10 +65,6 @@ public class EaseInputEditText extends androidx.appcompat.widget.AppCompatEditTe
         }
     }
 
-    /**
-     * 设置监听
-     * @param listener
-     */
     public void setOnEditTextChangeListener(OnEditTextChangeListener listener) {
         this.listener = listener;
     }

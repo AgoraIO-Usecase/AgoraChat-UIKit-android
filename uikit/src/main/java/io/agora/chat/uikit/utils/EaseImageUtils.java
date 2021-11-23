@@ -68,7 +68,7 @@ public class EaseImageUtils extends ImageUtils {
     }
 
 	/**
-	 * 获取图片最大的长和宽
+	 * Get the maximum length and width of the picture
 	 * @param context
 	 */
 	public static int[] getImageMaxSize(Context context) {
@@ -82,7 +82,7 @@ public class EaseImageUtils extends ImageUtils {
 	}
 
 	/**
-	 * 展示视频封面
+	 * Show video cover
 	 * @param context
 	 * @param imageView
 	 * @param message
@@ -93,14 +93,10 @@ public class EaseImageUtils extends ImageUtils {
 		if(!(body instanceof VideoMessageBody)) {
 			return imageView.getLayoutParams();
 		}
-		//获取图片的尺寸
 		int width = ((VideoMessageBody) body).getThumbnailWidth();
 		int height = ((VideoMessageBody) body).getThumbnailHeight();
-		//获取视频封面本地资源路径
 		Uri localThumbUri = ((VideoMessageBody) body).getLocalThumbUri();
-		//检查Uri读权限
 		EaseFileUtils.takePersistableUriPermission(context, localThumbUri);
-		//获取视频封面服务器地址
 		String thumbnailUrl = ((VideoMessageBody) body).getThumbnailUrl();
 		if(!EaseFileUtils.isFileExistByUri(context, localThumbUri)) {
 		    localThumbUri = null;
@@ -114,10 +110,8 @@ public class EaseImageUtils extends ImageUtils {
 		if(!(body instanceof ImageMessageBody)) {
 			return params;
 		}
-		//获取图片的长和宽
 		int width = ((ImageMessageBody) body).getWidth();
 		int height = ((ImageMessageBody) body).getHeight();
-		//获取图片本地资源地址
 		Uri imageUri = ((ImageMessageBody) body).getLocalUri();
 		if(!EaseFileUtils.isFileExistByUri(context, imageUri)) {
 			imageUri = ((ImageMessageBody) body).thumbnailLocalUri();
@@ -125,7 +119,6 @@ public class EaseImageUtils extends ImageUtils {
 			    imageUri = null;
 			}
 		}
-		//图片附件上传之前从消息体中获取不到图片的长和宽
 		if(width == 0 || height == 0) {
 			BitmapFactory.Options options = null;
 			try {
@@ -147,28 +140,20 @@ public class EaseImageUtils extends ImageUtils {
 		if(radio == 0) {
 			radio = 1;
 		}
-		//按原图展示的情况
 		if((maxHeight == 0 && maxWidth == 0) /*|| (width <= maxWidth && height <= maxHeight)*/) {
 			return params;
 		}
-		//如果宽度方向大于最大值，且宽高比过大,将图片设置为centerCrop类型
-		//宽度方向设置为最大值，高度的话设置为宽度的1/2
 		if(mRadio / radio < 0.1f) {
 			params.width = maxWidth;
 			params.height = maxWidth / 2;
 		}else if(mRadio / radio > 4) {
-			//如果高度方向大于最大值，且宽高比过大,将图片设置为centerCrop类型
-			//高度方向设置为最大值，宽度的话设置为宽度的1/2
 			params.width = maxHeight / 2;
 			params.height = maxHeight;
 		}else {
-			//对比图片的宽高比，找到最接近最大值的，其余方向，按比例缩放
 			if(radio < mRadio) {
-				//说明高度方向上更大
 				params.height = maxHeight;
 				params.width = (int) (maxHeight * radio);
 			}else {
-				//宽度方向上更大
 				params.width = maxWidth;
 				params.height = (int) (maxWidth / radio);
 			}
@@ -177,7 +162,7 @@ public class EaseImageUtils extends ImageUtils {
 	}
 
 	/**
-	 * 展示图片
+	 * Show picture
 	 * @param context
 	 * @param imageView
 	 * @param message
@@ -188,12 +173,9 @@ public class EaseImageUtils extends ImageUtils {
 		if(!(body instanceof ImageMessageBody)) {
 		    return imageView.getLayoutParams();
 		}
-		//获取图片的长和宽
 		int width = ((ImageMessageBody) body).getWidth();
 		int height = ((ImageMessageBody) body).getHeight();
-		//获取图片本地资源地址
 		Uri imageUri = ((ImageMessageBody) body).getLocalUri();
-		// 获取Uri的读权限
 		EaseFileUtils.takePersistableUriPermission(context, imageUri);
 		EMLog.e("tag", "current show small view big file: uri:"+imageUri + " exist: "+EaseFileUtils.isFileExistByUri(context, imageUri));
 		if(!EaseFileUtils.isFileExistByUri(context, imageUri)) {
@@ -205,7 +187,6 @@ public class EaseImageUtils extends ImageUtils {
 			    imageUri = null;
 			}
 		}
-		//图片附件上传之前从消息体中获取不到图片的长和宽
 		if(width == 0 || height == 0) {
 			BitmapFactory.Options options = null;
 			try {
@@ -218,7 +199,6 @@ public class EaseImageUtils extends ImageUtils {
 			    height = options.outHeight;
 			}
 		}
-		//获取图片服务器地址
 		String thumbnailUrl = null;
 		// If not auto download thumbnail, do not set remote url
 		if(ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
@@ -231,18 +211,25 @@ public class EaseImageUtils extends ImageUtils {
 	}
 
 	/**
-	 * 展示图片的逻辑如下：
-	 * 1、图片的宽度不超过屏幕宽度的1/3，高度不超过屏幕宽度1/2，这样的话，图片的长宽比位3：2
-	 * 2、如果图片的长宽比大于3：2，则选择高度方向与规定一致，宽度方向按比例缩放
-	 * 3、如果图片的长宽比小于3：2，则选择宽度方向与规定一致，高度方向按比例缩放
-	 * 4、如果图片的长和宽都小的话，就按照图片的大小展示就好
-	 * 5、如果没有本地资源，则展示服务器地址
-	 * @param context 上下文
+	 * The logic of displaying pictures is as follows:
+	 * 1. The width of the picture does not exceed 1/3 of the screen width,
+	 * and the height does not exceed 1/2 of the screen width. In this case,
+	 * the aspect ratio of the picture is 3:2
+	 * 2. If the aspect ratio of the picture is greater than 3:2,
+	 * select the height direction to be consistent with the regulations,
+	 * and the width direction will be scaled proportionally
+	 * 3. If the aspect ratio of the picture is less than 3:2,
+	 * select the width direction to be consistent with the regulations,
+	 * and the height direction is scaled proportionally
+	 * 4. If the length and width of the picture are small,
+	 * just display it according to the size of the picture
+	 * 5. If there is no local resource, show the server address
+	 * @param context
 	 * @param imageView
-	 * @param imageUri 图片本地资源
-	 * @param imageUrl 服务器图片地址
-	 * @param imgWidth 图片的宽度
-	 * @param imgHeight 图片的长度
+	 * @param imageUri Picture local resources
+	 * @param imageUrl Server picture address
+	 * @param imgWidth 
+	 * @param imgHeight 
 	 * @return
 	 */
 	public static ViewGroup.LayoutParams showImage(Context context, ImageView imageView, Uri imageUri, String imageUrl, int imgWidth, int imgHeight) {
@@ -257,7 +244,6 @@ public class EaseImageUtils extends ImageUtils {
 		    radio = 1;
 		}
 
-		//按原图展示的情况
 		if((maxHeight == 0 && maxWidth == 0) /*|| (width <= maxWidth && height <= maxHeight)*/) {
 			if(context instanceof Activity && (((Activity) context).isFinishing() || ((Activity) context).isDestroyed())) {
 				return imageView.getLayoutParams();
@@ -266,26 +252,19 @@ public class EaseImageUtils extends ImageUtils {
 			return imageView.getLayoutParams();
 		}
 		ViewGroup.LayoutParams params = imageView.getLayoutParams();
-		//如果宽度方向大于最大值，且宽高比过大,将图片设置为centerCrop类型
-		//宽度方向设置为最大值，高度的话设置为宽度的1/2
 		if(mRadio / radio < 0.1f) {
 			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			params.width = maxWidth;
 			params.height = maxWidth / 2;
 		}else if(mRadio / radio > 4) {
-			//如果高度方向大于最大值，且宽高比过大,将图片设置为centerCrop类型
-			//高度方向设置为最大值，宽度的话设置为宽度的1/2
 			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			params.width = maxHeight / 2;
 			params.height = maxHeight;
 		}else {
-			//对比图片的宽高比，找到最接近最大值的，其余方向，按比例缩放
 			if(radio < mRadio) {
-				//说明高度方向上更大
 				params.height = maxHeight;
 				params.width = (int) (maxHeight * radio);
 			}else {
-				//宽度方向上更大
 				params.width = maxWidth;
 				params.height = (int) (maxWidth / radio);
 			}

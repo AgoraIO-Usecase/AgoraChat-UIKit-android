@@ -50,11 +50,12 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     private EaseMessageAdapter messageAdapter;
     private ConcatAdapter baseAdapter;
     /**
-     * 加载数据的方式，目前有三种，常规模式（从本地加载），漫游模式，查询历史消息模式（通过数据库搜索）
+     * There are currently three ways to load data, regular mode (loaded from local)
+     * , roaming mode, and query history message mode (searching through the database)
      */
     private LoadDataType loadDataType;
     /**
-     * 消息id，一般是搜索历史消息时会用到这个参数
+     * Message id, this parameter is generally used when searching for historical messages
      */
     private String msgId;
     private int pageSize = DEFAULT_PAGE_SIZE;
@@ -63,11 +64,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     private LinearLayoutManager layoutManager;
     private Conversation conversation;
     /**
-     * 会话类型，包含单聊，群聊和聊天室
+     * Conversation type, including single chat, group chat and chat room
      */
     private Conversation.ConversationType conType;
     /**
-     * 另一侧的环信id
+     * The other chat id
      */
     private String username;
     private boolean canUseRefresh = true;
@@ -75,12 +76,9 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     private OnMessageTouchListener messageTouchListener;
     private OnChatErrorListener errorListener;
     /**
-     * 上一次控件的高度
+     * The height of the last control
      */
     private int recyclerViewLastHeight;
-    /**
-     * 条目具体控件的点击事件
-     */
     private MessageListItemClickListener messageListItemClickListener;
     private EaseChatItemStyleHelper chatSetHelper;
 
@@ -254,9 +252,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         setAdapterListener();
     }
 
-    /**
-     * 加载更多的更早一些的数据，下拉加载更多
-     */
     public void loadMorePreviousData() {
         String msgId = getListFirstMessageId();
         if(loadDataType == LoadDataType.ROAM) {
@@ -268,9 +263,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
     }
 
-    /**
-     * 专用于加载更多的更新一些的数据，上拉加载更多时使用
-     */
     public void loadMoreHistoryData() {
         String msgId = getListLastMessageId();
         if(loadDataType == LoadDataType.HISTORY) {
@@ -279,10 +271,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
     }
 
-    /**
-     * 获取列表最下面的一条消息的id
-     * @return
-     */
     private String getListFirstMessageId() {
         ChatMessage message = null;
         try {
@@ -293,10 +281,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         return message == null ? null : message.getMsgId();
     }
 
-    /**
-     * 获取列表最下面的一条消息的id
-     * @return
-     */
     private String getListLastMessageId() {
         ChatMessage message = null;
         try {
@@ -336,12 +320,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                             messageTouchListener.onReachBottom();
                         }
                     }
-                    //判断状态及是否还有更多数据
                    if(loadDataType == LoadDataType.HISTORY
                            && loadMoreStatus == LoadMoreStatus.HAS_MORE
                            && layoutManager.findLastVisibleItemPosition() != 0
                            && layoutManager.findLastVisibleItemPosition() == layoutManager.getItemCount() -1) {
-                       //加载更多
                        loadMoreHistoryData();
                    }
                 }else {
@@ -353,7 +335,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             }
         });
 
-        //用于监听RecyclerView高度的变化，从而刷新列表
         rvList.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -362,7 +343,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                     recyclerViewLastHeight = height;
                 }
                 if(recyclerViewLastHeight != height) {
-                    //RecyclerView高度发生变化，刷新页面
                     if(messageAdapter.getData() != null && !messageAdapter.getData().isEmpty()) {
                         post(()-> smoothSeekToPosition(messageAdapter.getData().size() - 1));
                     }
@@ -452,9 +432,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         });
     }
 
-    /**
-     * 停止下拉动画
-     */
     private void finishRefresh() {
         if(presenter.isActive()) {
             runOnUi(() -> {
@@ -469,18 +446,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         messageAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * 设置数据
-     * @param data
-     */
     public void setData(List<ChatMessage> data) {
         messageAdapter.setData(data);
     }
 
-    /**
-     * 添加数据
-     * @param data
-     */
     public void addData(List<ChatMessage> data) {
         messageAdapter.addData(data);
     }
@@ -616,11 +585,8 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                 List<ChatMessage> messages = messageAdapter.getData();
                 int position = messages.lastIndexOf(message);
                 if(position != -1) {
-                    //需要保证条目从集合中删除
                     messages.remove(position);
-                    //通知适配器删除条目
                     messageAdapter.notifyItemRemoved(position);
-                    //通知刷新下一条消息
                     messageAdapter.notifyItemChanged(position);
                 }
             }
@@ -768,8 +734,8 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     /**
-     * 是否有新的消息
-     * 判断依据为：数据库中最新的一条数据的时间戳是否大于页面上的最新一条数据的时间戳
+     * Determine if there is a new message
+     * The judgment basis is: whether the timestamp of the latest piece of data in the database is greater than the timestamp of the latest piece of data on the page
      * @return
      */
     public boolean haveNewMessages() {
@@ -780,10 +746,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         return conversation.getLastMessage().getMsgTime() > messageAdapter.getData().get(messageAdapter.getData().size() - 1).getMsgTime();
     }
 
-    /**
-     * 移动到指定位置
-     * @param position
-     */
     private void seekToPosition(int position) {
         if(presenter.isDestroy() || rvList == null) {
             return;
@@ -797,10 +759,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
     }
 
-    /**
-     * 移动到指定位置
-     * @param position
-     */
     private void smoothSeekToPosition(int position) {
         if(presenter.isDestroy() || rvList == null) {
             return;
@@ -871,20 +829,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         this.messageListItemClickListener = listener;
     }
 
-    /**
-     * 是否滑动到底部
-     * @param recyclerView
-     * @return
-     */
     public static boolean isVisibleBottom(RecyclerView recyclerView) {
         LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        //屏幕中最后一个可见子项的position
         int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-        //当前屏幕所看到的子项个数
         int visibleItemCount = layoutManager.getChildCount();
-        //当前RecyclerView的所有子项个数
         int totalItemCount = layoutManager.getItemCount();
-        //RecyclerView的滑动状态
         int state = recyclerView.getScrollState();
         if(visibleItemCount > 0 && lastVisibleItemPosition == totalItemCount - 1 && state == recyclerView.SCROLL_STATE_IDLE){
             return true;
@@ -897,19 +846,16 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         EaseThreadManager.getInstance().runOnMainThread(runnable);
     }
 
-    /**
-     * 消息列表接口
-     */
     public interface OnMessageTouchListener {
         /**
-         * touch事件
+         * touch event
          * @param v
          * @param position
          */
         void onTouchItemOutside(View v, int position);
 
         /**
-         * 控件正在被拖拽
+         * The control is being dragged
          */
         void onViewDragging();
 
@@ -921,7 +867,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     public interface OnChatErrorListener {
         /**
-         * 聊天中错误信息
+         * Wrong message in chat
          * @param code
          * @param errorMsg
          */
@@ -929,25 +875,17 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     /**
-     * 三种数据加载模式，local是从本地数据库加载，Roam是开启消息漫游，History是搜索本地消息
+     * Three data loading modes, local is to load from the local database,
+     * Roam is to enable message roaming, and History is to search for local messages
      */
     public enum LoadDataType {
         LOCAL, ROAM, HISTORY
     }
 
-    /**
-     * 加载更多的状态
-     */
     public enum LoadMoreStatus {
         IS_LOADING, HAS_MORE, NO_MORE_DATA
     }
 
-    /**
-     * 条目的展示方式
-     * normal区分发送方和接收方
-     * left发送方和接收方在左侧
-     * right发送方和接收方在右侧
-     */
     public enum ShowType {
         NORMAL, LEFT/*, RIGHT*/
     }

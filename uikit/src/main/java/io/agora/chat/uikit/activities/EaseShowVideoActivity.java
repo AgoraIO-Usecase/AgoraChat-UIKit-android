@@ -57,7 +57,7 @@ public class EaseShowVideoActivity extends EaseBaseActivity {
 		EMLog.d(TAG, "localFilePath = "+localFilePath);
 		EMLog.d(TAG, "local filename = "+messageBody.getFileName());
 
-		//检查Uri读权限
+		//Check Uri read permissions
 		EaseFileUtils.takePersistableUriPermission(this, localFilePath);
 
 		if(EaseFileUtils.isFileExistByUri(this, localFilePath)) {

@@ -5,7 +5,7 @@ import android.view.View;
 
 public interface OnChatRecordTouchListener {
     /**
-     * 语音按压事件
+     * Record pressing events
      * @param v
      * @param event
      * @return

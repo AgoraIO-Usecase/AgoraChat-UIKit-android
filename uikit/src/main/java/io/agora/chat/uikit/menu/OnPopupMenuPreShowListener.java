@@ -3,9 +3,9 @@ package io.agora.chat.uikit.menu;
 
 public interface OnPopupMenuPreShowListener {
     /**
-     * popupMenu展示前的监听，可以对PopupMenu进行设置
+     * Monitoring before popupMenu display, you can set PopupMenu
      * @param menuHelper {@link EasePopupMenuHelper}
-     * @param position 条目位置
+     * @param position item position
      */
     void onMenuPreShow(EasePopupMenuHelper menuHelper, int position);
 }

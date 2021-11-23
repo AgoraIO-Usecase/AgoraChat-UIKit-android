@@ -57,7 +57,6 @@ public class RomUtils {
     }
 
     public static int getLightStatusBarAvailableRomType() {
-        //开发版 7.7.13 及以后版本采用了系统API，旧方法无效但不会报错
         if (isMiUIV7OrAbove()) {
             return AvailableRomType.ANDROID_NATIVE;
         }
@@ -77,14 +76,11 @@ public class RomUtils {
         return AvailableRomType.NA;
     }
 
-    //Flyme V4的displayId格式为 [Flyme OS 4.x.x.xA]
-    //Flyme V5的displayId格式为 [Flyme 5.x.x.x beta]
     private static boolean isFlymeV4OrAbove() {
         String displayId = Build.DISPLAY;
         if (!TextUtils.isEmpty(displayId) && displayId.contains("Flyme")) {
             String[] displayIdArray = displayId.split(" ");
             for (String temp : displayIdArray) {
-                //版本号4以上，形如4.x.
                 if (temp.matches("^[4-9]\\.(\\d+\\.)+\\S*")) {
                     return true;
                 }
@@ -93,7 +89,6 @@ public class RomUtils {
         return false;
     }
 
-    //Android Api 23以上
     private static boolean isAndroidMOrAbove() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }

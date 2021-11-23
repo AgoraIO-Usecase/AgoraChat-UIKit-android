@@ -25,9 +25,9 @@ public class EasePopupWindow extends PopupWindow {
     }
 
     /**
-     * 第二个参数为改变背景色
+     * The second parameter is to change the background color
      * @param context
-     * @param closeChangeBg 是否改变背景色
+     * @param closeChangeBg
      */
     public EasePopupWindow(Context context, boolean closeChangeBg){
         this.mContext = context;
@@ -36,7 +36,7 @@ public class EasePopupWindow extends PopupWindow {
     }
 
     /**
-     * 设置背景透明度
+     * Set background transparency
      * @param alpha
      */
     public void setBackgroundAlpha(float alpha){
@@ -62,14 +62,11 @@ public class EasePopupWindow extends PopupWindow {
         setOutsideTouchable(isOutsideTouchable());
     }
 
-    /**
-     * 初始化BasePopupWindow的一些信息
-     * */
     private void initBasePopupWindow() {
         setAnimationStyle(android.R.style.Animation_Dialog);
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-        setOutsideTouchable(true);  //默认设置outside点击无响应
+        setOutsideTouchable(true);
         setFocusable(true);
     }
 
@@ -117,7 +114,7 @@ public class EasePopupWindow extends PopupWindow {
     }
 
     /**
-     * 窗口显示，窗口背景透明度渐变动画
+     * Window display, window background transparency gradient animation
      * */
     private ValueAnimator showAnimator() {
         ValueAnimator animator = ValueAnimator.ofFloat(1.0f, mShowAlpha);
@@ -136,7 +133,7 @@ public class EasePopupWindow extends PopupWindow {
     }
 
     /**
-     * 窗口隐藏，窗口背景透明度渐变动画
+     * The window is hidden, and the window background transparency gradient animation
      * */
     private ValueAnimator dismissAnimator() {
         ValueAnimator animator = ValueAnimator.ofFloat(mShowAlpha, 1.0f);
@@ -155,7 +152,7 @@ public class EasePopupWindow extends PopupWindow {
     }
 
     /**
-     * 为窗体添加outside点击事件
+     * Add outside click event to the form
      * */
     private void addKeyListener(View contentView) {
         if(contentView != null) {
@@ -178,9 +175,6 @@ public class EasePopupWindow extends PopupWindow {
         }
     }
 
-    /**
-     * 控制窗口背景的不透明度
-     * */
     private void setWindowBackgroundAlpha(float alpha) {
         Window window = ((Activity)getContext()).getWindow();
         WindowManager.LayoutParams layoutParams = window.getAttributes();

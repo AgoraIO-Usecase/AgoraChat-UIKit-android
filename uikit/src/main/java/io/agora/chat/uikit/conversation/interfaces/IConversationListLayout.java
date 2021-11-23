@@ -8,20 +8,10 @@ import io.agora.chat.uikit.interfaces.IRecyclerView;
 
 public interface IConversationListLayout extends IRecyclerView {
 
-    /**
-     * 添加其他类型的代理类
-     * @param delegate
-     */
-    //void addDelegate(EaseBaseConversationDelegate delegate);
-
-    /**
-     * 设置presenter
-     * @param presenter
-     */
     void setPresenter(EaseConversationPresenter presenter);
 
     /**
-     * 是否展示默认的条目菜单
+     * Whether to show the default entry menu
      * @param showDefault
      */
     void showItemDefaultMenu(boolean showDefault);
@@ -33,13 +23,13 @@ public interface IConversationListLayout extends IRecyclerView {
     void setListAdapter(EaseConversationListAdapter listAdapter);
 
     /**
-     * 获取数据适配器
+     * Get data adapter
      * @return
      */
     EaseConversationListAdapter getListAdapter();
 
     /**
-     * 获取条目数据
+     * Get item data
      * @param position
      * @return
      */
@@ -47,41 +37,31 @@ public interface IConversationListLayout extends IRecyclerView {
 
 
     /**
-     * 将对话置为已读
+     * Make conversation read
      * @param position
      * @param info
      */
     void makeConversionRead(int position, EaseConversationInfo info);
 
-    /**
-     * 置顶
-     * @param position
-     * @param info
-     */
     void makeConversationTop(int position, EaseConversationInfo info);
 
-    /**
-     * 取消置顶
-     * @param position
-     * @param info
-     */
     void cancelConversationTop(int position, EaseConversationInfo info);
 
     /**
-     * 删除会话
+     * Delete conversation
      * @param position
      * @param info
      */
     void deleteConversation(int position, EaseConversationInfo info);
 
     /**
-     * 设置会话变化的监听
+     * Set up monitoring of session changes
      * @param listener
      */
     void setOnConversationChangeListener(OnConversationChangeListener listener);
 
     /**
-     * 设置加载会话状态监听
+     * Set up the loading session state monitor
      * @param loadListener
      */
     void setOnConversationLoadListener(OnConversationLoadListener loadListener);

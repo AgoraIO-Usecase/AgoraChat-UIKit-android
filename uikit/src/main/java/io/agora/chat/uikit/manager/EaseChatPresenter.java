@@ -67,7 +67,7 @@ public class EaseChatPresenter implements MessageListener {
      */
     @Override
     public void onMessageRecalled(List<ChatMessage> messages) {
-        // 撤回消息的回调
+        
     }
 
     /**

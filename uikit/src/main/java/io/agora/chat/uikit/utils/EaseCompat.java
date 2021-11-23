@@ -155,7 +155,7 @@ public class EaseCompat {
     }
 
     /**
-     * open file
+     * Open file
      *
      * @param f
      * @param context
@@ -165,7 +165,7 @@ public class EaseCompat {
     }
 
     /**
-     * 打开文件
+     * Open file
      * @param context
      * @param filePath
      */
@@ -178,7 +178,7 @@ public class EaseCompat {
     }
 
     /**
-     * 打开文件
+     * Open file
      * @param context
      * @param file
      */
@@ -191,7 +191,7 @@ public class EaseCompat {
         String mimeType = getMimeType(context, file);
         /* get uri */
         Uri uri = getUriForFile(context, file);
-        //为了解决本地视频文件打不开的问题
+        //To solve the local video file can not open the problem
         if(isVideoFile(context, filename)) {
             uri = Uri.parse(file.getAbsolutePath());
         }
@@ -199,7 +199,7 @@ public class EaseCompat {
     }
 
     /**
-     * 打开文件
+     * Open file
      * @param context
      * @param uri
      */
@@ -209,7 +209,6 @@ public class EaseCompat {
             return;
         }
         String filePath = EaseFileUtils.getFilePath(context, uri);
-        //如果可以获取文件的绝对路径，则需要根据sdk版本处理FileProvider的问题
         if(!TextUtils.isEmpty(filePath) && new File(filePath).exists()) {
             openFile(context, new File(filePath));
             return;
@@ -220,9 +219,9 @@ public class EaseCompat {
     }
 
     /**
-     * 打开文件
+     * Open file
      * @param context
-     * @param uri 此uri由FileProvider及ContentProvider生成
+     * @param uri
      * @param filename
      * @param mimeType
      */
@@ -247,7 +246,7 @@ public class EaseCompat {
     }
 
     /**
-     * 删除文件
+     * Delete file
      * @param context
      * @param uri
      */
@@ -272,7 +271,7 @@ public class EaseCompat {
     }
 
     /**
-     * 获取视频第一帧图片
+     * Gets the first frame of the video
      * @param context
      * @param videoUri
      * @return
@@ -294,7 +293,7 @@ public class EaseCompat {
     }
 
     /**
-     * 用于检查从多媒体获取文件是否是视频
+     * Used to check whether a file obtained from multimedia is a video
      * @param context
      * @param uri
      * @return
@@ -308,7 +307,7 @@ public class EaseCompat {
     }
 
     /**
-     * 用于检查从多媒体获取文件是否是图片
+     * Used to check whether a file obtained from multimedia is a picture
      * @param context
      * @param uri
      * @return
@@ -322,7 +321,7 @@ public class EaseCompat {
     }
 
     /**
-     * 获取文件mime type
+     * Get mime type
      * @param context
      * @param uri
      * @return
@@ -338,7 +337,6 @@ public class EaseCompat {
     public static String getMimeType(Context context, String filename) {
         String mimeType = null;
         Resources resources = context.getResources();
-        //先设置常用的后缀
 
         if(checkSuffix(filename, resources.getStringArray(R.array.ease_image_file_suffix))) {
             mimeType = "image/*";
@@ -363,7 +361,7 @@ public class EaseCompat {
     }
 
     /**
-     * 判断是否是视频文件
+     * Check whether it is a video file
      * @param context
      * @param filename
      * @return
@@ -417,7 +415,7 @@ public class EaseCompat {
     }
 
     /**
-     * 检查后缀
+     * Check suffix
      * @param filename
      * @param fileSuffix
      * @return
@@ -437,7 +435,7 @@ public class EaseCompat {
     }
 
     /**
-     * 获取文件名
+     * Get file name
      * @param context
      * @param fileUri
      * @return

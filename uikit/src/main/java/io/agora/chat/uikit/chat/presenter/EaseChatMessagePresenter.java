@@ -26,7 +26,7 @@ public abstract class EaseChatMessagePresenter extends EaseBasePresenter {
     }
 
     /**
-     * 与会话绑定
+     * Bind to conversation
      * @param conversation
      */
     public void setupWithConversation(Conversation conversation) {
@@ -36,19 +36,19 @@ public abstract class EaseChatMessagePresenter extends EaseBasePresenter {
     public abstract void joinChatRoom(String username);
 
     /**
-     * 加载本地数据
+     * Load local messages
      * @param pageSize
      */
     public abstract void loadLocalMessages(int pageSize);
 
     /**
-     * 加载更多本地数据
+     * Load more local messages
      * @param pageSize
      */
     public abstract void loadMoreLocalMessages(String msgId, int pageSize);
 
     /**
-     * 从本地加载更多历史数据
+     * Load more historical data locally
      * @param msgId
      * @param pageSize
      * @param direction
@@ -56,24 +56,24 @@ public abstract class EaseChatMessagePresenter extends EaseBasePresenter {
     public abstract void loadMoreLocalHistoryMessages(String msgId, int pageSize, Conversation.SearchDirection direction);
 
     /**
-     * 从服务器加载数据
+     * Load data from the server
      * @param pageSize
      */
     public abstract void loadServerMessages(int pageSize);
     /**
-     * 从服务器加载更多数据
+     * Load more data from the server
      * @param msgId 消息id
      * @param pageSize
      */
     public abstract void loadMoreServerMessages(String msgId, int pageSize);
 
     /**
-     * 刷新当前的会话
+     * Refresh current conversation
      */
     public abstract void refreshCurrentConversation();
 
     /**
-     * 刷新当前会话，并移动到最新
+     * Refresh the current session and move to the latest
      */
     public abstract void refreshToLatest();
 }

@@ -7,37 +7,37 @@ import io.agora.chat.uikit.widget.EaseImageView;
 
 public interface IAvatarSet {
     /**
-     * 设置默认头像
+     * Set default avatar
      * @param src
      */
     default void setAvatarDefaultSrc(Drawable src){}
 
     /**
-     * 设置头像大小，长和宽是相同的
+     * Set the size of the avatar, the length and width are the same
      * @param avatarSize
      */
     void setAvatarSize(float avatarSize);
 
     /**
-     * 设置头像样式
+     * Set avatar style
      * @param shapeType
      */
     void setAvatarShapeType(EaseImageView.ShapeType shapeType);
 
     /**
-     * 设置头像半径
+     * Set avatar radius
      * @param radius
      */
     void setAvatarRadius(int radius);
 
     /**
-     * 设置外边框宽度
+     * Set the width of the outer border
      * @param borderWidth
      */
     void setAvatarBorderWidth(int borderWidth);
 
     /**
-     * 设置外边框颜色
+     * Set the outer border color
      * @param borderColor
      */
     void setAvatarBorderColor(int borderColor);

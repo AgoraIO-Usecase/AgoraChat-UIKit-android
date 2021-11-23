@@ -8,24 +8,21 @@ import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
 
 public interface IEaseConversationListView extends ILoadDataView {
     /**
-     * 获取会话列表数据成功
+     * Succeeded in obtaining session list data
      * @param data
      */
     void loadConversationListSuccess(List<EaseConversationInfo> data);
 
-    /**
-     * 没有获取到会话列表数据
-     */
     void loadConversationListNoData();
 
     /**
-     * 获取失败
+     * Load conversation failed
      * @param message
      */
     void loadConversationListFail(String message);
 
     /**
-     * 对数据排序完成
+     * Sorted data
      * @param data
      */
     void sortConversationListSuccess(List<EaseConversationInfo> data);
@@ -37,24 +34,24 @@ public interface IEaseConversationListView extends ILoadDataView {
     void loadMuteDataSuccess(List<EaseConversationInfo> data);
 
     /**
-     * 刷新列表
+     * Refresh conversation list
      */
     void refreshList();
 
     /**
-     * 刷新列表
+     * Refresh the data list at the specified location
      * @param position
      */
     void refreshList(int position);
 
     /**
-     * 删除列表中某条
+     * Delete the specified item
      * @param position
      */
     void deleteItem(int position);
 
     /**
-     * 删除条目失败
+     * Delete item failed
      * @param position
      * @param message
      */

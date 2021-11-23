@@ -4,13 +4,13 @@ import io.agora.chat.ChatMessage;
 
 public interface OnMessageSendCallBack {
     /**
-     * 发送消息成功后的回调
+     * Callback after the message is sent successfully
      * @param message
      */
     default void onChatSuccess(ChatMessage message){}
 
     /**
-     * 聊天中错误信息
+     * Wrong message in chat
      * @param code
      * @param errorMsg
      */

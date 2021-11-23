@@ -23,8 +23,9 @@ public class EaseExpressionViewHolder extends EaseChatRowViewHolder {
     protected void handleReceiveMessage(ChatMessage message) {
         super.handleReceiveMessage(message);
         if(!EaseConfigsManager.enableSendChannelAck()) {
-            //此处不再单独发送read_ack消息，改为进入聊天页面发送channel_ack
-            //新消息在聊天页面的onReceiveMessage方法中，排除视频，语音和文件消息外，发送read_ack消息
+            //Here no longer send read_ack message separately, instead enter the chat page to send channel_ack
+            //New messages are sent in the onReceiveMessage method of the chat page, except for video
+            // , voice and file messages, and send read_ack messages
             if (!message.isAcked() && message.getChatType() == ChatMessage.ChatType.Chat) {
                 try {
                     ChatClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());

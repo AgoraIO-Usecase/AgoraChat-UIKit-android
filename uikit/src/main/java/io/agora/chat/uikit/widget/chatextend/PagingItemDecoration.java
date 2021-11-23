@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * item decoration
- * 针对原博文（https://blog.csdn.net/Y_sunny_U/article/details/89500464）做了如下修改：
- * 增加了{@link #setDrawable(Drawable)}类，支持自定义divider.
+ * Refer to:https://blog.csdn.net/Y_sunny_U/article/details/89500464
  */
 public class PagingItemDecoration extends RecyclerView.ItemDecoration {
 

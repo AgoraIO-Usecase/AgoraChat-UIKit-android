@@ -148,7 +148,7 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
     }
 
     /**
-     * 会话条目点击事件
+     * Conversation item click event
      * @param view
      * @param position
      */
@@ -160,7 +160,7 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
     }
 
     /**
-     * 会话长按菜单条目点击事件
+     * Session long press menu item click event
      * @param item
      * @param position
      */
@@ -171,8 +171,9 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
     }
 
     /**
-     * 会话长按菜单显示前的监听事件，可以对PopupMenu增加条目{@link EaseConversationListLayout#addItemMenu(int, int, int, String)}，
-     * 隐藏或者显示条目{@link EaseConversationListLayout#findItemVisible(int, boolean)}
+     * To listen to events before the long-press menu is displayed in the conversation
+     * , you can add items to PopupMenu {@link EaseConversationListLayout#addItemMenu(int, int, int, String)},
+     * Hide or show items {@link EaseConversationListLayout#findItemVisible(int, boolean)}
      * @param menuHelper
      * @param position
      */
@@ -197,7 +198,7 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
     }
 
     /**
-     * 停止刷新
+     * Finish refresh
      */
     public void finishRefresh() {
         if(!mContext.isFinishing() && srlRefresh != null) {

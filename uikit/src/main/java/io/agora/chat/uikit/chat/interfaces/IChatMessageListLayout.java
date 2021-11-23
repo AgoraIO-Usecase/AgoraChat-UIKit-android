@@ -9,32 +9,25 @@ import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 
 public interface IChatMessageListLayout extends IRecyclerView {
 
-    /**
-     * 设置presenter
-     * @param presenter
-     */
     void setPresenter(EaseChatMessagePresenter presenter);
 
-    /**
-     * 获取adapter
-     * @return
-     */
     EaseMessageAdapter getMessageAdapter();
 
     /**
-     * 设置聊天区域的touch监听，判断是否点击在条目消息外，是否正在拖拽列表
+     * Set the touch monitor in the chat area to determine whether the click is
+     * outside the item message or whether the list is being dragged
      * @param listener
      */
     void setOnMessageTouchListener(EaseChatMessageListLayout.OnMessageTouchListener listener);
 
     /**
-     * 设置聊天过程中的错误监听
+     * Set up error monitoring during chat
      * @param listener
      */
     void setOnChatErrorListener(EaseChatMessageListLayout.OnChatErrorListener listener);
 
     /**
-     * 设置聊天列表条目中各个控件的点击事件
+     * Set the click event of each control in the chat list entry
      * @param listener
      */
     void setMessageListItemClickListener(MessageListItemClickListener listener);
