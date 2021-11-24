@@ -49,34 +49,18 @@ public abstract class EaseBasePresenter implements LifecycleObserver {
         isDestroy = true;
     }
 
-    /**
-     * 生命周期正在销毁
-     * @return
-     */
     public boolean isDestroy() {
         return isDestroy;
     }
 
-    /**
-     * 生命周期仍在活跃
-     * @return
-     */
     public boolean isActive() {
         return !isDestroy;
     }
 
-    /**
-     * 执行UI线程
-     * @param runnable
-     */
     public void runOnUI(Runnable runnable) {
         EaseThreadManager.getInstance().runOnMainThread(runnable);
     }
 
-    /**
-     * 执行IO异步线程
-     * @param runnable
-     */
     public void runOnIO(Runnable runnable) {
         EaseThreadManager.getInstance().runOnIOThread(runnable);
     }

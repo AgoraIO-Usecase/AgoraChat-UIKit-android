@@ -9,84 +9,84 @@ import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 
 public interface IChatLayout {
     /**
-     * 获取聊天列表
+     * Get chat list
      * @return
      */
     EaseChatMessageListLayout getChatMessageListLayout();
 
     /**
-     * 获取输入菜单
+     * Get input menu
      * @return
      */
     EaseChatInputMenu getChatInputMenu();
 
     /**
-     * 获取输入框内容
+     * Get input content
      * @return
      */
     String getInputContent();
 
     /**
-     * 是否打开正在输入监控
+     * Whether to open the input monitoring
      * @param turnOn
      */
     void turnOnTypingMonitor(boolean turnOn);
 
     /**
-     * 发送文本消息
+     * Send text message
      * @param content
      */
     void sendTextMessage(String content);
 
     /**
-     * 发送文本消息
+     * Send text message
      * @param content
-     * @param isNeedGroupAck 需要需要群回执
+     * @param isNeedGroupAck Need group receipt
      */
     void sendTextMessage(String content, boolean isNeedGroupAck);
 
     /**
-     * 发送@消息
+     * send @ message
      * @param content
      */
     void sendAtMessage(String content);
 
     /**
-     * 发送大表情消息
+     * Send GIF message
      * @param name
      * @param identityCode
      */
     void sendBigExpressionMessage(String name, String identityCode);
 
     /**
-     * 发送语音消息
+     * Send voice message
      * @param filePath
      * @param length
      */
     void sendVoiceMessage(String filePath, int length);
 
     /**
-     * 发送语音消息
+     * Send voice message
      * @param filePath
      * @param length
      */
     void sendVoiceMessage(Uri filePath, int length);
 
     /**
-     * 发送图片消息
+     * Send picture message
      * @param imageUri
      */
     void sendImageMessage(Uri imageUri);
 
     /**
-     * 发送图片消息
+     * Send picture message
      * @param imageUri
      * @param sendOriginalImage
      */
     void sendImageMessage(Uri imageUri, boolean sendOriginalImage);
 
     /**
-     * 发送定位消息
+     * Send location message
      * @param latitude
      * @param longitude
      * @param locationAddress
@@ -94,68 +94,64 @@ public interface IChatLayout {
     void sendLocationMessage(double latitude, double longitude, String locationAddress);
 
     /**
-     * 发送视频消息
+     * Send video message
      * @param videoUri
      * @param videoLength
      */
     void sendVideoMessage(Uri videoUri, int videoLength);
 
     /**
-     * 发送文件消息
+     * Send file message
      * @param fileUri
      */
     void sendFileMessage(Uri fileUri);
 
     /**
-     * 为消息添加扩展字段
+     * Add extension fields to the message
      * @param message
      */
     void addMessageAttributes(ChatMessage message);
 
     /**
-     * 发送消息
+     * Send message
      * @param message
      */
     void sendMessage(ChatMessage message);
 
     /**
-     * 重新发送消息
+     * Resend message
      * @param message
      */
     void resendMessage(ChatMessage message);
 
     /**
-     * 删除消息
+     * delete local message
      * @param message
      */
     void deleteMessage(ChatMessage message);
 
     /**
-     * 撤回消息
+     * Recall server message
      * @param message
      */
     void recallMessage(ChatMessage message);
 
-    /**
-     * 用于监听消息的变化
-     * @param listener
-     */
     void setOnChatLayoutListener(OnChatLayoutListener listener);
 
     /**
-     * 用于监听发送语音的触摸事件
+     * Used to monitor touch events for sending voice
      * @param voiceTouchListener
      */
     void setOnChatRecordTouchListener(OnChatRecordTouchListener voiceTouchListener);
 
     /**
-     * 消息撤回监听
+     * Message withdrawal monitoring
      * @param listener
      */
     void setOnRecallMessageResultListener(OnRecallMessageResultListener listener);
 
     /**
-     * 设置发送消息前设置属性事件
+     * Set the attribute event before sending message
      * @param sendMsgEvent
      */
     void setOnAddMsgAttrsBeforeSendEvent(OnAddMsgAttrsBeforeSendEvent sendMsgEvent);

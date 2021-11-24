@@ -61,7 +61,7 @@ public class EasePreferenceManager {
 
 
     /**
-     * 保存未发送的文本消息内容
+     * Save unsent text message content
      * @param toChatUsername
      * @param content
      */

@@ -7,14 +7,12 @@ import android.content.Context;
  */
 public class EaseVoiceLengthUtils {
     /**
-     * 获取语音的长度
+     * Get the length of the voice
      * @param context
      * @param voiceLength
      * @return
      */
     public static int getVoiceLength(Context context, int voiceLength) {
-        // 先获取屏幕的宽度，取其一半作为最大长度
-        // 语音超过20s后长度一致，小于20s的按照时长控制长度
         float maxLength = EaseUtils.getScreenInfo(context)[0] / 4 - EaseUtils.dip2px(context, 10);
         float paddingLeft;
         if(voiceLength <= 20) {

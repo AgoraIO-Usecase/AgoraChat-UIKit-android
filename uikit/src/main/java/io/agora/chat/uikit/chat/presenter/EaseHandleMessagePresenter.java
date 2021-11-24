@@ -36,7 +36,7 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter {
     }
 
     /**
-     * 绑定发送方id
+     * Bind sender id
      * @param chatType
      * @param toChatUsername
      */
@@ -47,53 +47,53 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter {
     }
 
     /**
-     * 发送文本消息
+     * Send text message
      * @param content
      */
     public abstract void sendTextMessage(String content);
 
     /**
-     * 发送文本消息
+     * Send text message
      * @param content
-     * @param isNeedGroupAck 需要需要群回执
+     * @param isNeedGroupAck Whether need a group receipt
      */
     public abstract void sendTextMessage(String content, boolean isNeedGroupAck);
 
     /**
-     * 发送@消息
+     * Send @ message
      * @param content
      */
     public abstract void sendAtMessage(String content);
 
     /**
-     * 发送大表情消息
+     * Send GIF message
      * @param name
      * @param identityCode
      */
     public abstract void sendBigExpressionMessage(String name, String identityCode);
 
     /**
-     * 发送语音消息
+     * Send voice message
      * @param filePath
      * @param length
      */
     public abstract void sendVoiceMessage(Uri filePath, int length);
 
     /**
-     * 发送图片消息
+     * Send image message
      * @param imageUri
      */
     public abstract void sendImageMessage(Uri imageUri);
 
     /**
-     * 发送图片消息
+     * Send image message
      * @param imageUri
      * @param sendOriginalImage
      */
     public abstract void sendImageMessage(Uri imageUri, boolean sendOriginalImage);
 
     /**
-     * 发送定位消息
+     * Send location message
      * @param latitude
      * @param longitude
      * @param locationAddress
@@ -101,56 +101,56 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter {
     public abstract void sendLocationMessage(double latitude, double longitude, String locationAddress);
 
     /**
-     * 发送视频消息
+     * Send video message
      * @param videoUri
      * @param videoLength
      */
     public abstract void sendVideoMessage(Uri videoUri, int videoLength);
 
     /**
-     * 发送文件消息
+     * Send file message
      * @param fileUri
      */
     public abstract void sendFileMessage(Uri fileUri);
 
     /**
-     * 为消息添加扩展字段
+     * Add extension fields to the message
      * @param message
      */
     public abstract void addMessageAttributes(ChatMessage message);
 
     /**
-     * 发送消息
+     * Send message
      * @param message
      */
     public abstract void sendMessage(ChatMessage message);
 
     /**
-     * 发送cmd消息
+     * Send cmd message
      * @param action
      */
     public abstract void sendCmdMessage(String action);
 
     /**
-     * 重新发送消息
+     * Resend message
      * @param message
      */
     public abstract void resendMessage(ChatMessage message);
 
     /**
-     * 删除消息
+     * Delete local message
      * @param message
      */
     public abstract void deleteMessage(ChatMessage message);
 
     /**
-     * 撤回消息
+     * Withdraw message
      * @param message
      */
     public abstract void recallMessage(ChatMessage message);
 
     /**
-     * 是否是群聊
+     * Determine whether it is a group chat
      * @return
      */
     public boolean isGroupChat() {

@@ -8,31 +8,31 @@ import io.agora.chat.uikit.models.EaseEmojiconGroupEntity;
 
 public interface IChatEmojiconMenu {
     /**
-     * 添加表情
+     * Add emoticon group
      * @param groupEntity
      */
     void addEmojiconGroup(EaseEmojiconGroupEntity groupEntity);
 
     /**
-     * 添加表情列表
+     * Add emoticons list
      * @param groupEntitieList
      */
     void addEmojiconGroup(List<EaseEmojiconGroupEntity> groupEntitieList);
 
     /**
-     * 移除表情
+     * Remove emoticon group
      * @param position
      */
     void removeEmojiconGroup(int position);
 
     /**
-     * 设置TabBar是否可见
+     * Set whether the TabBar is visible
      * @param isVisible
      */
     void setTabBarVisibility(boolean isVisible);
 
     /**
-     * 设置表情监听
+     * Set up emoticon monitoring
      * @param listener
      */
     void setEmojiconMenuListener(EaseEmojiconMenuListener listener);

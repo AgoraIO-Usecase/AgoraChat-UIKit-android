@@ -424,20 +424,12 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         startActivityForResult(intent, REQUEST_CODE_SELECT_FILE);
     }
 
-    /**
-     * 相机返回处理结果
-     * @param data
-     */
     protected void onActivityResultForCamera(Intent data) {
         if (cameraFile != null && cameraFile.exists()) {
             chatLayout.sendImageMessage(Uri.parse(cameraFile.getAbsolutePath()), sendOriginalImage);
         }
     }
 
-    /**
-     * 选择本地图片处理结果
-     * @param data
-     */
     protected void onActivityResultForLocalPhotos(@Nullable Intent data) {
         if (data != null) {
             Uri selectedImage = data.getData();
@@ -463,10 +455,6 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
     }
 
-    /**
-     * 本地文件选择结果处理
-     * @param data
-     */
     protected void onActivityResultForLocalFiles(@Nullable Intent data) {
         if (data != null) {
             Uri uri = data.getData();
@@ -482,10 +470,6 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
     }
 
-    /**
-     * 检查sd卡是否挂载
-     * @return
-     */
     protected boolean checkSdCardExist() {
         return EaseUtils.isSdcardExist();
     }

@@ -130,9 +130,6 @@ public class EaseChatExtendMenu extends FrameLayout implements PagingScrollHelpe
         }
     }
 
-    /**
-     * 清空数据
-     */
     @Override
     public void clear() {
         itemModels.clear();
@@ -264,7 +261,6 @@ public class EaseChatExtendMenu extends FrameLayout implements PagingScrollHelpe
     @Override
     public void onPageChange(int index) {
         currentPosition = index;
-        //设置选中的indicator
         indicatorAdapter.setSelectedPosition(index);
     }
 
@@ -311,21 +307,9 @@ public class EaseChatExtendMenu extends FrameLayout implements PagingScrollHelpe
     }
 
     public static class ChatMenuItemModel{
-        /**
-         * 条目名称
-         */
         public String name;
-        /**
-         * 条目图标
-         */
         public int image;
-        /**
-         * 条目id
-         */
         public int id;
-        /**
-         * 用作排序
-         */
         public int order;
         public EaseChatExtendMenuItemClickListener clickListener;
     }

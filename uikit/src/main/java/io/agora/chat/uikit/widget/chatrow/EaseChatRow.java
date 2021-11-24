@@ -289,11 +289,11 @@ public abstract class EaseChatRow extends LinearLayout {
                 setAvatarOptions(itemStyle);
             }
             if(usernickView != null) {
-                //如果在同一侧展示，则需要显示昵称
+                //If displayed on the same side, the nickname needs to be displayed
                 if(itemStyle.getItemShowType() == 1 || itemStyle.getItemShowType() == 2) {
                     usernickView.setVisibility(VISIBLE);
                 }else {
-                    //如果不在同一侧的话，则根据判断是否显示昵称
+                    //If it is not on the same side, the nickname is displayed based on the judgment
                     usernickView.setVisibility((itemStyle.isShowNickname() && message.direct() == ChatMessage.Direct.RECEIVE) ? VISIBLE : GONE);
                 }
             }
@@ -371,7 +371,7 @@ public abstract class EaseChatRow extends LinearLayout {
     }
 
     /**
-     * 是否是发送者
+     * Whether is the sender
      * @return
      */
     public boolean isSender() {
@@ -384,7 +384,6 @@ public abstract class EaseChatRow extends LinearLayout {
     protected void setAvatarAndNick() {
         if (isSender()) {
             EaseUserUtils.setUserAvatar(context, ChatClient.getInstance().getCurrentUser(), userAvatarView);
-            //只要不是常规布局形式，就展示昵称
             if(EaseChatItemStyleHelper.getInstance().getStyle().getItemShowType() != EaseChatMessageListLayout.ShowType.NORMAL.ordinal()) {
                 EaseUserUtils.setUserNick(message.getFrom(), usernickView);
             }

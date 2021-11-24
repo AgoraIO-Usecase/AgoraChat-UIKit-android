@@ -116,7 +116,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
 
     @Override
     public void addMessageAttributes(ChatMessage message) {
-        //可以添加一些自定义属性
+        //You can add some custom attributes
         mView.addMsgAttrBeforeSend(message);
     }
 
@@ -216,11 +216,6 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
         }
     }
 
-    /**
-     * 获取视频封面
-     * @param videoUri
-     * @return
-     */
     private String getThumbPath(Uri videoUri) {
         if(!EaseFileUtils.isFileExistByUri(mView.context(), videoUri)) {
             return "";

@@ -6,43 +6,43 @@ import io.agora.chat.uikit.interfaces.ILoadDataView;
 
 public interface IHandleMessageView extends ILoadDataView {
     /**
-     * 生成视频封面失败
+     * Failed to generate video cover
      * @param message
      */
     void createThumbFileFail(String message);
 
     /**
-     * 在发送消息前，添加消息属性，如设置ext等
+     * Before sending a message, add message attributes, such as setting ext, etc.
      * @param message
      */
     void addMsgAttrBeforeSend(ChatMessage message);
 
     /**
-     * 发送消息失败
+     * Failed to send message
      * @param message
      */
     void sendMessageFail(String message);
 
     /**
-     * 完成发送消息动作
+     * Complete the message sending action
      * @param message
      */
     void sendMessageFinish(ChatMessage message);
 
     /**
-     * 删除本地消息
+     * Delete local message
      * @param message
      */
     void deleteLocalMessageSuccess(ChatMessage message);
 
     /**
-     * 完成撤回消息
+     * Complete withdrawal message
      * @param message
      */
     void recallMessageFinish(ChatMessage message);
 
     /**
-     * 撤回消息失败
+     * Failed to withdraw the message
      * @param code
      * @param message
      */

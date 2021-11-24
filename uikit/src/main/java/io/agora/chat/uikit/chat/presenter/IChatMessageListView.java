@@ -9,78 +9,67 @@ import io.agora.chat.Conversation;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
 
 public interface IChatMessageListView extends ILoadDataView {
-    /**
-     * 获取当前会话
-     * @return
-     */
+
     Conversation getCurrentConversation();
-    /**
-     * 加入聊天室成功
-     * @param value
-     */
+
     void joinChatRoomSuccess(ChatRoom value);
 
-    /**
-     * 加入聊天室失败
-     * @param error
-     * @param errorMsg
-     */
     void joinChatRoomFail(int error, String errorMsg);
 
     /**
-     * 加载消息失败
+     * Failed to load message
      * @param error
      * @param message
      */
     void loadMsgFail(int error, String message);
 
     /**
-     * 加载本地数据成功
+     * Load local data successfully
      * @param data
      */
     void loadLocalMsgSuccess(List<ChatMessage> data);
 
     /**
-     * 没有加载到本地数据
+     * Not loaded to local data
      */
     void loadNoLocalMsg();
 
     /**
-     * 加载本地更多数据成功
+     * Load more local data successfully
      * @param data
      */
     void loadMoreLocalMsgSuccess(List<ChatMessage> data);
 
     /**
-     * 没有加载到更多数据
+     * No more data loaded
      */
     void loadNoMoreLocalMsg();
 
     /**
-     * 加载更多本地的历史数据
+     * Load more local historical data
      * @param data
      */
     void loadMoreLocalHistoryMsgSuccess(List<ChatMessage> data, Conversation.SearchDirection direction);
 
     /**
-     * 没有更多的本地历史数据
+     * No more local historical data
      */
     void loadNoMoreLocalHistoryMsg();
 
     /**
-     * 加载漫游数据
+     * Load roaming data
      * @param data
      */
     void loadServerMsgSuccess(List<ChatMessage> data);
 
     /**
-     * 加载更多漫游数据
+     * Load more roaming data
      * @param data
      */
     void loadMoreServerMsgSuccess(List<ChatMessage> data);
 
     /**
-     * 刷新当前会话
+     * Refresh current conversation
      * @param data
      */
     void refreshCurrentConSuccess(List<ChatMessage> data, boolean toLatest);

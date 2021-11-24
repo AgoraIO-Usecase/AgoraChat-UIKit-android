@@ -25,7 +25,7 @@ public class EaseFileUtils {
     }
 
     /**
-     * 删除文件
+     * Delete file
      * @param context
      * @param uri
      */
@@ -48,7 +48,7 @@ public class EaseFileUtils {
     }
 
     /**
-     * 获取文件名
+     * Get file name
      * @param context
      * @param fileUri
      * @return
@@ -71,7 +71,7 @@ public class EaseFileUtils {
     }
 
     /**
-     * 判断uri是否以file开头
+     * Determine whether uri starts with file
      * @param fileUri
      * @return
      */
@@ -80,7 +80,7 @@ public class EaseFileUtils {
     }
 
     /**
-     * 判断是否以content开头的Uri
+     * Determine whether uri starts with content
      * @param fileUri
      * @return
      */
@@ -113,7 +113,7 @@ public class EaseFileUtils {
     }
 
     /**
-     * 是否是本app的FileProvider
+     * Is it the FileProvider of this app
      * @param context
      * @param uri
      * @return
@@ -123,7 +123,7 @@ public class EaseFileUtils {
     }
 
     /**
-     * 其他app分享过来的FileProvider
+     * FileProvider shared by other apps
      * @param context
      * @param uri
      * @return
@@ -143,7 +143,6 @@ public class EaseFileUtils {
         if(context == null || fileUri == null) {
             return false;
         }
-        //目前只处理scheme为"content"的Uri
         if(!uriStartWithContent(fileUri)) {
             return false;
         }
@@ -180,7 +179,7 @@ public class EaseFileUtils {
     }
 
     /**
-     * 获取Uri的永久读权限
+     * Get permanent read permission for Uri
      * @param context
      * @param uri
      * @return
@@ -189,11 +188,10 @@ public class EaseFileUtils {
         if(context == null || uri == null) {
             return null;
         }
-        //目前只处理scheme为"content"的Uri
         if(!uriStartWithContent(uri)) {
             return null;
         }
-        //获取Uri的读权限
+        //Get Uri's read permission
         String last = getLastSubFromUri(uri);
         if(!TextUtils.isEmpty(last)) {
             String fileUri = EasePreferenceManager.getInstance().getString(last);

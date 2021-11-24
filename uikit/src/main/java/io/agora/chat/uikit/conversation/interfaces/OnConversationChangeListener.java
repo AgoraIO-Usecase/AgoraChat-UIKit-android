@@ -2,18 +2,18 @@ package io.agora.chat.uikit.conversation.interfaces;
 
 public interface OnConversationChangeListener {
     /**
-     * 通知单条变化
+     * Notice item change
      * @param position
      */
     void notifyItemChange(int position);
 
     /**
-     * 通知所有数据变化
+     * Notify all data changes
      */
     void notifyAllChange();
 
     /**
-     * 通知移除单条
+     * Notice removal
      * @param position
      */
     void notifyItemRemove(int position);

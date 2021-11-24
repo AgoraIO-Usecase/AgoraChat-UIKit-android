@@ -7,26 +7,23 @@ import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 
 
-/**
- * {@link EasePopupWindowHelper}中的条目点击事件
- */
 public interface OnMenuChangeListener {
     /**
-     * 展示Menu之前
+     * Before showing the Menu
      * @param helper
      * @param message
      */
     void onPreMenu(EasePopupWindowHelper helper, ChatMessage message);
 
     /**
-     * 点击条目
+     * Item click
      * @param item
      * @param message
      */
     boolean onMenuItemClick(MenuItemBean item, ChatMessage message);
 
     /**
-     * 消失
+     * Dismiss event
      * @param menu
      */
     default void onDismiss(PopupWindow menu) {}

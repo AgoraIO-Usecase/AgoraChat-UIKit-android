@@ -9,73 +9,67 @@ import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 
 public interface IChatMessageItemSet {
     /**
-     * 设置默认头像
+     * Set default avatar
      * @param src
      */
     void setAvatarDefaultSrc(Drawable src);
 
     /**
-     * 设置头像样式
+     * Set avatar shape
      * @param shapeType
      */
     void setAvatarShapeType(int shapeType);
 
     /**
-     * 是否展示昵称
+     * Whether to show nickname
      * @param showNickname
      */
     void showNickname(boolean showNickname);
 
     /**
-     * 设置条目发送者的背景
+     * Set the background of the item sender
      * @param bgDrawable
      */
     void setItemSenderBackground(Drawable bgDrawable);
 
     /**
-     * 设置接收者的背景
+     * Set the receiver's background
      * @param bgDrawable
      */
     void setItemReceiverBackground(Drawable bgDrawable);
 
     /**
-     * 设置文本消息字体大小
+     * Set text message font size
      * @param textSize
      */
     void setItemTextSize(int textSize);
 
     /**
-     * 设置文本消息字体颜色
+     * Set text message font color
      * @param textColor
      */
     void setItemTextColor(@ColorInt int textColor);
 
     /**
-     * 设置文本消息条目的最小高度
-     * @param height
-     */
-    //void setItemMinHeight(int height);
-
-    /**
-     * 设置时间线文本大小
+     * Set the timeline text size
      * @param textSize
      */
     void setTimeTextSize(int textSize);
 
     /**
-     * 设置时间线文本颜色
+     * Set the timeline text color
      * @param textColor
      */
     void setTimeTextColor(int textColor);
 
     /**
-     * 设置时间线背景
+     * Set the timeline background
      * @param bgDrawable
      */
     void setTimeBackground(Drawable bgDrawable);
 
     /**
-     * 聊天列表条目的展示方式
+     * Set the display style of the chat list
      * @param type
      */
     void setItemShowType(EaseChatMessageListLayout.ShowType type);

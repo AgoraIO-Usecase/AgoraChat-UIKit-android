@@ -248,21 +248,21 @@ public class EaseChatPrimaryMenu extends RelativeLayout implements IChatPrimaryM
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(id == R.id.btn_send) {//发送
+        if(id == R.id.btn_send) {
             if(listener != null) {
                 String s = editText.getText().toString();
                 editText.setText("");
                 listener.onSendBtnClicked(s);
             }
-        }else if(id == R.id.btn_set_mode_voice) {//切换到语音模式
+        }else if(id == R.id.btn_set_mode_voice) {
             showVoiceStatus();
-        }else if (id == R.id.btn_set_mode_keyboard) {//切换到文本模式
+        }else if (id == R.id.btn_set_mode_keyboard) {
             showTextStatus();
-        }else if (id == R.id.btn_more) {//切换到更多模式
+        }else if (id == R.id.btn_more) {
             showMoreStatus();
-        }else if (id == R.id.et_sendmessage) {//切换到文本模式
+        }else if (id == R.id.et_sendmessage) {
             showTextStatus();
-        }else if (id == R.id.rl_face) {//切换到表情模式
+        }else if (id == R.id.rl_face) {
             showEmojiconStatus();
         }
     }

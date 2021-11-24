@@ -8,83 +8,62 @@ import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
 
 public interface IChatPrimaryMenu {
     /**
-     * 菜单展示类型
+     * Set menu display type
      * @param style
      */
     void setMenuShowType(EaseInputMenuStyle style);
 
-    /**
-     * 常规模式
-     */
     void showNormalStatus();
 
-    /**
-     * 文本输入模式
-     */
     void showTextStatus();
 
-    /**
-     * 语音输入模式
-     */
     void showVoiceStatus();
 
-    /**
-     * 表情输入模式
-     */
     void showEmojiconStatus();
 
-    /**
-     * 更多模式
-     */
     void showMoreStatus();
 
-    /**
-     * 隐藏扩展区模式
-     */
     void hideExtendStatus();
 
-    /**
-     * 隐藏软键盘
-     */
     void hideSoftKeyboard();
 
    /**
-     * 输入表情
+     * Enter emoticon event
      * @param emojiContent
      */
     void onEmojiconInputEvent(CharSequence emojiContent);
 
     /**
-     * 删除表情
+     * Delete emoticon event
      */
     void onEmojiconDeleteEvent();
 
     /**
-     * 输入文本
+     * Insert text
      * @param text
      */
     void onTextInsert(CharSequence text);
 
     /**
-     * 获取EditText
+     * Get EditText
      * @return
      */
     EditText getEditText();
 
     /**
-     * 设置输入框背景
+     * Set the background of the input box
      * @param bg
      */
     void setMenuBackground(Drawable bg);
 
     /**
-     * 设置发送按钮背景
+     * Set the send button background
      * @param bg
      */
     void setSendButtonBackground(Drawable bg);
 
     /**
-     * 设置监听
+     * Set up monitoring
      * @param listener
      */
     void setEaseChatPrimaryMenuListener(EaseChatPrimaryMenuListener listener);

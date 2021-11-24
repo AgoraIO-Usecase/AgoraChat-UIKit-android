@@ -216,7 +216,7 @@ public class EaseDateUtils {
 	}
 	
 	/**
-	 * endtime为今天
+	 * endtime is today
 	 * @return
 	 */
 	public static TimeInfo getCurrentMonthStartAndEndTime(){
@@ -274,7 +274,7 @@ public class EaseDateUtils {
     }
 
 	/**
-	 * 判断是否是24小时制
+	 * Determine whether it is a 24-hour clock
 	 * @param context
 	 * @return
 	 */

@@ -2,7 +2,7 @@ package io.agora.chat.uikit.chat.interfaces;
 
 public interface OnChatInputChangeListener {
     /**
-     * EditText文本变化监听
+     * EditText text change monitoring
      * @param s
      * @param start
      * @param before

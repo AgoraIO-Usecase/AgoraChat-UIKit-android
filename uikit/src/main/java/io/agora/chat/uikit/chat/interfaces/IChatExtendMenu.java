@@ -1,20 +1,18 @@
 package io.agora.chat.uikit.chat.interfaces;
 
 public interface IChatExtendMenu {
-    /**
-     * 清理扩展功能
-     */
+
     void clear();
 
     /**
-     * 设置条目的排序
+     * Set the order of item
      * @param itemId
      * @param order
      */
     void setMenuOrder(int itemId, int order);
 
     /**
-     * 添加新的扩展功能
+     * Add new extended functions
      * @param name
      * @param drawableRes
      * @param itemId
@@ -22,7 +20,7 @@ public interface IChatExtendMenu {
     void registerMenuItem(String name, int drawableRes, int itemId);
 
     /**
-     * 添加新的扩展功能
+     * Add new extended functions
      * @param name
      * @param drawableRes
      * @param itemId
@@ -31,7 +29,7 @@ public interface IChatExtendMenu {
     void registerMenuItem(String name, int drawableRes, int itemId, int order);
 
     /**
-     * 添加新的扩展功能
+     * Add new extended functions
      * @param nameRes
      * @param drawableRes
      * @param itemId
@@ -39,7 +37,7 @@ public interface IChatExtendMenu {
     void registerMenuItem(int nameRes, int drawableRes, int itemId);
 
     /**
-     * 添加新的扩展功能
+     * Add new extended functions
      * @param nameRes
      * @param drawableRes
      * @param itemId
@@ -48,7 +46,7 @@ public interface IChatExtendMenu {
     void registerMenuItem(int nameRes, int drawableRes, int itemId, int order);
 
     /**
-     * 设置条目监听
+     * Set item click listener
      * @param listener
      */
     void setEaseChatExtendMenuItemClickListener(EaseChatExtendMenuItemClickListener listener);

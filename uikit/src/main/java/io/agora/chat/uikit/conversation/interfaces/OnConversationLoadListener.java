@@ -5,18 +5,15 @@ import java.util.List;
 
 import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
 
-/**
- * 会话列表加载数据的监听
- */
 public interface OnConversationLoadListener {
     /**
-     * 加载完成后回调
+     * Call back after loading
      * @param data
      */
     void loadDataFinish(List<EaseConversationInfo> data);
 
     /**
-     * 加载数据失败后回调
+     * Call back after failed to load data
      * @param message
      */
     default void loadDataFail(String message) {}

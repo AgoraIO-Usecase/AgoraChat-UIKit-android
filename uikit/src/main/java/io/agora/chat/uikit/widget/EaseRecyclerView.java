@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 可以添加header和footer
- * 参考：https://github.com/idisfkj/EnhanceRecyclerView
+ * Can add headers and footers
+ * Refer to：https://github.com/idisfkj/EnhanceRecyclerView
  */
 public class EaseRecyclerView extends RecyclerView {
     private static final int BASE_HEADER_VIEW_TYPE = -1 << 10;
@@ -42,12 +42,6 @@ public class EaseRecyclerView extends RecyclerView {
         super(context, attrs, defStyleAttr);
     }
 
-    // TODO: 2020/1/11
-    /**
-     * 如果view的初始化中的parent用的是recyclerView, 该方法的调用应该放在setLayoutManager之后,
-     * 否则需要自己对view添加LayoutParams
-     * @param view
-     */
     public void addHeaderView(View view) {
         FixedViewInfo info = new FixedViewInfo();
         info.view = view;
@@ -60,7 +54,7 @@ public class EaseRecyclerView extends RecyclerView {
     }
 
     /**
-     * 移除所有的头布局
+     * Remove all headers
      */
     public void removeHeaderViews() {
         if(mHeaderViewInfos != null) {
@@ -331,7 +325,7 @@ public class EaseRecyclerView extends RecyclerView {
         }
     };
 
-//=====================解决添加条目快捷菜单的问题======================================
+//=====================Fix add item shortcut menu======================================
     public static class RecyclerViewContextMenuInfo implements ContextMenu.ContextMenuInfo {
         public int position;
         public long id;

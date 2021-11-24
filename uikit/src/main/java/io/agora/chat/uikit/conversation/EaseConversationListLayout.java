@@ -283,18 +283,10 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
         presenter.loadData(true);
     }
 
-    /**
-     * 设置数据
-     * @param data
-     */
     public void setData(List<EaseConversationInfo> data) {
         presenter.sortData(data);
     }
 
-    /**
-     * 添加数据
-     * @param data
-     */
     public void addData(List<EaseConversationInfo> data) {
         if(data != null) {
             List<EaseConversationInfo> infos = listAdapter.getData();
@@ -304,7 +296,7 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
     }
 
     /**
-     * 刷新数据
+     * Notify data changed
      */
     public void notifyDataSetChanged() {
         if(listAdapter != null) {
@@ -313,7 +305,7 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
     }
 
     /**
-     * 返回触摸点的x坐标
+     * Returns the x coordinate of the touch point
      * @return
      */
     public float getTouchX() {
@@ -321,7 +313,7 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
     }
 
     /**
-     * 返回触摸点的y坐标
+     * Returns the y coordinate of the touch point
      * @return
      */
     public float getTouchY() {
@@ -336,10 +328,8 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
 
         menuHelper.initMenu(view);
 
-        //检查置顶配置
         menuHelper.findItemVisible(R.id.action_con_make_top, !info.isTop());
         menuHelper.findItemVisible(R.id.action_con_cancel_top, info.isTop());
-        //检查已读配置
         if(info.getInfo() instanceof Conversation) {
             menuHelper.findItemVisible(R.id.action_con_make_read, ((Conversation) info.getInfo()).getUnreadMsgCount() > 0);
         }

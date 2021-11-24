@@ -59,7 +59,8 @@ public class EaseChatRowText extends EaseChatRow {
     }
 
     /**
-     * 解决长按事件与relink冲突，参考：https://www.jianshu.com/p/d3bef8449960
+     * Resolve long press event conflict with Relink
+     * Refer to：https://www.jianshu.com/p/d3bef8449960
      */
     private void replaceSpan() {
         Spannable spannable = (Spannable) contentView.getText();

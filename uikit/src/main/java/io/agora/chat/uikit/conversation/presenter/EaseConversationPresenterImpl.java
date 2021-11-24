@@ -41,7 +41,6 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
                 EaseConversationInfo info = null;
                 for (Conversation conversation : conversations.values()) {
                     if(conversation.getAllMessages().size() != 0) {
-                        //如果不展示系统消息，则移除相关系统消息
                         if(!showSystemMessage) {
                             if(EaseNotificationMsgManager.getInstance().isNotificationConversation(conversation)) {
                                 continue;

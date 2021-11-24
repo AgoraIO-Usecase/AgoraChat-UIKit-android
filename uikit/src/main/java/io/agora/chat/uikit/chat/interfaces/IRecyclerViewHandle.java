@@ -5,35 +5,35 @@ import io.agora.chat.ChatMessage;
 
 public interface IRecyclerViewHandle {
     /**
-     * 是否可以使用默认的刷新
+     * Whether to use the default refresh
      * @param canUseRefresh
      */
     void canUseDefaultRefresh(boolean canUseRefresh);
 
     /**
-     * 刷新数据
+     * Refresh messages
      */
     void refreshMessages();
 
     /**
-     * 刷新并移动到最新的一条数据
+     * Refresh and move to the latest piece of data
      */
     void refreshToLatest();
 
     /**
-     * 刷新单条数据
+     * Refresh single message
      * @param message
      */
     void refreshMessage(ChatMessage message);
 
     /**
-     * 删除单条数据
+     * Delete single message
      * @param message
      */
     void removeMessage(ChatMessage message);
 
     /**
-     * 移动到指定position的位置
+     * Move to the specified position
      * @param position
      */
     void moveToPosition(int position);

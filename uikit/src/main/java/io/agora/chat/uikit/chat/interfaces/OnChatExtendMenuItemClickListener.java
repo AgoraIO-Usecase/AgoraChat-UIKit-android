@@ -4,7 +4,7 @@ import android.view.View;
 
 public interface OnChatExtendMenuItemClickListener {
     /**
-     * 条目点击
+     * Extend menu item click event
      * @param view
      * @param itemId
      */

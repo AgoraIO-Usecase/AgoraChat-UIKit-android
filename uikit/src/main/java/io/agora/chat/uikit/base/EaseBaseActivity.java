@@ -92,7 +92,6 @@ public class EaseBaseActivity extends AppCompatActivity {
      */
     public void setFitSystemForTheme(boolean fitSystemForTheme, @ColorRes int colorId, boolean isDark) {
         setFitSystem(fitSystemForTheme);
-        //初始设置
         StatusBarCompat.compat(this, ContextCompat.getColor(this, colorId));
         StatusBarCompat.setLightStatusBar(this, isDark);
     }

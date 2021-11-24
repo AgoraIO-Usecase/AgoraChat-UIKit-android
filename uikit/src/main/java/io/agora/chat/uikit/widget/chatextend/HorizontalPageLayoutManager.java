@@ -9,10 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * 本LayoutManager提供了类似ViewPager+GridView的分页效果。
- * 针对原博文（https://blog.csdn.net/Y_sunny_U/article/details/89500464）做了如下修改：
- * 1、recyclerView的高度模式是wrap_content时，主动设置条目的高度{@link #setItemHeight(int)}
- * 参考博文：https://blog.csdn.net/Y_sunny_U/article/details/89500464
+ * This LayoutManager provides pagination effects similar to ViewPager+GridView.
+ * Refer to：https://blog.csdn.net/Y_sunny_U/article/details/89500464
  */
 public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager implements PageDecorationLastJudge {
     private int totalHeight = 0;
@@ -90,7 +88,7 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
     }
 
     /**
-     * 返回true使用recyclerView的自动测量
+     * Returns true using recyclerView for automatic measurement
      * @return
      */
     @Override
@@ -107,23 +105,22 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
         if (state.isPreLayout()) {
             return;
         }
-        //获取每个Item的平均宽高
+        //Gets the average width and height of each Item
         itemWidth = getUsableWidth() / columns;
         itemHeight = getUsableHeight() / rows;
 
-        //针对高度方向为wrap_content的情况
         if(itemHeight == 0) {
             getWrapItemHeight();
         }
 
-        //计算宽高已经使用的量，主要用于后期测量
+        //Calculate the amount of width and height already used, mainly for later measurement
         itemWidthUsed = (columns - 1) * itemWidth;
         itemHeightUsed = (rows - 1) * itemHeight;
-        //计算总的页数
+        //Count the total number of pages
         computePageSize(state);
-        //计算可以横向滚动的最大值
+        //Calculate the maximum value that can be scrolled horizontally
         totalWidth = (pageSize - 1) * getWidth();
-        //分离view
+        //Separate views
         detachAndScrapAttachedViews(recycler);
 
         int count = getItemCount();
@@ -132,7 +129,6 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
                 for (int c = 0; c < columns; c++) {
                     int index = p * onePageSize + r * columns + c;
                     if (index == count) {
-                        //跳出多重循环
                         c = columns;
                         r = rows;
                         p = pageSize;
@@ -140,12 +136,12 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
                     }
                     View view = recycler.getViewForPosition(index);
                     addView(view);
-                    //测量item
+                    //Measure item
                     measureChildWithMargins(view, itemWidthUsed, itemHeightUsed);
 
                     int width = getDecoratedMeasuredWidth(view);
                     int height = getDecoratedMeasuredHeight(view);
-                    //如何设置了条目高度，则使用；没有设置，则使用真实的条目高度作为itemHeight
+                    //If the entry height is set, use; If it is not set, the actual itemHeight is used as itemHeight
                     if(isUseSetHeight) {
                         height = getWrapItemHeight();
                         itemHeight = height;
@@ -154,7 +150,6 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
                             itemHeight = height;
                         }
                     }
-                    //记录显示范围
                     Rect rect = allItemFrames.get(index);
                     if (rect == null) {
                         rect = new Rect();
@@ -165,23 +160,16 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
                     allItemFrames.put(index, rect);
                 }
             }
-            //每一页循环以后就回收一页的View用于下一页的使用
+            //After each page is recycled, one page of View is recycled for the next page
             removeAndRecycleAllViews(recycler);
         }
         recycleAndFillItems(recycler, state);
         requestLayout();
     }
 
-    /**
-     * 获取wrap_content下，条目的高度
-     * @return
-     */
     private int getWrapItemHeight() {
-        //如果条目高度是wrap_content模式
         if(heightMode == View.MeasureSpec.AT_MOST) {
-            //如果设置了条目高度，则采用设置的高度
             if(isUseSetHeight) {
-                //判断设置的条目高度是否超过可用高度
                 if(itemSetHeight * rows <= totalHeight) {
                     itemHeight = itemSetHeight;
                 }else {
