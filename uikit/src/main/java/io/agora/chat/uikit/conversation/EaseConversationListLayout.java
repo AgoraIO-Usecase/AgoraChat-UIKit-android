@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -70,6 +73,42 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
     private boolean showDefaultMenu = true;
     private OnConversationChangeListener conversationChangeListener;
     private OnConversationLoadListener loadListener;
+    private final  int PRE_CODE =100;
+    private final  int LAST_CODE =200;
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                case PRE_CODE:
+                    removeMessages(LAST_CODE);
+                    if (presenter != null && presenter.isActive()) {
+                        presenter.loadData(false);
+                    }
+                    flag=true;
+                    break;
+                case LAST_CODE:
+                    removeMessages(PRE_CODE);
+                    if (presenter != null && presenter.isActive()) {
+                        presenter.loadData(false);
+                    }
+                    flag=true;
+                    break;
+                default:
+                   break;
+            }
+
+        }
+    };
+    private boolean flag=true;
+
+    public synchronized void refreshData() {
+        if(flag) {
+            handler.sendEmptyMessageDelayed(LAST_CODE,500);
+            flag=false;
+        }
+        handler.removeMessages(PRE_CODE);
+        handler.sendEmptyMessageDelayed(PRE_CODE,100);
+    }
 
     public EaseConversationListLayout(Context context) {
         this(context, null);
@@ -242,10 +281,6 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
 
     public void loadDefaultData() {
         presenter.loadData(true);
-    }
-
-    public void refreshData() {
-        presenter.loadData(false);
     }
 
     /**
