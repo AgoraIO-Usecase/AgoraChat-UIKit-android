@@ -384,7 +384,7 @@ public abstract class EaseChatRow extends LinearLayout {
     protected void setAvatarAndNick() {
         if (isSender()) {
             EaseUserUtils.setUserAvatar(context, ChatClient.getInstance().getCurrentUser(), userAvatarView);
-            if(EaseChatItemStyleHelper.getInstance().getStyle().getItemShowType() != EaseChatMessageListLayout.ShowType.NORMAL.ordinal()) {
+            if(EaseChatItemStyleHelper.getInstance().getStyle().getItemShowType() != EaseChatMessageListLayout.ShowType.LEFT_RIGHT.ordinal()) {
                 EaseUserUtils.setUserNick(message.getFrom(), usernickView);
             }
         } else {

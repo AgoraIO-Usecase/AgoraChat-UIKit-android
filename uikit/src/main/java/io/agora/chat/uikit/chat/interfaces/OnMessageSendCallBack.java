@@ -7,12 +7,12 @@ public interface OnMessageSendCallBack {
      * Callback after the message is sent successfully
      * @param message
      */
-    default void onChatSuccess(ChatMessage message){}
+    default void onSuccess(ChatMessage message){}
 
     /**
      * Wrong message in chat
      * @param code
      * @param errorMsg
      */
-    void onChatError(int code, String errorMsg);
+    void onError(int code, String errorMsg);
 }

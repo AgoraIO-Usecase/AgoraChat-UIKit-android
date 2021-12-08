@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 
 import java.util.List;
 
@@ -886,8 +884,14 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         IS_LOADING, HAS_MORE, NO_MORE_DATA
     }
 
+    /**
+     * Message list show type
+     */
     public enum ShowType {
-        NORMAL, LEFT/*, RIGHT*/
+        // Receiver is on the left, sender is on the right
+        LEFT_RIGHT,
+        // Receiver and sender are on the left
+        ALL_LEFT/*, RIGHT*/
     }
 }
 

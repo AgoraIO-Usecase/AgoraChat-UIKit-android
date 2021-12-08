@@ -312,7 +312,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
             return;
         handler.removeMessages(MSG_OTHER_TYPING_END);
         if(listener != null) {
-            listener.onOtherTyping(ACTION_TYPING_END);
+            listener.onPeerTyping(ACTION_TYPING_END);
         }
     }
 
@@ -619,7 +619,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
             EaseThreadManager.getInstance().runOnMainThread(() -> {
                 if(TextUtils.equals(msg.getFrom(), conversationId)) {
                     if(listener != null) {
-                        listener.onOtherTyping(body.action());
+                        listener.onPeerTyping(body.action());
                     }
                     if(typingHandler != null) {
                         typingHandler.removeMessages(MSG_OTHER_TYPING_END);
@@ -672,13 +672,12 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void createThumbFileFail(String message) {
         if(listener != null) {
-            listener.onChatError(-1, message);
+            listener.onError(-1, message);
         }
     }
 
     @Override
     public void addMsgAttrBeforeSend(ChatMessage message) {
-        //发送消息前，添加消息属性，比如设置ext
         if(sendMsgEvent != null) {
             sendMsgEvent.addMsgAttrsBeforeSend(message);
         }
@@ -687,7 +686,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void sendMessageFail(String message) {
         if(listener != null) {
-            listener.onChatError(-1, message);
+            listener.onError(-1, message);
         }
     }
 
@@ -717,7 +716,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
             recallMessageListener.recallFail(code, message);
         }
         if(listener != null) {
-            listener.onChatError(code, message);
+            listener.onError(code, message);
         }
     }
 
@@ -725,7 +724,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     public void onPresenterMessageSuccess(ChatMessage message) {
         EMLog.i(TAG, "send message onPresenterMessageSuccess");
         if(listener != null) {
-            listener.onChatSuccess(message);
+            listener.onSuccess(message);
         }
     }
 
@@ -734,7 +733,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         EMLog.i(TAG, "send message onPresenterMessageError code: "+code + " error: "+error);
         refreshMessage(message);
         if(listener != null) {
-            listener.onChatError(code, error);
+            listener.onError(code, error);
         }
     }
 
@@ -828,14 +827,14 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     public void onMessageSuccess(ChatMessage message) {
         EMLog.i(TAG, "send message onMessageSuccess");
         if(listener != null) {
-            listener.onChatSuccess(message);
+            listener.onSuccess(message);
         }
     }
 
     @Override
     public void onMessageError(ChatMessage message, int code, String error) {
         if(listener != null) {
-            listener.onChatError(code, error);
+            listener.onError(code, error);
         }
     }
 
@@ -848,7 +847,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onChatError(int code, String errorMsg) {
         if(listener != null) {
-            listener.onChatError(code, errorMsg);
+            listener.onError(code, errorMsg);
         }
     }
 

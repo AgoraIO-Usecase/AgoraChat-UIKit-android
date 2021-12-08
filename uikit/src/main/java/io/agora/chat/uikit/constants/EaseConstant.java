@@ -33,7 +33,7 @@ public interface EaseConstant {
 
     String EXTRA_CHAT_TYPE = "chatType";
     String EXTRA_CONVERSATION_ID = "conversationId";
-    String EXTRA_IS_ROAM = "isRoaming";
+    String EXTRA_IS_FROM_SERVER = "isRoaming";
 
     String MESSAGE_TYPE_TXT = "txt";
     String MESSAGE_TYPE_EXPRESSION = "expression";

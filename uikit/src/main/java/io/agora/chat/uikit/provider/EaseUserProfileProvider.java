@@ -10,8 +10,8 @@ import io.agora.chat.uikit.models.EaseUser;
 public interface EaseUserProfileProvider {
     /**
      * return EaseUser for input username
-     * @param username
+     * @param userID
      * @return
      */
-    EaseUser getUser(String username);
+    EaseUser getUser(String userID);
 }

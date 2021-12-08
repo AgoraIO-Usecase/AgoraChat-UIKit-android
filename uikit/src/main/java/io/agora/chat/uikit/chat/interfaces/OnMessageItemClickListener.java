@@ -4,7 +4,7 @@ import android.view.View;
 
 import io.agora.chat.ChatMessage;
 
-public interface OnChatItemClickListener {
+public interface OnMessageItemClickListener {
     /**
      * Click on the message bubble area
      * @param message

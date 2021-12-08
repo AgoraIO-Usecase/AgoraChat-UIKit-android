@@ -30,11 +30,11 @@ import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.chat.interfaces.OnChatExtendMenuItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatInputChangeListener;
-import io.agora.chat.uikit.chat.interfaces.OnChatItemClickListener;
+import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageSendCallBack;
-import io.agora.chat.uikit.chat.interfaces.OnOtherTypingListener;
+import io.agora.chat.uikit.chat.interfaces.OnPeerTypingListener;
 import io.agora.chat.uikit.chat.widget.EaseChatExtendMenuDialog;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
@@ -73,9 +73,9 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     private EaseTitleBar.OnBackPressListener backPressListener;
     private OnChatExtendMenuItemClickListener extendMenuItemClickListener;
     private OnChatInputChangeListener chatInputChangeListener;
-    private OnChatItemClickListener chatItemClickListener;
+    private OnMessageItemClickListener chatItemClickListener;
     private OnMessageSendCallBack messageSendCallBack;
-    private OnOtherTypingListener otherTypingListener;
+    private OnPeerTypingListener otherTypingListener;
     private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
     private OnChatRecordTouchListener recordTouchListener;
     private EaseMessageAdapter messageAdapter;
@@ -106,7 +106,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             conversationId = bundle.getString(EaseConstant.EXTRA_CONVERSATION_ID);
             chatType = bundle.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
             historyMsgId = bundle.getString(EaseConstant.HISTORY_MSG_ID);
-            isRoam = bundle.getBoolean(EaseConstant.EXTRA_IS_ROAM, false);
+            isRoam = bundle.getBoolean(EaseConstant.EXTRA_IS_FROM_SERVER, false);
         }
     }
 
@@ -116,7 +116,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         if(this.messageAdapter != null) {
             chatLayout.getChatMessageListLayout().setMessageAdapter(this.messageAdapter);
         }
-        chatLayout.getChatMessageListLayout().setItemShowType(EaseChatMessageListLayout.ShowType.NORMAL);
+        chatLayout.getChatMessageListLayout().setItemShowType(EaseChatMessageListLayout.ShowType.LEFT_RIGHT);
 
         Bundle bundle = getArguments();
         if(bundle != null) {
@@ -155,7 +155,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             }
             boolean showNickname = bundle.getBoolean(Constant.KEY_SHOW_NICKNAME, false);
             chatLayout.getChatMessageListLayout().showNickname(showNickname);
-            String messageListShowType = bundle.getString(Constant.KEY_MESSAGE_LIST_SHOW_TYPE, "");
+            String messageListShowType = bundle.getString(Constant.KEY_MESSAGE_LIST_SHOW_STYLE, "");
             if(!TextUtils.isEmpty(messageListShowType)) {
                 EaseChatMessageListLayout.ShowType showType = EaseChatMessageListLayout.ShowType.valueOf(messageListShowType);
                 if(showType != null) {
@@ -257,7 +257,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         this.chatInputChangeListener = listener;
     }
 
-    private void setOnChatItemClickListener(OnChatItemClickListener listener) {
+    private void setOnMessageItemClickListener(OnMessageItemClickListener listener) {
         this.chatItemClickListener = listener;
     }
 
@@ -265,7 +265,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         this.messageSendCallBack = callBack;
     }
 
-    private void setOnOtherTypingListener(OnOtherTypingListener listener) {
+    private void setOnPeerTypingListener(OnPeerTypingListener listener) {
         this.otherTypingListener = listener;
     }
 
@@ -312,9 +312,9 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     }
 
     @Override
-    public void onChatExtendMenuItemClick(View view, int itemId) {
+    public boolean onChatExtendMenuItemClick(View view, int itemId) {
         if(extendMenuItemClickListener != null && extendMenuItemClickListener.onChatExtendMenuItemClick(view, itemId)) {
-            return;
+            return true;
         }
         if(itemId == R.id.extend_item_take_picture) {
             selectPicFromCamera();
@@ -325,6 +325,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }else if(itemId == R.id.extend_item_file) {
             selectFileFromLocal();
         }
+        return true;
     }
 
     @Override
@@ -335,24 +336,24 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     }
 
     @Override
-    public void onChatSuccess(ChatMessage message) {
+    public void onSuccess(ChatMessage message) {
         // you can do something after sending a successful message
         if(messageSendCallBack != null) {
-            messageSendCallBack.onChatSuccess(message);
+            messageSendCallBack.onSuccess(message);
         }
     }
 
     @Override
-    public void onChatError(int code, String errorMsg) {
+    public void onError(int code, String errorMsg) {
         if(messageSendCallBack != null) {
-            messageSendCallBack.onChatError(code, errorMsg);
+            messageSendCallBack.onError(code, errorMsg);
         }
     }
 
     @Override
-    public void onOtherTyping(String action) {
+    public void onPeerTyping(String action) {
         if(otherTypingListener != null) {
-            otherTypingListener.onOtherTyping(action);
+            otherTypingListener.onPeerTyping(action);
         }
     }
 
@@ -507,171 +508,338 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         private OnChatLayoutListener listener;
         private OnChatExtendMenuItemClickListener extendMenuItemClickListener;
         private OnChatInputChangeListener chatInputChangeListener;
-        private OnChatItemClickListener chatItemClickListener;
+        private OnMessageItemClickListener messageItemClickListener;
         private OnMessageSendCallBack messageSendCallBack;
-        private OnOtherTypingListener otherTypingListener;
+        private OnPeerTypingListener peerTypingListener;
         private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
         private OnChatRecordTouchListener recordTouchListener;
         private EaseChatFragment customFragment;
 
+        /**
+         * Constructor
+         * @param conversationId Agora Chat ID
+         * @param chatType       1: single chat; 2: group chat; 3: chat room
+         */
         public Builder(String conversationId, int chatType) {
             this.bundle = new Bundle();
             bundle.putString(EaseConstant.EXTRA_CONVERSATION_ID, conversationId);
             bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType);
         }
 
+        /**
+         * Constructor
+         * @param conversationId Agora Chat ID
+         * @param chatType       1: single chat; 2: group chat; 3: chat room
+         * @param historyMsgId   Message ID
+         */
         public Builder(String conversationId, int chatType, String historyMsgId) {
             this.bundle = new Bundle();
             bundle.putString(EaseConstant.EXTRA_CONVERSATION_ID, conversationId);
             bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType);
             bundle.putString(EaseConstant.HISTORY_MSG_ID, historyMsgId);
         }
+        // add comments
 
+        /**
+         * Whether to use default titleBar which is {@link EaseTitleBar}
+         * @param useTitle
+         * @return
+         */
         public Builder setUseHeader(boolean useTitle) {
             this.bundle.putBoolean(Constant.KEY_USE_TITLE, useTitle);
             return this;
         }
 
+        /**
+         * Set titleBar's title
+         * @param title
+         * @return
+         */
         public Builder setHeaderTitle(String title) {
             this.bundle.putString(Constant.KEY_SET_TITLE, title);
             return this;
         }
 
-        public Builder setHeaderEnableBack(boolean canBack) {
+        /**
+         * Whether show back icon in titleBar
+         * @param canBack
+         * @return
+         */
+        public Builder enableHeaderPressBack(boolean canBack) {
             this.bundle.putBoolean(Constant.KEY_ENABLE_BACK, canBack);
             return this;
         }
 
-        public Builder setUseRoamMessage(boolean useRoamMessage) {
-            this.bundle.putBoolean(EaseConstant.EXTRA_IS_ROAM, useRoamMessage);
-            return this;
-        }
-
+        /**
+         * If you have set {@link Builder#enableHeaderPressBack(boolean)}, you can set the listener
+         * @param listener
+         * @return
+         */
         public Builder setHeaderBackPressListener(EaseTitleBar.OnBackPressListener listener) {
             this.backPressListener = listener;
             return this;
         }
 
+        /**
+         * Set Whether to get history message from server or local database
+         * @param isFromServer
+         * @return
+         */
+        public Builder getHistoryMessageFromServerOrLocal(boolean isFromServer) {
+            this.bundle.putBoolean(EaseConstant.EXTRA_IS_FROM_SERVER, isFromServer);
+            return this;
+        }
+
+        /**
+         * Set chat layout listener.You can set the sample listener by set {@link Builder#setOnChatExtendMenuItemClickListener(OnChatExtendMenuItemClickListener)},
+         * {@link Builder#setOnMessageItemClickListener(OnMessageItemClickListener)}, {@link Builder#setOnChatInputChangeListener(OnChatInputChangeListener)},
+         * {@link Builder#setOnPeerTypingListener(OnPeerTypingListener)} and {@link Builder#setOnMessageSendCallBack(OnMessageSendCallBack)}
+         * @param listener
+         * @return
+         */
         public Builder setOnChatLayoutListener(OnChatLayoutListener listener) {
             this.listener = listener;
             return this;
         }
 
+        /**
+         * Set chat extension menu item click listener
+         * @param listener
+         * @return
+         */
         public Builder setOnChatExtendMenuItemClickListener(OnChatExtendMenuItemClickListener listener) {
             this.extendMenuItemClickListener = listener;
             return this;
         }
 
+        /**
+         * Set chat menu's text change listener
+         * @param listener
+         * @return
+         */
         public Builder setOnChatInputChangeListener(OnChatInputChangeListener listener) {
             this.chatInputChangeListener = listener;
             return this;
         }
 
-        public Builder setOnChatItemClickListener(OnChatItemClickListener listener) {
-            this.chatItemClickListener = listener;
+        /**
+         * Set message item click listener, include bubble click, bubble long click, avatar click
+         * and avatar long click
+         * @param listener
+         * @return
+         */
+        public Builder setOnMessageItemClickListener(OnMessageItemClickListener listener) {
+            this.messageItemClickListener = listener;
             return this;
         }
 
+        /**
+         * Set message's callback after which is sent
+         * @param callBack
+         * @return
+         */
         public Builder setOnMessageSendCallBack(OnMessageSendCallBack callBack) {
             this.messageSendCallBack = callBack;
             return this;
         }
 
+        /**
+         * Turn on other peer's typing monitor, only for single chat
+         * @param turnOn
+         * @return
+         */
         public Builder turnOnTypingMonitor(boolean turnOn) {
             this.bundle.putBoolean(Constant.KEY_TURN_ON_TYPING_MONITOR, turnOn);
             return this;
         }
 
-        public Builder setOnOtherTypingListener(OnOtherTypingListener listener) {
-            this.otherTypingListener = listener;
+        /**
+         * Set peer's typing listener, only for single chat. You need call {@link Builder#turnOnTypingMonitor(boolean)} first.
+         * @param listener
+         * @return
+         */
+        public Builder setOnPeerTypingListener(OnPeerTypingListener listener) {
+            this.peerTypingListener = listener;
             return this;
         }
 
+        /**
+         * Set the event you can add message's attrs before send message
+         * @param sendMsgEvent
+         * @return
+         */
         public Builder setOnAddMsgAttrsBeforeSendEvent(OnAddMsgAttrsBeforeSendEvent sendMsgEvent) {
             this.sendMsgEvent = sendMsgEvent;
             return this;
         }
 
+        /**
+         * Set touch event listener during recording
+         * @param recordTouchListener
+         * @return
+         */
         public Builder setOnChatRecordTouchListener(OnChatRecordTouchListener recordTouchListener) {
             this.recordTouchListener = recordTouchListener;
             return this;
         }
 
+        /**
+         * Set the text color of message item time
+         * @param color
+         * @return
+         */
         public Builder setMsgTimeTextColor(@ColorInt int color) {
             this.bundle.putInt(Constant.KEY_MSG_TIME_COLOR, color);
             return this;
         }
 
+        /**
+         * Set the text size of message item time, unit is px
+         * @param size
+         * @return
+         */
         public Builder setMsgTimeTextSize(int size) {
             this.bundle.putInt(Constant.KEY_MSG_TIME_SIZE, size);
             return this;
         }
 
-        public Builder setChatReceiveBubbleBackground(@DrawableRes int bgDrawable) {
+        /**
+         * Set the bubble background of the received message
+         * @param bgDrawable
+         * @return
+         */
+        public Builder setReceivedMsgBubbleBackground(@DrawableRes int bgDrawable) {
             this.bundle.putInt(Constant.KEY_MSG_LEFT_BUBBLE, bgDrawable);
             return this;
         }
 
-        public Builder setChatSendBubbleBackground(@DrawableRes int bgDrawable) {
+        /**
+         * Set the bubble background of the sent message
+         * @param bgDrawable
+         * @return
+         */
+        public Builder setSentBubbleBackground(@DrawableRes int bgDrawable) {
             this.bundle.putInt(Constant.KEY_MSG_RIGHT_BUBBLE, bgDrawable);
             return this;
         }
 
-        public Builder showChatNickname(boolean showNickname) {
+        /**
+         * Whether to show nickname in message item
+         * @param showNickname
+         * @return
+         */
+        public Builder showNickname(boolean showNickname) {
             this.bundle.putBoolean(Constant.KEY_SHOW_NICKNAME, showNickname);
             return this;
         }
 
-        public Builder setMessageListStyle(EaseChatMessageListLayout.ShowType showType) {
-            this.bundle.putString(Constant.KEY_MESSAGE_LIST_SHOW_TYPE, showType.name());
+        /**
+         * Set message list show style, including left_right and all_left style
+         * @param showType
+         * @return
+         */
+        public Builder setMessageListShowStyle(EaseChatMessageListLayout.ShowType showType) {
+            this.bundle.putString(Constant.KEY_MESSAGE_LIST_SHOW_STYLE, showType.name());
             return this;
         }
 
-        public Builder hideChatReceiveAvatar(boolean hide) {
+        /**
+         * Whether to hide receiver's avatar
+         * @param hide
+         * @return
+         */
+        public Builder hideReceiverAvatar(boolean hide) {
             this.bundle.putBoolean(Constant.KEY_HIDE_RECEIVE_AVATAR, hide);
             return this;
         }
 
-        public Builder hideChatSendAvatar(boolean hide) {
+        /**
+         * Whether to hide sender's avatar
+         * @param hide
+         * @return
+         */
+        public Builder hideSenderAvatar(boolean hide) {
             this.bundle.putBoolean(Constant.KEY_HIDE_SEND_AVATAR, hide);
             return this;
         }
 
+        /**
+         * Set the background of the chat list region
+         * @param bgDrawable
+         * @return
+         */
         public Builder setChatBackground(@DrawableRes int bgDrawable) {
             this.bundle.putInt(Constant.KEY_CHAT_BACKGROUND, bgDrawable);
             return this;
         }
 
-        public Builder setChatMenuStyle(EaseInputMenuStyle style) {
+        /**
+         * Set chat input menu style, including voice input, text input,
+         * emoji input and extended function input
+         * @param style
+         * @return
+         */
+        public Builder setChatInputMenuStyle(EaseInputMenuStyle style) {
             this.bundle.putString(Constant.KEY_CHAT_MENU_STYLE, style.name());
             return this;
         }
 
-        public Builder setChatMenuInputBackground(@DrawableRes int bgDrawable) {
+        /**
+         * Set chat input menu background
+         * @param bgDrawable
+         * @return
+         */
+        public Builder setChatInputMenuBackground(@DrawableRes int bgDrawable) {
             this.bundle.putInt(Constant.KEY_CHAT_MENU_INPUT_BG, bgDrawable);
             return this;
         }
 
-        public Builder setChatMenuInputHint(String inputHint) {
+        /**
+         * Set chat input menu's hint text
+         * @param inputHint
+         * @return
+         */
+        public Builder setChatInputMenuHint(String inputHint) {
             this.bundle.putString(Constant.KEY_CHAT_MENU_INPUT_HINT, inputHint);
             return this;
         }
 
+        /**
+         * Set whether to use original file to send image message
+         * @param sendOriginalImage
+         * @return
+         */
         public Builder sendMessageByOriginalImage(boolean sendOriginalImage) {
             this.bundle.putBoolean(Constant.KEY_SEND_ORIGINAL_IMAGE_MESSAGE, sendOriginalImage);
             return this;
         }
 
+        /**
+         * Set chat list's empty layout if you want replace the default
+         * @param emptyLayout
+         * @return
+         */
         public Builder setEmptyLayout(@LayoutRes int emptyLayout) {
             this.bundle.putInt(Constant.KEY_EMPTY_LAYOUT, emptyLayout);
             return this;
         }
 
+        /**
+         * Set custom fragment which should extends EaseMessageFragment
+         * @param fragment
+         * @param <T>
+         * @return
+         */
         public <T extends EaseChatFragment> Builder setCustomFragment(T fragment) {
             this.customFragment = fragment;
             return this;
         }
 
+        /**
+         * Set custom adapter which should extends EaseMessageAdapter
+         * @param adapter
+         * @return
+         */
         public Builder setCustomAdapter(EaseMessageAdapter adapter) {
             this.adapter = adapter;
             return this;
@@ -681,12 +849,11 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             EaseChatFragment fragment = this.customFragment != null ? this.customFragment : new EaseChatFragment();
             fragment.setArguments(this.bundle);
             fragment.setHeaderBackPressListener(this.backPressListener);
-            fragment.setOnChatLayoutListener(this.listener);
             fragment.setOnChatExtendMenuItemClickListener(this.extendMenuItemClickListener);
             fragment.setOnChatInputChangeListener(this.chatInputChangeListener);
-            fragment.setOnChatItemClickListener(this.chatItemClickListener);
+            fragment.setOnMessageItemClickListener(this.messageItemClickListener);
             fragment.setOnMessageSendCallBack(this.messageSendCallBack);
-            fragment.setOnOtherTypingListener(this.otherTypingListener);
+            fragment.setOnPeerTypingListener(this.peerTypingListener);
             fragment.setOnAddMsgAttrsBeforeSendEvent(this.sendMsgEvent);
             fragment.setOnChatRecordTouchListener(this.recordTouchListener);
             fragment.setCustomAdapter(this.adapter);
@@ -704,7 +871,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         public static final String KEY_MSG_LEFT_BUBBLE = "key_msg_left_bubble";
         public static final String KEY_MSG_RIGHT_BUBBLE = "key_msg_right_bubble";
         public static final String KEY_SHOW_NICKNAME = "key_show_nickname";
-        public static final String KEY_MESSAGE_LIST_SHOW_TYPE = "key_message_list_show_type";
+        public static final String KEY_MESSAGE_LIST_SHOW_STYLE = "key_message_list_show_type";
         public static final String KEY_HIDE_RECEIVE_AVATAR = "key_hide_left_avatar";
         public static final String KEY_HIDE_SEND_AVATAR = "key_hide_right_avatar";
         public static final String KEY_CHAT_BACKGROUND = "key_chat_background";
