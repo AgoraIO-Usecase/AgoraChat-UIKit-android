@@ -96,7 +96,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         if(!isMessageId(msgId)) {
             throw new IllegalArgumentException("please check if set correct msg id");
         }
-        ChatMessage message = conversation.getMessage(msgId, false);
+        ChatMessage message = conversation.getMessage(msgId, true);
         List<ChatMessage> messages = conversation.searchMsgFromDB(message.getMsgTime() - 1,
                                                                 pageSize, direction);
         if(isActive()) {
@@ -208,12 +208,12 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
             //Can allow message id to be empty
             return true;
         }
-        ChatMessage message = conversation.getMessage(msgId, false);
+        ChatMessage message = conversation.getMessage(msgId, true);
         return message != null;
     }
 
     /**
-     * Check message's status, if is not success or fail, set to {@link com.hyphenate.chat.ChatMessage.Status#FAIL}
+     * Check message's status, if is not success or fail, set to {@link ChatMessage.Status#FAIL}
      * @param messages
      */
     private void checkMessageStatus(List<ChatMessage> messages) {
