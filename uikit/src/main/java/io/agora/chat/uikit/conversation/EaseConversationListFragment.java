@@ -316,61 +316,122 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
             this.bundle = new Bundle();
         }
 
+        /**
+         * Set custom fragment which should extends EaseConversationListFragment
+         * @param fragment
+         * @param <T>
+         * @return
+         */
         public <T extends EaseConversationListFragment> EaseConversationListFragment.Builder setCustomFragment(T fragment) {
             this.customFragment = fragment;
             return this;
         }
 
-        public Builder setUseHeader(boolean useTitle) {
+        /**
+         * Whether to use default titleBar which is {@link EaseTitleBar}
+         * @param useTitle
+         * @return
+         */
+        public Builder useHeader(boolean useTitle) {
             this.bundle.putBoolean(Constant.KEY_USE_TITLE, useTitle);
             return this;
         }
 
+        /**
+         * Set titleBar's title
+         * @param title
+         * @return
+         */
         public Builder setHeaderTitle(String title) {
             this.bundle.putString(Constant.KEY_SET_TITLE, title);
             return this;
         }
 
-        public Builder setHeaderEnableBack(boolean canBack) {
+        /**
+         * Whether show back icon in titleBar
+         * @param canBack
+         * @return
+         */
+        public Builder enableHeaderPressBack(boolean canBack) {
             this.bundle.putBoolean(Constant.KEY_ENABLE_BACK, canBack);
             return this;
         }
 
+        /**
+         * If you have set {@link EaseConversationListFragment.Builder#enableHeaderPressBack(boolean)}, you can set the listener
+         * @param listener
+         * @return
+         */
         public Builder setHeaderBackPressListener(EaseTitleBar.OnBackPressListener listener) {
             this.backPressListener = listener;
             return this;
         }
 
+        /**
+         * Set conversation item click listener
+         * @param itemClickListener
+         * @return
+         */
         public Builder setItemClickListener(OnItemClickListener itemClickListener) {
             this.itemClickListener = itemClickListener;
             return this;
         }
 
+        /**
+         * Set conversation change listener, such as conversation was been removed
+         * @param listener
+         * @return
+         */
         public Builder setConversationChangeListener(OnConversationChangeListener listener) {
             this.conversationChangeListener = listener;
             return this;
         }
 
+        /**
+         * Whether to show unread icon
+         * @param hideUnread
+         * @return
+         */
         public Builder hideUnread(boolean hideUnread) {
             this.bundle.putBoolean(Constant.KEY_HIDE_UNREAD, hideUnread);
             return this;
         }
 
+        /**
+         * Set unread icon position
+         * @param position
+         * @return
+         */
         public Builder setUnreadPosition(EaseConversationSetStyle.UnreadDotPosition position) {
             this.bundle.putString(Constant.KEY_UNREAD_POSITION, position.name());
             return this;
         }
 
+        /**
+         * Set unread icon's show style
+         * @param style
+         * @return
+         */
         public Builder setUnreadStyle(EaseConversationSetStyle.UnreadStyle style) {
             this.bundle.putString(Constant.KEY_UNREAD_STYLE, style.name());
             return this;
         }
 
+        /**
+         * Set chat list's empty layout if you want replace the default
+         * @param emptyLayout
+         * @return
+         */
         public Builder setEmptyLayout(@LayoutRes int emptyLayout) {
             this.bundle.putInt(Constant.KEY_EMPTY_LAYOUT, emptyLayout);
             return this;
         }
 
+        /**
+         * Set custom adapter which should extends EaseConversationListAdapter
+         * @param adapter
+         * @return
+         */
         public Builder setCustomAdapter(EaseConversationListAdapter adapter) {
             this.adapter = adapter;
             return this;
