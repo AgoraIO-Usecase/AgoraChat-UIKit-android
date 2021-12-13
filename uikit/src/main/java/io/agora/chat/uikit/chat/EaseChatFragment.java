@@ -65,9 +65,8 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     public String conversationId;
     public int chatType;
     public String historyMsgId;
-    public boolean isRoam;
+    public boolean isFromServer;
     public boolean isMessageInit;
-    private OnChatLayoutListener listener;
 
     protected File cameraFile;
     private EaseTitleBar.OnBackPressListener backPressListener;
@@ -106,7 +105,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             conversationId = bundle.getString(EaseConstant.EXTRA_CONVERSATION_ID);
             chatType = bundle.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
             historyMsgId = bundle.getString(EaseConstant.HISTORY_MSG_ID);
-            isRoam = bundle.getBoolean(EaseConstant.EXTRA_IS_FROM_SERVER, false);
+            isFromServer = bundle.getBoolean(EaseConstant.EXTRA_IS_FROM_SERVER, false);
         }
     }
 
@@ -122,21 +121,23 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         if(bundle != null) {
             boolean useHeader = bundle.getBoolean(Constant.KEY_USE_TITLE, false);
             titleBar.setVisibility(useHeader ? View.VISIBLE : View.GONE);
+            if(useHeader) {
+                String title = bundle.getString(Constant.KEY_SET_TITLE, "");
+                if(!TextUtils.isEmpty(title)) {
+                    titleBar.setTitle(title);
+                }
 
-            String title = bundle.getString(Constant.KEY_SET_TITLE, "");
-            if(!TextUtils.isEmpty(title)) {
-                titleBar.setTitle(title);
+                boolean canBack = bundle.getBoolean(Constant.KEY_ENABLE_BACK, false);
+                titleBar.setDisplayHomeAsUpEnabled(canBack);
+
+                titleBar.setOnBackPressListener(backPressListener != null ? backPressListener : new EaseTitleBar.OnBackPressListener() {
+                    @Override
+                    public void onBackPress(View view) {
+                        mContext.onBackPressed();
+                    }
+                });
             }
 
-            boolean canBack = bundle.getBoolean(Constant.KEY_ENABLE_BACK, false);
-            titleBar.setDisplayHomeAsUpEnabled(canBack);
-
-            titleBar.setOnBackPressListener(backPressListener != null ? backPressListener : new EaseTitleBar.OnBackPressListener() {
-                @Override
-                public void onBackPress(View view) {
-                    mContext.onBackPressed();
-                }
-            });
             int timeColor = bundle.getInt(Constant.KEY_MSG_TIME_COLOR, -1);
             if(timeColor != -1) {
                 chatLayout.getChatMessageListLayout().setTimeTextColor(timeColor);
@@ -197,7 +198,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     }
 
     public void initListener() {
-        chatLayout.setOnChatLayoutListener(listener != null ? listener : this);
+        chatLayout.setOnChatLayoutListener(this);
         chatLayout.setOnPopupWindowItemClickListener(this);
         chatLayout.setOnAddMsgAttrsBeforeSendEvent(sendMsgEvent != null ? sendMsgEvent : this);
         chatLayout.setOnChatRecordTouchListener(recordTouchListener != null ? recordTouchListener : this);
@@ -208,7 +209,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             chatLayout.init(EaseChatMessageListLayout.LoadDataType.HISTORY, conversationId, chatType);
             chatLayout.loadData(historyMsgId);
         }else {
-            if(isRoam) {
+            if(isFromServer) {
                 chatLayout.init(EaseChatMessageListLayout.LoadDataType.ROAM, conversationId, chatType);
             }else {
                 chatLayout.init(conversationId, chatType);
@@ -243,10 +244,6 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     private void setHeaderBackPressListener(EaseTitleBar.OnBackPressListener listener) {
         this.backPressListener = listener;
-    }
-
-    private void setOnChatLayoutListener(OnChatLayoutListener listener) {
-        this.listener = listener;
     }
 
     private void setOnChatExtendMenuItemClickListener(OnChatExtendMenuItemClickListener listener) {
@@ -505,7 +502,6 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         private final Bundle bundle;
         private EaseTitleBar.OnBackPressListener backPressListener;
         private EaseMessageAdapter adapter;
-        private OnChatLayoutListener listener;
         private OnChatExtendMenuItemClickListener extendMenuItemClickListener;
         private OnChatInputChangeListener chatInputChangeListener;
         private OnMessageItemClickListener messageItemClickListener;
@@ -538,14 +534,13 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType);
             bundle.putString(EaseConstant.HISTORY_MSG_ID, historyMsgId);
         }
-        // add comments
 
         /**
          * Whether to use default titleBar which is {@link EaseTitleBar}
          * @param useTitle
          * @return
          */
-        public Builder setUseHeader(boolean useTitle) {
+        public Builder useHeader(boolean useTitle) {
             this.bundle.putBoolean(Constant.KEY_USE_TITLE, useTitle);
             return this;
         }
@@ -587,18 +582,6 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
          */
         public Builder getHistoryMessageFromServerOrLocal(boolean isFromServer) {
             this.bundle.putBoolean(EaseConstant.EXTRA_IS_FROM_SERVER, isFromServer);
-            return this;
-        }
-
-        /**
-         * Set chat layout listener.You can set the sample listener by set {@link Builder#setOnChatExtendMenuItemClickListener(OnChatExtendMenuItemClickListener)},
-         * {@link Builder#setOnMessageItemClickListener(OnMessageItemClickListener)}, {@link Builder#setOnChatInputChangeListener(OnChatInputChangeListener)},
-         * {@link Builder#setOnPeerTypingListener(OnPeerTypingListener)} and {@link Builder#setOnMessageSendCallBack(OnMessageSendCallBack)}
-         * @param listener
-         * @return
-         */
-        public Builder setOnChatLayoutListener(OnChatLayoutListener listener) {
-            this.listener = listener;
             return this;
         }
 

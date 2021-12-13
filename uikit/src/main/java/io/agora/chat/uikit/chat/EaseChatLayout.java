@@ -530,8 +530,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     public boolean onPressToSpeakBtnTouch(View v, MotionEvent event) {
         if(recordTouchListener != null) {
             boolean onRecordTouch = recordTouchListener.onRecordTouch(v, event);
-            if (!onRecordTouch) {
-                return false;
+            if (onRecordTouch) {
+                return true;
             }
         }
         return voiceRecorder.onPressToSpeakBtnTouch(v, event, (this::sendVoiceMessage));
