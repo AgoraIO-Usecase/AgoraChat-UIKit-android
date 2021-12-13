@@ -43,5 +43,5 @@ dependencies {
     // swipe refresh layout
     api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     // Agora Chat SDK
-    api 'io.hyphenate:chat-sdk:3.8.7.2'
+    api 'io.agora.rtc:chat-sdk:1.0.0'
 }
