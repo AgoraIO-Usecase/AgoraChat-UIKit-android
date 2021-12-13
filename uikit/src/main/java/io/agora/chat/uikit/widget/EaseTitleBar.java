@@ -202,25 +202,27 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         }else {
             if(getContext() instanceof AppCompatActivity) {
                 AppCompatActivity activity = (AppCompatActivity) getContext();
-                activity.setSupportActionBar(toolbar);
-                if(activity.getSupportActionBar() != null) {
-                    // Show back icon
-                    activity.getSupportActionBar().setDisplayHomeAsUpEnabled(mDisplayHomeAsUpEnabled);
-                    // Not show title
-                    activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-                }
-                toolbar.setNavigationOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(mBackPressListener != null) {
-                            mBackPressListener.onBackPress(v);
-                        }
+                if(activity.getSupportActionBar() == null) {
+                    activity.setSupportActionBar(toolbar);
+                    if(activity.getSupportActionBar() != null) {
+                        // Show back icon
+                        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(mDisplayHomeAsUpEnabled);
+                        // Not show title
+                        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
                     }
-                });
-                if(mArrowColorId != -1) {
-                    setToolbarCustomColor(mArrowColorId);
-                }else {
-                    setToolbarCustomColorDefault(mArrowColor);
+                    toolbar.setNavigationOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(mBackPressListener != null) {
+                                mBackPressListener.onBackPress(v);
+                            }
+                        }
+                    });
+                    if(mArrowColorId != -1) {
+                        setToolbarCustomColor(mArrowColorId);
+                    }else {
+                        setToolbarCustomColorDefault(mArrowColor);
+                    }
                 }
             }
         }
