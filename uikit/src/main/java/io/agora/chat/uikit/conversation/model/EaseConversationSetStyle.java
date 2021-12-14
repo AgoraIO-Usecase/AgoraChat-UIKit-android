@@ -15,7 +15,6 @@ public class EaseConversationSetStyle extends EaseBaseSetStyle {
     private boolean hideUnreadDot;
     private UnreadDotPosition unreadDotPosition;
     private UnreadStyle style;
-    private boolean showSystemMessage;
 
     public int getTitleTextColor() {
         return titleTextColor;
@@ -103,14 +102,6 @@ public class EaseConversationSetStyle extends EaseBaseSetStyle {
 
     public void setStyle(UnreadStyle style) {
         this.style = style;
-    }
-
-    public boolean isShowSystemMessage() {
-        return showSystemMessage;
-    }
-
-    public void setShowSystemMessage(boolean showSystemMessage) {
-        this.showSystemMessage = showSystemMessage;
     }
 
     public enum UnreadDotPosition {

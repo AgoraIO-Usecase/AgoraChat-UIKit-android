@@ -41,10 +41,9 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
                 EaseConversationInfo info = null;
                 for (Conversation conversation : conversations.values()) {
                     if(conversation.getAllMessages().size() != 0) {
-                        if(!showSystemMessage) {
-                            if(EaseNotificationMsgManager.getInstance().isNotificationConversation(conversation)) {
-                                continue;
-                            }
+                        // Remove notification conversation
+                        if(EaseNotificationMsgManager.getInstance().isNotificationConversation(conversation)) {
+                            continue;
                         }
                         info = new EaseConversationInfo();
                         info.setInfo(conversation);

@@ -19,12 +19,6 @@ public interface IConversationStyle extends IAvatarSet, IConversationTextStyle {
     void hideUnreadDot(boolean hide);
 
     /**
-     * Whether to display notification messages
-     * @param show
-     */
-    void showSystemMessage(boolean show);
-
-    /**
      * Unread display position
      * Currently supports left and right
      * @param position

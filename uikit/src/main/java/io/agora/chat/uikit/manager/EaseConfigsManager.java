@@ -23,17 +23,6 @@ public class EaseConfigsManager {
         return false;
     }
 
-    /**
-     * Whether to display system notifications, such as notification of adding a contact.
-     * @return
-     */
-    public static boolean isShowSysNotificationForConversation() {
-        if(checkIfUIKitInit()) {
-            return EaseUtils.getBooleanResource(EaseUIKit.getInstance().getContext(), R.bool.ease_conversation_show_system_notification);
-        }
-        return false;
-    }
-
     private static boolean checkIfUIKitInit() {
         Context context = EaseUIKit.getInstance().getContext();
         if(context == null) {

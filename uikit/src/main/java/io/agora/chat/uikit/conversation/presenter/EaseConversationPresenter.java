@@ -3,21 +3,16 @@ package io.agora.chat.uikit.conversation.presenter;
 
 import java.util.List;
 
-import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBasePresenter;
-import io.agora.chat.uikit.interfaces.ILoadDataView;
 import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
-import io.agora.chat.uikit.manager.EaseConfigsManager;
-import io.agora.chat.uikit.utils.EaseUtils;
+import io.agora.chat.uikit.interfaces.ILoadDataView;
 
 public abstract class EaseConversationPresenter extends EaseBasePresenter {
     public IEaseConversationListView mView;
-    public boolean showSystemMessage;
 
     @Override
     public void attachView(ILoadDataView view) {
         mView = (IEaseConversationListView) view;
-        showSystemMessage = EaseConfigsManager.isShowSysNotificationForConversation();
     }
 
     @Override
@@ -29,14 +24,6 @@ public abstract class EaseConversationPresenter extends EaseBasePresenter {
     public void onDestroy() {
         super.onDestroy();
         detachView();
-    }
-
-    /**
-     * Whether to display notification messages
-     * @param showSystemMessage
-     */
-    public void setShowSystemMessage(boolean showSystemMessage) {
-        this.showSystemMessage = showSystemMessage;
     }
 
     /**

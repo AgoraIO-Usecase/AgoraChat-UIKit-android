@@ -215,10 +215,6 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
             setModel.setStyle(unreadStyle == 0 ? EaseConversationSetStyle.UnreadStyle.NUM
                     : EaseConversationSetStyle.UnreadStyle.DOT);
 
-            boolean showSystemMessage = a.getBoolean(R.styleable.EaseConversationListLayout_ease_con_item_show_system_message, true);
-            setModel.setShowSystemMessage(showSystemMessage);
-            presenter.setShowSystemMessage(showSystemMessage);
-
             a.recycle();
         }
     }
@@ -405,7 +401,6 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
         if(getContext() instanceof AppCompatActivity) {
             ((AppCompatActivity) getContext()).getLifecycle().addObserver(presenter);
         }
-        this.presenter.setShowSystemMessage(setModel.isShowSystemMessage());
         this.presenter.attachView(this);
     }
 
@@ -456,13 +451,6 @@ public class EaseConversationListLayout extends EaseBaseLayout implements IConve
     @Override
     public void hideUnreadDot(boolean hide) {
         setModel.setHideUnreadDot(hide);
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void showSystemMessage(boolean show) {
-        setModel.setShowSystemMessage(show);
-        presenter.setShowSystemMessage(show);
         notifyDataSetChanged();
     }
 
