@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/tv_name"
         android:textSize="11sp"
-        android:textColor="@color/gray_normal"
+        android:textColor="@color/ease_gray_normal"
         />
 
 </LinearLayout>

@@ -3,7 +3,6 @@ package io.agora.chat.uikit.widget.chatrow;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,7 +13,6 @@ import io.agora.chat.NormalFileMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.provider.EaseFileIconProvider;
-import io.agora.chat.uikit.utils.EaseEditTextUtils;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.util.TextFormater;
 
@@ -71,16 +69,16 @@ public class EaseChatRowFile extends EaseChatRow {
         if (message.direct() == ChatMessage.Direct.SEND){
             if (EaseFileUtils.isFileExistByUri(context, filePath)
                     && message.status() == ChatMessage.Status.SUCCESS) {
-                fileStateView.setText(R.string.have_uploaded);
+                fileStateView.setText(R.string.ease_have_uploaded);
             }else {
                 fileStateView.setText("");
             }
         }
         if (message.direct() == ChatMessage.Direct.RECEIVE) {
             if (EaseFileUtils.isFileExistByUri(context, filePath)) {
-                fileStateView.setText(R.string.have_downloaded);
+                fileStateView.setText(R.string.ease_have_downloaded);
             } else {
-                fileStateView.setText(R.string.did_not_download);
+                fileStateView.setText(R.string.ease_did_not_download);
             }
         }
 	}
@@ -105,7 +103,7 @@ public class EaseChatRowFile extends EaseChatRow {
             statusView.setVisibility(View.INVISIBLE);
         if (message.direct() == ChatMessage.Direct.SEND)
             if(fileStateView != null) {
-                fileStateView.setText(R.string.have_uploaded);
+                fileStateView.setText(R.string.ease_have_uploaded);
             }
     }
 

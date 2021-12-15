@@ -101,7 +101,7 @@ public class EaseChatRowText extends EaseChatRow {
         if (isSender() && EaseDingMessageHelper.get().isDingMessage(message) && ackedView != null) {
             ackedView.setVisibility(VISIBLE);
             int count = message.groupAckCount();
-            ackedView.setText(String.format(getContext().getString(R.string.group_ack_read_count), count));
+            ackedView.setText(String.format(getContext().getString(R.string.ease_group_ack_read_count), count));
         }
 
         // Set ack-user list change listener.
@@ -142,7 +142,7 @@ public class EaseChatRowText extends EaseChatRow {
         ackedView.post(()->{
             if (isSender()) {
                 ackedView.setVisibility(VISIBLE);
-                ackedView.setText(String.format(getContext().getString(R.string.group_ack_read_count), count));
+                ackedView.setText(String.format(getContext().getString(R.string.ease_group_ack_read_count), count));
             }
         });
     }

@@ -123,7 +123,7 @@ public class EaseShowVideoActivity extends EaseBaseActivity {
 					@Override
 					public void run() {
 						if (error == Error.FILE_NOT_FOUND) {
-							Toast.makeText(getApplicationContext(), R.string.Video_expired, Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), R.string.ease_video_expired, Toast.LENGTH_SHORT).show();
 						}
 					}
 				});

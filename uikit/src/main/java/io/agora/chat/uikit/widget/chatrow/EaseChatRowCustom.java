@@ -39,7 +39,7 @@ public class EaseChatRowCustom extends EaseChatRow {
     @Override
     public void onSetUpView() {
         CustomMessageBody txtBody = (CustomMessageBody) message.getBody();
-        String msg = context.getString(R.string.custom_message, txtBody.event());
+        String msg = context.getString(R.string.ease_custom_message, txtBody.event());
         contentView.setText(msg);
     }
 
@@ -49,7 +49,7 @@ public class EaseChatRowCustom extends EaseChatRow {
                 @Override
                 public void run() {
                     ackedView.setVisibility(VISIBLE);
-                    ackedView.setText(String.format(getContext().getString(R.string.group_ack_read_count), count));
+                    ackedView.setText(String.format(getContext().getString(R.string.ease_group_ack_read_count), count));
                 }
             });
         }
@@ -78,7 +78,7 @@ public class EaseChatRowCustom extends EaseChatRow {
         if (isSender() && EaseDingMessageHelper.get().isDingMessage(message) && ackedView != null) {
             ackedView.setVisibility(VISIBLE);
             int count = message.groupAckCount();
-            ackedView.setText(String.format(getContext().getString(R.string.group_ack_read_count), count));
+            ackedView.setText(String.format(getContext().getString(R.string.ease_group_ack_read_count), count));
         }
 
         // Set ack-user list change listener.

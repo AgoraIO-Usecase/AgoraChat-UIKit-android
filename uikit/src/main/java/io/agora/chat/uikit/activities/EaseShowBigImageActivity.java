@@ -89,7 +89,7 @@ public class EaseShowBigImageActivity extends EaseBaseActivity {
 	@SuppressLint("NewApi")
 	private void downloadImage(final String msgId) {
         EMLog.e(TAG, "download with messageId: " + msgId);
-		String str1 = getResources().getString(R.string.Download_the_pictures);
+		String str1 = getResources().getString(R.string.ease_download_the_pictures);
 		pd = new ProgressDialog(this);
 		pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		pd.setCanceledOnTouchOutside(false);
@@ -128,7 +128,7 @@ public class EaseShowBigImageActivity extends EaseBaseActivity {
                         image.setImageResource(default_res);
                         pd.dismiss();
                         if (error == Error.FILE_NOT_FOUND) {
-							Toast.makeText(getApplicationContext(), R.string.Image_expired, Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), R.string.ease_image_expired, Toast.LENGTH_SHORT).show();
 						}
 					}
 				});
@@ -136,7 +136,7 @@ public class EaseShowBigImageActivity extends EaseBaseActivity {
 
 			public void onProgress(final int progress, String status) {
 				EMLog.d(TAG, "Progress: " + progress);
-				final String str2 = getResources().getString(R.string.Download_the_pictures_new);
+				final String str2 = getResources().getString(R.string.ease_download_the_pictures_new);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {

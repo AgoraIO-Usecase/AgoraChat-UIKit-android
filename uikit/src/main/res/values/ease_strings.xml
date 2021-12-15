@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ease_location_recv">[The location of %1$s]</string>
+    <string name="ease_location_recv">[%1$s location]</string>
     <string name="ease_location_prefix">[My location]</string>
-    <string name="ease_picture">[Picture]</string>
+    <string name="ease_picture">[Image]</string>
     <string name="ease_video">[Video]</string>
     <string name="ease_file">[File]</string>
     <string name="ease_custom">[Custom message]</string>
     <string name="ease_voice_prefix">[Voice]</string>
-    <string name="ease_dynamic_expression">[Dynamic expression]</string>
+    <string name="ease_dynamic_expression">[Animoji]</string>
 
     <string name="ease_list_no_data_text">No data</string>
-    <string name="ease_all_members">All members</string>
+    <string name="ease_all_members">All members 44</string>
 
-    <string name="action_copy">Copy</string>
-    <string name="action_forward">Forward</string>
-    <string name="action_recall">Recall</string>
-    <string name="action_delete">Delete</string>
+    <string name="ease_action_copy">Copy</string>
+    <string name="ease_action_forward">Forward</string>
+    <string name="ease_action_recall">Recall</string>
+    <string name="ease_action_delete">Delete</string>
 
     <string name="ease_conversation_menu_make_read">Make read</string>
     <string name="ease_conversation_menu_make_top">Make top</string>
@@ -26,58 +26,58 @@
     <string name="ease_list_no_conversation_data_text">No data</string>
     <string name="ease_conversation_default_title">Chats</string>
 
-    <string name="ease_chat_were_mentioned">Someone @ You </string>
-    <string name="ease_chat_were_not_send_msg"> draft </string>
+    <string name="ease_chat_were_mentioned">[@Mentioning me]</string>
+    <string name="ease_chat_were_not_send_msg">[Draft]</string>
 
-    <string name="ease_msg_recall_by_self">You withdrew a message</string>
-    <string name="ease_msg_recall_by_user">%1$s withdrew a message</string>
+    <string name="ease_msg_recall_by_self">You recalled a message</string>
+    <string name="ease_msg_recall_by_user">%1$s recalled a message</string>
 
-    <string name="not_download">Not download:</string>
-    <string name="text_ack_msg">Read</string>
-    <string name="text_delivered_msg">Delivered</string>
-    <string name="group_ack_read_count">%1$d have read</string>
-    <string name="custom_message">Custom message: %1$s</string>
-    <string name="have_uploaded">Uploaded</string>
-    <string name="have_downloaded">Downloaded</string>
-    <string name="did_not_download">Did not download</string>
+    <string name="ease_not_download">Not download:</string>
+    <string name="ease_text_ack_msg">Read</string>
+    <string name="ease_text_delivered_msg">Delivered</string>
+    <string name="ease_group_ack_read_count">%1$d read</string>
+    <string name="ease_custom_message">Custom message: %1$s</string>
+    <string name="ease_have_uploaded">Uploaded</string>
+    <string name="ease_have_downloaded">Downloaded</string>
+    <string name="ease_did_not_download">Not downloaded</string>
 
-    <string name="attach_smile">Expression</string>
-    <string name="attach_picture">Photo album</string>
-    <string name="attach_take_pic">Camera</string>
-    <string name="attach_location">Location</string>
-    <string name="attach_video">Video</string>
-    <string name="attach_file">File</string>
+    <string name="ease_attach_smile">Emojis</string>
+    <string name="ease_attach_picture">Album</string>
+    <string name="ease_attach_take_pic">Camera</string>
+    <string name="ease_attach_location">Location</string>
+    <string name="ease_attach_video">Videos</string>
+    <string name="ease_attach_file">Files</string>
 
-    <string name="button_pushtotalk">Hold down to talk</string>
-    <string name="button_pushtotalk_pressed">Loosen to send</string>
-    <string name="button_send">Send</string>
-    <string name="Recording_without_permission">No Recording permission</string>
-    <string name="The_recording_time_is_too_short">Speaking time is too short</string>
-    <string name="send_failure_please">Sending failed. Please check whether the server is connected.</string>
-    <string name="Send_voice_need_sdcard_support">Voice sending requires sdcard support</string>
-    <string name="move_up_to_cancel">Swipe up to cancel sending</string>
-    <string name="release_to_cancel">Touch up to cancel sending</string>
-    <string name="send_fail">Failed to send message</string>
-    <string name="recoding_fail">Recording failed, please try again!</string>
-    <string name="resend">Resend</string>
-    <string name="confirm_resend">Are you sure to resend this message?</string>
-    <string name="delete_voice">Delete voice</string>
-    <string name="delete_video">Delete video</string>
-    <string name="Is_download_voice_click_later">Downloading voice, click later</string>
+    <string name="ease_button_pushtotalk">Press and hold to speak</string>
+    <string name="ease_button_pushtotalk_pressed">Release to send message</string>
+    <string name="ease_button_send">Send</string>
+    <string name="ease_recording_without_permission">No Recording permission</string>
+    <string name="ease_recording_time_is_too_short">Speech too short</string>
+    <string name="ease_send_failure_please">Failed to send message, please check the server connection.</string>
+    <string name="ease_send_voice_need_sdcard_support">You need an SD card to send voice messages</string>
+    <string name="ease_move_up_to_cancel">Swipe up to cancel sending</string>
+    <string name="ease_release_to_cancel">Release to cancel sending</string>
+    <string name="ease_send_fail">Failed to send message</string>
+    <string name="ease_recoding_fail">Recording failed, please try again!</string>
+    <string name="ease_resend">Resend 44</string>
+    <string name="ease_confirm_resend">Are you sure you want to resend this message?</string>
+    <string name="ease_delete_voice">Delete voice</string>
+    <string name="ease_delete_video">Delete video</string>
+    <string name="ease_is_download_voice_click_later">Downloading audio, click when done.</string>
     <string name="ease_chat_unknown_type">Unknown message type</string>
 
     <!--alert-->
-    <string name="prompt">Note</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
+    <string name="ease_prompt">Note</string>
+    <string name="ease_cancel">Cancel</string>
+    <string name="ease_ok">OK</string>
 
-    <string name="is_down_please_wait">Downloading video, please wait</string>
-    <string name="Image_expired">Picture is out of date!</string>
-    <string name="Video_expired">Video is out of date!</string>
-    <string name="downwaiting">Downloading file, please wait</string>
-    <string name="Failed_to_download_file">Failed to download file:</string>
-    <string name="File_expired">Picture is out of date:</string>
-    <string name="Download_the_pictures">Download picture: 0%</string>
-    <string name="Download_the_pictures_new">Downloading picture:</string>
+    <string name="ease_is_down_please_wait">Downloading video, please wait.</string>
+    <string name="ease_image_expired">Image expired</string>
+    <string name="ease_video_expired">Video expired</string>
+    <string name="ease_downwaiting">Downloading file, please wait.</string>
+    <string name="ease_failed_to_download_file">Failed to download file:</string>
+    <string name="ease_file_expired">File expired:</string>
+    <string name="ease_download_the_pictures">Downloading image: 0%</string>
+    <string name="ease_download_the_pictures_new">Downloading image:</string>
 
 </resources>

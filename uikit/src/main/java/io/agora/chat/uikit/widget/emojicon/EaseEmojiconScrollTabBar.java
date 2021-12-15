@@ -85,9 +85,9 @@ public class EaseEmojiconScrollTabBar extends RelativeLayout{
         scrollTo(position);
         for (int i = 0; i < tabList.size(); i++) {
             if (position == i) {
-                tabList.get(i).setBackgroundColor(getResources().getColor(R.color.emojicon_tab_selected));
+                tabList.get(i).setBackgroundColor(getResources().getColor(R.color.ease_emojicon_tab_selected));
             } else {
-                tabList.get(i).setBackgroundColor(getResources().getColor(R.color.emojicon_tab_nomal));
+                tabList.get(i).setBackgroundColor(getResources().getColor(R.color.ease_emojicon_tab_nomal));
             }
         }
     }
