@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:layout_marginTop="4dp"
-            android:text="@string/prompt"
+            android:text="@string/ease_prompt"
             android:textColor="#333"
             android:visibility="visible"
             android:textSize="20sp" />
@@ -52,7 +52,7 @@
             android:layout_weight="1"
             android:background="@drawable/ease_btn_cancel_bj"
             android:gravity="center"
-            android:text="@string/cancel"
+            android:text="@string/ease_cancel"
             android:textColor="#666666"
             android:textSize="16sp"
             android:visibility="gone" />
@@ -65,7 +65,7 @@
             android:layout_weight="1"
             android:background="@drawable/ease_btn_blue_selector"
             android:gravity="center"
-            android:text="@string/ok"
+            android:text="@string/ease_ok"
             android:textColor="#fff"
             android:textSize="16sp" />
     </LinearLayout>

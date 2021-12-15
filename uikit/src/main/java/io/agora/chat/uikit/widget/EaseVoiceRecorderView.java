@@ -129,13 +129,13 @@ public class EaseVoiceRecorderView extends RelativeLayout {
                             recorderCallback.onVoiceRecordComplete(getVoiceFilePath(), length);
                         }
                     } else if (length == Error.FILE_INVALID) {
-                        Toast.makeText(context, R.string.Recording_without_permission, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.ease_recording_without_permission, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(context, R.string.The_recording_time_is_too_short, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.ease_recording_time_is_too_short, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(context, R.string.send_failure_please, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.ease_send_failure_please, Toast.LENGTH_SHORT).show();
                 }
             }
             return true;
@@ -149,7 +149,7 @@ public class EaseVoiceRecorderView extends RelativeLayout {
         if(view instanceof ViewGroup && ((ViewGroup) view).getChildCount() > 0) {
             View child = ((ViewGroup) view).getChildAt(0);
             if(child instanceof TextView) {
-                ((TextView) child).setText(getContext().getString(pressed ? R.string.button_pushtotalk_pressed : R.string.button_pushtotalk));
+                ((TextView) child).setText(getContext().getString(pressed ? R.string.ease_button_pushtotalk_pressed : R.string.ease_button_pushtotalk));
             }
         }
     }
@@ -168,13 +168,13 @@ public class EaseVoiceRecorderView extends RelativeLayout {
 
     public void startRecording() {
         if (!EaseUtils.isSdcardExist()) {
-            Toast.makeText(context, R.string.Send_voice_need_sdcard_support, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.ease_send_voice_need_sdcard_support, Toast.LENGTH_SHORT).show();
             return;
         }
         try {
             wakeLock.acquire();
             this.setVisibility(View.VISIBLE);
-            recordingHint.setText(context.getString(R.string.move_up_to_cancel));
+            recordingHint.setText(context.getString(R.string.ease_move_up_to_cancel));
             recordingHint.setBackgroundColor(Color.TRANSPARENT);
             ivIcon.setImageResource(R.drawable.ease_record_icon);
             micImage.setVisibility(VISIBLE);
@@ -186,20 +186,20 @@ public class EaseVoiceRecorderView extends RelativeLayout {
             if (voiceRecorder != null)
                 voiceRecorder.discardRecording();
             this.setVisibility(View.INVISIBLE);
-            Toast.makeText(context, R.string.recoding_fail, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.ease_recoding_fail, Toast.LENGTH_SHORT).show();
             return;
         }
     }
 
     public void showReleaseToCancelHint() {
-        recordingHint.setText(context.getString(R.string.release_to_cancel));
+        recordingHint.setText(context.getString(R.string.ease_release_to_cancel));
         //recordingHint.setBackgroundResource(R.drawable.ease_recording_text_hint_bg);
         ivIcon.setImageResource(R.drawable.ease_record_cancel);
         micImage.setVisibility(GONE);
     }
 
     public void showMoveUpToCancelHint() {
-        recordingHint.setText(context.getString(R.string.move_up_to_cancel));
+        recordingHint.setText(context.getString(R.string.ease_move_up_to_cancel));
         recordingHint.setBackgroundColor(Color.TRANSPARENT);
         ivIcon.setImageResource(R.drawable.ease_record_icon);
         micImage.setVisibility(VISIBLE);

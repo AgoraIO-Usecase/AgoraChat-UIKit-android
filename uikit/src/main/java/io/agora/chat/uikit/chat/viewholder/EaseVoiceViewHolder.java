@@ -3,7 +3,6 @@ package io.agora.chat.uikit.chat.viewholder;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -60,7 +59,7 @@ public class EaseVoiceViewHolder extends EaseChatRowViewHolder{
                 asyncDownloadVoice(message);
             }
         } else {
-            final String st = getContext().getResources().getString(R.string.Is_download_voice_click_later);
+            final String st = getContext().getResources().getString(R.string.ease_is_download_voice_click_later);
             if (message.status() == ChatMessage.Status.SUCCESS) {
                 if (ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
                     play(message);

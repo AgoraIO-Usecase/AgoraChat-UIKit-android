@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_chat_activity" >
+        android:layout_marginTop="@dimen/ease_margin_chat_activity" >
 
         <io.agora.chat.uikit.widget.EaseImageView
             android:id="@+id/iv_userhead"
@@ -29,7 +29,7 @@
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_chat_activity"
+            android:layout_marginEnd="@dimen/ease_margin_chat_activity"
             app:layout_constraintEnd_toStartOf="@id/iv_userhead"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_goneMarginEnd="@dimen/ease_chat_avatar_margin"
@@ -99,9 +99,9 @@
             style="@style/chat_text_name_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/chat_nick_margin_left"
+            android:layout_marginRight="@dimen/ease_chat_nick_margin_left"
             android:layout_marginBottom="2dp"
-            android:textSize="@dimen/chat_nick_text_size"
+            android:textSize="@dimen/ease_chat_nick_text_size"
             android:textColor="@color/ease_msg_name_color"
             app:layout_constraintBottom_toTopOf="@id/bubble"
             app:layout_constraintRight_toRightOf="@id/bubble"

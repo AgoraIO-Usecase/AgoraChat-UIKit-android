@@ -7,7 +7,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/gray_normal"
+        android:background="@color/ease_gray_normal"
         android:visibility="gone"/>
 
     <LinearLayout
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="32dp"
                 android:layout_marginLeft="5dp"
-                android:text="@string/button_pushtotalk"
+                android:text="@string/ease_button_pushtotalk"
                 android:textColor="#666666"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
@@ -141,7 +141,7 @@
                 android:layout_marginEnd="@dimen/ease_chat_primary_margin_right"
                 android:layout_marginBottom="6dp"
                 android:background="@drawable/ease_chat_send_btn_selector"
-                android:text="@string/button_send"
+                android:text="@string/ease_button_send"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:visibility="gone" />

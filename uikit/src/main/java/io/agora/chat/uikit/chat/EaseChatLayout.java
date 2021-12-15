@@ -775,7 +775,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public boolean onResendClick(ChatMessage message) {
         EMLog.i(TAG, "onResendClick");
-        new EaseDialog(getContext(), R.string.resend, R.string.confirm_resend, null, new EaseDialog.AlertDialogUser() {
+        new EaseDialog(getContext(), R.string.ease_resend, R.string.ease_confirm_resend, null, new EaseDialog.AlertDialogUser() {
             @Override
             public void onResult(boolean confirmed, Bundle bundle) {
                 if (!confirmed) {
@@ -972,7 +972,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         ChatMessage.Type type = message.getType();
         menuHelper.findItemVisible(R.id.action_chat_copy, false);
         menuHelper.findItemVisible(R.id.action_chat_recall, false);
-        menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.action_delete));
+        menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_action_delete));
         switch (type) {
             case TXT:
                 menuHelper.findItemVisible(R.id.action_chat_copy, true);
@@ -984,11 +984,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
             case VOICE:
-                menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.delete_voice));
+                menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_voice));
                 menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
             case VIDEO:
-                menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.delete_video));
+                menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_video));
                 menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
         }

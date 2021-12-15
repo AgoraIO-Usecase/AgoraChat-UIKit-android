@@ -4,7 +4,7 @@
     <dimen name="ease_toolbar_title_right_size">16sp</dimen>
     <dimen name="ease_common_title_bar_height">44dp</dimen>
 
-    <dimen name="margin_chat_activity">10dp</dimen>
+    <dimen name="ease_margin_chat_activity">10dp</dimen>
     <dimen name="ease_chat_avatar_margin">15dp</dimen>
     <dimen name="ease_chat_bubble_margin_avatar">10dp</dimen>
     <dimen name="ease_chat_ack_margin_bubble">5dp</dimen>
@@ -12,15 +12,15 @@
     <dimen name="ease_msg_status_icon_margin_bottom_bubble">8dp</dimen>
     <dimen name="ease_msg_file_bubble_default_width">254dp</dimen>
 
-    <dimen name="chat_nick_margin_left">12dp</dimen>
-    <dimen name="chat_nick_text_size">13sp</dimen>
+    <dimen name="ease_chat_nick_margin_left">12dp</dimen>
+    <dimen name="ease_chat_nick_text_size">13sp</dimen>
 
     <dimen name="ease_chat_file_icon_size">44dp</dimen>
     <dimen name="ease_chat_file_icon_margin">8dp</dimen>
     <dimen name="ease_chat_file_bubble_min_height">70dp</dimen>
 
-    <dimen name="image_thumbnail_size">100dp</dimen>
-    <dimen name="image_thumbnail_spacing">1dp</dimen>
+    <dimen name="ease_image_thumbnail_size">100dp</dimen>
+    <dimen name="ease_image_thumbnail_spacing">1dp</dimen>
 
     <dimen name="ease_chat_primary_menu_icon_size">36dp</dimen>
     <dimen name="ease_chat_primary_menu_more_icon_size">36dp</dimen>

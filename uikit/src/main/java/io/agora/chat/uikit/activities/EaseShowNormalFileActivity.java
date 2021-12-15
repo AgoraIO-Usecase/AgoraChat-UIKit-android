@@ -49,9 +49,9 @@ public class EaseShowNormalFileActivity extends EaseBaseActivity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         EaseCompat.deleteFile(EaseShowNormalFileActivity.this, ((FileMessageBody) message.getBody()).getLocalUri());
-                        String str4 = getResources().getString(R.string.Failed_to_download_file);
+                        String str4 = getResources().getString(R.string.ease_failed_to_download_file);
                         if (code == Error.FILE_NOT_FOUND) {
-                            str4 = getResources().getString(R.string.File_expired);
+                            str4 = getResources().getString(R.string.ease_file_expired);
                         }
                         Toast.makeText(getApplicationContext(), str4+message, Toast.LENGTH_SHORT).show();
                         finish();

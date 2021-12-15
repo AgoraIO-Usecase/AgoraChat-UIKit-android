@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@id/iv_icon"
         android:layout_marginTop="19dp"
         android:padding="2dp"
-        android:text="@string/move_up_to_cancel"
+        android:text="@string/ease_move_up_to_cancel"
         android:textColor="@color/white"
         android:textSize="14sp" />
 

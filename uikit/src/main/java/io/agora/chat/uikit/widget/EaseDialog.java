@@ -25,14 +25,14 @@ public class EaseDialog extends Dialog {
 
 	public EaseDialog(Context context, int msgId) {
 		super(context);
-		this.title = context.getResources().getString(R.string.prompt);
+		this.title = context.getResources().getString(R.string.ease_prompt);
 		this.msg = context.getResources().getString(msgId);
 		this.setCanceledOnTouchOutside(true);
 	}
 	
 	public EaseDialog(Context context, String msg) {
 		super(context);
-		this.title = context.getResources().getString(R.string.prompt);
+		this.title = context.getResources().getString(R.string.ease_prompt);
 		this.msg = msg;
 		this.setCanceledOnTouchOutside(true);
 	}
