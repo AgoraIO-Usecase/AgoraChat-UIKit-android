@@ -10,7 +10,7 @@
     <string name="ease_dynamic_expression">[Animoji]</string>
 
     <string name="ease_list_no_data_text">No data</string>
-    <string name="ease_all_members">All members 44</string>
+    <string name="ease_all_members">All members</string>
 
     <string name="ease_action_copy">Copy</string>
     <string name="ease_action_forward">Forward</string>
@@ -59,7 +59,7 @@
     <string name="ease_release_to_cancel">Release to cancel sending</string>
     <string name="ease_send_fail">Failed to send message</string>
     <string name="ease_recoding_fail">Recording failed, please try again!</string>
-    <string name="ease_resend">Resend 44</string>
+    <string name="ease_resend">Resend</string>
     <string name="ease_confirm_resend">Are you sure you want to resend this message?</string>
     <string name="ease_delete_voice">Delete voice</string>
     <string name="ease_delete_video">Delete video</string>

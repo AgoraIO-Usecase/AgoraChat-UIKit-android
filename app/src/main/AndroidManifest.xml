@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.agora.chat.uikit">
+    package="io.agora.chat.uikit.simple">
 
     <application
         android:allowBackup="true"
@@ -8,6 +8,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".DemoApplication"
         android:theme="@style/Theme.AgoraChatUIKit">
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -16,6 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SignInActivity" />
     </application>
 
 </manifest>
