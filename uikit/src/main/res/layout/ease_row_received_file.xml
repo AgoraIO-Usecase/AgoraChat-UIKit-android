@@ -115,7 +115,7 @@
             app:layout_constraintStart_toEndOf="@id/bubble"
             app:layout_constraintBottom_toBottomOf="parent"
             android:indeterminateDrawable="@drawable/ease_chat_loading_progress_bar"
-            android:visibility="visible" />
+            android:visibility="invisible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
