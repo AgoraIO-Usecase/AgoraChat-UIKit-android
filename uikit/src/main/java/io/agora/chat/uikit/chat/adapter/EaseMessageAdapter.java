@@ -10,7 +10,7 @@ import io.agora.chat.uikit.conversation.viewholder.EaseConversationViewHolderFac
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 
 public class EaseMessageAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage> {
-    private MessageListItemClickListener listener;
+    protected MessageListItemClickListener listener;
     
     public EaseMessageAdapter() {}
     
