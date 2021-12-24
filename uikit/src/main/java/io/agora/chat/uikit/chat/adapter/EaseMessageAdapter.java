@@ -19,11 +19,8 @@ public class EaseMessageAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage>
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if(mData != null && mData.size() > 0) {
-            return EaseChatViewHolderFactory.getViewType(mData.get(position));
-        }
-        return super.getItemViewType(position);
+    public int getItemNotEmptyViewType(int position) {
+        return EaseChatViewHolderFactory.getViewType(mData.get(position));
     }
 
     @Override

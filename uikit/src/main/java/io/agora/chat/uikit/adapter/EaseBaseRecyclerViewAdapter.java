@@ -101,9 +101,23 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
         return (mData == null || mData.isEmpty()) ? 1 : mData.size();
     }
 
+    /**
+     * If you want to add more view type and use default empty view implementation, you should override {@link #getItemNotEmptyViewType(int)}
+     * @param position
+     * @return
+     */
     @Override
     public int getItemViewType(int position) {
-        return (mData == null || mData.isEmpty()) ? VIEW_TYPE_EMPTY : VIEW_TYPE_ITEM;
+        return (mData == null || mData.isEmpty()) ? VIEW_TYPE_EMPTY : getItemNotEmptyViewType(position);
+    }
+
+    /**
+     * If you want to add more view type and use default empty view implementation, you should override the method
+     * @param position
+     * @return
+     */
+    public int getItemNotEmptyViewType(int position) {
+        return VIEW_TYPE_ITEM;
     }
 
     @Override
