@@ -20,11 +20,8 @@ public class EaseConversationListAdapter extends EaseBaseRecyclerViewAdapter<Eas
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if(mData != null && mData.size() > 0) {
-            return EaseConversationViewHolderFactory.getViewType(mData.get(position));
-        }
-        return super.getItemViewType(position);
+    public int getItemNotEmptyViewType(int position) {
+        return EaseConversationViewHolderFactory.getViewType(mData.get(position));
     }
 
     @Override
