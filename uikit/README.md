@@ -92,9 +92,10 @@ public class ChatActivity extends AppCompatActivity {
 }
 ```
 运行后，如下图：
+
 // todo：添加图片
 
-### 快速创建聊天页面
+### 快速创建会话列表页面
 AgoraChatUIKit 提供了 EaseConversationListFragment ，添加到 Activity 中即可使用。
 示例如下：
 ```java
@@ -114,6 +115,7 @@ public class ConversationListActivity extends AppCompatActivity {
 ```
 注意：如果接收到新消息，删除会话联系人等事件，需要调用 EaseConversationListFragment#refreshList 方法刷新列表。
 运行后，如下图：
+
 // todo：添加图片
 
 ## 高级定制
@@ -195,9 +197,6 @@ EaseChatFragment#Builder 提供的方法解释：
 （1）创建自定义适配器 CustomMessageAdapter 继承自 EaseMessageAdapter， 重写 getViewHolder 和 getItemNotEmptyViewType 方法。
 ```java
 public class CustomMessageAdapter extends EaseMessageAdapter {
-    private static final String CUSTOM_TYPE = "custom_type";
-    private static final int VIEW_TYPE_MESSAGE_CUSTOM_VIEW_ME = 1000;
-    private static final int VIEW_TYPE_MESSAGE_CUSTOM_VIEW_OTHER = 1001;
 
     @Override
     public int getItemNotEmptyViewType(int position) {
@@ -300,8 +299,37 @@ builder.setCustomAdapter(customMessageAdapter);
 ```java
 builder.setCustomFragment(customChatFragment);
 ```
+（1）列表控件相关功能设置
+获取 EaseChatMessageListLayout 对象：
+```java
+EaseChatMessageListLayout chatMessageListLayout = chatLayout.getChatMessageListLayout();
+```
+EaseChatMessageListLayout 提供了如下方法：
+| 方法                            | 说明                                                 |
+| ------------------------------ | ---------------------------------------------------- |
+| setPresenter()                 | UIKit 中提供了默认的数据实现 EaseChatMessagePresenterImpl，开发者可以继承 EaseChatMessagePresenter 添加自己的数据逻辑 |
+| getMessageAdapter()            | 返回消息列表的适配器 |
+| addHeaderAdapter()             | 添加消息列表的头布局的适配器 |
+| addFooterAdapter()             | 添加消息列表的尾布局的适配器 |
+| removeAdapter()                | 移除指定适配器 |
+| addRVItemDecoration()          | 添加消息列表的装饰器 |
+| removeRVItemDecoration()       | 移除消息列表的装饰器 |
+| setAvatarDefaultSrc()          | 设置条目的默认头像 |
+| setAvatarShapeType()           | 设置头像的样式 |
+| showNickname()                 | 是否展示条目的昵称，EaseChatFragment#Builder 提供了相应的设置方法         |
+| setItemSenderBackground()      | 设置发送方的背景，EaseChatFragment#Builder 提供了相应的设置方法           |
+| setItemReceiverBackground()    | 设置接收方的背景，EaseChatFragment#Builder 提供了相应的设置方法           |
+| setItemTextSize()              | 设置文本消息的字体大小                                                 |
+| setItemTextColor()             | 设置文本消息的字体颜色                                                 |
+| setTimeTextSize()              | 设置时间线文本的字体大小，EaseChatFragment#Builder 提供了相应的设置方法    |
+| setTimeTextColor()             | 设置时间线文本的颜色，EaseChatFragment#Builder 提供了相应的设置方法       |
+| setTimeBackground()            | 设置时间线的背景                                                      |
+| setItemShowType()              | 设置消息列表的展示样式，EaseChatFragment#Builder 提供了相应的设置方法      |
+| hideChatReceiveAvatar()        | 不展示接收方头像，默认为展示，EaseChatFragment#Builder 提供了相应的设置方法 |
+| hideChatSendAvatar()           | 不展示发送方头像，默认为展示，EaseChatFragment#Builder 提供了相应的设置方法 |
+| setOnChatErrorListener()       | 设置发送消息时的错误回调，EaseChatFragment#Builder 提供了相应的设置方法    |
 
-（1）扩展功能设置
+（2）扩展功能设置
 ```java
 IChatExtendMenu chatExtendMenu = chatLayout.getChatInputMenu().getChatExtendMenu();
 ```
@@ -329,7 +357,7 @@ public boolean onChatExtendMenuItemClick(View view, int itemId) {
 }
 ```
 
-（2）长按菜单功能设置
+（3）长按菜单功能设置
 - 增加自定义菜单条目
 ```java
 chatLayout.addItemMenu(Menu.NONE, CUSTOM_YOUR_LONG_LICK_MENU_ID, 
@@ -365,31 +393,6 @@ public void onDismiss(PopupWindow menu) {
     // 如果要处理快捷菜单的隐藏事件，可以在这里处理
 }
 ```
-（3）列表相关功能设置
-EaseChatMessageListLayout 提供了如下方法：
-| 方法                            | 说明                                                 |
-| ------------------------------ | ---------------------------------------------------- |
-| setPresenter()                 | UIKit 中提供了默认的数据实现 EaseChatMessagePresenterImpl，开发者可以继承 EaseChatMessagePresenter 添加自己的数据逻辑 |
-| getMessageAdapter()            | 返回消息列表的适配器 |
-| addHeaderAdapter()             | 添加消息列表的头布局的适配器 |
-| addFooterAdapter()             | 添加消息列表的尾布局的适配器 |
-| removeAdapter()                | 移除指定适配器 |
-| addRVItemDecoration()          | 添加消息列表的装饰器 |
-| removeRVItemDecoration()       | 移除消息列表的装饰器 |
-| setAvatarDefaultSrc()          | 设置条目的默认头像 |
-| setAvatarShapeType()           | 设置头像的样式 |
-| showNickname()                 | 是否展示条目的昵称，EaseChatFragment#Builder 提供了相应的设置方法         |
-| setItemSenderBackground()      | 设置发送方的背景，EaseChatFragment#Builder 提供了相应的设置方法           |
-| setItemReceiverBackground()    | 设置接收方的背景，EaseChatFragment#Builder 提供了相应的设置方法           |
-| setItemTextSize()              | 设置文本消息的字体大小                                                 |
-| setItemTextColor()             | 设置文本消息的字体颜色                                                 |
-| setTimeTextSize()              | 设置时间线文本的字体大小，EaseChatFragment#Builder 提供了相应的设置方法    |
-| setTimeTextColor()             | 设置时间线文本的颜色，EaseChatFragment#Builder 提供了相应的设置方法       |
-| setTimeBackground()            | 设置时间线的背景                                                      |
-| setItemShowType()              | 设置消息列表的展示样式，EaseChatFragment#Builder 提供了相应的设置方法      |
-| hideChatReceiveAvatar()        | 不展示接收方头像，默认为展示，EaseChatFragment#Builder 提供了相应的设置方法 |
-| hideChatSendAvatar()           | 不展示发送方头像，默认为展示，EaseChatFragment#Builder 提供了相应的设置方法 |
-| setOnChatErrorListener()       | 设置发送消息时的错误回调，EaseChatFragment#Builder 提供了相应的设置方法    |
 
 （4）设置输入菜单相关属性
 - 获取 EaseChatInputMenu 对象
