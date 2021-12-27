@@ -12,9 +12,49 @@
 AgoraChatUIKit 支持Gradle接入和 Module源码集成
 
 #### Gradle接入集成
+在项目根目录的 build.gradle 文件中添加 MavenCentral 远程仓库。
+```java
+buildscript {
+    repositories {
+        ...
+        mavenCentral()
+    }
+}
+allprojects {
+    repositories {
+        ...
+        mavenCentral()
+    }
+}
+```
+// todo 需要先发布uikit才能有远程地址
 
+在项目的 /app/build.gradle 文件添加 xxx 依赖项（X.Y.Z 为当前版本号）。你可以在 Sonatype 官网查询最新版本号。
+```java
+android {
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+dependencies {
+    ...
+    implementation 'xxx:xxx:X.Y.Z'
+}
+```
 #### Module源码集成
+从 github 获取 [AgoraChatUIKit](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-android) 源码，按照下面的方式集成：
 
+```java
+implementation project(':uikit')
+```
+#### 防止代码混淆
+在 app/proguard-rules.pro 文件中添加如下行，防止代码混淆：
+```java
+-keep class io.agora.** {*;}
+-dontwarn  io.agora.**
+```
 ### 权限
 ```xml
 <!-- IM SDK required start -->
