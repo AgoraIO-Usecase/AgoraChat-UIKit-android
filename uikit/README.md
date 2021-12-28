@@ -49,6 +49,7 @@ dependencies {
 ```java
 implementation project(':uikit')
 ```
+// TODO 是否应该将 防止代码混淆 、 权限 以及一些 AndroidManifest.xml 的修改，添加一个链接到 SDK 的初始化 ？？
 #### 防止代码混淆
 在 app/proguard-rules.pro 文件中添加如下行，防止代码混淆：
 ```java
