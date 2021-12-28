@@ -20,6 +20,7 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.conversation.adapter.EaseConversationListAdapter;
+import io.agora.chat.uikit.conversation.interfaces.OnConItemClickListener;
 import io.agora.chat.uikit.conversation.interfaces.OnConversationChangeListener;
 import io.agora.chat.uikit.conversation.interfaces.OnConversationLoadListener;
 import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
@@ -43,7 +44,7 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
     public EaseConversationListLayout conversationListLayout;
     public SwipeRefreshLayout srlRefresh;
     private EaseConversationListAdapter adapter;
-    private OnItemClickListener itemClickListener;
+    private OnConItemClickListener<EaseConversationInfo> itemClickListener;
     private EaseTitleBar.OnBackPressListener backPressListener;
     private OnConversationChangeListener conversationListener;
 
@@ -135,7 +136,7 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
         this.adapter = adapter;
     }
 
-    private void setItemClickListener(OnItemClickListener itemClickListener) {
+    private void setItemClickListener(OnConItemClickListener<EaseConversationInfo> itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
 
@@ -155,7 +156,11 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
     @Override
     public void onItemClick(View view, int position) {
         if(this.itemClickListener != null) {
-            this.itemClickListener.onItemClick(view, position);
+            EaseConversationInfo info = null;
+            if(conversationListLayout != null) {
+                info = conversationListLayout.getListAdapter().getItem(position);
+            }
+            this.itemClickListener.onItemClick(view, info, position);
         }
     }
 
@@ -307,7 +312,7 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
     public static class Builder {
         private final Bundle bundle;
         private EaseConversationListFragment customFragment;
-        private OnItemClickListener itemClickListener;
+        private OnConItemClickListener<EaseConversationInfo> itemClickListener;
         private EaseConversationListAdapter adapter;
         private EaseTitleBar.OnBackPressListener backPressListener;
         private OnConversationChangeListener conversationChangeListener;
@@ -372,7 +377,7 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
          * @param itemClickListener
          * @return
          */
-        public Builder setItemClickListener(OnItemClickListener itemClickListener) {
+        public Builder setItemClickListener(OnConItemClickListener<EaseConversationInfo> itemClickListener) {
             this.itemClickListener = itemClickListener;
             return this;
         }
