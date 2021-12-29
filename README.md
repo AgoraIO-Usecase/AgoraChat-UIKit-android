@@ -1,6 +1,6 @@
-# AgoraChatUIKit 使用指南
+# Agora Chat UIKit 使用指南
 
-## 导入 AgoraChatUIKit
+## 导入 Agora Chat UIKit
 ### 开发环境要求
 - Android Studio 3.2以上
 - Gradle4.6以上
@@ -9,7 +9,7 @@
 - Java JDK 1.8以上
 
 ### 集成说明
-AgoraChatUIKit 支持Gradle接入和 Module源码集成
+Agora Chat UIKit 支持Gradle接入和 Module源码集成
 
 #### Gradle接入集成
 在项目根目录的 build.gradle 文件中添加 MavenCentral 远程仓库。
@@ -44,7 +44,7 @@ dependencies {
 }
 ```
 #### Module源码集成
-从 github 获取 [AgoraChatUIKit](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-android) 源码，按照下面的方式集成：
+从 github 获取 [Agora Chat UIKit](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-android) 源码，按照下面的方式集成：
 
 ```java
 implementation project(':uikit')
@@ -90,7 +90,7 @@ implementation project(':uikit')
 <!-- IM SDK required end -->
 ```
 ### 初始化 Agora Chat SDK
-使用 Agora Chat SDK之前，需要初始化，可以使用 AgoraChatUIKit 提供的初始化方法 EaseUIKit#init 。
+使用 Agora Chat SDK之前，需要初始化，可以使用 Agora Chat UIKit 提供的初始化方法 EaseUIKit#init 。
 示例代码：
 ```java
 public class DemoApplication extends Application {
@@ -113,7 +113,7 @@ public class DemoApplication extends Application {
 
 ## 快速搭建
 ### 快速创建聊天页面
-AgoraChatUIKit 提供了 EaseChatFragment ，添加到 Activity 中并传递相应的参数即可使用。
+Agora Chat UIKit 提供了 EaseChatFragment ，添加到 Activity 中并传递相应的参数即可使用。
 示例如下：
 ```java
 public class ChatActivity extends AppCompatActivity {
@@ -137,7 +137,7 @@ public class ChatActivity extends AppCompatActivity {
 // todo：添加图片
 
 ### 快速创建会话列表页面
-AgoraChatUIKit 提供了 EaseConversationListFragment ，添加到 Activity 中即可使用。
+Agora Chat UIKit 提供了 EaseConversationListFragment ，添加到 Activity 中即可使用。
 示例如下：
 ```java
 public class ConversationListActivity extends AppCompatActivity {
