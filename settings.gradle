@@ -1,3 +1,2 @@
 include ':chat-uikit'
 include ':app'
-rootProject.name = "AgoraChatUIKit"
