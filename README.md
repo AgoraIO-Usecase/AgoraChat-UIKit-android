@@ -29,7 +29,7 @@ allprojects {
 ```
 // todo 需要先发布uikit才能有远程地址
 
-在项目的 /app/build.gradle 文件添加 xxx 依赖项（X.Y.Z 为当前版本号）。你可以在 Sonatype 官网查询最新版本号。
+在项目的 /app/build.gradle 文件添加 chat-uikit 依赖项（X.Y.Z 为当前版本号）。你可以在 [Sonatype](https://search.maven.org/) 官网查询最新版本号。
 ```java
 android {
     
@@ -40,7 +40,8 @@ android {
 }
 dependencies {
     ...
-    implementation 'xxx:xxx:X.Y.Z'
+        implementation 'io.agora.rtc:chat-sdk:X.Y.Z'
+        implementation 'io.agora.rtc:chat-uikit:X.Y.Z'
 }
 ```
 #### Module源码集成
@@ -653,7 +654,7 @@ EaseUIKit.getInstance().setAvatarOptions(getAvatarOptions());
 ......
 /**
  * 统一配置头像
- * @return
+ * @return EaseAvatarOptions
  */
 private EaseAvatarOptions getAvatarOptions() {
     EaseAvatarOptions avatarOptions = new EaseAvatarOptions();
