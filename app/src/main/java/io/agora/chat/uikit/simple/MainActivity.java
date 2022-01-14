@@ -2,22 +2,49 @@ package io.agora.chat.uikit.simple;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
+import io.agora.chat.Conversation;
 import io.agora.chat.uikit.chat.EaseChatFragment;
 import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.conversation.EaseConversationListFragment;
+import io.agora.chat.uikit.conversation.interfaces.OnConItemClickListener;
+import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
 import io.agora.chat.uikit.conversation.model.EaseConversationSetStyle;
+import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    public static void actionStart(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fl_fragment,
+                        new EaseConversationListFragment.Builder()
+                                .setItemClickListener(new OnConItemClickListener<EaseConversationInfo>() {
+                                    @Override
+                                    public void onItemClick(View view, EaseConversationInfo conversation, int position) {
+                                        Object info = conversation.getInfo();
+                                        if(info instanceof Conversation) {
+                                            ChatActivity.actionStart(MainActivity.this
+                                                    , ((Conversation) info).conversationId(), EaseUtils.getChatType((Conversation) info));
+                                        }
+                                    }
+                                })
+                                .build())
+                .commit();
         String conversationID = "";
         int SINGLE_CHAT = 1;
         EaseTitleBar.OnBackPressListener onBackPressListener;
