@@ -27,7 +27,6 @@ allprojects {
     }
 }
 ```
-// todo 需要先发布uikit才能有远程地址
 
 在项目的 /app/build.gradle 文件添加 chat-uikit 依赖项（X.Y.Z 为当前版本号）。你可以在 [Sonatype](https://search.maven.org/) 官网查询最新版本号。
 ```java
@@ -40,7 +39,6 @@ android {
 }
 dependencies {
     ...
-        implementation 'io.agora.rtc:chat-sdk:X.Y.Z'
         implementation 'io.agora.rtc:chat-uikit:X.Y.Z'
 }
 ```
@@ -135,7 +133,7 @@ public class ChatActivity extends AppCompatActivity {
 ```
 运行后，如下图：
 
-// todo：添加图片
+![avatar](./images/Chat.jpg)
 
 ### 快速创建会话列表页面
 Agora Chat UIKit 提供了 EaseConversationListFragment ，添加到 Activity 中即可使用。
@@ -158,14 +156,14 @@ public class ConversationListActivity extends AppCompatActivity {
 注意：如果接收到新消息，删除会话联系人等事件，需要调用 EaseConversationListFragment#refreshList 方法刷新列表。
 运行后，如下图：
 
-// todo：添加图片
+![avatar](./images/ConversationList.jpg)
 
 ## 高级定制
 ### 聊天页面相关
 
 聊天页面按照以下进行分区和命名：
 
-// TODO 添加各个区域的命名图片
+![avatar](./images/ChatMenuNote.png)
 #### 通过 EaseChatFragment.Builder 自定义设置
 EaseChatFragment 提供了 Builder 构建方式，方便开发者进行一些自定义设置，目前提供的设置项如下：
 ```java
