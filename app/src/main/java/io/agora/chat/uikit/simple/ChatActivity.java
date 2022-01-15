@@ -3,11 +3,13 @@ package io.agora.chat.uikit.simple;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import io.agora.chat.uikit.chat.EaseChatFragment;
+import io.agora.chat.uikit.widget.EaseTitleBar;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -29,6 +31,15 @@ public class ChatActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fl_fragment,
                         new EaseChatFragment.Builder(conversationID, chatType)
+                                .useHeader(true)
+                                .setHeaderTitle(conversationID)
+                                .enableHeaderPressBack(true)
+                                .setHeaderBackPressListener(new EaseTitleBar.OnBackPressListener() {
+                                    @Override
+                                    public void onBackPress(View view) {
+                                        onBackPressed();
+                                    }
+                                })
                                 .build())
                 .commit();
     }

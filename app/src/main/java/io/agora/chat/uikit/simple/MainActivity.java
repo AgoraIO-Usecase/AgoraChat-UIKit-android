@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fl_fragment,
                         new EaseConversationListFragment.Builder()
+                                .useHeader(true)
+                                .setHeaderTitle("ConversationList")
+                                .enableHeaderPressBack(false)
                                 .setItemClickListener(new OnConItemClickListener<EaseConversationInfo>() {
                                     @Override
                                     public void onItemClick(View view, EaseConversationInfo conversation, int position) {
