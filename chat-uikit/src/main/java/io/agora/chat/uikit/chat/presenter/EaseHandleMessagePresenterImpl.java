@@ -32,6 +32,10 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
 
     @Override
     public void sendTextMessage(String content) {
+        if(TextUtils.isEmpty(content)) {
+            EMLog.e(TAG, "sendTextMessage : content is null");
+            return;
+        }
         sendTextMessage(content, false);
     }
 
