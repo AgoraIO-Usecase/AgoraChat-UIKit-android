@@ -46,7 +46,9 @@ public class EasePresenceView extends ConstraintLayout {
         tvPresence.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onPresenceClick(v);
+                if (listener != null) {
+                    listener.onPresenceClick(v);
+                }
             }
         });
     }
@@ -68,8 +70,8 @@ public class EasePresenceView extends ConstraintLayout {
                         .into(ivAvatar);
             }
         }
-        tvPresence.setText(EasePresenceUtil.getPresenceString(getContext(),presence));
-        ivPresence.setImageResource(EasePresenceUtil.getPresenceIcon(getContext(),presence));
+        tvPresence.setText(EasePresenceUtil.getPresenceString(getContext(), presence));
+        ivPresence.setImageResource(EasePresenceUtil.getPresenceIcon(getContext(), presence));
         tvName.setText(presence.getPublisher());
     }
 
@@ -83,14 +85,15 @@ public class EasePresenceView extends ConstraintLayout {
         this.listener = listener;
     }
 
-    public void setPresenceTextViewArrowVisiable(boolean visiable){
-        if(visiable) {
+    public void setPresenceTextViewArrowVisiable(boolean visiable) {
+        if (visiable) {
             Drawable arrow = getResources().getDrawable(R.drawable.ease_presence_arrow_left);
             tvPresence.setCompoundDrawablesWithIntrinsicBounds(null, null, arrow, null);
-        }else{
+        } else {
             tvPresence.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         }
     }
+
     public void setPresenTextViewColor(@ColorInt int color) {
         tvPresence.setTextColor(color);
     }
