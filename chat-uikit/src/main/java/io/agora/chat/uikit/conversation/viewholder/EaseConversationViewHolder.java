@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 
@@ -28,6 +29,7 @@ import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
+import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 
 public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
@@ -104,35 +106,7 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
 
         // add judgement for conversation type
         if(item.getType() == Conversation.ConversationType.Chat) {
-            EaseUserProfileProvider userProvider = EaseUIKit.getInstance().getUserProvider();
-            if(userProvider != null) {
-                EaseUser user = userProvider.getUser(username);
-                if(user != null) {
-                    if(!TextUtils.isEmpty(user.getNickname())) {
-                        this.name.setText(user.getNickname());
-                    }
-                    if(!TextUtils.isEmpty(user.getAvatar())) {
-                        Drawable drawable = this.avatar.getDrawable();
-
-                        try {
-                            //Compatible with local images
-                            Integer intAvatar = Integer.valueOf(user.getAvatar());
-                            Glide.with(mContext)
-                                    .load(intAvatar)
-                                    .placeholder(defaultAvatar)
-                                    .error(drawable)
-                                    .into(this.avatar);
-                        } catch (NumberFormatException e) {
-                            e.printStackTrace();
-                            Glide.with(mContext)
-                                    .load(user.getAvatar())
-                                    .placeholder(defaultAvatar)
-                                    .error(drawable)
-                                    .into(this.avatar);
-                        }
-                    }
-                }
-            }
+            EaseUserUtils.setUserAvatar(context, username, ContextCompat.getDrawable(context, defaultAvatar), this.avatar.getDrawable(), this.avatar);
         }
         if(!setModel.isHideUnreadDot()) {
             showUnreadNum(item.getUnreadMsgCount());

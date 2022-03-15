@@ -33,7 +33,9 @@ import java.util.List;
 
 import io.agora.chat.ChatMessage;
 import io.agora.chat.Conversation;
+import io.agora.chat.MsgOverview;
 import io.agora.chat.TextMessageBody;
+import io.agora.chat.ThreadInfo;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.constants.EaseConstant;
@@ -143,7 +145,46 @@ public class EaseUtils {
         Log.e("TAG", "message text = "+digest);
         return digest;
     }
-    
+
+	/**
+     * Get digest according message type and content
+     *
+     * @param message
+     * @param context
+     * @return
+     */
+    public static String getMessageDigest(MsgOverview message, Context context) {
+        String digest = "";
+        switch (message.getType()) {
+        case LOCATION:
+            digest = getString(context, R.string.ease_location);
+            break;
+        case IMAGE:
+            digest = getString(context, R.string.ease_picture);
+            break;
+        case VOICE:
+            digest = getString(context, R.string.ease_voice_prefix);
+            break;
+        case VIDEO:
+            digest = getString(context, R.string.ease_video);
+            break;
+        case CUSTOM:
+            digest = getString(context, R.string.ease_custom);
+            break;
+        case TXT:
+            digest = message.getMessage();
+            break;
+        case FILE:
+            digest = getString(context, R.string.ease_file);
+            break;
+        default:
+            EMLog.e(TAG, "error, unknow type");
+            return "";
+        }
+        Log.e("TAG", "message text = "+digest);
+        return digest;
+    }
+
     static String getString(Context context, int resId){
         return context.getResources().getString(resId);
     }
@@ -368,4 +409,16 @@ public class EaseUtils {
         return enable;
     }
 
+    /**
+     * Used to handle message unread
+     * @param count
+     * @return
+     */
+    public static String handleBigNum(int count) {
+        if(count <= 99) {
+            return String.valueOf(count);
+        }else {
+            return "99+";
+        }
+    }
 }

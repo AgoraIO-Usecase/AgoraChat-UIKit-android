@@ -106,6 +106,7 @@ public abstract class EaseChatRow extends LinearLayout {
 
     protected MessageListItemClickListener itemClickListener;
     private EaseChatRowActionCallback itemActionCallback;
+    private EaseThreadRegion threadRegion;
 
     public EaseChatRow(Context context, boolean isSender) {
         super(context);
@@ -154,6 +155,7 @@ public abstract class EaseChatRow extends LinearLayout {
         statusView = (ImageView) findViewById(R.id.msg_status);
         ackedView = (TextView) findViewById(R.id.tv_ack);
         deliveredView = (TextView) findViewById(R.id.tv_delivered);
+        threadRegion = (EaseThreadRegion) findViewById(R.id.thread_region);
 
         setLayoutStyle();
 
@@ -275,6 +277,18 @@ public abstract class EaseChatRow extends LinearLayout {
                     ackedView.setVisibility(View.INVISIBLE);
                 }
             }
+        }
+        if(threadRegion != null) {
+            setThreadRegion();
+        }
+    }
+
+    public void setThreadRegion() {
+        if(message != null && message.getThreadOverview() != null) {
+            threadRegion.setVisibility(VISIBLE);
+            threadRegion.setThreadInfo(message.getThreadOverview());
+        }else {
+            threadRegion.setVisibility(GONE);
         }
     }
 

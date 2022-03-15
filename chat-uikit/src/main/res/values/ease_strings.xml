@@ -2,6 +2,7 @@
 <resources>
     <string name="ease_location_recv">[%1$s location]</string>
     <string name="ease_location_prefix">[My location]</string>
+    <string name="ease_location">[Location]</string>
     <string name="ease_picture">[Image]</string>
     <string name="ease_video">[Video]</string>
     <string name="ease_file">[File]</string>
