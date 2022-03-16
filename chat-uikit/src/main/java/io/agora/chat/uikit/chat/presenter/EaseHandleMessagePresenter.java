@@ -18,6 +18,7 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
     protected int chatType;
     protected String toChatUsername;
     protected Conversation conversation;
+    protected boolean isThread;
 
     @Override
     public void attachView(ILoadDataView view) {
@@ -41,8 +42,18 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
      * @param toChatUsername
      */
     public void setupWithToUser(int chatType, @NonNull String toChatUsername) {
+        setupWithToUser(chatType, toChatUsername, false);
+    }
+    
+    /**
+     * Bind sender id
+     * @param chatType
+     * @param toChatUsername
+     */
+    public void setupWithToUser(int chatType, @NonNull String toChatUsername, boolean isThread) {
         this.chatType = chatType;
         this.toChatUsername = toChatUsername;
+        this.isThread = isThread;
         conversation = ChatClient.getInstance().chatManager().getConversation(toChatUsername, EaseUtils.getConversationType(chatType), true);
     }
 

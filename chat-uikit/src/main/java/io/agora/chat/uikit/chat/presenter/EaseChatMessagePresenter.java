@@ -60,12 +60,26 @@ public abstract class EaseChatMessagePresenter extends EaseBasePresenter {
      * @param pageSize
      */
     public abstract void loadServerMessages(int pageSize);
+    
+    /**
+     * Load data from the server
+     * @param pageSize
+     */
+    public abstract void loadServerMessages(int pageSize, Conversation.SearchDirection direction);
+    
     /**
      * Load more data from the server
      * @param msgId 消息id
      * @param pageSize
      */
     public abstract void loadMoreServerMessages(String msgId, int pageSize);
+    
+    /**
+     * Load more data from the server
+     * @param msgId 消息id
+     * @param pageSize
+     */
+    public abstract void loadMoreServerMessages(String msgId, int pageSize, Conversation.SearchDirection direction);
 
     /**
      * Refresh current conversation

@@ -79,6 +79,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     private int recyclerViewLastHeight;
     private MessageListItemClickListener messageListItemClickListener;
     private EaseChatItemStyleHelper chatSetHelper;
+    private boolean isThread;
 
     public EaseChatMessageListLayout(@NonNull Context context) {
         this(context, null);
@@ -191,8 +192,13 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     public void init(LoadDataType loadDataType, String username, int chatType) {
+        init(loadDataType, username, chatType, false);
+    }
+    
+    public void init(LoadDataType loadDataType, String username, int chatType, boolean isThread) {
         this.username = username;
         this.loadDataType = loadDataType;
+        this.isThread = isThread;
         this.conType = EaseUtils.getConversationType(chatType);
         conversation = ChatClient.getInstance().chatManager().getConversation(username, conType, true);
         presenter.setupWithConversation(conversation);
@@ -795,6 +801,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         });
         animator.setDuration(800);
         animator.start();
+    }
+
+    @Override
+    public void setThreadMessage(boolean isThread) {
+        
     }
 
     @Override

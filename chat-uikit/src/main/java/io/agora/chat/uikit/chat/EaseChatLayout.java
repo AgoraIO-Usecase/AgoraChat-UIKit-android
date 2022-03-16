@@ -138,6 +138,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     private Drawable preBackground;
     // To flag whether has get the background drawable of input menu
     private boolean hasGetInputBgFlag;
+    // Whether the marker is a thread message
+    private boolean isThread;
 
     public EaseChatLayout(Context context) {
         this(context, null);
@@ -220,6 +222,30 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         this.chatType = chatType;
         messageListLayout.init(loadDataType, this.conversationId, chatType);
         presenter.setupWithToUser(chatType, this.conversationId);
+        if(isChatRoomCon()) {
+            chatRoomListener = new ChatRoomListener();
+            ChatClient.getInstance().chatroomManager().addChatRoomChangeListener(chatRoomListener);
+        }else if(isGroupCon()) {
+            EaseAtMessageHelper.get().removeAtMeGroup(conversationId);
+            groupListener = new GroupListener();
+            ChatClient.getInstance().groupManager().addGroupChangeListener(groupListener);
+        }
+        initTypingHandler();
+    }
+
+    /**
+     * initialization
+     * @param loadDataType Load data mode
+     * @param conversationId      The conversation id, which may be the ring letter id of the other party,
+     *                            or the group id or chat room id
+     * @param chatType Chat type, single chat, group chat or chat room
+     */
+    public void init(EaseChatMessageListLayout.LoadDataType loadDataType, String conversationId, int chatType, boolean isThread) {
+        this.conversationId = conversationId;
+        this.chatType = chatType;
+        this.isThread = isThread;
+        messageListLayout.init(loadDataType, this.conversationId, chatType);
+        presenter.setupWithToUser(chatType, this.conversationId, isThread);
         if(isChatRoomCon()) {
             chatRoomListener = new ChatRoomListener();
             ChatClient.getInstance().chatroomManager().addChatRoomChangeListener(chatRoomListener);

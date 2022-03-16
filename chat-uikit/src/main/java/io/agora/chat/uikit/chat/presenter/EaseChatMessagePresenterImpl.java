@@ -142,7 +142,70 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
     }
 
     @Override
+    public void loadServerMessages(int pageSize, Conversation.SearchDirection direction) {
+        if(conversation == null) {
+            throw new NullPointerException("should first set up with conversation");
+        }
+        ChatClient.getInstance().chatManager().asyncFetchHistoryMessage(conversation.conversationId(),
+                conversation.getType(), pageSize, "",
+                new ValueCallBack<CursorResult<ChatMessage>>() {
+                    @Override
+                    public void onSuccess(CursorResult<ChatMessage> value) {
+                        conversation.loadMoreMsgFromDB("", pageSize);
+                        runOnUI(() -> {
+                            if(isActive()) {
+                                mView.loadServerMsgSuccess(value.getData());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(int error, String errorMsg) {
+                        runOnUI(() -> {
+                            if(isActive()) {
+                                mView.loadMsgFail(error, errorMsg);
+                                loadLocalMessages(pageSize);
+                            }
+                        });
+                    }
+                });
+    }
+
+    @Override
     public void loadMoreServerMessages(String msgId, int pageSize) {
+        if(conversation == null) {
+            throw new NullPointerException("should first set up with conversation");
+        }
+        if(!isMessageId(msgId)) {
+            throw new IllegalArgumentException("please check if set correct msg id");
+        }
+        ChatClient.getInstance().chatManager().asyncFetchHistoryMessage(conversation.conversationId(),
+                conversation.getType(), pageSize, msgId,
+                new ValueCallBack<CursorResult<ChatMessage>>() {
+                    @Override
+                    public void onSuccess(CursorResult<ChatMessage> value) {
+                        conversation.loadMoreMsgFromDB(msgId, pageSize);
+                        runOnUI(() -> {
+                            if(isActive()) {
+                                mView.loadMoreServerMsgSuccess(value.getData());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(int error, String errorMsg) {
+                        runOnUI(() -> {
+                            if(isActive()) {
+                                mView.loadMsgFail(error, errorMsg);
+                                loadMoreLocalMessages(msgId, pageSize);
+                            }
+                        });
+                    }
+                });
+    }
+
+    @Override
+    public void loadMoreServerMessages(String msgId, int pageSize, Conversation.SearchDirection direction) {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");
         }

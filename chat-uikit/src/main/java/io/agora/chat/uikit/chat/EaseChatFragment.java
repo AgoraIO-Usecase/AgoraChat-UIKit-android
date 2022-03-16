@@ -67,6 +67,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     public String historyMsgId;
     public boolean isFromServer;
     public boolean isMessageInit;
+    public boolean isThread;
 
     protected File cameraFile;
     private EaseTitleBar.OnBackPressListener backPressListener;
@@ -106,6 +107,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             chatType = bundle.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
             historyMsgId = bundle.getString(EaseConstant.HISTORY_MSG_ID);
             isFromServer = bundle.getBoolean(EaseConstant.EXTRA_IS_FROM_SERVER, false);
+            isThread = bundle.getBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, false);
         }
     }
 
@@ -499,7 +501,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     }
 
     public static class Builder {
-        private final Bundle bundle;
+        protected final Bundle bundle;
         private EaseTitleBar.OnBackPressListener backPressListener;
         private EaseMessageAdapter adapter;
         private OnChatExtendMenuItemClickListener extendMenuItemClickListener;
@@ -552,6 +554,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
          */
         public Builder setHeaderTitle(String title) {
             this.bundle.putString(Constant.KEY_SET_TITLE, title);
+            return this;
+        }
+
+        /**
+         * Set titleBar's sub title
+         * @param subTitle
+         * @return
+         */
+        public Builder setHeaderSubTitle(String subTitle) {
+            this.bundle.putString(Constant.KEY_SET_SUB_TITLE, subTitle);
             return this;
         }
 
@@ -798,6 +810,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
 
         /**
+         * Set whether to use original file to send image message
+         * @param isThread
+         * @return
+         */
+        public Builder setThreadMessage(boolean isThread) {
+            this.bundle.putBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, isThread);
+            return this;
+        }
+
+        /**
          * Set chat list's empty layout if you want replace the default
          * @param emptyLayout
          * @return
@@ -847,6 +869,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     private static class Constant {
         public static final String KEY_USE_TITLE = "key_use_title";
         public static final String KEY_SET_TITLE = "key_set_title";
+        public static final String KEY_SET_SUB_TITLE = "key_set_sub_title";
         public static final String KEY_EMPTY_LAYOUT = "key_empty_layout";
         public static final String KEY_ENABLE_BACK = "key_enable_back";
         public static final String KEY_MSG_TIME_COLOR = "key_msg_time_color";
@@ -863,6 +886,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         public static final String KEY_CHAT_MENU_INPUT_HINT = "key_chat_menu_input_hint";
         public static final String KEY_TURN_ON_TYPING_MONITOR = "key_turn_on_typing_monitor";
         public static final String KEY_SEND_ORIGINAL_IMAGE_MESSAGE = "key_send_original_image_message";
+        public static final String KEY_THREAD_MESSAGE_FLAG = "key_thread_message_flag";
     }
 }
 
