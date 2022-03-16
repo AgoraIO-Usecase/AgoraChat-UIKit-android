@@ -1,34 +1,25 @@
-package io.agora.chat.uikit.chat.presenter;
+package io.agora.chat.uikit.thread.presenter;
 
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.text.TextUtils;
-
-
-import java.io.File;
-import java.io.FileOutputStream;
+import android.widget.EditText;
 
 import io.agora.CallBack;
+import io.agora.Error;
+import io.agora.ValueCallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
-import io.agora.chat.CmdMessageBody;
+import io.agora.chat.ChatThread;
 import io.agora.chat.Group;
 import io.agora.chat.MessageBody;
-import io.agora.chat.TextMessageBody;
-import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.chat.EaseChatLayout;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
-import io.agora.exceptions.ChatException;
 import io.agora.util.EMLog;
-import io.agora.util.PathUtil;
 
-public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
-    private static final String TAG = EaseChatLayout.class.getSimpleName();
+public class EaseThreadCreatePresenterImpl extends EaseThreadCreatePresenter{
+    private static final String TAG = EaseThreadCreatePresenterImpl.class.getSimpleName();
 
     @Override
     public void sendTextMessage(String content) {
@@ -47,7 +38,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
         }
         ChatMessage message = ChatMessage.createTxtSendMessage(content, toChatUsername);
         message.setIsNeedGroupAck(isNeedGroupAck);
-        sendMessage(message);
+        setMessage(message);
     }
 
     @Override
@@ -67,19 +58,19 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG,
                     EaseAtMessageHelper.get().atListToJsonArray(EaseAtMessageHelper.get().getAtMessageUsernames(content)));
         }
-        sendMessage(message);
+        setMessage(message);
     }
 
     @Override
     public void sendBigExpressionMessage(String name, String identityCode) {
         ChatMessage message = EaseUtils.createExpressionMessage(toChatUsername, name, identityCode);
-        sendMessage(message);
+        setMessage(message);
     }
 
     @Override
     public void sendVoiceMessage(Uri filePath, int length) {
         ChatMessage message = ChatMessage.createVoiceSendMessage(filePath, length, toChatUsername);
-        sendMessage(message);
+        setMessage(message);
     }
 
     @Override
@@ -88,9 +79,14 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     }
 
     @Override
+    public void sendGroupDingMessage(ChatMessage message) {
+        setMessage(message);
+    }
+
+    @Override
     public void sendImageMessage(Uri imageUri, boolean sendOriginalImage) {
         ChatMessage message = ChatMessage.createImageSendMessage(imageUri, sendOriginalImage, toChatUsername);
-        sendMessage(message);
+        setMessage(message);
     }
 
     @Override
@@ -102,26 +98,50 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
         String from = message.getFrom();
         EMLog.i(TAG, "body = "+body);
         EMLog.i(TAG, "msgId = "+msgId + " from = "+from);
-        sendMessage(message);
+        setMessage(message);
     }
 
     @Override
     public void sendVideoMessage(Uri videoUri, int videoLength) {
-        String thumbPath = getThumbPath(videoUri);
+        String thumbPath = EaseFileUtils.getThumbPath(mView.context(), videoUri);
         ChatMessage message = ChatMessage.createVideoSendMessage(videoUri, thumbPath, videoLength, toChatUsername);
-        sendMessage(message);
+        setMessage(message);
     }
 
     @Override
     public void sendFileMessage(Uri fileUri) {
         ChatMessage message = ChatMessage.createFileSendMessage(fileUri, toChatUsername);
-        sendMessage(message);
+        setMessage(message);
     }
 
     @Override
     public void addMessageAttributes(ChatMessage message) {
         //You can add some custom attributes
         mView.addMsgAttrBeforeSend(message);
+    }
+
+    @Override
+    public void createThread(String threadName, ChatMessage message) {
+        if(TextUtils.isEmpty(threadName)) {
+            mView.onCreateThreadFail(Error.GENERAL_ERROR, "Thread name should not be null");
+            return;
+        }
+        ChatClient.getInstance().threadManager().createThread(parentId, messageId, threadName, new ValueCallBack<ChatThread>() {
+            @Override
+            public void onSuccess(ChatThread value) {
+                sendMessage(message);
+                if(isActive()) {
+                    mView.onCreateThreadSuccess(value, message);
+                }
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                if(isActive()) {
+                    mView.onCreateThreadFail(error, errorMsg);
+                }
+            }
+        });
     }
 
     @Override
@@ -138,6 +158,8 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
         }else if(chatType == EaseConstant.CHATTYPE_CHATROOM){
             message.setChatType(ChatMessage.ChatType.ChatRoom);
         }
+        // Add thread label for message
+        message.setIsThread(true);
         message.setMessageStatusCallback(new CallBack() {
             @Override
             public void onSuccess() {
@@ -167,61 +189,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
         }
     }
 
-    @Override
-    public void sendCmdMessage(String action) {
-        ChatMessage beginMsg = ChatMessage.createSendMessage(ChatMessage.Type.CMD);
-        CmdMessageBody body = new CmdMessageBody(action);
-        // Only deliver this cmd msg to online users
-        body.deliverOnlineOnly(true);
-        beginMsg.addBody(body);
-        beginMsg.setTo(toChatUsername);
-        ChatClient.getInstance().chatManager().sendMessage(beginMsg);
-    }
-
-    @Override
-    public void resendMessage(ChatMessage message) {
-        message.setStatus(ChatMessage.Status.CREATE);
-        long currentTimeMillis = System.currentTimeMillis();
-        message.setLocalTime(currentTimeMillis);
-        message.setMsgTime(currentTimeMillis);
-        ChatClient.getInstance().chatManager().updateMessage(message);
-        sendMessage(message);
-    }
-
-    @Override
-    public void deleteMessage(ChatMessage message) {
-        conversation.removeMessage(message.getMsgId());
-        if(isActive()) {
-            runOnUI(()->mView.deleteLocalMessageSuccess(message));
-        }
-    }
-
-    @Override
-    public void recallMessage(ChatMessage message) {
-        try {
-            ChatMessage msgNotification = ChatMessage.createSendMessage(ChatMessage.Type.TXT);
-            TextMessageBody txtBody = new TextMessageBody(mView.context().getResources().getString(R.string.ease_msg_recall_by_self));
-            msgNotification.addBody(txtBody);
-            msgNotification.setTo(message.getTo());
-            msgNotification.setMsgTime(message.getMsgTime());
-            msgNotification.setLocalTime(message.getMsgTime());
-            msgNotification.setAttribute(EaseConstant.MESSAGE_TYPE_RECALL, true);
-            msgNotification.setStatus(ChatMessage.Status.SUCCESS);
-            ChatClient.getInstance().chatManager().recallMessage(message);
-            ChatClient.getInstance().chatManager().saveMessage(msgNotification);
-            if(isActive()) {
-                runOnUI(()->mView.recallMessageFinish(msgNotification));
-            }
-        } catch (ChatException e) {
-            e.printStackTrace();
-            if(isActive()) {
-                runOnUI(()->mView.recallMessageFail(e.getErrorCode(), e.getDescription()));
-            }
-        }
-    }
-
-    private String getThumbPath(Uri videoUri) {
-        return EaseFileUtils.getThumbPath(mView.context(), videoUri);
+    public void setMessage(ChatMessage message) {
+        createThread(etInput == null ? "" : etInput.getText().toString().trim(), message);
     }
 }
-

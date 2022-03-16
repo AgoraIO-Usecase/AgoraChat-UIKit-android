@@ -1,27 +1,26 @@
-package io.agora.chat.uikit.chat.presenter;
+package io.agora.chat.uikit.thread.presenter;
 
 import android.net.Uri;
+import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 
-import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
-import io.agora.chat.Conversation;
 import io.agora.chat.uikit.base.EaseBasePresenter;
+import io.agora.chat.uikit.chat.presenter.IBaseHandleMessage;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
-import io.agora.chat.uikit.utils.EaseUtils;
 
-
-public abstract class EaseHandleMessagePresenter extends EaseBasePresenter implements IBaseHandleMessage{
-    protected IHandleMessageView mView;
+public abstract class EaseThreadCreatePresenter extends EaseBasePresenter implements IBaseHandleMessage {
+    protected IThreadCreateView mView;
     protected int chatType;
+    protected EditText etInput;
     protected String toChatUsername;
-    protected Conversation conversation;
+    protected String parentId;
+    protected String messageId;
 
     @Override
     public void attachView(ILoadDataView view) {
-        mView = (IHandleMessageView) view;
+        mView = (IThreadCreateView) view;
     }
 
     @Override
@@ -37,13 +36,13 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
 
     /**
      * Bind sender id
-     * @param chatType
-     * @param toChatUsername
+     * @param parentId
+     * @param messageId
      */
-    public void setupWithToUser(int chatType, @NonNull String toChatUsername) {
-        this.chatType = chatType;
-        this.toChatUsername = toChatUsername;
-        conversation = ChatClient.getInstance().chatManager().getConversation(toChatUsername, EaseUtils.getConversationType(chatType), true);
+    public void setupWithToUser(String parentId, String messageId, EditText etInput) {
+        this.parentId = parentId;
+        this.messageId = messageId;
+        this.etInput = etInput;
     }
 
     /**
@@ -72,34 +71,18 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
     public abstract void sendImageMessage(Uri imageUri);
 
     /**
+     * Send group ding message
+     * @param message
+     */
+    public abstract void sendGroupDingMessage(ChatMessage message);
+
+    /**
      * Add extension fields to the message
      * @param message
      */
     public abstract void addMessageAttributes(ChatMessage message);
 
-    /**
-     * Send cmd message
-     * @param action
-     */
-    public abstract void sendCmdMessage(String action);
-
-    /**
-     * Resend message
-     * @param message
-     */
-    public abstract void resendMessage(ChatMessage message);
-
-    /**
-     * Delete local message
-     * @param message
-     */
-    public abstract void deleteMessage(ChatMessage message);
-
-    /**
-     * Withdraw message
-     * @param message
-     */
-    public abstract void recallMessage(ChatMessage message);
+    public abstract void createThread(String threadName, ChatMessage message);
 
     /**
      * Determine whether it is a group chat
@@ -108,5 +91,5 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
     public boolean isGroupChat() {
         return chatType == EaseConstant.CHATTYPE_GROUP;
     }
-}
 
+}

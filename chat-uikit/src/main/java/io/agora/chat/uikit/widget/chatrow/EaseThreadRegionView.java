@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,11 +17,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import java.util.Date;
 
-import io.agora.chat.ChatMessage;
 import io.agora.chat.MsgOverview;
 import io.agora.chat.ThreadInfo;
 import io.agora.chat.uikit.EaseUIKit;
@@ -34,8 +31,8 @@ import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseImageView;
 
-public class EaseThreadRegion extends FrameLayout implements View.OnClickListener {
-    private static final String TAG = EaseThreadRegion.class.getSimpleName();
+public class EaseThreadRegionView extends FrameLayout implements View.OnClickListener {
+    private static final String TAG = EaseThreadRegionView.class.getSimpleName();
     private ImageView ivThreadIcon;
     private TextView tvThreadName;
     private TextView tvThreadMsgCount;
@@ -47,15 +44,15 @@ public class EaseThreadRegion extends FrameLayout implements View.OnClickListene
 
     private OnClickListener listener;
 
-    public EaseThreadRegion(@NonNull Context context) {
+    public EaseThreadRegionView(@NonNull Context context) {
         this(context, null);
     }
 
-    public EaseThreadRegion(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public EaseThreadRegionView(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public EaseThreadRegion(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public EaseThreadRegionView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }

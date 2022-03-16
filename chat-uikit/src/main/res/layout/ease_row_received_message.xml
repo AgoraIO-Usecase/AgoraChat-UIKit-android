@@ -56,7 +56,7 @@
                 android:textSize="15sp"
                 tools:text="Agora Chat" />
 
-            <io.agora.chat.uikit.widget.chatrow.EaseThreadRegion
+            <io.agora.chat.uikit.widget.chatrow.EaseThreadRegionView
                 android:id="@+id/thread_region"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
