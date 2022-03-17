@@ -3,6 +3,7 @@ package io.agora.chat.uikit.chat.presenter;
 import android.text.TextUtils;
 
 
+import java.util.Collections;
 import java.util.List;
 
 import io.agora.ValueCallBack;
@@ -39,12 +40,17 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
 
     @Override
     public void loadLocalMessages(int pageSize) {
+        loadLocalMessages(pageSize, Conversation.SearchDirection.UP);
+    }
+
+    @Override
+    public void loadLocalMessages(int pageSize, Conversation.SearchDirection direction) {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");
         }
         List<ChatMessage> messages = null;
         try {
-            messages = conversation.loadMoreMsgFromDB(null, pageSize);
+            messages = conversation.loadMoreMsgFromDB(null, pageSize, direction);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,6 +69,11 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
 
     @Override
     public void loadMoreLocalMessages(String msgId, int pageSize) {
+        loadMoreLocalMessages(msgId, pageSize, Conversation.SearchDirection.UP);
+    }
+
+    @Override
+    public void loadMoreLocalMessages(String msgId, int pageSize, Conversation.SearchDirection direction) {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");
         }
@@ -71,7 +82,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         }
         List<ChatMessage> moreMsgs = null;
         try {
-            moreMsgs = conversation.loadMoreMsgFromDB(msgId, pageSize);
+            moreMsgs = conversation.loadMoreMsgFromDB(msgId, pageSize, direction);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,32 +124,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
 
     @Override
     public void loadServerMessages(int pageSize) {
-        if(conversation == null) {
-            throw new NullPointerException("should first set up with conversation");
-        }
-        ChatClient.getInstance().chatManager().asyncFetchHistoryMessage(conversation.conversationId(),
-                conversation.getType(), pageSize, "",
-                new ValueCallBack<CursorResult<ChatMessage>>() {
-                    @Override
-                    public void onSuccess(CursorResult<ChatMessage> value) {
-                        conversation.loadMoreMsgFromDB("", pageSize);
-                        runOnUI(() -> {
-                            if(isActive()) {
-                                mView.loadServerMsgSuccess(value.getData());
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError(int error, String errorMsg) {
-                        runOnUI(() -> {
-                            if(isActive()) {
-                                mView.loadMsgFail(error, errorMsg);
-                                loadLocalMessages(pageSize);
-                            }
-                        });
-                    }
-                });
+        loadServerMessages(pageSize, Conversation.SearchDirection.UP);
     }
 
     @Override
@@ -147,11 +133,11 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
             throw new NullPointerException("should first set up with conversation");
         }
         ChatClient.getInstance().chatManager().asyncFetchHistoryMessage(conversation.conversationId(),
-                conversation.getType(), pageSize, "",
+                conversation.getType(), pageSize, "", direction,
                 new ValueCallBack<CursorResult<ChatMessage>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
-                        conversation.loadMoreMsgFromDB("", pageSize);
+                        conversation.loadMoreMsgFromDB("", pageSize, direction);
                         runOnUI(() -> {
                             if(isActive()) {
                                 mView.loadServerMsgSuccess(value.getData());
@@ -173,35 +159,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
 
     @Override
     public void loadMoreServerMessages(String msgId, int pageSize) {
-        if(conversation == null) {
-            throw new NullPointerException("should first set up with conversation");
-        }
-        if(!isMessageId(msgId)) {
-            throw new IllegalArgumentException("please check if set correct msg id");
-        }
-        ChatClient.getInstance().chatManager().asyncFetchHistoryMessage(conversation.conversationId(),
-                conversation.getType(), pageSize, msgId,
-                new ValueCallBack<CursorResult<ChatMessage>>() {
-                    @Override
-                    public void onSuccess(CursorResult<ChatMessage> value) {
-                        conversation.loadMoreMsgFromDB(msgId, pageSize);
-                        runOnUI(() -> {
-                            if(isActive()) {
-                                mView.loadMoreServerMsgSuccess(value.getData());
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError(int error, String errorMsg) {
-                        runOnUI(() -> {
-                            if(isActive()) {
-                                mView.loadMsgFail(error, errorMsg);
-                                loadMoreLocalMessages(msgId, pageSize);
-                            }
-                        });
-                    }
-                });
+        loadMoreServerMessages(msgId, pageSize, Conversation.SearchDirection.UP);
     }
 
     @Override
@@ -213,7 +171,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
             throw new IllegalArgumentException("please check if set correct msg id");
         }
         ChatClient.getInstance().chatManager().asyncFetchHistoryMessage(conversation.conversationId(),
-                conversation.getType(), pageSize, msgId,
+                conversation.getType(), pageSize, msgId, direction,
                 new ValueCallBack<CursorResult<ChatMessage>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
@@ -244,6 +202,10 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         }
         conversation.markAllMessagesAsRead();
         List<ChatMessage> allMessages = conversation.getAllMessages();
+        // If conversation is thread, reverse the order
+        if(conversation.isThread()) {
+            Collections.reverse(allMessages);
+        }
         if(isActive()) {
             runOnUI(()->mView.refreshCurrentConSuccess(allMessages, false));
         }

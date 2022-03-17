@@ -42,10 +42,26 @@ public abstract class EaseChatMessagePresenter extends EaseBasePresenter {
     public abstract void loadLocalMessages(int pageSize);
 
     /**
+     * Load local messages
+     * @param pageSize
+     * @param direction
+     */
+    public abstract void loadLocalMessages(int pageSize, Conversation.SearchDirection direction);
+
+    /**
      * Load more local messages
+     * @param msgId
      * @param pageSize
      */
     public abstract void loadMoreLocalMessages(String msgId, int pageSize);
+
+    /**
+     * Load more local messages
+     * @param msgId
+     * @param pageSize
+     * @param direction
+     */
+    public abstract void loadMoreLocalMessages(String msgId, int pageSize, Conversation.SearchDirection direction);
 
     /**
      * Load more historical data locally

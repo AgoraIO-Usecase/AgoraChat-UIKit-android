@@ -211,10 +211,14 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             chatLayout.init(EaseChatMessageListLayout.LoadDataType.HISTORY, conversationId, chatType);
             chatLayout.loadData(historyMsgId);
         }else {
-            if(isFromServer) {
-                chatLayout.init(EaseChatMessageListLayout.LoadDataType.ROAM, conversationId, chatType);
+            if(isThread) {
+                chatLayout.init(EaseChatMessageListLayout.LoadDataType.THREAD, conversationId, chatType);
             }else {
-                chatLayout.init(conversationId, chatType);
+                if(isFromServer) {
+                    chatLayout.init(EaseChatMessageListLayout.LoadDataType.ROAM, conversationId, chatType);
+                }else {
+                    chatLayout.init(conversationId, chatType);
+                }
             }
             chatLayout.loadDefaultData();
         }

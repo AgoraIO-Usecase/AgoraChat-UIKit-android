@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.thread;
+package io.agora.chat.uikit.thread.interfaces;
 
 import android.view.View;
 

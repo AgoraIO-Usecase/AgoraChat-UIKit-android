@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.thread;
+package io.agora.chat.uikit.thread.adapter;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -17,6 +17,7 @@ import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.adapter.EaseBaseRecyclerViewAdapter;
 import io.agora.chat.uikit.models.EaseUser;
+import io.agora.chat.uikit.thread.widget.EaseThreadParentMsgView;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 
 public class EaseThreadChatHeaderAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage> {

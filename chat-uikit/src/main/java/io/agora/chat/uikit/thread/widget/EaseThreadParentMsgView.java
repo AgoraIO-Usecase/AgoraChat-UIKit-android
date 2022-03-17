@@ -1,8 +1,7 @@
-package io.agora.chat.uikit.thread;
+package io.agora.chat.uikit.thread.widget;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,9 +16,7 @@ import androidx.annotation.Nullable;
 
 import java.util.Date;
 
-import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
-import io.agora.chat.FileMessageBody;
 import io.agora.chat.NormalFileMessageBody;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.VideoMessageBody;
@@ -33,12 +29,9 @@ import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseFileIconProvider;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 import io.agora.chat.uikit.utils.EaseDateUtils;
-import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseImageUtils;
 import io.agora.chat.uikit.utils.EaseUserUtils;
-import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.utils.EaseVoiceLengthUtils;
-import io.agora.util.EMLog;
 import io.agora.util.TextFormater;
 
 public class EaseThreadParentMsgView extends FrameLayout {

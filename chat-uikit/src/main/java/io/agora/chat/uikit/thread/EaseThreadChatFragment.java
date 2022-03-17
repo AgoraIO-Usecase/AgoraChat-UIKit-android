@@ -1,12 +1,10 @@
 package io.agora.chat.uikit.thread;
 
 import android.content.Context;
-import android.os.Binder;
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +14,10 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.chat.EaseChatFragment;
+import io.agora.chat.uikit.constants.EaseConstant;
+import io.agora.chat.uikit.thread.adapter.EaseThreadChatHeaderAdapter;
 import io.agora.chat.uikit.thread.presenter.EaseThreadChatPresenter;
 import io.agora.chat.uikit.thread.presenter.EaseThreadChatPresenterImpl;
-import io.agora.chat.uikit.thread.presenter.EaseThreadCreatePresenterImpl;
 import io.agora.chat.uikit.thread.presenter.IThreadChatView;
 
 public class EaseThreadChatFragment extends EaseChatFragment implements IThreadChatView {
@@ -108,12 +107,12 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
 
     @Override
     public void initData() {
-        super.initData();
         if(mThread == null) {
             mPresenter.getThreadInfo(conversationId);
         }
         setThreadInfo(mThread);
         headerAdapter.setData(data);
+        super.initData();
     }
 
     @Override
@@ -139,21 +138,42 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
     public static class Builder extends EaseChatFragment.Builder {
         private EaseThreadChatPresenter presenter;
 
-        public Builder(String parentMsgId, String conversationId, int chatType) {
-            super(conversationId, chatType);
+        /**
+         * Constructor
+         * @param parentMsgId    Usually is the group ID
+         * @param conversationId Agora Chat ID
+         */
+        public Builder(String parentMsgId, String conversationId) {
+            super(conversationId, EaseConstant.CHATTYPE_GROUP);
             this.bundle.putString(Constant.KEY_PARENT_MESSAGE_ID, parentMsgId);
         }
 
-        public Builder(String parentMsgId, String conversationId, int chatType, String historyMsgId) {
-            super(conversationId, chatType, historyMsgId);
+        /**
+         * Constructor
+         * @param parentMsgId       Usually is the group ID
+         * @param conversationId    Agora Chat ID
+         * @param historyMsgId
+         */
+        public Builder(String parentMsgId, String conversationId, String historyMsgId) {
+            super(conversationId, EaseConstant.CHATTYPE_GROUP, historyMsgId);
             this.bundle.putString(Constant.KEY_PARENT_MESSAGE_ID, parentMsgId);
         }
-        
-        public Builder setThread(ChatThread thread) {
+
+        /**
+         * Set thread info, {@link ChatThread}
+         * @param thread
+         * @return
+         */
+        public Builder setThreadInfo(ChatThread thread) {
             this.bundle.putParcelable(Constant.KEY_THREAD_BEAN, thread);
             return this;
         }
 
+        /**
+         * Set custom thread presenter if you want to add your logic
+         * @param presenter
+         * @return
+         */
         public Builder setThreadPresenter(EaseThreadChatPresenter presenter) {
             this.presenter = presenter;
             return this;
@@ -161,6 +181,8 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
 
         @Override
         public EaseChatFragment build() {
+            // Set is thread message
+            setThreadMessage(true);
             EaseChatFragment fragment = super.build();
             if(fragment instanceof EaseThreadChatFragment) {
                 ((EaseThreadChatFragment)fragment).setThreadPresenter(this.presenter);

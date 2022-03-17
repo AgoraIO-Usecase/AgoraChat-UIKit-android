@@ -138,6 +138,8 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
         }else if(chatType == EaseConstant.CHATTYPE_CHATROOM){
             message.setChatType(ChatMessage.ChatType.ChatRoom);
         }
+        // Should add thread label if it is a thread conversation
+        message.setIsThread(isThread);
         message.setMessageStatusCallback(new CallBack() {
             @Override
             public void onSuccess() {

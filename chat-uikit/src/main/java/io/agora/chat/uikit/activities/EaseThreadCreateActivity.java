@@ -13,7 +13,7 @@ import io.agora.chat.uikit.base.EaseBaseActivity;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.databinding.EaseActivityThreadCreateBinding;
 import io.agora.chat.uikit.thread.EaseThreadCreateFragment;
-import io.agora.chat.uikit.thread.EaseThreadParentMsgViewProvider;
+import io.agora.chat.uikit.thread.interfaces.EaseThreadParentMsgViewProvider;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 
 public class EaseThreadCreateActivity extends EaseBaseActivity {

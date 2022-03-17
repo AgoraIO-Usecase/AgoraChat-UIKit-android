@@ -192,16 +192,15 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     public void init(LoadDataType loadDataType, String username, int chatType) {
-        init(loadDataType, username, chatType, false);
-    }
-    
-    public void init(LoadDataType loadDataType, String username, int chatType, boolean isThread) {
         this.username = username;
         this.loadDataType = loadDataType;
-        this.isThread = isThread;
         this.conType = EaseUtils.getConversationType(chatType);
-        conversation = ChatClient.getInstance().chatManager().getConversation(username, conType, true);
+        conversation = ChatClient.getInstance().chatManager().getConversation(username, conType, true, this.loadDataType == LoadDataType.THREAD);
         presenter.setupWithConversation(conversation);
+        // If it is thread conversation, should not use refresh animator
+        if(this.loadDataType == LoadDataType.THREAD) {
+            srlRefresh.setEnabled(false);
+        }
     }
 
     public void init(String username, int chatType) {
@@ -239,6 +238,8 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             presenter.loadServerMessages(pageSize);
         }else if(loadDataType == LoadDataType.HISTORY) {
             presenter.loadMoreLocalHistoryMessages(msgId, pageSize, Conversation.SearchDirection.DOWN);
+        }else if(loadDataType == LoadDataType.THREAD) {
+            presenter.loadServerMessages(pageSize, Conversation.SearchDirection.DOWN);
         }else {
             presenter.loadLocalMessages(pageSize);
         }
@@ -267,12 +268,30 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
     }
 
+    public void onRefreshData() {
+        if(loadDataType != LoadDataType.THREAD) {
+            loadMorePreviousData();
+        }
+    }
+
     public void loadMoreHistoryData() {
         String msgId = getListLastMessageId();
         if(loadDataType == LoadDataType.HISTORY) {
             loadMoreStatus = LoadMoreStatus.HAS_MORE;
             presenter.loadMoreLocalHistoryMessages(msgId, pageSize, Conversation.SearchDirection.DOWN);
         }
+    }
+
+    public void loadMoreData() {
+        if(loadDataType == LoadDataType.HISTORY) {
+            loadMoreHistoryData();
+        }else if(loadDataType == LoadDataType.THREAD) {
+            loadMoreThreadMessages();
+        }
+    }
+
+    private void loadMoreThreadMessages() {
+        presenter.loadMoreServerMessages(msgId, pageSize, Conversation.SearchDirection.DOWN);
     }
 
     private String getListFirstMessageId() {
@@ -296,11 +315,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     public boolean isChatRoomCon() {
-        return conType == Conversation.ConversationType.ChatRoom;
+        return conType == Conversation.ConversationType.ChatRoom && loadDataType != LoadDataType.THREAD;
     }
 
     public boolean isGroupChat() {
-        return conType == Conversation.ConversationType.GroupChat;
+        return conType == Conversation.ConversationType.GroupChat && loadDataType != LoadDataType.THREAD;
     }
 
     private boolean isSingleChat() {
@@ -311,7 +330,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         srlRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadMorePreviousData();
+                onRefreshData();
             }
         });
         rvList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -324,11 +343,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                             messageTouchListener.onReachBottom();
                         }
                     }
-                   if(loadDataType == LoadDataType.HISTORY
-                           && loadMoreStatus == LoadMoreStatus.HAS_MORE
+                   if(loadMoreStatus == LoadMoreStatus.HAS_MORE
                            && layoutManager.findLastVisibleItemPosition() != 0
                            && layoutManager.findLastVisibleItemPosition() == layoutManager.getItemCount() -1) {
-                       loadMoreHistoryData();
+                       loadMoreData();
                    }
                 }else {
                     //if recyclerView not idle should hide keyboard
@@ -536,7 +554,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     @Override
     public void loadServerMsgSuccess(List<ChatMessage> data) {
-        presenter.refreshToLatest();
+        if(loadDataType == LoadDataType.THREAD) {
+            presenter.refreshCurrentConversation();
+        }else {
+            presenter.refreshToLatest();
+        }
     }
 
     @Override
@@ -888,7 +910,22 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
      * Roam is to enable message roaming, and History is to search for local messages
      */
     public enum LoadDataType {
-        LOCAL, ROAM, HISTORY
+        /**
+         * Get message from local DB
+         */
+        LOCAL,
+        /**
+         * Get message from chat server
+         */
+        ROAM,
+        /**
+         * Get thread message from server and show the oldest message first
+         */
+        THREAD,
+        /**
+         * Get historical messages through messageId, which can be loaded up or down for messages except thread messages
+         */
+        HISTORY
     }
 
     public enum LoadMoreStatus {

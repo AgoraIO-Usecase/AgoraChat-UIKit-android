@@ -73,8 +73,8 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
     }
 
     public void initData() {
-        EaseChatFragment.Builder builder = new EaseThreadChatFragment.Builder(parentMsgId, conversationId, chatType)
-                .setThread(thread)
+        EaseChatFragment.Builder builder = new EaseThreadChatFragment.Builder(parentMsgId, conversationId)
+                .setThreadInfo(thread)
                 .useHeader(false)
                 .setEmptyLayout(R.layout.ease_layout_no_data_show_nothing)
                 .setOnChatExtendMenuItemClickListener(new OnChatExtendMenuItemClickListener() {

@@ -45,7 +45,7 @@
         android:textSize="18sp"
         android:textColor="@color/black"/>
 
-    <io.agora.chat.uikit.thread.EaseThreadParentMsgView
+    <io.agora.chat.uikit.thread.widget.EaseThreadParentMsgView
         android:id="@+id/thread_parent_msg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
