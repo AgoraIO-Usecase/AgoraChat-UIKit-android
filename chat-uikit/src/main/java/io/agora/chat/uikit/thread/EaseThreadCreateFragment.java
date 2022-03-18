@@ -583,6 +583,12 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
             return this;
         }
 
+        /**
+         * Set custom presenter if you want to add your logic
+         * @param presenter
+         * @param <T>
+         * @return
+         */
         public <T extends EaseThreadCreatePresenter> Builder setCustomPresenter(EaseThreadCreatePresenter presenter) {
             this.presenter = presenter;
             return this;

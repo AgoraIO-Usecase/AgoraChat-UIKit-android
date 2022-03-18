@@ -1,5 +1,6 @@
 package io.agora.chat.uikit.thread.presenter;
 
+import io.agora.CallBack;
 import io.agora.ValueCallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatThread;
@@ -21,6 +22,26 @@ public class EaseThreadChatPresenterImpl extends EaseThreadChatPresenter {
                 if(isActive()) {
                     mView.onGetThreadInfoFail(error, errorMsg);
                 }
+            }
+        });
+    }
+
+    @Override
+    public void joinThread(String threadId) {
+        ChatClient.getInstance().threadManager().joinThread(threadId, new CallBack() {
+            @Override
+            public void onSuccess() {
+                
+            }
+
+            @Override
+            public void onError(int code, String error) {
+
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+
             }
         });
     }

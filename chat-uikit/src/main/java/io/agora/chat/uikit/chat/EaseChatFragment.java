@@ -129,6 +129,12 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                     titleBar.setTitle(title);
                 }
 
+                String subTitle = bundle.getString(Constant.KEY_SET_SUB_TITLE, "");
+                if(!TextUtils.isEmpty(subTitle)) {
+                    titleBar.setSubTitle(subTitle);
+                    titleBar.getSubTitle().setVisibility(View.VISIBLE);
+                }
+
                 boolean canBack = bundle.getBoolean(Constant.KEY_ENABLE_BACK, false);
                 titleBar.setDisplayHomeAsUpEnabled(canBack);
 

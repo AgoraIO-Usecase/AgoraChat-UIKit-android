@@ -22,5 +22,15 @@ public abstract class EaseThreadChatPresenter extends EaseBasePresenter {
         detachView();
     }
 
+    /**
+     * Get thread info
+     * @param threadId
+     */
     public abstract void getThreadInfo(String threadId);
+
+    /**
+     * Join thread
+     * @param threadId
+     */
+    public abstract void joinThread(String threadId);
 }

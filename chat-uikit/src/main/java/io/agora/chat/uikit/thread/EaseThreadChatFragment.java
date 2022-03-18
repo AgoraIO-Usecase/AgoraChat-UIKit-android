@@ -28,6 +28,7 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
     protected EaseThreadChatPresenter mPresenter;
     private EaseThreadChatHeaderAdapter headerAdapter;
     private List<ChatMessage> data = new ArrayList<>();
+    private OnJoinThreadResultListener joinThreadResultListener;
 
     @Override
     public void initView() {
@@ -112,7 +113,6 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         }
         setThreadInfo(mThread);
         headerAdapter.setData(data);
-        super.initData();
     }
 
     @Override
@@ -131,12 +131,47 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
 
     }
 
+    @Override
+    public void OnJoinThreadSuccess() {
+        if(joinThreadResultListener != null) {
+            joinThreadResultListener.joinSuccess(conversationId);
+        }
+        super.initData();
+    }
+
+    @Override
+    public void OnJoinThreadFail(int error, String errorMsg) {
+        if(joinThreadResultListener != null) {
+            joinThreadResultListener.joinFailed(error, errorMsg);
+        }
+    }
+
     private void setThreadPresenter(EaseThreadChatPresenter presenter) {
         this.mPresenter = presenter;
     }
 
+    private void setOnJoinThreadResultListener(OnJoinThreadResultListener listener) {
+        this.joinThreadResultListener = listener;
+    }
+
+    public interface OnJoinThreadResultListener {
+        /**
+         * Join thread success
+         * @param threadId
+         */
+        void joinSuccess(String threadId);
+
+        /**
+         * Join thread failed
+         * @param errorCode
+         * @param message
+         */
+        void joinFailed(int errorCode, String message);
+    }
+
     public static class Builder extends EaseChatFragment.Builder {
         private EaseThreadChatPresenter presenter;
+        private OnJoinThreadResultListener listener;
 
         /**
          * Constructor
@@ -179,6 +214,16 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
             return this;
         }
 
+        /**
+         * Set join thread listener
+         * @param listener
+         * @return
+         */
+        public Builder setOnJoinThreadResultListener(OnJoinThreadResultListener listener) {
+            this.listener = listener;
+            return this;
+        }
+
         @Override
         public EaseChatFragment build() {
             // Set is thread message
@@ -186,6 +231,7 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
             EaseChatFragment fragment = super.build();
             if(fragment instanceof EaseThreadChatFragment) {
                 ((EaseThreadChatFragment)fragment).setThreadPresenter(this.presenter);
+                ((EaseThreadChatFragment)fragment).setOnJoinThreadResultListener(this.listener);
             }
             return fragment;
         }
