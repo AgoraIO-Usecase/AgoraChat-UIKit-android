@@ -17,4 +17,16 @@ public interface IThreadChatView extends ILoadDataView {
      * @param errorMsg
      */
     void onGetThreadInfoFail(int error, String errorMsg);
+
+    /**
+     * Join thread success or have joined
+     */
+    void OnJoinThreadSuccess();
+
+    /**
+     * Join thread failed
+     * @param error
+     * @param errorMsg
+     */
+    void OnJoinThreadFail(int error, String errorMsg);
 }

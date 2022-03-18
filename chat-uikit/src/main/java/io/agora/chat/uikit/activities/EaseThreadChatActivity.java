@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.fragment.app.Fragment;
+
 import com.superrtc.livepusher.PermissionsManager;
 
 import io.agora.chat.ChatThread;
@@ -28,19 +30,17 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
     private ChatThread thread;
     private EaseBaseActivity mContext;
 
-    public static void actionStart(Context context, String parentMsgId, String conversationId, int chatType) {
+    public static void actionStart(Context context, String parentMsgId, String conversationId) {
         Intent intent = new Intent(context, EaseThreadChatActivity.class);
         intent.putExtra("parentMsgId", parentMsgId);
         intent.putExtra("conversationId", conversationId);
-        intent.putExtra("chatType", chatType);
         context.startActivity(intent);
     }
     
-    public static void actionStart(Context context, String parentMsgId, String conversationId, int chatType, ChatThread thread) {
+    public static void actionStart(Context context, String parentMsgId, String conversationId, ChatThread thread) {
         Intent intent = new Intent(context, EaseThreadChatActivity.class);
         intent.putExtra("parentMsgId", parentMsgId);
         intent.putExtra("conversationId", conversationId);
-        intent.putExtra("chatType", chatType);
         intent.putExtra("thread", thread);
         context.startActivity(intent);
     }
@@ -73,64 +73,78 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
     }
 
     public void initData() {
-        EaseChatFragment.Builder builder = new EaseThreadChatFragment.Builder(parentMsgId, conversationId)
-                .setThreadInfo(thread)
-                .useHeader(false)
-                .setEmptyLayout(R.layout.ease_layout_no_data_show_nothing)
-                .setOnChatExtendMenuItemClickListener(new OnChatExtendMenuItemClickListener() {
-                    @Override
-                    public boolean onChatExtendMenuItemClick(View view, int itemId) {
-                        EMLog.e("TAG", "onChatExtendMenuItemClick");
-                        if (itemId == R.id.extend_item_take_picture) {
-                            // check if has permissions
-                            if (!PermissionsManager.getInstance().hasPermission(mContext, Manifest.permission.CAMERA)) {
-                                PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(mContext
-                                        , new String[]{Manifest.permission.CAMERA}, null);
-                                return true;
-                            }
-                            if (!PermissionsManager.getInstance().hasPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                                PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(mContext
-                                        , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, null);
-                                return true;
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("thread_chat");
+        if(fragment == null) {
+            EaseChatFragment.Builder builder = new EaseThreadChatFragment.Builder(parentMsgId, conversationId)
+                    .setThreadInfo(thread)
+                    .setOnJoinThreadResultListener(new EaseThreadChatFragment.OnJoinThreadResultListener() {
+                        @Override
+                        public void joinSuccess(String threadId) {
+
+                        }
+
+                        @Override
+                        public void joinFailed(int errorCode, String message) {
+
+                        }
+                    })
+                    .useHeader(false)
+                    .setEmptyLayout(R.layout.ease_layout_no_data_show_nothing)
+                    .setOnChatExtendMenuItemClickListener(new OnChatExtendMenuItemClickListener() {
+                        @Override
+                        public boolean onChatExtendMenuItemClick(View view, int itemId) {
+                            EMLog.e("TAG", "onChatExtendMenuItemClick");
+                            if (itemId == R.id.extend_item_take_picture) {
+                                // check if has permissions
+                                if (!PermissionsManager.getInstance().hasPermission(mContext, Manifest.permission.CAMERA)) {
+                                    PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(mContext
+                                            , new String[]{Manifest.permission.CAMERA}, null);
+                                    return true;
+                                }
+                                if (!PermissionsManager.getInstance().hasPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                    PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(mContext
+                                            , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, null);
+                                    return true;
+                                }
+                                return false;
+                            } else if (itemId == R.id.extend_item_picture || itemId == R.id.extend_item_file || itemId == R.id.extend_item_video) {
+                                if (!PermissionsManager.getInstance().hasPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                    PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(mContext
+                                            , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, null);
+                                    return true;
+                                }
+                                return false;
                             }
                             return false;
-                        } else if (itemId == R.id.extend_item_picture || itemId == R.id.extend_item_file || itemId == R.id.extend_item_video) {
-                            if (!PermissionsManager.getInstance().hasPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        }
+                    })
+                    .setOnChatInputChangeListener(new OnChatInputChangeListener() {
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            EMLog.e("TAG", "onTextChanged: s: " + s.toString());
+                        }
+                    })
+                    .setOnChatRecordTouchListener(new OnChatRecordTouchListener() {
+                        @Override
+                        public boolean onRecordTouch(View v, MotionEvent event) {
+                            // Check if has record audio permission
+                            if (!PermissionsManager.getInstance().hasPermission(mContext, Manifest.permission.RECORD_AUDIO)) {
                                 PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(mContext
-                                        , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, null);
+                                        , new String[]{Manifest.permission.RECORD_AUDIO}, null);
                                 return true;
                             }
                             return false;
                         }
-                        return false;
-                    }
-                })
-                .setOnChatInputChangeListener(new OnChatInputChangeListener() {
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        EMLog.e("TAG", "onTextChanged: s: " + s.toString());
-                    }
-                })
-                .setOnChatRecordTouchListener(new OnChatRecordTouchListener() {
-                    @Override
-                    public boolean onRecordTouch(View v, MotionEvent event) {
-                        // Check if has record audio permission
-                        if (!PermissionsManager.getInstance().hasPermission(mContext, Manifest.permission.RECORD_AUDIO)) {
-                            PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(mContext
-                                    , new String[]{Manifest.permission.RECORD_AUDIO}, null);
-                            return true;
-                        }
-                        return false;
-                    }
-                })
-                .hideSenderAvatar(true);
-        setChildFragmentBuilder(builder);
-        EaseChatFragment fragment = builder.build();
+                    })
+                    .hideSenderAvatar(true);
+            setChildFragmentBuilder(builder);
+            fragment = builder.build();
+        }
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment, fragment, "thread_chat").commit();
 
     }
 
     public void setChildFragmentBuilder(EaseChatFragment.Builder builder) {
-        
+
     }
 }
