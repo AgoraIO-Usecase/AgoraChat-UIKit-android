@@ -2,17 +2,23 @@ package io.agora.chat.uikit.widget.chatrow;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+
 import io.agora.chat.ChatMessage;
 import io.agora.chat.FileMessageBody;
 import io.agora.chat.VideoMessageBody;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.chat.model.EaseChatItemStyleHelper;
 import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.utils.EaseImageUtils;
+import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.util.EMLog;
 import io.agora.util.TextFormater;
 
@@ -105,6 +111,8 @@ public class EaseChatRowVideo extends EaseChatRowFile {
                 showVideoThumbView(message);
             }
         }
+
+        setImageIncludeThread(imageView);
 	}
 
     /**

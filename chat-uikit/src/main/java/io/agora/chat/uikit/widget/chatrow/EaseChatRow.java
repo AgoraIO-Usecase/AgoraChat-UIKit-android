@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import java.util.Date;
 
@@ -30,6 +34,7 @@ import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
 import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.utils.EaseUserUtils;
+import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseImageView;
 import io.agora.util.EMLog;
 
@@ -284,12 +289,20 @@ public abstract class EaseChatRow extends LinearLayout {
     }
 
     public void setThreadRegion() {
-        if(message != null && message.getThreadOverview() != null) {
+        if(shouldShowThreadRegion()) {
             threadRegion.setVisibility(VISIBLE);
             threadRegion.setThreadInfo(message.getThreadOverview());
         }else {
             threadRegion.setVisibility(GONE);
         }
+    }
+
+    /**
+     * If need to show thread region
+     * @return
+     */
+    public boolean shouldShowThreadRegion() {
+        return message != null && message.getThreadOverview() != null;
     }
 
     /**
@@ -376,6 +389,47 @@ public abstract class EaseChatRow extends LinearLayout {
         }
     }
 
+    /**
+     * Set chat item include image which contains thread region
+     * @param imageView
+     */
+    public void setImageIncludeThread(ImageView imageView) {
+        if(shouldShowThreadRegion()) {
+            if(isSender()) {
+                Drawable senderBgDrawable = EaseChatItemStyleHelper.getSenderBgDrawable();
+                if(senderBgDrawable != null) {
+                    bubbleLayout.setBackground(senderBgDrawable.getConstantState().newDrawable());
+                }else {
+                    bubbleLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ease_send_message_et_bg));
+                }
+            }else {
+                Drawable receiverBgDrawable = EaseChatItemStyleHelper.getReceiverBgDrawable();
+                if(receiverBgDrawable != null) {
+                    bubbleLayout.setBackground(receiverBgDrawable.getConstantState().newDrawable());
+                }else {
+                    bubbleLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ease_chat_bubble_receive_bg));
+                }
+            }
+            int[] marginArray = getContext().getResources().getIntArray(R.array.ease_chat_image_margin_include_thread);
+            if(marginArray != null && marginArray.length == 4) {
+                int leftMargin = Math.max(marginArray[0], 0);
+                int topMargin = Math.max(marginArray[1], 0);
+                int rightMargin = Math.max(marginArray[2], 0);
+                int bottomMargin = Math.max(marginArray[3], 0);
+                ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+                if(layoutParams instanceof ConstraintLayout.LayoutParams) {
+                    ((ConstraintLayout.LayoutParams) layoutParams).leftMargin = (int) EaseUtils.dip2px(getContext(),
+                            leftMargin);
+                    ((ConstraintLayout.LayoutParams) layoutParams).topMargin = (int) EaseUtils.dip2px(getContext(),
+                            topMargin);
+                    ((ConstraintLayout.LayoutParams) layoutParams).rightMargin = (int) EaseUtils.dip2px(getContext(),
+                            rightMargin);
+                    ((ConstraintLayout.LayoutParams) layoutParams).bottomMargin = (int) EaseUtils.dip2px(getContext(),
+                            bottomMargin);
+                }
+            }
+        }
+    }
     /**
      *
      * @return

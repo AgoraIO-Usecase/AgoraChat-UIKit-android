@@ -41,14 +41,12 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/iv_userhead"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="@dimen/ease_margin_chat_activity"
-            android:background="@drawable/ease_chat_bubble_receive_bg">
+            android:layout_marginStart="@dimen/ease_margin_chat_activity">
 
             <io.agora.chat.uikit.widget.EaseImageView
                 android:id="@+id/chatting_content_iv"
                 android:layout_width="130dp"
                 android:layout_height="145dp"
-                style="@style/bubble_inner_start_top_end_margin"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -61,6 +59,7 @@
                 android:id="@+id/thread_region"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 style="@style/bubble_inner_start_bottom_end_margin"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

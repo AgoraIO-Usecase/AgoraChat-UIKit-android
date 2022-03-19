@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.chat.model;
 
 
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
 public class EaseChatItemStyleHelper {
@@ -114,6 +115,34 @@ public class EaseChatItemStyleHelper {
 
     public void setHideSendAvatar(boolean hideSendAvatar) {
         style.setHideSendAvatar(hideSendAvatar);
+    }
+    
+    public static Drawable getSenderBgDrawable() {
+        if(instance == null || instance.style == null) {
+            return null;
+        }
+        return instance.style.getSenderBgDrawable();
+    }
+    
+    public static Drawable getReceiverBgDrawable() {
+        if(instance == null || instance.style == null) {
+            return null;
+        }
+        return instance.style.getReceiverBgDrawable();
+    }
+    
+    public static Drawable getTimeBgDrawable() {
+        if(instance == null || instance.style == null) {
+            return null;
+        }
+        return instance.style.getTimeBgDrawable();
+    }
+    
+    public static Drawable getAvatarDefaultSrc() {
+        if(instance == null || instance.style == null) {
+            return null;
+        }
+        return instance.style.getAvatarDefaultSrc();
     }
 }
 

@@ -180,4 +180,11 @@
         <item>.dot</item>
         <item>.docx</item>
     </array>
+
+    <array name="ease_chat_image_margin_include_thread">
+        <item>12</item><!--left margin-->
+        <item>12</item><!--top margin-->
+        <item>12</item><!--right margin-->
+        <item>0</item><!--bottom margin-->
+    </array>
 </resources>
