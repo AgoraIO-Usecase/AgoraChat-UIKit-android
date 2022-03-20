@@ -321,6 +321,22 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     }
 
     @Override
+    public boolean onThreadClick(String messageId, String threadId) {
+        if(chatItemClickListener != null) {
+            return chatItemClickListener.onThreadClick(messageId, threadId);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onThreadLongClick(View v, String messageId, String threadId) {
+        if(chatItemClickListener != null) {
+            return chatItemClickListener.onThreadLongClick(v, messageId, threadId);
+        }
+        return false;
+    }
+
+    @Override
     public boolean onChatExtendMenuItemClick(View view, int itemId) {
         if(extendMenuItemClickListener != null && extendMenuItemClickListener.onChatExtendMenuItemClick(view, itemId)) {
             return true;

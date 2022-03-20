@@ -7,5 +7,9 @@
         <activity android:name=".activities.EaseShowNormalFileActivity" />
         <activity android:name=".activities.EaseShowLocalVideoActivity" />
         <activity android:name=".activities.EaseShowBigImageActivity" />
+        <activity
+            android:name=".activities.EaseThreadChatActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
     </application>
 </manifest>

@@ -425,6 +425,22 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             }
 
             @Override
+            public boolean onThreadClick(String messageId, String threadId) {
+                if(messageListItemClickListener != null) {
+                    return messageListItemClickListener.onThreadClick(messageId, threadId);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onThreadLongClick(View v, String messageId, String threadId) {
+                if(messageListItemClickListener != null) {
+                    return messageListItemClickListener.onThreadLongClick(v, messageId, threadId);
+                }
+                return false;
+            }
+
+            @Override
             public void onMessageCreate(ChatMessage message) {
                 if(messageListItemClickListener != null) {
                     messageListItemClickListener.onMessageCreate(message);

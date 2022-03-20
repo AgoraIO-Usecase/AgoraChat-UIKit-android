@@ -823,6 +823,22 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     @Override
+    public boolean onThreadClick(String messageId, String threadId) {
+        if(listener != null) {
+            return listener.onThreadClick(messageId, threadId);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onThreadLongClick(View v, String messageId, String threadId) {
+        if(listener != null) {
+            return listener.onThreadLongClick(v, messageId, threadId);
+        }
+        return false;
+    }
+
+    @Override
     public void onMessageCreate(ChatMessage message) {
         EMLog.i(TAG, "onMessageCreate");
     }
