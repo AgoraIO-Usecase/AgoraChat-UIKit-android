@@ -6,14 +6,18 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -35,6 +39,8 @@ public class EasePopupWindowHelper {
     private static final int[] titles = {R.string.ease_action_copy, R.string.ease_action_delete, R.string.ease_action_recall};
     private static final int[] icons = {R.drawable.ease_chat_item_menu_copy, R.drawable.ease_chat_item_menu_delete, R.drawable.ease_chat_item_menu_recall};
     private static final int SPAN_COUNT = 5;
+    private static float screenBgAlpha = 0.3f;
+    private static float popupWindowBgAlpha = 0.8f;
     private EasePopupWindow pMenu;
     private List<MenuItemBean> menuItems = new ArrayList<>();
     private Map<Integer, MenuItemBean> menuItemMap = new HashMap<>();
@@ -47,6 +53,9 @@ public class EasePopupWindowHelper {
     private boolean touchable;
     private Drawable background;
     private View layout;
+    private EasePopupWindow.Style menuStyle = EasePopupWindow.Style.BOTTOM_SCREEN;
+    private boolean itemMenuIconVisible = true;
+    private RelativeLayout rvTop;
 
     public EasePopupWindowHelper() {
         if(pMenu != null) {
@@ -61,11 +70,16 @@ public class EasePopupWindowHelper {
      */
     public void initMenu(@NonNull Context context) {
         this.context = context;
-        pMenu = new EasePopupWindow(context, true);
+        boolean closeChangeBg = true;
+        if(menuStyle != EasePopupWindow.Style.ATTACH_ITEM_VIEW) {
+            closeChangeBg = false;
+        }
+        pMenu = new EasePopupWindow(context, closeChangeBg);
         layout = LayoutInflater.from(context).inflate(R.layout.ease_layout_menu_popupwindow, null);
         pMenu.setContentView(layout);
         tvTitle = layout.findViewById(R.id.tv_title);
         rvMenuList = layout.findViewById(R.id.rv_menu_list);
+        rvTop = layout.findViewById(R.id.rl_top);
         adapter = new MenuAdapter();
         rvMenuList.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemClickListener() {
@@ -77,6 +91,18 @@ public class EasePopupWindowHelper {
                 }
             }
         });
+        // Only bottom screen style will show expand icon
+        if(menuStyle == EasePopupWindow.Style.BOTTOM_SCREEN) {
+            View expandIcon = layout.findViewById(R.id.expand_icon);
+            expandIcon.setVisibility(View.VISIBLE);
+            expandIcon.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    dismiss();
+                    return true;
+                }
+            });
+        }
     }
 
     public void clear() {
@@ -171,6 +197,15 @@ public class EasePopupWindowHelper {
         tvTitle.setVisibility(View.VISIBLE);
     }
 
+    public void setMenuStyle(EasePopupWindow.Style style) {
+        this.menuStyle = style;
+    }
+
+    public void setRlTopLayout(View view) {
+        rvTop.removeAllViews();
+        rvTop.addView(view);
+    }
+
     public void show(View parent, View v) {
         show(parent, v, false);
     }
@@ -181,6 +216,38 @@ public class EasePopupWindowHelper {
             Log.e("EasePopupWindowHelper", "Span count should be at least 1. Provided " + menuItems.size());
             return;
         }
+        if(menuStyle == EasePopupWindow.Style.ATTACH_ITEM_VIEW) {
+            showAttachItemViewStyle(parent, v, isTop);
+        }else if(menuStyle == EasePopupWindow.Style.BOTTOM_SCREEN) {
+            showBottomToScreen(parent, v);
+        }else {
+            showCenterToScreen(parent, v);
+        }
+
+    }
+
+    private void showCenterToScreen(View parent, View v) {
+        // Set screen's alpha
+        pMenu.setBackgroundAlpha(screenBgAlpha);
+        // Set popup window's background alpha
+        getView().setAlpha(popupWindowBgAlpha);
+        rvMenuList.setLayoutManager(new LinearLayoutManager(context));
+        pMenu.showAtLocation(parent, Gravity.CENTER, 0, 0);
+    }
+
+    private void showBottomToScreen(View parent, View v) {
+        // Set screen's alpha
+        pMenu.setBackgroundAlpha(screenBgAlpha);
+        // Set popup window's background alpha
+        getView().setAlpha(popupWindowBgAlpha);
+        rvMenuList.setLayoutManager(new LinearLayoutManager(context));
+        pMenu.showAtLocation(parent, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        ViewGroup.LayoutParams layoutParams = getView().getLayoutParams();
+        layoutParams.width = (int) EaseUtils.getScreenInfo(context)[0];
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+    }
+
+    private void showAttachItemViewStyle(View parent, View v, boolean isTop) {
         if(menuItems.size() < SPAN_COUNT) {
             rvMenuList.setLayoutManager(new GridLayoutManager(context, menuItems.size(), RecyclerView.VERTICAL, false));
         }else {
@@ -217,7 +284,7 @@ public class EasePopupWindowHelper {
                 yOffset = location[1] + v.getHeight() + margin;
             }
         }
-        
+
         int xOffset = 0;
         if(location[0] + v.getWidth() / 2 + popupWidth / 2 + EaseUtils.dip2px(context, 10) > parent.getWidth()) {
             xOffset = (int) (parent.getWidth() - EaseUtils.dip2px(context, 10) - popupWidth);
@@ -266,11 +333,17 @@ public class EasePopupWindowHelper {
         return layout;
     }
 
+    public void setItemMenuIconVisible(boolean visible) {
+        this.itemMenuIconVisible = visible;
+    }
+
     private class MenuAdapter extends EaseBaseRecyclerViewAdapter<MenuItemBean> {
 
         @Override
         public ViewHolder getViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(context).inflate(R.layout.ease_layout_item_menu_popupwindow, parent, false);
+            View view = LayoutInflater.from(context).inflate(menuStyle == EasePopupWindow.Style.ATTACH_ITEM_VIEW ?
+                    R.layout.ease_layout_item_menu_popupwindow :
+                    R.layout.ease_layout_item_menu_popupwindow_horizontal, parent, false);
             return new MenuViewHolder(view);
         }
 
@@ -294,8 +367,11 @@ public class EasePopupWindowHelper {
                 if(!TextUtils.isEmpty(title)) {
                     tvActionName.setText(title);
                 }
-                if(item.getResourceId() != 0) {
+                if(item.getResourceId() != 0 && itemMenuIconVisible) {
+                    ivActionIcon.setVisibility(View.VISIBLE);
                     ivActionIcon.setImageResource(item.getResourceId());
+                }else {
+                    ivActionIcon.setVisibility(View.GONE);
                 }
             }
         }

@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.interfaces;
 
 
+import io.agora.chat.uikit.menu.EasePopupWindow;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 
@@ -20,7 +21,24 @@ public interface IPopupWindow {
      */
     MenuItemBean findItem(int id);
 
+    /**
+     * Find item menu by id, and set it to visible or gone
+     * @param id
+     * @param visible
+     */
     void findItemVisible(int id, boolean visible);
+
+    /**
+     * Set menu popup window's style
+     * @param style
+     */
+    void setMenuStyle(EasePopupWindow.Style style);
+
+    /**
+     * Set whether show item menu icon
+     * @param visible
+     */
+    void setItemMenuIconVisible(boolean visible);
 
     void setOnPopupWindowItemClickListener(OnMenuChangeListener listener);
 

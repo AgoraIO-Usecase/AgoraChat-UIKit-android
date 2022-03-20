@@ -886,6 +886,16 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     @Override
+    public void setMenuStyle(EasePopupWindow.Style style) {
+        menuHelper.setMenuStyle(style);
+    }
+
+    @Override
+    public void setItemMenuIconVisible(boolean visible) {
+        menuHelper.setItemMenuIconVisible(visible);
+    }
+
+    @Override
     public EasePopupWindowHelper getMenuHelper() {
         return menuHelper;
     }
