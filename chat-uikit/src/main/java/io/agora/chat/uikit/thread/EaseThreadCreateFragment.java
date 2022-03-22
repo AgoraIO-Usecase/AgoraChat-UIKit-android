@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
+import java.util.List;
 
 import io.agora.Error;
 import io.agora.chat.ChatClient;
@@ -32,6 +33,7 @@ import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageSendCallBack;
 import io.agora.chat.uikit.databinding.EaseFragmentCreateThreadBinding;
+import io.agora.chat.uikit.interfaces.EaseMessageListener;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.thread.interfaces.EaseThreadParentMsgViewProvider;
@@ -156,12 +158,35 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
         binding.threadParentMsg.addView(view);
 
         view.setOnMessageItemClickListener(chatItemClickListener);
+        view.setBottomDividerVisible(false);
 
         view.setMessage(ChatClient.getInstance().chatManager().getMessage(messageId));
     }
 
     public void initListener() {
         binding.layoutMenu.setChatInputMenuListener(this);
+        ChatClient.getInstance().chatManager().addMessageListener(new EaseMessageListener() {
+            @Override
+            public void onMessageReceived(List<ChatMessage> messages) {
+                for (ChatMessage message : messages) {
+                    if(message.getChatType() == ChatMessage.ChatType.GroupChat) {
+                        if(mContext != null) {
+                            mContext.runOnUiThread(()-> binding.titleBar.setUnreadIconVisible(true));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onMessageRecalled(List<ChatMessage> messages) {
+
+            }
+
+            @Override
+            public void onMessageChanged(ChatMessage message, Object change) {
+
+            }
+        });
     }
 
     public void initData() {
@@ -170,7 +195,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
 
     @Override
     public void onTyping(CharSequence s, int start, int before, int count) {
-        binding.etInputName.setText(s);
+
     }
 
     @Override

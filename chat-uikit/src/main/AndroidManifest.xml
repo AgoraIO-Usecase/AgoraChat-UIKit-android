@@ -11,5 +11,8 @@
             android:name=".activities.EaseThreadChatActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity android:name=".activities.EaseThreadCreateActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
     </application>
 </manifest>

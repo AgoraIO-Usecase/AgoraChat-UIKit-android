@@ -1,7 +1,11 @@
 package io.agora.chat.uikit.thread.widget;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,32 +17,47 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
 
+import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
+import io.agora.chat.ImageMessageBody;
 import io.agora.chat.NormalFileMessageBody;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.VideoMessageBody;
 import io.agora.chat.VoiceMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.activities.EaseShowBigImageActivity;
+import io.agora.chat.uikit.activities.EaseShowNormalFileActivity;
+import io.agora.chat.uikit.activities.EaseShowVideoActivity;
 import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
 import io.agora.chat.uikit.databinding.EaseLayoutChatThreadParentMsgBinding;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseFileIconProvider;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
+import io.agora.chat.uikit.utils.EaseCompat;
 import io.agora.chat.uikit.utils.EaseDateUtils;
+import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseImageUtils;
+import io.agora.chat.uikit.utils.EaseSmileUtils;
 import io.agora.chat.uikit.utils.EaseUserUtils;
+import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.utils.EaseVoiceLengthUtils;
+import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoice;
+import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoicePlayer;
+import io.agora.util.EMLog;
 import io.agora.util.TextFormater;
 
-public class EaseThreadParentMsgView extends FrameLayout {
+public class EaseThreadParentMsgView extends ConstraintLayout {
     private static final String TAG = EaseThreadParentMsgView.class.getSimpleName();
     private EaseLayoutChatThreadParentMsgBinding binding;
     private OnMessageItemClickListener itemClickListener;
     private ChatMessage message;
+    private EaseChatRowVoicePlayer voicePlayer;
+    private AnimationDrawable voiceAnimation;
 
     public EaseThreadParentMsgView(@NonNull Context context) {
         this(context, null);
@@ -54,12 +73,11 @@ public class EaseThreadParentMsgView extends FrameLayout {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        Log.e(TAG, "init");
         View root = LayoutInflater.from(context).inflate(R.layout.ease_layout_chat_thread_parent_msg, this);
         binding = EaseLayoutChatThreadParentMsgBinding.bind(root);
 
         // set avatar uniformly
-        EaseUserUtils.setUserAvatarStyle(binding.image);
+        EaseUserUtils.setUserAvatarStyle(binding.avatar);
 
         setListener();
     }
@@ -90,7 +108,9 @@ public class EaseThreadParentMsgView extends FrameLayout {
             public void onClick(View v) {
                 if(itemClickListener != null && message != null) {
                     itemClickListener.onBubbleClick(message);
+                    return;
                 }
+                clickEvent(message);
             }
         });
 
@@ -104,6 +124,109 @@ public class EaseThreadParentMsgView extends FrameLayout {
                 return false;
             }
         });
+    }
+
+    private void clickEvent(ChatMessage message) {
+        if(message == null) {
+            return;
+        }
+        ChatMessage.Type type = message.getType();
+        switch (type) {
+            case IMAGE :
+                openImage(message);
+                break;
+            case VIDEO :
+                openVideo(message);
+                break;
+            case LOCATION :
+                openLocation(message);
+                break;
+            case VOICE :
+                playVoice(message);
+                break;
+            case FILE :
+                openFile(message);
+                break;
+        }
+    }
+
+    private void openImage(ChatMessage message) {
+        ImageMessageBody imgBody = (ImageMessageBody) message.getBody();
+        Intent intent = new Intent(getContext(), EaseShowBigImageActivity.class);
+        Uri imgUri = imgBody.getLocalUri();
+        EaseFileUtils.takePersistableUriPermission(getContext(), imgUri);
+        EMLog.e("Tag", "big image uri: " + imgUri + "  exist: "+EaseFileUtils.isFileExistByUri(getContext(), imgUri));
+        if(EaseFileUtils.isFileExistByUri(getContext(), imgUri)) {
+            intent.putExtra("uri", imgUri);
+        } else{
+            // The local full size pic does not exist yet.
+            // ShowBigImage needs to download it from the server
+            // first
+            String msgId = message.getMsgId();
+            intent.putExtra("messageId", msgId);
+            intent.putExtra("filename", imgBody.getFileName());
+        }
+        getContext().startActivity(intent);
+    }
+
+    private void openVideo(ChatMessage message) {
+        Intent intent = new Intent(getContext(), EaseShowVideoActivity.class);
+        intent.putExtra("msg", message);
+        getContext().startActivity(intent);
+    }
+
+    private void openLocation(ChatMessage message) {
+
+    }
+
+    private void playVoice(ChatMessage message) {
+        if(voicePlayer == null) {
+            voicePlayer = EaseChatRowVoicePlayer.getInstance(getContext());
+        }
+        if (voicePlayer.isPlaying()) {
+            // Stop the voice play first, no matter the playing voice item is this or others.
+            voicePlayer.stop();
+
+            // If the playing voice item is this item, only need stop play.
+            String playingId = voicePlayer.getCurrentPlayingId();
+            if (message.getMsgId().equals(playingId)) {
+                return;
+            }
+        }
+        voicePlayer.play(message, new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // Stop the voice play animation.
+                stopVoicePlayAnimation();
+            }
+        });
+        // Start the voice play animation.
+        startVoicePlayAnimation();
+    }
+
+    private void startVoicePlayAnimation() {
+        binding.ivVoice.setImageResource(R.drawable.voice_from_icon);
+        voiceAnimation = (AnimationDrawable) binding.ivVoice.getDrawable();
+        voiceAnimation.start();
+    }
+
+    private void stopVoicePlayAnimation() {
+        if (voiceAnimation != null) {
+            voiceAnimation.stop();
+        }
+        binding.ivVoice.setImageResource(R.drawable.ease_chatfrom_voice_playing);
+    }
+
+    private void openFile(ChatMessage message) {
+        NormalFileMessageBody fileMessageBody = (NormalFileMessageBody) message.getBody();
+        Uri filePath = fileMessageBody.getLocalUri();
+        EaseFileUtils.takePersistableUriPermission(getContext(), filePath);
+        if(EaseFileUtils.isFileExistByUri(getContext(), filePath)){
+            EaseCompat.openFile(getContext(), filePath);
+        } else {
+            // download the file
+            getContext().startActivity(new Intent(getContext(), EaseShowNormalFileActivity.class).putExtra("msg", message));
+        }
     }
 
     public void setMessage(ChatMessage message) {
@@ -154,9 +277,7 @@ public class EaseThreadParentMsgView extends FrameLayout {
 
     private void setTxtMessage(ChatMessage message) {
         hideAllBubble();
-        TextMessageBody body = (TextMessageBody) message.getBody();
-        String content = body.getMessage();
-        binding.message.setText(content);
+        binding.message.setText(EaseSmileUtils.getSmiledText(getContext(), EaseUtils.getMessageDigest(message, getContext())));
         binding.message.setVisibility(VISIBLE);
     }
 
@@ -256,6 +377,10 @@ public class EaseThreadParentMsgView extends FrameLayout {
 
     public ViewGroup getBubbleParent() {
         return binding.llContent;
+    }
+
+    public void setBottomDividerVisible(boolean visible) {
+        binding.viewBottomDivider.setVisibility(visible ? VISIBLE : GONE);
     }
 
     /**

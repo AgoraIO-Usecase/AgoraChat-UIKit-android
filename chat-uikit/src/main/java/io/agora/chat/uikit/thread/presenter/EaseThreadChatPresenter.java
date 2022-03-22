@@ -33,4 +33,10 @@ public abstract class EaseThreadChatPresenter extends EaseBasePresenter {
      * @param threadId
      */
     public abstract void joinThread(String threadId);
+
+    /**
+     * Get group Info
+     * @param groupId
+     */
+    public abstract void getGroupInfo(String groupId);
 }

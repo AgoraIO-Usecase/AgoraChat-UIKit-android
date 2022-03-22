@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.thread.presenter;
 
 import io.agora.chat.ChatThread;
+import io.agora.chat.Group;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
 
 public interface IThreadChatView extends ILoadDataView {
@@ -29,4 +30,17 @@ public interface IThreadChatView extends ILoadDataView {
      * @param errorMsg
      */
     void OnJoinThreadFail(int error, String errorMsg);
+
+    /**
+     * Get group info success
+     * @param group
+     */
+    void onGetGroupInfoSuccess(Group group);
+
+    /**
+     * Get group info failed
+     * @param error
+     * @param errorMsg
+     */
+    void onGetGroupInfoFail(int error, String errorMsg);
 }

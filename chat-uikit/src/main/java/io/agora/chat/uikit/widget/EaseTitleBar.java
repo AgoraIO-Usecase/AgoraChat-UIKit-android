@@ -358,6 +358,9 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
 
     public void setSubTitle(String title){
         subTitleView.setText(title);
+        if(!TextUtils.isEmpty(title)) {
+            subTitleView.setVisibility(VISIBLE);
+        }
     }
 
     public void setSubTitleSize(float sp){

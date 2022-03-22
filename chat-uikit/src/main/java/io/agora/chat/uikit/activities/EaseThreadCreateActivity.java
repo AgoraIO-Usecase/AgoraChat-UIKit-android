@@ -67,6 +67,7 @@ public class EaseThreadCreateActivity extends EaseBaseActivity {
                     .setThreadParentMsgViewProvider(new EaseThreadParentMsgViewProvider() {
                         @Override
                         public View parentMsgView(ChatMessage message) {
+                            // Add your parent view
                             return null;
                         }
                     })

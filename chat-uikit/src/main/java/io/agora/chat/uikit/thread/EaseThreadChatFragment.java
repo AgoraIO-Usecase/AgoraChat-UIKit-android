@@ -13,6 +13,7 @@ import io.agora.MessageListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
+import io.agora.chat.Group;
 import io.agora.chat.uikit.chat.EaseChatFragment;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.thread.adapter.EaseThreadChatHeaderAdapter;
@@ -113,6 +114,19 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         }
         setThreadInfo(mThread);
         headerAdapter.setData(data);
+        joinThread();
+        setGroupInfo();
+    }
+
+    private void setGroupInfo() {
+        if(TextUtils.isEmpty(parentId)) {
+            return;
+        }
+        mPresenter.getGroupInfo(parentId);
+    }
+
+    private void joinThread() {
+        mPresenter.joinThread(conversationId);
     }
 
     @Override
@@ -144,6 +158,16 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         if(joinThreadResultListener != null) {
             joinThreadResultListener.joinFailed(error, errorMsg);
         }
+    }
+
+    @Override
+    public void onGetGroupInfoSuccess(Group group) {
+        titleBar.setSubTitle("# "+group.getGroupName());
+    }
+
+    @Override
+    public void onGetGroupInfoFail(int error, String errorMsg) {
+
     }
 
     private void setThreadPresenter(EaseThreadChatPresenter presenter) {

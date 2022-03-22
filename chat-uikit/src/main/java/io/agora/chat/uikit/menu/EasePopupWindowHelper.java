@@ -35,9 +35,9 @@ import io.agora.chat.uikit.interfaces.OnItemClickListener;
 import io.agora.chat.uikit.utils.EaseUtils;
 
 public class EasePopupWindowHelper {
-    private static final int[] itemIds = {R.id.action_chat_copy, R.id.action_chat_delete, R.id.action_chat_recall};
-    private static final int[] titles = {R.string.ease_action_copy, R.string.ease_action_delete, R.string.ease_action_recall};
-    private static final int[] icons = {R.drawable.ease_chat_item_menu_copy, R.drawable.ease_chat_item_menu_delete, R.drawable.ease_chat_item_menu_recall};
+    private static final int[] itemIds = {R.id.action_chat_reply, R.id.action_chat_copy, R.id.action_chat_delete};
+    private static final int[] titles = {R.string.ease_action_reply, R.string.ease_action_copy, R.string.ease_action_delete, R.string.ease_action_recall};
+    private static final int[] icons = {R.drawable.ease_chat_item_menu_reply, R.drawable.ease_chat_item_menu_copy, R.drawable.ease_chat_item_menu_delete};
     private static final int SPAN_COUNT = 5;
     private static float screenBgAlpha = 0.3f;
     private static float popupWindowBgAlpha = 0.8f;

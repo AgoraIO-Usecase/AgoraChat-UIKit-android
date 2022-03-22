@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- ids for long click of chat -->
+    <!--reply-->
+    <item name="action_chat_reply" type="id"/>
     <!--copy-->
     <item name="action_chat_copy" type="id"/>
     <!--delete-->

@@ -33,6 +33,7 @@ import io.agora.chat.Conversation;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.adapter.EMAChatRoomManagerListener;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.activities.EaseThreadCreateActivity;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.IChatLayout;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -794,6 +795,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public boolean onBubbleLongClick(View v, ChatMessage message) {
         if(showDefaultMenu) {
+            inputMenu.hideSoftKeyboard();
             showDefaultMenu(v, message);
             if(listener != null) {
                 return listener.onBubbleLongClick(v, message);
@@ -981,6 +983,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                         EMLog.i(TAG,"currentMsgId = "+message.getMsgId() + " timestamp = "+message.getMsgTime());
                     }else if(itemId == R.id.action_chat_recall) {
                         recallMessage(message);
+                    }else if(itemId == R.id.action_chat_reply) {
+                        skipToCreateThread(message);
                     }
                     return true;
                 }
@@ -998,8 +1002,13 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         menuHelper.show(this, v);
     }
 
+    private void skipToCreateThread(ChatMessage message) {
+        EaseThreadCreateActivity.actionStart(context(), conversationId, message.getMsgId());
+    }
+
     private void setMenuByMsgType(ChatMessage message) {
         ChatMessage.Type type = message.getType();
+        menuHelper.findItemVisible(R.id.action_chat_reply, false);
         menuHelper.findItemVisible(R.id.action_chat_copy, false);
         menuHelper.findItemVisible(R.id.action_chat_recall, false);
         menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_action_delete));
@@ -1021,6 +1030,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_video));
                 menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
+        }
+        if(message.getChatType() == ChatMessage.ChatType.GroupChat) {
+            menuHelper.findItemVisible(R.id.action_chat_reply, true);
         }
 
         if(message.direct() == ChatMessage.Direct.RECEIVE ){

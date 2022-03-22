@@ -13,6 +13,7 @@
     <string name="ease_list_no_data_text">No data</string>
     <string name="ease_all_members">All members</string>
 
+    <string name="ease_action_reply">Reply</string>
     <string name="ease_action_copy">Copy</string>
     <string name="ease_action_forward">Forward</string>
     <string name="ease_action_recall">Recall</string>
@@ -84,6 +85,7 @@
     <string name="ease_thread_create_mentions">Send a message to start a thread in this Group Chat.</string>
     <string name="ease_thread_create_title">New Thread</string>
     <string name="ease_thread_create_input_hint">Thread Name</string>
+    <string name="ease_thread_create_parent_msg_from_parent">Original message from Group Chat.</string>
     <string name="ease_thread_started_by_user">Started by %1$s</string>
 
 </resources>

@@ -18,7 +18,6 @@ import io.agora.chat.uikit.chat.EaseChatFragment;
 import io.agora.chat.uikit.chat.interfaces.OnChatExtendMenuItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatInputChangeListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
-import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.databinding.EaseActivityThreadChatBinding;
 import io.agora.chat.uikit.thread.EaseThreadChatFragment;
 import io.agora.util.EMLog;
@@ -26,9 +25,9 @@ import io.agora.util.EMLog;
 public class EaseThreadChatActivity extends EaseBaseActivity {
     private String parentMsgId;
     private String conversationId;
-    private int chatType;
     private ChatThread thread;
     private EaseBaseActivity mContext;
+    protected EaseActivityThreadChatBinding binding;
 
     public static void actionStart(Context context, String parentMsgId, String conversationId) {
         Intent intent = new Intent(context, EaseThreadChatActivity.class);
@@ -48,8 +47,8 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        EaseActivityThreadChatBinding inflate = EaseActivityThreadChatBinding.inflate(getLayoutInflater());
-        setContentView(inflate.getRoot());
+        binding = EaseActivityThreadChatBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         mContext= this;
         initIntent(getIntent());
         initView();
@@ -60,7 +59,6 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
     public void initIntent(Intent intent) {
         parentMsgId = intent.getStringExtra("parentMsgId");
         conversationId = intent.getStringExtra("conversationId");
-        chatType = intent.getIntExtra("chatType", EaseConstant.CHATTYPE_GROUP);
         thread = intent.getParcelableExtra("thread");
     }
 

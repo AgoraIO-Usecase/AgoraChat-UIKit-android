@@ -16,6 +16,7 @@ package io.agora.chat.uikit.base;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -51,7 +53,28 @@ public class EaseBaseActivity extends AppCompatActivity {
         }
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
-    
+
+    @Override
+    public void setContentView(View view) {
+        super.setContentView(view);
+        setActivityTheme();
+    }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        super.setContentView(view, params);
+        setActivityTheme();
+    }
+
+    @Override
+    public void setContentView(int layoutResID) {
+        super.setContentView(layoutResID);
+        setActivityTheme();
+    }
+
+    public void setActivityTheme() {
+        setFitSystemForTheme(true);
+    }
 
     @Override
     protected void onResume() {
@@ -82,7 +105,7 @@ public class EaseBaseActivity extends AppCompatActivity {
      * @param fitSystemForTheme
      */
     public void setFitSystemForTheme(boolean fitSystemForTheme) {
-        setFitSystemForTheme(fitSystemForTheme, R.color.white, true);
+        setFitSystemForTheme(fitSystemForTheme, "#feffffff", true);
     }
 
     /**
@@ -93,6 +116,17 @@ public class EaseBaseActivity extends AppCompatActivity {
     public void setFitSystemForTheme(boolean fitSystemForTheme, @ColorRes int colorId, boolean isDark) {
         setFitSystem(fitSystemForTheme);
         StatusBarCompat.compat(this, ContextCompat.getColor(this, colorId));
+        StatusBarCompat.setLightStatusBar(this, isDark);
+    }
+
+    /**
+     * Can set the status bar's style and change the background color
+     * @param fitSystemForTheme
+     * @param color Color string
+     */
+    public void setFitSystemForTheme(boolean fitSystemForTheme, String color, boolean isDark) {
+        setFitSystem(fitSystemForTheme);
+        StatusBarCompat.compat(this, Color.parseColor(color));
         StatusBarCompat.setLightStatusBar(this, isDark);
     }
 

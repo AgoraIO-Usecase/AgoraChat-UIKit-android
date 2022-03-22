@@ -18,7 +18,12 @@ public class EaseShowNormalFileActivity extends EaseBaseActivity {
     private static final String TAG = EaseShowNormalFileActivity.class.getSimpleName();
 	private ProgressBar progressBar;
 
-	@Override
+    @Override
+    public void setActivityTheme() {
+        super.setActivityTheme();
+    }
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ease_activity_show_file);

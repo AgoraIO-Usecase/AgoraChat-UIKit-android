@@ -30,6 +30,7 @@ import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.chat.interfaces.OnChatExtendMenuItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatInputChangeListener;
+import io.agora.chat.uikit.chat.interfaces.OnChatLayoutFinishInflateListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
@@ -78,6 +79,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     private OnPeerTypingListener otherTypingListener;
     private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
     private OnChatRecordTouchListener recordTouchListener;
+    private OnChatLayoutFinishInflateListener finishInflateListener;
     private EaseMessageAdapter messageAdapter;
     private boolean sendOriginalImage;
 
@@ -203,6 +205,11 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             }
         }
         setCustomExtendMenu();
+        // Provide views after finishing inflate
+        if(finishInflateListener != null) {
+            finishInflateListener.onTitleBarFinishInflate(titleBar);
+            finishInflateListener.onChatListFinishInflate(chatLayout);
+        }
     }
 
     public void initListener() {
@@ -284,6 +291,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     private void setOnChatRecordTouchListener(OnChatRecordTouchListener recordTouchListener) {
         this.recordTouchListener = recordTouchListener;
+    }
+
+    private void setOnChatLayoutFinishInflateListener(OnChatLayoutFinishInflateListener inflateListener) {
+        this.finishInflateListener = inflateListener;
     }
 
     private void setCustomAdapter(EaseMessageAdapter adapter) {
@@ -537,6 +548,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         private OnPeerTypingListener peerTypingListener;
         private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
         private OnChatRecordTouchListener recordTouchListener;
+        private OnChatLayoutFinishInflateListener finishInflateListener;
         private EaseChatFragment customFragment;
 
         /**
@@ -765,6 +777,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
 
         /**
+         * Set layout inflated listener
+         * @param finishInflateListener
+         * @return
+         */
+        public Builder setOnChatLayoutFinishInflateListener(OnChatLayoutFinishInflateListener finishInflateListener) {
+            this.finishInflateListener = finishInflateListener;
+            return this;
+        }
+
+        /**
          * Whether to hide receiver's avatar
          * @param hide
          * @return
@@ -887,6 +909,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             fragment.setOnPeerTypingListener(this.peerTypingListener);
             fragment.setOnAddMsgAttrsBeforeSendEvent(this.sendMsgEvent);
             fragment.setOnChatRecordTouchListener(this.recordTouchListener);
+            fragment.setOnChatLayoutFinishInflateListener(this.finishInflateListener);
             fragment.setCustomAdapter(this.adapter);
             return fragment;
         }
