@@ -87,5 +87,8 @@
     <string name="ease_thread_create_input_hint">Thread Name</string>
     <string name="ease_thread_create_parent_msg_from_parent">Original message from Group Chat.</string>
     <string name="ease_thread_started_by_user">Started by %1$s</string>
+    <string name="ease_thread_list_admin_title">All Threads</string>
+    <string name="ease_thread_list_member_title">Joined Threads</string>
+    <string name="ease_thread_list_sub_title"># %1$s</string>
 
 </resources>

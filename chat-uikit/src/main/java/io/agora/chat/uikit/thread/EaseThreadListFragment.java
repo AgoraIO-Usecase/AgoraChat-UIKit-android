@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,8 +22,10 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
 import io.agora.chat.CursorResult;
 import io.agora.chat.Group;
+import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.databinding.EaseFragmentThreadListBinding;
+import io.agora.chat.uikit.interfaces.OnTitleBarFinishInflateListener;
 import io.agora.chat.uikit.thread.interfaces.OnItemThreadClickListener;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
 import io.agora.chat.uikit.thread.adapter.EaseThreadListAdapter;
@@ -44,6 +47,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
     private Group mGroup;
     private OnLoadResultListener resultListener;
     private OnItemThreadClickListener itemClickListener;
+    private OnTitleBarFinishInflateListener inflateListener;
 
     @Nullable
     @Override
@@ -106,6 +110,9 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
             limit = bundle.getInt(Constant.KEY_REQUEST_LIMIT, 10);
         }
         setListView();
+        if(inflateListener != null) {
+            inflateListener.onTitleBarFinishInflate(binding.titleBar);
+        }
     }
 
     public void setListView() {
@@ -149,6 +156,14 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
             return;
         }
         presenter.getThreadParent(parentId);
+    }
+
+    private boolean isTitleEmpty(TextView textView) {
+        if(textView == null) {
+            return true;
+        }
+        String content = textView.getText().toString().trim();
+        return TextUtils.isEmpty(content);
     }
 
     public void onLoadMore() {
@@ -198,6 +213,10 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
 
     private void setOnItemClickListener(OnItemThreadClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
+    }
+
+    public void setOnTitleBarFinishInflateListener(OnTitleBarFinishInflateListener inflateListener) {
+        this.inflateListener = inflateListener;
     }
 
     @Override
@@ -331,7 +350,9 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
     @Override
     public void getThreadParentInfoSuccess(Group group) {
         mGroup = group;
-        binding.titleBar.setSubTitle(group.getGroupName());
+        if(isTitleEmpty(binding.titleBar.getSubTitle())) {
+            binding.titleBar.setSubTitle(getString(R.string.ease_thread_list_sub_title, group.getGroupName()));
+        }
         String currentUser = ChatClient.getInstance().getCurrentUser();
         // If current user is group admin
         if(TextUtils.equals(group.getOwner(), currentUser) || group.getAdminList().contains(currentUser)) {
@@ -340,6 +361,9 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
         }else {
             isGroupAdmin = false;
             presenter.getJoinedThreadList(group.getGroupId(), limit, cursor);
+        }
+        if(isTitleEmpty(binding.titleBar.getTitle())) {
+            binding.titleBar.setTitle(getString(isGroupAdmin ? R.string.ease_thread_list_admin_title : R.string.ease_thread_list_member_title));
         }
     }
 
@@ -357,6 +381,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
         private EaseThreadListPresenter presenter;
         private OnLoadResultListener resultListener;
         private OnItemThreadClickListener itemClickListener;
+        private OnTitleBarFinishInflateListener inflateListener;
 
         public Builder(String parentId) {
             this.bundle = new Bundle();
@@ -444,6 +469,16 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
         }
 
         /**
+         * Set title bar finish inflate listener
+         * @param inflateListener
+         * @return
+         */
+        public Builder setOnTitleBarFinishInflateListener(OnTitleBarFinishInflateListener inflateListener) {
+            this.inflateListener = inflateListener;
+            return this;
+        }
+
+        /**
          * Set custom presenter if you want to add your logic
          * @param presenter
          * @param <T>
@@ -472,6 +507,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
             fragment.setOnLoadResultListener(this.resultListener);
             fragment.setCustomPresenter(this.presenter);
             fragment.setOnItemClickListener(this.itemClickListener);
+            fragment.setOnTitleBarFinishInflateListener(this.inflateListener);
             return fragment;
         }
     }

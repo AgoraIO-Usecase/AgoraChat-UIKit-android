@@ -11,6 +11,7 @@ import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseActivity;
 import io.agora.chat.uikit.databinding.EaseActivityThreadListBinding;
+import io.agora.chat.uikit.interfaces.OnTitleBarFinishInflateListener;
 import io.agora.chat.uikit.thread.interfaces.OnItemThreadClickListener;
 import io.agora.chat.uikit.thread.EaseThreadListFragment;
 import io.agora.chat.uikit.widget.EaseTitleBar;
@@ -18,6 +19,7 @@ import io.agora.chat.uikit.widget.EaseTitleBar;
 public class EaseThreadListActivity extends EaseBaseActivity {
     private EaseActivityThreadListBinding binding;
     private String parentId;
+    private EaseTitleBar titleBar;
 
     public static void actionStart(Context context, String parentId) {
         Intent intent = new Intent(context, EaseThreadListActivity.class);
@@ -68,6 +70,12 @@ public class EaseThreadListActivity extends EaseBaseActivity {
                         @Override
                         public void onItemClick(View view, ChatThread thread, String messageId) {
                             EaseThreadChatActivity.actionStart(EaseThreadListActivity.this, messageId, thread.getThreadId(), thread);
+                        }
+                    })
+                    .setOnTitleBarFinishInflateListener(new OnTitleBarFinishInflateListener() {
+                        @Override
+                        public void onTitleBarFinishInflate(EaseTitleBar titleBar) {
+                            EaseThreadListActivity.this.titleBar = titleBar;
                         }
                     })
                     .build();
