@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.utils.EaseUtils;
+import io.agora.chat.uikit.utils.StatusBarCompat;
 
 
 /**
@@ -247,26 +248,10 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
                         }
                     });
                     if(mArrowColorId != -1) {
-                        setToolbarCustomColor(mArrowColorId);
+                        StatusBarCompat.setToolbarCustomColor(getContext(), mArrowColorId);
                     }else {
-                        setToolbarCustomColorDefault(mArrowColor);
+                        StatusBarCompat.setToolbarCustomColorDefault(getContext(), mArrowColor);
                     }
-                }
-            }
-        }
-    }
-
-    public void setToolbarCustomColor(@ColorRes int colorId) {
-        setToolbarCustomColorDefault(ContextCompat.getColor(getContext(), colorId));
-    }
-
-    public void setToolbarCustomColorDefault(@ColorInt int colorId) {
-        Drawable leftArrow = ContextCompat.getDrawable(getContext(), R.drawable.abc_ic_ab_back_material);
-        if(leftArrow != null) {
-            leftArrow.setColorFilter(colorId, PorterDuff.Mode.SRC_ATOP);
-            if(getContext() instanceof AppCompatActivity) {
-                if(((AppCompatActivity)getContext()).getSupportActionBar() != null) {
-                    ((AppCompatActivity)getContext()).getSupportActionBar().setHomeAsUpIndicator(leftArrow);
                 }
             }
         }
