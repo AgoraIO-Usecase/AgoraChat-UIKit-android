@@ -126,4 +126,8 @@
         <item name="android:layout_marginBottom">@dimen/ease_chat_bubble_margin_12</item>
     </style>
 
+    <style name="Dialog.Light" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">#005FFF</item>
+    </style>
+
 </resources>

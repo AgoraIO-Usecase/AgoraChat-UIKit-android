@@ -72,6 +72,7 @@
     <string name="ease_prompt">Note</string>
     <string name="ease_cancel">Cancel</string>
     <string name="ease_ok">OK</string>
+    <string name="ease_loading">Loading&#8230;</string>
 
     <string name="ease_is_down_please_wait">Downloading video, please wait.</string>
     <string name="ease_image_expired">Image expired</string>

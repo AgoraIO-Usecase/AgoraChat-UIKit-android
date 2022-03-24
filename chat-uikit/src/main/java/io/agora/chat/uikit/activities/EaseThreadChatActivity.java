@@ -20,14 +20,17 @@ import io.agora.chat.uikit.chat.interfaces.OnChatInputChangeListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
 import io.agora.chat.uikit.databinding.EaseActivityThreadChatBinding;
 import io.agora.chat.uikit.thread.EaseThreadChatFragment;
+import io.agora.chat.uikit.thread.EaseThreadRole;
+import io.agora.chat.uikit.thread.interfaces.OnThreadRoleResultCallback;
 import io.agora.util.EMLog;
 
 public class EaseThreadChatActivity extends EaseBaseActivity {
-    private String parentMsgId;
-    private String conversationId;
-    private ChatThread thread;
-    private EaseBaseActivity mContext;
+    protected String parentMsgId;
+    protected String conversationId;
+    protected ChatThread thread;
+    protected EaseBaseActivity mContext;
     protected EaseActivityThreadChatBinding binding;
+    protected EaseThreadRole threadRole = EaseThreadRole.UNKNOWN;
 
     public static void actionStart(Context context, String parentMsgId, String conversationId) {
         Intent intent = new Intent(context, EaseThreadChatActivity.class);
@@ -63,14 +66,6 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
     }
 
     public void initView() {
-
-    }
-
-    public void initListener() {
-
-    }
-
-    public void initData() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("thread_chat");
         if(fragment == null) {
             EaseChatFragment.Builder builder = new EaseThreadChatFragment.Builder(parentMsgId, conversationId)
@@ -84,6 +79,12 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
                         @Override
                         public void joinFailed(int errorCode, String message) {
 
+                        }
+                    })
+                    .setOnThreadRoleResultCallback(new OnThreadRoleResultCallback() {
+                        @Override
+                        public void onThreadRole(EaseThreadRole role) {
+                            threadRole = role;
                         }
                     })
                     .useHeader(false)
@@ -139,6 +140,13 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
             fragment = builder.build();
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment, fragment, "thread_chat").commit();
+    }
+
+    public void initListener() {
+
+    }
+
+    public void initData() {
 
     }
 
