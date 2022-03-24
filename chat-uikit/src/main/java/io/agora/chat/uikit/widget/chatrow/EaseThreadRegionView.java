@@ -58,7 +58,6 @@ public class EaseThreadRegionView extends FrameLayout implements View.OnClickLis
     }
 
     private void init(Context context, AttributeSet attrs) {
-        Log.e(TAG, "init");
         LayoutInflater.from(context).inflate(R.layout.ease_layout_chat_thread_region, this);
         ivThreadIcon = findViewById(R.id.iv_thread_icon);
         tvThreadName = findViewById(R.id.tv_thread_name);
@@ -144,35 +143,31 @@ public class EaseThreadRegionView extends FrameLayout implements View.OnClickLis
         String num = EaseUtils.handleBigNum(info.getMessageCount());
         tvThreadMsgCount.setText(num);
 
-        do {
-            MsgOverview msgOverview = info.getMsgOverview();
-            if(msgOverview == null) {
-                break;
-            }
-            EaseUserProfileProvider userProvider = EaseUIKit.getInstance().getUserProvider();
-            if(userProvider == null) {
-                break;
-            }
+        MsgOverview msgOverview = info.getMsgOverview();
+        if(msgOverview == null) {
+            return;
+        }
+        String nickname = msgOverview.getFrom();
+        String msgContent = "";
+        EaseUserProfileProvider userProvider = EaseUIKit.getInstance().getUserProvider();
+        if(userProvider != null) {
             EaseUserUtils.setUserAvatar(getContext(), msgOverview.getFrom(), null, null, ivUserIcon);
 
             EaseUser user = userProvider.getUser(msgOverview.getFrom());
-            if(user == null) {
-                break;
+            if(user != null) {
+                return;
             }
-            String nickname = user.getNickname();
-            String msgContent = EaseUtils.getMessageDigest(msgOverview, getContext());
+            nickname = user.getNickname();
+            msgContent = EaseUtils.getMessageDigest(msgOverview, getContext());
+        }
+        SpannableStringBuilder builder = new SpannableStringBuilder(nickname);
+        builder.append(" "+msgContent);
 
-            SpannableStringBuilder builder = new SpannableStringBuilder(nickname);
-            builder.append(" "+msgContent);
+        builder.setSpan(new ForegroundColorSpan(this.getResources().getColor(R.color.black)), 0, nickname.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvMsgContent.setText(builder);
 
-            builder.setSpan(new ForegroundColorSpan(this.getResources().getColor(R.color.black)), 0, nickname.length(),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            tvMsgContent.setText(builder);
-
-            tvMsgTime.setText(EaseDateUtils.getTimestampString(getContext(), new Date(msgOverview.getTimestamp())));
-
-        }while (false);
-
+        tvMsgTime.setText(EaseDateUtils.getTimestampSimpleString(getContext(), msgOverview.getTimestamp()));
     }
 
     @Override
