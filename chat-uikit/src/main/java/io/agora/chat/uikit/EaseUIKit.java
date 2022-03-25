@@ -142,7 +142,7 @@ public class EaseUIKit {
         // set if need read ack
         options.setRequireAck(true);
         // set if need delivery ack
-        options.setRequireDeliveryAck(false);
+        options.setRequireDeliveryAck(true);
 
         return options;
     }

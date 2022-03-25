@@ -80,4 +80,6 @@
     <string name="ease_download_the_pictures">Downloading image: 0%</string>
     <string name="ease_download_the_pictures_new">Downloading image:</string>
 
+    <string name="ease_title_image_grid">Camera and Video</string>
+    <string name="ease_take_video_capture">Shoot video</string>
 </resources>

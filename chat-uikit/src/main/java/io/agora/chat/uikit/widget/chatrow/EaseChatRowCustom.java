@@ -67,6 +67,7 @@ public class EaseChatRowCustom extends EaseChatRow {
 
     @Override
     protected void onMessageSuccess() {
+        super.onMessageSuccess();
         if(progressBar != null) {
             progressBar.setVisibility(View.GONE);
         }
