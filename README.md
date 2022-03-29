@@ -2,11 +2,11 @@
 
 ## 导入 Agora Chat UIKit
 ### 开发环境要求
-- Android Studio 3.2以上
-- Gradle4.6以上
-- targetVersion 26以上
-- Android SDK API 19以上
-- Java JDK 1.8以上
+- Android Studio 3.2 及以上
+- Gradle 4.6 及以上
+- targetVersion 26 及以上
+- Android SDK API 19 及以上
+- Java JDK 1.8 及以上
 
 ### 集成说明
 Agora Chat UIKit 支持Gradle接入和 Module源码集成
@@ -27,9 +27,8 @@ allprojects {
     }
 }
 ```
-// todo 需要先发布uikit才能有远程地址
 
-在项目的 /app/build.gradle 文件添加 xxx 依赖项（X.Y.Z 为当前版本号）。你可以在 Sonatype 官网查询最新版本号。
+在项目的 /app/build.gradle 文件添加 chat-uikit 依赖项（X.Y.Z 为当前版本号）。你可以在 [Sonatype](https://search.maven.org/) 官网查询最新版本号。
 ```java
 android {
     
@@ -40,7 +39,7 @@ android {
 }
 dependencies {
     ...
-    implementation 'xxx:xxx:X.Y.Z'
+        implementation 'io.agora.rtc:chat-uikit:X.Y.Z'
 }
 ```
 #### Module源码集成
@@ -59,38 +58,30 @@ implementation project(':uikit')
 ### 权限
 ```xml
 <!-- IM SDK required start -->
-<!-- 允许程序振动 -->
+<!-- 允许程序振动，用于本地通知设置振动 -->
 <uses-permission android:name="android.permission.VIBRATE" />
 <!-- 访问网络权限 -->
 <uses-permission android:name="android.permission.INTERNET" />
-<!-- 麦克风权限 -->
+<!-- 麦克风权限，用于语音消息时录制语音，不使用录制语音可以移除 -->
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
-<!-- 相机权限 -->
+<!-- 相机权限，用于图片消息时拍摄图片，不使用拍照可以移除 -->
 <uses-permission android:name="android.permission.CAMERA" />
-<!-- 获取运营商信息，用于支持提供运营商信息相关的接口-->
+<!-- 获取运营商信息，用于获取网络状态 -->
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-<!-- 写入扩展存储权限-->
+<!-- 写入扩展存储权限，用于附件等的存储 -->
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-<!-- 这个权限用于访问GPS定位(用于定位消息，如果不用定位相关可以移除) -->
+<!-- 访问GPS定位，用于定位消息，如果不用定位相关可以移除 -->
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-<!-- api 21后被标记为deprecated -->
+<!-- api 21后被标记为deprecated，可以移除 -->
 <uses-permission android:name="android.permission.GET_TASKS" />
-<!-- 用于访问wifi网络信息-->
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-<!-- 用于获取wifi的获取权限 -->
-<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 <!-- 允许程序在手机屏幕关闭后后台进程仍然运行 -->
 <uses-permission android:name="android.permission.WAKE_LOCK" />
-<!-- 允许程序修改声音设置信息 -->
-<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-<!-- 允许程序访问电话状态 -->
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 <!-- 允许程序开机自动运行 -->
 <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 <!-- IM SDK required end -->
 ```
 ### 初始化 Agora Chat SDK
-使用 Agora Chat SDK之前，需要初始化，可以使用 Agora Chat UIKit 提供的初始化方法 EaseUIKit#init 。
+使用 Agora Chat SDK 之前，需要初始化，可以使用 Agora Chat UIKit 提供的初始化方法 EaseUIKit#init 。
 示例代码：
 ```java
 public class DemoApplication extends Application {
@@ -106,7 +97,7 @@ public class DemoApplication extends Application {
 
 }
 ```
-注意：如果您选择在 AndroidManifest.xml设置 appKey ，可以不在ChatOptions中配置，即如下：
+注意：如果您选择在 AndroidManifest.xml设置 appKey ，可以不在 Agora Chat SDK 的 ChatOptions 中配置，即如下：
 ```xml
 <meta-data android:name="EASEMOB_APPKEY"  android:value="Your AppKey" />
 ```
@@ -134,7 +125,7 @@ public class ChatActivity extends AppCompatActivity {
 ```
 运行后，如下图：
 
-// todo：添加图片
+![avatar](./images/Chat.jpg)
 
 ### 快速创建会话列表页面
 Agora Chat UIKit 提供了 EaseConversationListFragment ，添加到 Activity 中即可使用。
@@ -157,14 +148,14 @@ public class ConversationListActivity extends AppCompatActivity {
 注意：如果接收到新消息，删除会话联系人等事件，需要调用 EaseConversationListFragment#refreshList 方法刷新列表。
 运行后，如下图：
 
-// todo：添加图片
+![avatar](./images/ConversationList.jpg)
 
 ## 高级定制
 ### 聊天页面相关
 
 聊天页面按照以下进行分区和命名：
 
-// TODO 添加各个区域的命名图片
+![avatar](./images/ChatMenuNote.png)
 #### 通过 EaseChatFragment.Builder 自定义设置
 EaseChatFragment 提供了 Builder 构建方式，方便开发者进行一些自定义设置，目前提供的设置项如下：
 ```java
@@ -207,7 +198,7 @@ EaseChatFragment#Builder 提供的方法解释：
 | setHeaderTitle()                       | 设置标题栏的标题                                        |
 | enableHeaderPressBack()                | 设置是否支持显示返回按钮，默认为 False                     |
 | setHeaderBackPressListener(）           | 设置点击标题栏返回按钮的监听事件                          |
-| getHistoryMessageFromServerOrLocal(）   | 设置点击标题栏返回按钮的监听事件                          |
+| getHistoryMessageFromServerOrLocal(）   | 设置优先从服务器还是本地获取消息                          |
 | setOnChatExtendMenuItemClickListener() | 设置扩展功能的条目点击事件监听                            |
 | setOnChatInputChangeListener()         | 设置菜单中文本变化的监听                                 |
 | setOnMessageItemClickListener()        | 设置消息条目的点击事件监听，包括气泡区域及头像的点击及长按事件  |
@@ -220,8 +211,8 @@ EaseChatFragment#Builder 提供的方法解释：
 | setSentBubbleBackground()              | 设置发送消息气泡区域的背景                                |
 | showNickname()                         | 是否显示昵称，默认为 False                               |
 | setMessageListShowStyle()              | 设置消息列表的展示样式，分为 left_right 和 all_left 两种样式 |
-| hideReceiverAvatar()                   | 不展示接收方头像，默认为展示                              |
-| hideSenderAvatar()                     | 不展示发送方头像，默认为展示                              |
+| hideReceiverAvatar()                   | 设置不展示接收方头像，默认展示接收方头像                              |
+| hideSenderAvatar()                     | 设置不展示发送方头像，默认展示发送方头像                              |
 | setChatBackground()                    | 设置聊天列表区域的背景                                   |
 | setChatInputMenuStyle()                | 设置菜单样式，详见 EaseInputMenuStyle                   |
 | setChatInputMenuBackground()           | 设置菜单区域的背景                                      |
@@ -356,19 +347,19 @@ EaseChatMessageListLayout 提供了如下方法：
 | addRVItemDecoration()          | 添加消息列表的装饰器 |
 | removeRVItemDecoration()       | 移除消息列表的装饰器 |
 | setAvatarDefaultSrc()          | 设置条目的默认头像 |
-| setAvatarShapeType()           | 设置头像的样式 |
-| showNickname()                 | 是否展示条目的昵称，EaseChatFragment#Builder 提供了相应的设置方法         |
-| setItemSenderBackground()      | 设置发送方的背景，EaseChatFragment#Builder 提供了相应的设置方法           |
-| setItemReceiverBackground()    | 设置接收方的背景，EaseChatFragment#Builder 提供了相应的设置方法           |
+| setAvatarShapeType()           | 设置头像的样式，分为默认ImageView样式，圆形和矩形三种样式 |
+| showNickname()                 | 是否展示条目的昵称，EaseChatFragment#Builder 也提供了此功能的设置方法         |
+| setItemSenderBackground()      | 设置发送方的背景，EaseChatFragment#Builder 也提供了此功能的设置方法           |
+| setItemReceiverBackground()    | 设置接收方的背景，EaseChatFragment#Builder 也提供了此功能的设置方法           |
 | setItemTextSize()              | 设置文本消息的字体大小                                                 |
 | setItemTextColor()             | 设置文本消息的字体颜色                                                 |
-| setTimeTextSize()              | 设置时间线文本的字体大小，EaseChatFragment#Builder 提供了相应的设置方法    |
-| setTimeTextColor()             | 设置时间线文本的颜色，EaseChatFragment#Builder 提供了相应的设置方法       |
+| setTimeTextSize()              | 设置时间线文本的字体大小，EaseChatFragment#Builder 也提供了此功能的设置方法    |
+| setTimeTextColor()             | 设置时间线文本的颜色，EaseChatFragment#Builder 也提供了此功能的设置方法       |
 | setTimeBackground()            | 设置时间线的背景                                                      |
-| setItemShowType()              | 设置消息列表的展示样式，EaseChatFragment#Builder 提供了相应的设置方法      |
-| hideChatReceiveAvatar()        | 不展示接收方头像，默认为展示，EaseChatFragment#Builder 提供了相应的设置方法 |
-| hideChatSendAvatar()           | 不展示发送方头像，默认为展示，EaseChatFragment#Builder 提供了相应的设置方法 |
-| setOnChatErrorListener()       | 设置发送消息时的错误回调，EaseChatFragment#Builder 提供了相应的设置方法    |
+| setItemShowType()              | 设置消息列表的展示样式，EaseChatFragment#Builder 也提供了此功能的设置方法      |
+| hideChatReceiveAvatar()        | 不展示接收方头像，默认为展示，EaseChatFragment#Builder 也提供了此功能的设置方法 |
+| hideChatSendAvatar()           | 不展示发送方头像，默认为展示，EaseChatFragment#Builder 也提供了此功能的设置方法 |
+| setOnChatErrorListener()       | 设置发送消息时的错误回调，EaseChatFragment#Builder 也提供了此功能的设置方法    |
 
 （2）扩展功能设置
 ```java
@@ -391,7 +382,7 @@ IChatExtendMenu 提供的方法解释：
 public boolean onChatExtendMenuItemClick(View view, int itemId) {
     if(itemId == CUSTOM_YOUR_EXTEND_MENU_ID) {
         // 处理你自己的点击事件逻辑
-        // 如果要消费点击事件需要返回 True
+        // 如果要消费点击事件需要返回 true
         return true;
     }
     return super.onChatExtendMenuItemClick(view, itemId);
@@ -420,18 +411,18 @@ EaseChatLayout 提供的长按菜单方法
 ```java
 @Override
 public void onPreMenu(EasePopupWindowHelper helper, ChatMessage message) {
-    // 菜单展示前的回调事件，可以在这里设置菜单条目的显示与否
+    // 菜单展示前的回调事件，可以通过helper对象在这里设置菜单条目是否展示
 }
 
 @Override
 public boolean onMenuItemClick(MenuItemBean item, ChatMessage message) {
-    // 如果要拦截某个点击事件，需要返回 Ture
+    // 如果要拦截某个点击事件，需要返回 ture
     return false;
 }
 
 @Override
 public void onDismiss(PopupWindow menu) {
-    // 如果要处理快捷菜单的隐藏事件，可以在这里处理
+    // 可以在这里处理快捷菜单的隐藏事件
 }
 ```
 
@@ -505,15 +496,15 @@ new EaseConversationListFragment.Builder()
 EaseConversationListFragment#Builder 提供的方法解释：
 | 方法                                    | 说明                                                             |
 | -------------------------------------- | ---------------------------------------------------------------- |
-| useHeader()                            | 是否使用默认的标题栏（EaseTitileBar），默认为 False        |
+| useHeader()                            | 是否使用默认的标题栏（EaseTitileBar），默认为不使用        |
 | setHeaderTitle()                       | 设置标题栏的标题                                        |
-| enableHeaderPressBack()                | 设置是否支持显示返回按钮，默认为 False                     |
-| setHeaderBackPressListener(）          | 设置点击标题栏返回按钮的监听事件                          |
+| enableHeaderPressBack()                | 设置是否支持显示返回按钮，默认为不显示返回按钮               |
+| setHeaderBackPressListener(）          | 设置点击标题栏返回按钮的监听器                          |
 | hideUnread(）                          | 设置是否隐藏未读消息标示 |
 | setUnreadStyle(）                      | 设置未读消息的样式，样式见 EaseConversationSetStyle#UnreadStyle |
 | setUnreadPosition(）                   | 设置未读消息的位置，样式见 EaseConversationSetStyle#UnreadDotPosition |
-| setItemClickListener(）                | 设置条目点击事件监听 |
-| setConversationChangeListener(）       | 设置会话变化的监听 |
+| setItemClickListener(）                | 设置条目点击事件监听器 |
+| setConversationChangeListener(）       | 设置会话变化的监听器 |
 | setEmptyLayout(）                      | 设置会话列表的空白页面 |
 | setCustomAdapter(）                    | 设置自定义的适配器，默认为 EaseConversationListAdapter |
 | setCustomFragment(）                   | 设置自定义聊天Fragment，需要继承自 EaseConversationListFragment |
@@ -521,14 +512,14 @@ EaseConversationListFragment#Builder 提供的方法解释：
 #### 添加自定义消息布局
 开发者可以继承 EaseConversationListAdapter 实现自己的 CustomConversationListAdapter ，然后将 CustomConversationListAdapter 设置到 EaseConversationListFragment#Builder#setCustomAdapter 中。
 
-（1）创建自定义适配器 CustomConversationListAdapter 继承自 EaseConversationListAdapter 重写 getViewHolder 和 getItemNotEmptyViewType 方法。
+（1）创建自定义适配器 CustomConversationListAdapter ，继承自 EaseConversationListAdapter ，重写 getViewHolder 和 getItemNotEmptyViewType 方法。
 ```java
 public class CustomConversationListAdapter extends EaseConversationListAdapter {
 
     @Override
     public int getItemNotEmptyViewType(int position) {
-        // 根据消息类型设置自己的 itemViewType。
-        // 如果要使用默认的，返回 super.getItemNotEmptyViewType(position) 即可。
+        // 根据消息类型设置自定义 itemViewType。
+        // 如果使用默认的 itemViewTyp，返回 super.getItemNotEmptyViewType(position) 即可。
         return CUSTOM_YOUR_CONVERSATION_TYPE;
     }
 
@@ -577,7 +568,7 @@ EaseConversationListLayout 提供的方法解释：
 | setUnreadStyle()                       | 设置未读消息的样式，样式见 EaseConversationSetStyle#UnreadStyle，EaseConversationListFragment#Builder 提供了相应的设置方法 |
 | setAvatarDefaultSrc()                  | 设置条目的默认头像 |
 | setAvatarSize()                        | 设置条目头像的大小 |
-| setAvatarShapeType()                   | 设置条目头像的样式，默认，圆形和矩形 |
+| setAvatarShapeType()                   | 设置条目头像的样式，分为默认ImageView样式，圆形和矩形三种样式 |
 | setAvatarRadius()                      | 设置条目头像的圆角半径，样式设置为矩形时有效 |
 | setAvatarBorderWidth()                 | 设置条目头像边框的宽度 |
 | setAvatarBorderColor()                 | 设置条目头像边框的颜色 |
@@ -604,15 +595,15 @@ EaseTitleBar 提供的方法：
 | setRightTitle()                        | 设置右侧标题 |
 | setIcon()                              | 设置标题的图片，一般位于标题中部，位置随 setTitlePosition 方法设置而定 |
 | setTitlePosition()                     | 设置标题的位置，参见 TitlePosition  |
-| setLeftLayoutVisibility()              | 设置左侧布局是否可见 |
-| setRightLayoutVisibility()             | 设置右侧布局是否可见 |
+| setLeftLayoutVisibility()              | 设置左侧布局是否可见，默认不可见 |
+| setRightLayoutVisibility()             | 设置右侧布局是否可见，默认不可见 |
 | setTitle()                             | 设置标题 |
 | setTitleSize()                         | 设置标题的文字大小 |
-| setDisplayHomeAsUpEnabled()            | 设置 ToolBar 是否可见返回按钮 |
+| setDisplayHomeAsUpEnabled()            | 设置 ToolBar 是否可见返回按钮，默认为可见返回按钮 |
 | setBackgroundColor()                   | 设置标题栏的背景 |
-| setOnBackPressListener()               | 设置点击返回按钮的事件监听，也可为左侧区域的点击事件监听 |
-| setOnRightClickListener()              | 设置右侧区域的点击事件监听 |
-| setOnIconClickListener()               | 设置标题图标的点击事件监听 |
+| setOnBackPressListener()               | 设置点击返回按钮的事件监听器，也可为左侧区域的点击事件监听 |
+| setOnRightClickListener()              | 设置右侧区域的点击事件监听器 |
+| setOnIconClickListener()               | 设置标题图标的点击事件监听器 |
 | getTitle()                             | 获取标题控件 |
 | getLeftLayout()                        | 获取左侧布局控件 |
 | getRightLayout()                       | 获取右侧布局控件 |
@@ -653,11 +644,11 @@ EaseUIKit.getInstance().setAvatarOptions(getAvatarOptions());
 ......
 /**
  * 统一配置头像
- * @return
+ * @return EaseAvatarOptions
  */
 private EaseAvatarOptions getAvatarOptions() {
     EaseAvatarOptions avatarOptions = new EaseAvatarOptions();
-    //设置头像形状为圆形，1代表圆形，2代表方形
+    //设置头像形状，1代表圆形，2代表方形。这里设置为圆形。
     avatarOptions.setAvatarShape(1);
     return avatarOptions;
 }
@@ -669,10 +660,10 @@ UIKit 提供了 EaseNotifier 方法用于构建消息通知，同时 UIKit 提�
 EaseSettingsProvider 提供了如下方法：
 | 方法                                    | 说明                 |
 | -------------------------------------- | -------------------- |
-| isMsgNotifyAllowed()                   | 是否允许消息进行本地通知 |
-| isMsgSoundAllowed()                    | 是否收到消息时播放声音 |
-| isMsgVibrateAllowed()                  | 是否收到消息时震动 |
-| isSpeakerOpened()                      | 是否开启外放声音 |
+| isMsgNotifyAllowed()                   | 是否允许消息进行本地通知，默认不进行本地通知 |
+| isMsgSoundAllowed()                    | 是否收到消息时播放声音，默认不播放声音 |
+| isMsgVibrateAllowed()                  | 是否收到消息时振动，默认不开启振动 |
+| isSpeakerOpened()                      | 是否开启外放声音，默认不开启外放声音 |
 
 #### 设置群组的头像和昵称
 UIKit 提供了 EaseGroupInfoProvider 方法用于设置群组和聊天室的头像和昵称。
