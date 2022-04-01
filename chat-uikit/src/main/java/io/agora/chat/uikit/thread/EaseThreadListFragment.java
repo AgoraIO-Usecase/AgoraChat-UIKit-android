@@ -116,6 +116,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
     }
 
     public void setListView() {
+        binding.rvList.enableRefresh(false);
         binding.rvList.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new EaseThreadListAdapter();
         binding.rvList.setAdapter(mAdapter);
@@ -194,7 +195,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
     private void finishRefresh() {
         mContext.runOnUiThread(() -> {
             if(binding.srlRefresh != null) {
-                binding.srlRefresh.setEnabled(false);
+                binding.srlRefresh.setRefreshing(false);
             }
         });
     }
@@ -202,7 +203,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
     private void finishLoadMore() {
         mContext.runOnUiThread(()-> {
             if(binding.rvList != null) {
-                binding.rvList.enableLoadMore(false);
+                binding.rvList.finishLoadMore();
             }
         });
     }

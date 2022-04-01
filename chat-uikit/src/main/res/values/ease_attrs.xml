@@ -171,7 +171,7 @@
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="EaseThreadRegion">
+    <declare-styleable name="EaseChatRowThreadRegion">
         <attr name="thread_region_label" format="reference"/>
         <attr name="thread_region_title" format="reference|string"/>
         <attr name="thread_region_msg_count" format="reference|string"/>

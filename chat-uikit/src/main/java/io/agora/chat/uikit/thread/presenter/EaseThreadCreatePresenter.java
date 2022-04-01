@@ -12,7 +12,7 @@ import io.agora.chat.uikit.interfaces.ILoadDataView;
 
 public abstract class EaseThreadCreatePresenter extends EaseBasePresenter implements IBaseHandleMessage {
     protected IThreadCreateView mView;
-    protected int chatType;
+    protected int chatType = EaseConstant.CHATTYPE_GROUP;
     protected EditText etInput;
     protected String toChatUsername;
     protected String parentId;

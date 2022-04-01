@@ -67,7 +67,7 @@
 	            android:paddingRight="6dp"
                 android:src="@drawable/ease_chatfrom_voice_playing" />
 
-            <io.agora.chat.uikit.widget.chatrow.EaseThreadRegionView
+            <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion
                 android:id="@+id/thread_region"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

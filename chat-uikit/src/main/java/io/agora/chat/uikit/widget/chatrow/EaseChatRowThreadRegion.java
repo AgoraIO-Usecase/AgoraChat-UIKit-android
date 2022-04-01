@@ -8,7 +8,6 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -17,8 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import java.util.Date;
+import androidx.constraintlayout.widget.Group;
 
 import io.agora.chat.MsgOverview;
 import io.agora.chat.ThreadInfo;
@@ -31,28 +29,31 @@ import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseImageView;
 
-public class EaseThreadRegionView extends FrameLayout implements View.OnClickListener {
-    private static final String TAG = EaseThreadRegionView.class.getSimpleName();
+public class EaseChatRowThreadRegion extends FrameLayout implements View.OnClickListener {
+    private static final String TAG = EaseChatRowThreadRegion.class.getSimpleName();
     private ImageView ivThreadIcon;
     private TextView tvThreadName;
     private TextView tvThreadMsgCount;
     private ImageView ivRightIcon;
     private EaseImageView ivUserIcon;
-    private TextView tvMsgContent;
+    private TextView tvMsgUser;
     private TextView tvMsgTime;
+    private TextView tvMsgContent;
+    private Group group_msg;
+    private TextView tv_no_msg;
     private ThreadInfo info;
 
     private OnClickListener listener;
 
-    public EaseThreadRegionView(@NonNull Context context) {
+    public EaseChatRowThreadRegion(@NonNull Context context) {
         this(context, null);
     }
 
-    public EaseThreadRegionView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public EaseChatRowThreadRegion(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public EaseThreadRegionView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public EaseChatRowThreadRegion(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
@@ -64,9 +65,13 @@ public class EaseThreadRegionView extends FrameLayout implements View.OnClickLis
         tvThreadMsgCount = findViewById(R.id.tv_thread_msg_count);
         ivRightIcon = findViewById(R.id.iv_thread_right_icon);
         ivUserIcon = findViewById(R.id.iv_user_icon);
-        tvMsgContent = findViewById(R.id.tv_msg_username);
+        tvMsgUser = findViewById(R.id.tv_msg_username);
         tvMsgTime = findViewById(R.id.tv_msg_time);
+        tvMsgContent = findViewById(R.id.tv_msg_content);
+        group_msg = findViewById(R.id.group_msg);
+        tv_no_msg = findViewById(R.id.tv_no_msg);
         initAttr(context, attrs);
+        EaseUserUtils.setUserAvatarStyle(ivUserIcon);
         if(info != null) {
             setThreadRegion(info);
         }
@@ -76,51 +81,51 @@ public class EaseThreadRegionView extends FrameLayout implements View.OnClickLis
 
     private void initAttr(Context context, AttributeSet attrs) {
         if(attrs != null) {
-            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseThreadRegion);
-            Drawable threadLabel = ta.getDrawable(R.styleable.EaseThreadRegion_thread_region_label);
+            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseChatRowThreadRegion);
+            Drawable threadLabel = ta.getDrawable(R.styleable.EaseChatRowThreadRegion_thread_region_label);
             if(threadLabel != null) {
                 ivThreadIcon.setImageDrawable(threadLabel);
             }
 
-            int threadTitle = ta.getResourceId(R.styleable.EaseThreadRegion_thread_region_title, -1);
+            int threadTitle = ta.getResourceId(R.styleable.EaseChatRowThreadRegion_thread_region_title, -1);
             if (threadTitle != -1) {
                 tvThreadName.setText(threadTitle);
             } else {
-                String title = ta.getString(R.styleable.EaseThreadRegion_thread_region_title);
+                String title = ta.getString(R.styleable.EaseChatRowThreadRegion_thread_region_title);
                 tvThreadName.setText(title);
             }
 
-            int threadMsgCount = ta.getResourceId(R.styleable.EaseThreadRegion_thread_region_msg_count, -1);
+            int threadMsgCount = ta.getResourceId(R.styleable.EaseChatRowThreadRegion_thread_region_msg_count, -1);
             if (threadMsgCount != -1) {
                 tvThreadMsgCount.setText(threadMsgCount);
             } else {
-                String msgCount = ta.getString(R.styleable.EaseThreadRegion_thread_region_msg_count);
+                String msgCount = ta.getString(R.styleable.EaseChatRowThreadRegion_thread_region_msg_count);
                 tvThreadMsgCount.setText(msgCount);
             }
 
-            Drawable rightIcon = ta.getDrawable(R.styleable.EaseThreadRegion_thread_region_right_icon);
+            Drawable rightIcon = ta.getDrawable(R.styleable.EaseChatRowThreadRegion_thread_region_right_icon);
             if(rightIcon != null) {
                 ivRightIcon.setImageDrawable(rightIcon);
             }
 
-            Drawable userSrc = ta.getDrawable(R.styleable.EaseThreadRegion_thread_region_user_src);
+            Drawable userSrc = ta.getDrawable(R.styleable.EaseChatRowThreadRegion_thread_region_user_src);
             if(userSrc != null) {
                 ivUserIcon.setImageDrawable(userSrc);
             }
 
-            int threadContentRes = ta.getResourceId(R.styleable.EaseThreadRegion_thread_region_content, -1);
+            int threadContentRes = ta.getResourceId(R.styleable.EaseChatRowThreadRegion_thread_region_content, -1);
             if (threadContentRes != -1) {
-                tvMsgContent.setText(threadContentRes);
+                tvMsgUser.setText(threadContentRes);
             } else {
-                String threadContent = ta.getString(R.styleable.EaseThreadRegion_thread_region_content);
-                tvMsgContent.setText(threadContent);
+                String threadContent = ta.getString(R.styleable.EaseChatRowThreadRegion_thread_region_content);
+                tvMsgUser.setText(threadContent);
             }
 
-            int threadTimeRes = ta.getResourceId(R.styleable.EaseThreadRegion_thread_region_time, -1);
+            int threadTimeRes = ta.getResourceId(R.styleable.EaseChatRowThreadRegion_thread_region_time, -1);
             if (threadTimeRes != -1) {
                 tvMsgTime.setText(threadTimeRes);
             } else {
-                String threadContent = ta.getString(R.styleable.EaseThreadRegion_thread_region_time);
+                String threadContent = ta.getString(R.styleable.EaseChatRowThreadRegion_thread_region_time);
                 tvMsgTime.setText(threadContent);
             }
         }
@@ -128,8 +133,8 @@ public class EaseThreadRegionView extends FrameLayout implements View.OnClickLis
 
     public void setThreadInfo(ThreadInfo info) {
         this.info = info;
-        Log.e(TAG, "setThreadInfo");
-        invalidate();
+        setThreadRegion(info);
+        requestLayout();
     }
 
     private void setThreadRegion(ThreadInfo info) {
@@ -145,27 +150,27 @@ public class EaseThreadRegionView extends FrameLayout implements View.OnClickLis
 
         MsgOverview msgOverview = info.getMsgOverview();
         if(msgOverview == null) {
+            group_msg.setVisibility(GONE);
+            tv_no_msg.setVisibility(VISIBLE);
             return;
         }
+        group_msg.setVisibility(VISIBLE);
+        tv_no_msg.setVisibility(GONE);
         String nickname = msgOverview.getFrom();
         String msgContent = "";
         EaseUserProfileProvider userProvider = EaseUIKit.getInstance().getUserProvider();
-        if(userProvider != null) {
+        if(userProvider != null && !TextUtils.isEmpty(nickname)) {
             EaseUserUtils.setUserAvatar(getContext(), msgOverview.getFrom(), null, null, ivUserIcon);
 
             EaseUser user = userProvider.getUser(msgOverview.getFrom());
             if(user != null) {
-                return;
+                nickname = user.getNickname();
+                msgContent = EaseUtils.getMessageDigest(msgOverview, getContext());
             }
-            nickname = user.getNickname();
-            msgContent = EaseUtils.getMessageDigest(msgOverview, getContext());
         }
-        SpannableStringBuilder builder = new SpannableStringBuilder(nickname);
-        builder.append(" "+msgContent);
 
-        builder.setSpan(new ForegroundColorSpan(this.getResources().getColor(R.color.black)), 0, nickname.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvMsgContent.setText(builder);
+        tvMsgUser.setText(nickname);
+        tvMsgContent.setText(msgContent);
 
         tvMsgTime.setText(EaseDateUtils.getTimestampSimpleString(getContext(), msgOverview.getTimestamp()));
     }

@@ -549,7 +549,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
         private OnChatRecordTouchListener recordTouchListener;
         private OnChatLayoutFinishInflateListener finishInflateListener;
-        private EaseChatFragment customFragment;
+        protected EaseChatFragment customFragment;
 
         /**
          * Constructor

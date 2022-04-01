@@ -56,7 +56,7 @@ public class EaseThreadCreateActivity extends EaseBaseActivity {
     public void initData() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("create_thread");
         if(fragment == null) {
-            fragment = new EaseThreadCreateFragment.Builder(parentId, messageId)
+            EaseThreadCreateFragment.Builder builder = new EaseThreadCreateFragment.Builder(parentId, messageId)
                     .useHeader(true)
                     .setHeaderBackPressListener(new EaseTitleBar.OnBackPressListener() {
                         @Override
@@ -76,9 +76,14 @@ public class EaseThreadCreateActivity extends EaseBaseActivity {
                         public void addMsgAttrsBeforeSend(ChatMessage message) {
 
                         }
-                    })
-                    .build();
+                    });
+            setChildFragmentBuilder(builder);
+            fragment = builder.build();
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment, fragment, "create_thread").commit();
+    }
+
+    public void setChildFragmentBuilder(EaseThreadCreateFragment.Builder builder) {
+
     }
 }

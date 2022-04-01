@@ -25,6 +25,7 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.activities.EaseThreadChatActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -37,6 +38,7 @@ import io.agora.chat.uikit.interfaces.EaseMessageListener;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.thread.interfaces.EaseThreadParentMsgViewProvider;
+import io.agora.chat.uikit.thread.interfaces.OnThreadCreatedResultListener;
 import io.agora.chat.uikit.thread.presenter.EaseThreadCreatePresenter;
 import io.agora.chat.uikit.thread.presenter.EaseThreadCreatePresenterImpl;
 import io.agora.chat.uikit.thread.presenter.IThreadCreateView;
@@ -73,6 +75,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
     private File cameraFile;
     private boolean sendOriginalImage;
     private ChatThread chatThread;
+    private OnThreadCreatedResultListener resultListener;
 
     @Nullable
     @Override
@@ -273,6 +276,10 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
         this.recordTouchListener = recordTouchListener;
     }
 
+    private void setOnThreadCreatedResultListener(OnThreadCreatedResultListener resultListener) {
+        this.resultListener = resultListener;
+    }
+
     @Override
     public Context context() {
         return mContext;
@@ -297,12 +304,19 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
         if(messageSendCallBack != null) {
             messageSendCallBack.onSuccess(message);
         }
+        if(resultListener == null  || !resultListener.onThreadCreatedSuccess(messageId, message.conversationId())) {
+            EaseThreadChatActivity.actionStart(mContext, messageId, message.conversationId());
+        }
+        mContext.finish();
     }
 
     @Override
     public void onPresenterMessageError(ChatMessage message, int code, String error) {
         if(messageSendCallBack != null) {
             messageSendCallBack.onError(code, error);
+        }
+        if(resultListener != null ) {
+            resultListener.onThreadCreatedFail(code, error);
         }
     }
 
@@ -324,7 +338,9 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
 
     @Override
     public void onCreateThreadFail(int errorCode, String message) {
-
+        if(resultListener != null ) {
+            resultListener.onThreadCreatedFail(errorCode, message);
+        }
     }
 
     /**
@@ -459,6 +475,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
         private OnMessageSendCallBack messageSendCallBack;
         private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
         private OnChatRecordTouchListener recordTouchListener;
+        private OnThreadCreatedResultListener resultListener;
 
         public Builder(String parentId, String messageId) {
             this.bundle = new Bundle();
@@ -597,6 +614,11 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
             return this;
         }
 
+        public Builder setOnThreadCreatedResultListener(OnThreadCreatedResultListener listener) {
+            this.resultListener = listener;
+            return this;
+        }
+
         /**
          * Set custom fragment which should extends EaseMessageFragment
          * @param fragment
@@ -630,6 +652,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
             fragment.setOnMessageSendCallBack(this.messageSendCallBack);
             fragment.setOnAddMsgAttrsBeforeSendEvent(this.sendMsgEvent);
             fragment.setOnChatRecordTouchListener(this.recordTouchListener);
+            fragment.setOnThreadCreatedResultListener(this.resultListener);
             return fragment;
         }
     }

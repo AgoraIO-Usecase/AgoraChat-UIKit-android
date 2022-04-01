@@ -17,11 +17,13 @@ import io.agora.chat.uikit.base.EaseBaseActivity;
 import io.agora.chat.uikit.chat.EaseChatFragment;
 import io.agora.chat.uikit.chat.interfaces.OnChatExtendMenuItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatInputChangeListener;
+import io.agora.chat.uikit.chat.interfaces.OnChatLayoutFinishInflateListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
 import io.agora.chat.uikit.databinding.EaseActivityThreadChatBinding;
 import io.agora.chat.uikit.thread.EaseThreadChatFragment;
 import io.agora.chat.uikit.thread.EaseThreadRole;
 import io.agora.chat.uikit.thread.interfaces.OnThreadRoleResultCallback;
+import io.agora.chat.uikit.widget.EaseTitleBar;
 import io.agora.util.EMLog;
 
 public class EaseThreadChatActivity extends EaseBaseActivity {
@@ -36,14 +38,6 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
         Intent intent = new Intent(context, EaseThreadChatActivity.class);
         intent.putExtra("parentMsgId", parentMsgId);
         intent.putExtra("conversationId", conversationId);
-        context.startActivity(intent);
-    }
-    
-    public static void actionStart(Context context, String parentMsgId, String conversationId, ChatThread thread) {
-        Intent intent = new Intent(context, EaseThreadChatActivity.class);
-        intent.putExtra("parentMsgId", parentMsgId);
-        intent.putExtra("conversationId", conversationId);
-        intent.putExtra("thread", thread);
         context.startActivity(intent);
     }
     
@@ -62,14 +56,12 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
     public void initIntent(Intent intent) {
         parentMsgId = intent.getStringExtra("parentMsgId");
         conversationId = intent.getStringExtra("conversationId");
-        thread = intent.getParcelableExtra("thread");
     }
 
     public void initView() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("thread_chat");
         if(fragment == null) {
             EaseChatFragment.Builder builder = new EaseThreadChatFragment.Builder(parentMsgId, conversationId)
-                    .setThreadInfo(thread)
                     .setOnJoinThreadResultListener(new EaseThreadChatFragment.OnJoinThreadResultListener() {
                         @Override
                         public void joinSuccess(String threadId) {
@@ -87,7 +79,14 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
                             threadRole = role;
                         }
                     })
-                    .useHeader(false)
+                    .useHeader(true)
+                    .enableHeaderPressBack(true)
+                    .setHeaderBackPressListener(new EaseTitleBar.OnBackPressListener() {
+                        @Override
+                        public void onBackPress(View view) {
+                            onBackPressed();
+                        }
+                    })
                     .setEmptyLayout(R.layout.ease_layout_no_data_show_nothing)
                     .setOnChatExtendMenuItemClickListener(new OnChatExtendMenuItemClickListener() {
                         @Override

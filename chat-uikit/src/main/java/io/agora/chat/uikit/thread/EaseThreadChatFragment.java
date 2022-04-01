@@ -9,10 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.agora.ThreadNotifyListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
 import io.agora.chat.Group;
+import io.agora.chat.ThreadEvent;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.EaseChatFragment;
 import io.agora.chat.uikit.constants.EaseConstant;
@@ -22,6 +24,7 @@ import io.agora.chat.uikit.thread.interfaces.OnThreadRoleResultCallback;
 import io.agora.chat.uikit.thread.presenter.EaseThreadChatPresenter;
 import io.agora.chat.uikit.thread.presenter.EaseThreadChatPresenterImpl;
 import io.agora.chat.uikit.thread.presenter.IThreadChatView;
+import io.agora.util.EMLog;
 
 public class EaseThreadChatFragment extends EaseChatFragment implements IThreadChatView {
     protected String parentMsgId;
@@ -34,6 +37,8 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
     private List<ChatMessage> data = new ArrayList<>();
     private OnJoinThreadResultListener joinThreadResultListener;
     private OnThreadRoleResultCallback resultCallback;
+    private MessageListener messageListener;
+    private NotifyListener notifyListener;
 
     @Override
     public void initView() {
@@ -41,6 +46,7 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         if(mPresenter == null) {
             mPresenter = new EaseThreadChatPresenterImpl();
         }
+        mPresenter.attachView(this);
         if(mContext instanceof AppCompatActivity) {
             ((AppCompatActivity) mContext).getLifecycle().addObserver(mPresenter);
         }
@@ -48,7 +54,6 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         Bundle bundle = getArguments();
         if(bundle != null) {
             parentMsgId = bundle.getString(Constant.KEY_PARENT_MESSAGE_ID);
-            mThread = bundle.getParcelable(Constant.KEY_THREAD_BEAN);
         }
         if(mThread == null && parentMsgId != null) {
             ChatMessage message = ChatClient.getInstance().chatManager().getMessage(parentMsgId);
@@ -70,35 +75,58 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         if(thread == null) {
             return;
         }
+        if(titleBar != null) {
+            titleBar.setTitle(thread.getThreadName());
+        }
         headerAdapter.setThreadInfo(thread);
     }
 
     @Override
     public void initListener() {
         super.initListener();
-        ChatClient.getInstance().chatManager().addMessageListener(new EaseMessageListener() {
-            @Override
-            public void onMessageReceived(List<ChatMessage> messages) {
-                for (ChatMessage message:messages) {
-                    // Determine if there is new group information, and display a red dot if there is new group information
-                    if (message.getChatType() == ChatMessage.ChatType.GroupChat || message.getChatType() == ChatMessage.ChatType.ChatRoom) {
-                        if(TextUtils.equals(parentId, message.getTo())) {
-                            titleBar.setUnreadIconVisible(true);
-                        }
+        messageListener = new MessageListener();
+        notifyListener = new NotifyListener();
+        ChatClient.getInstance().chatManager().addMessageListener(messageListener);
+        ChatClient.getInstance().threadManager().addThreadNotifyListener(notifyListener);
+    }
+
+    private class MessageListener extends EaseMessageListener {
+
+        @Override
+        public void onMessageReceived(List<ChatMessage> messages) {
+            for (ChatMessage message:messages) {
+                // Determine if there is new group information, and display a red dot if there is new group information
+                if (message.getChatType() == ChatMessage.ChatType.GroupChat || message.getChatType() == ChatMessage.ChatType.ChatRoom) {
+                    if(TextUtils.equals(parentId, message.getTo())) {
+                        titleBar.setUnreadIconVisible(true);
                     }
                 }
             }
+        }
 
-            @Override
-            public void onMessageRecalled(List<ChatMessage> messages) {
+        @Override
+        public void onMessageRecalled(List<ChatMessage> messages) {
 
+        }
+
+        @Override
+        public void onMessageChanged(ChatMessage message, Object change) {
+
+        }
+    }
+
+    private class NotifyListener implements ThreadNotifyListener {
+
+        @Override
+        public void onThreadNotify(ThreadEvent event) {
+            if(event.getType() == ThreadEvent.TYPE.DELETE) {
+                mContext.finish();
+            }else if(event.getType() == ThreadEvent.TYPE.UPDATE) {
+                if(mContext != null && !mContext.isFinishing() && titleBar != null) {
+                    titleBar.setTitle(event.getThreadName());
+                }
             }
-
-            @Override
-            public void onMessageChanged(ChatMessage message, Object change) {
-
-            }
-        });
+        }
     }
 
     @Override
@@ -110,6 +138,17 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         headerAdapter.setData(data);
         joinThread();
         setGroupInfo();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(messageListener != null) {
+            ChatClient.getInstance().chatManager().removeMessageListener(messageListener);
+        }
+        if(notifyListener != null) {
+            ChatClient.getInstance().threadManager().removeThreadNotifyListener(notifyListener);
+        }
     }
 
     private void setGroupInfo() {
@@ -151,7 +190,7 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
                 resultCallback.onThreadRole(threadRole);
             }
         }
-        super.initData();
+        runOnUiThread(super::initData);
     }
 
     @Override
@@ -244,6 +283,7 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         public Builder(String parentMsgId, String conversationId) {
             super(conversationId, EaseConstant.CHATTYPE_GROUP);
             this.bundle.putString(Constant.KEY_PARENT_MESSAGE_ID, parentMsgId);
+            this.bundle.putBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, true);
         }
 
         /**
@@ -255,16 +295,7 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         public Builder(String parentMsgId, String conversationId, String historyMsgId) {
             super(conversationId, EaseConstant.CHATTYPE_GROUP, historyMsgId);
             this.bundle.putString(Constant.KEY_PARENT_MESSAGE_ID, parentMsgId);
-        }
-
-        /**
-         * Set thread info, {@link ChatThread}
-         * @param thread
-         * @return
-         */
-        public Builder setThreadInfo(ChatThread thread) {
-            this.bundle.putParcelable(Constant.KEY_THREAD_BEAN, thread);
-            return this;
+            this.bundle.putBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, true);
         }
 
         /**
@@ -299,21 +330,23 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
 
         @Override
         public EaseChatFragment build() {
-            // Set is thread message
-            setThreadMessage(true);
-            EaseChatFragment fragment = super.build();
-            if(fragment instanceof EaseThreadChatFragment) {
-                ((EaseThreadChatFragment)fragment).setThreadPresenter(this.presenter);
-                ((EaseThreadChatFragment)fragment).setOnJoinThreadResultListener(this.listener);
-                ((EaseThreadChatFragment)fragment).setOnThreadRoleResultCallback(this.resultCallback);
+            if(this.customFragment == null) {
+                this.customFragment = new EaseThreadChatFragment();
             }
-            return fragment;
+            setThreadMessage(true);
+            if(this.customFragment instanceof EaseThreadChatFragment) {
+                ((EaseThreadChatFragment)this.customFragment).setThreadPresenter(this.presenter);
+                ((EaseThreadChatFragment)this.customFragment).setOnJoinThreadResultListener(this.listener);
+                ((EaseThreadChatFragment)this.customFragment).setOnThreadRoleResultCallback(this.resultCallback);
+            }
+
+            return super.build();
         }
     }
 
     private static final class Constant {
         public static final String KEY_PARENT_MESSAGE_ID = "key_parent_message_id";
-        public static final String KEY_THREAD_BEAN = "key_thread_bean";
+        public static final String KEY_THREAD_MESSAGE_FLAG = "key_thread_message_flag";
     }
 
 }

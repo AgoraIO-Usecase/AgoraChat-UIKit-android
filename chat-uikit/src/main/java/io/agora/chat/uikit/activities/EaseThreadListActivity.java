@@ -1,5 +1,6 @@
 package io.agora.chat.uikit.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,10 +9,12 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 
 import io.agora.chat.ChatThread;
+import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseActivity;
 import io.agora.chat.uikit.databinding.EaseActivityThreadListBinding;
 import io.agora.chat.uikit.interfaces.OnTitleBarFinishInflateListener;
+import io.agora.chat.uikit.provider.EaseActivityProvider;
 import io.agora.chat.uikit.thread.interfaces.OnItemThreadClickListener;
 import io.agora.chat.uikit.thread.EaseThreadListFragment;
 import io.agora.chat.uikit.widget.EaseTitleBar;
@@ -69,7 +72,18 @@ public class EaseThreadListActivity extends EaseBaseActivity {
                     .setOnItemClickListener(new OnItemThreadClickListener() {
                         @Override
                         public void onItemClick(View view, ChatThread thread, String messageId) {
-                            EaseThreadChatActivity.actionStart(EaseThreadListActivity.this, messageId, thread.getThreadId(), thread);
+                            EaseActivityProvider provider = EaseUIKit.getInstance().getActivitiesProvider();
+                            if(provider != null) {
+                                Class activity = provider.getActivity(EaseThreadChatActivity.class.getSimpleName());
+                                if(activity != null) {
+                                    Intent intent = new Intent(EaseThreadListActivity.this, activity);
+                                    intent.putExtra("parentMsgId", messageId);
+                                    intent.putExtra("conversationId", thread.getThreadId());
+                                    EaseThreadListActivity.this.startActivity(intent);
+                                    return;
+                                }
+                            }
+                            EaseThreadChatActivity.actionStart(EaseThreadListActivity.this, messageId, thread.getThreadId());
                         }
                     })
                     .setOnTitleBarFinishInflateListener(new OnTitleBarFinishInflateListener() {

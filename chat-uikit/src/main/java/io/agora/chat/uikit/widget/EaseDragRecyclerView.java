@@ -44,7 +44,7 @@ public class EaseDragRecyclerView extends RecyclerView {
                 if(newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if(canLoadMore &&
                             dy < -dip2px(getContext(), 30) &&
-                            !EaseDragRecyclerView.this.canScrollVertically(1)) {
+                            !canScrollVertically(1)) {
                         if(loadMoreListener != null) {
                             // If is refreshing, not load more; If is loading, not load more again
                             if(status == Status.IDLE) {
@@ -55,7 +55,7 @@ public class EaseDragRecyclerView extends RecyclerView {
                     }
                     if(canRefresh &&
                             dy > dip2px(getContext(), 30) &&
-                            !EaseDragRecyclerView.this.canScrollVertically(-1)) {
+                            !canScrollVertically(-1)) {
                         if(refreshListener != null) {
                             if(status == Status.IDLE) {
                                 status = Status.IS_REFRESHING;
@@ -81,17 +81,16 @@ public class EaseDragRecyclerView extends RecyclerView {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent e) {
+    public boolean dispatchTouchEvent(MotionEvent e) {
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN :
                 preY = e.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
                 dy = e.getY() - preY;
-                Log.e("TAG", "dy: "+dy + " 10dp: "+dip2px(getContext(), 10));
                 break;
         }
-        return super.onTouchEvent(e);
+        return super.dispatchTouchEvent(e);
     }
 
     public void finishRefresh() {

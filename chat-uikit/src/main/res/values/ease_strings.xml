@@ -92,4 +92,6 @@
     <string name="ease_thread_list_member_title">Joined Threads</string>
     <string name="ease_thread_list_sub_title"># %1$s</string>
 
+    <string name="ease_thread_region_no_message">No Messages.</string>
+
 </resources>

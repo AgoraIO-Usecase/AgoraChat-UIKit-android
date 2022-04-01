@@ -1,8 +1,10 @@
 package io.agora.chat.uikit.thread.presenter;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,17 +25,19 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                 if(isDestroy()) {
                     return;
                 }
-                if(value == null) {
-                    mView.getNoJoinedThreadListData();
-                    return;
-                }
-                List<ChatThread> data = value.getData();
-                if(data == null || data.size() == 0) {
-                    mView.getNoJoinedThreadListData();
-                    return;
-                }
-                mView.getJoinedThreadListSuccess(value);
-                getThreadIdList(data);
+                runOnUI(() -> {
+                    if(value == null) {
+                        mView.getNoJoinedThreadListData();
+                        return;
+                    }
+                    List<ChatThread> data = value.getData();
+                    if(data == null || data.size() == 0) {
+                        mView.getNoJoinedThreadListData();
+                        return;
+                    }
+                    mView.getJoinedThreadListSuccess(value);
+                    getThreadIdList(data);
+                });
             }
 
             @Override
@@ -41,7 +45,9 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                 if(isDestroy()) {
                     return;
                 }
-                mView.getJoinedThreadListFail(error, errorMsg);
+                runOnUI(()-> {
+                    mView.getJoinedThreadListFail(error, errorMsg);
+                });
             }
         });
     }
@@ -55,20 +61,22 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                         if(isDestroy()) {
                             return;
                         }
-                        if(value == null) {
-                            mView.getNoMoreJoinedThreadList();
-                            return;
-                        }
-                        List<ChatThread> data = value.getData();
-                        if(data == null || data.size() == 0) {
-                            mView.getNoMoreJoinedThreadList();
-                            return;
-                        }
-                        mView.getJoinedThreadListSuccess(value);
-                        if(data.size() < limit) {
-                            mView.getNoMoreJoinedThreadList();
-                        }
-                        getThreadIdList(data);
+                        runOnUI(()-> {
+                            if(value == null) {
+                                mView.getNoMoreJoinedThreadList();
+                                return;
+                            }
+                            List<ChatThread> data = value.getData();
+                            if(data == null || data.size() == 0) {
+                                mView.getNoMoreJoinedThreadList();
+                                return;
+                            }
+                            mView.getMoreJoinedThreadListSuccess(value);
+                            if(data.size() < limit) {
+                                mView.getNoMoreJoinedThreadList();
+                            }
+                            getThreadIdList(data);
+                        });
                     }
 
                     @Override
@@ -76,7 +84,9 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                         if(isDestroy()) {
                             return;
                         }
-                        mView.getJoinedThreadListFail(error, errorMsg);
+                        runOnUI(()-> {
+                            mView.getJoinedThreadListFail(error, errorMsg);
+                        });
                     }
                 });
     }
@@ -90,17 +100,19 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                         if(isDestroy()) {
                             return;
                         }
-                        if(value == null) {
-                            mView.getNoThreadListData();
-                            return;
-                        }
-                        List<ChatThread> data = value.getData();
-                        if(data == null || data.size() == 0) {
-                            mView.getNoThreadListData();
-                            return;
-                        }
-                        mView.getThreadListSuccess(value);
-                        getThreadIdList(data);
+                        runOnUI(()-> {
+                            if(value == null) {
+                                mView.getNoThreadListData();
+                                return;
+                            }
+                            List<ChatThread> data = value.getData();
+                            if(data == null || data.size() == 0) {
+                                mView.getNoThreadListData();
+                                return;
+                            }
+                            mView.getThreadListSuccess(value);
+                            getThreadIdList(data);
+                        });
                     }
 
                     @Override
@@ -108,7 +120,9 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                         if(isDestroy()) {
                             return;
                         }
-                        mView.getThreadListFail(error, errorMsg);
+                        runOnUI(()-> {
+                            mView.getThreadListFail(error, errorMsg);
+                        });
                     }
                 });
     }
@@ -122,20 +136,22 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                         if(isDestroy()) {
                             return;
                         }
-                        if(value == null) {
-                            mView.getNoMoreThreadList();
-                            return;
-                        }
-                        List<ChatThread> data = value.getData();
-                        if(data == null || data.size() == 0) {
-                            mView.getNoMoreThreadList();
-                            return;
-                        }
-                        mView.getJoinedThreadListSuccess(value);
-                        if(data.size() < limit) {
-                            mView.getNoMoreThreadList();
-                        }
-                        getThreadIdList(data);
+                        runOnUI(()-> {
+                            if(value == null) {
+                                mView.getNoMoreThreadList();
+                                return;
+                            }
+                            List<ChatThread> data = value.getData();
+                            if(data == null || data.size() == 0) {
+                                mView.getNoMoreThreadList();
+                                return;
+                            }
+                            mView.getMoreThreadListSuccess(value);
+                            if(data.size() < limit) {
+                                mView.getNoMoreThreadList();
+                            }
+                            getThreadIdList(data);
+                        });
                     }
 
                     @Override
@@ -143,7 +159,9 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                         if(isDestroy()) {
                             return;
                         }
-                        mView.getThreadListFail(error, errorMsg);
+                        runOnUI(()-> {
+                            mView.getThreadListFail(error, errorMsg);
+                        });
                     }
                 });
     }
@@ -156,11 +174,13 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                 if(isDestroy()) {
                     return;
                 }
-                if(value == null || value.isEmpty()) {
-                    mView.getNoDataLatestThreadMessages();
-                    return;
-                }
-                mView.getLatestThreadMessagesSuccess(value);
+                runOnUI(()-> {
+                    if(value == null || value.isEmpty()) {
+                        mView.getNoDataLatestThreadMessages();
+                        return;
+                    }
+                    mView.getLatestThreadMessagesSuccess(value);
+                });
             }
 
             @Override
@@ -168,7 +188,9 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                 if(isDestroy()) {
                     return;
                 }
-                mView.getLatestThreadMessagesFail(error, errorMsg);
+                runOnUI(()-> {
+                    mView.getLatestThreadMessagesFail(error, errorMsg);
+                });
             }
         });
     }
@@ -183,7 +205,9 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                     if(isDestroy()) {
                         return;
                     }
-                    mView.getThreadParentInfoSuccess(value);
+                    runOnUI(()-> {
+                        mView.getThreadParentInfoSuccess(value);
+                    });
                 }
 
                 @Override
@@ -191,14 +215,18 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
                     if(isDestroy()) {
                         return;
                     }
-                    mView.getThreadParentInfoFail(error, errorMsg);
+                    runOnUI(()-> {
+                        mView.getThreadParentInfoFail(error, errorMsg);
+                    });
                 }
             });
         }else {
             if(isDestroy()) {
                 return;
             }
-            mView.getThreadParentInfoSuccess(group);
+            runOnUI(()-> {
+                mView.getThreadParentInfoSuccess(group);
+            });
         }
     }
 

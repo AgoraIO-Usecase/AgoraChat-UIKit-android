@@ -129,6 +129,7 @@ public class EaseThreadCreatePresenterImpl extends EaseThreadCreatePresenter{
         ChatClient.getInstance().threadManager().createThread(parentId, messageId, threadName, new ValueCallBack<ChatThread>() {
             @Override
             public void onSuccess(ChatThread value) {
+                toChatUsername = value.getThreadId();
                 sendMessage(message);
                 if(isActive()) {
                     mView.onCreateThreadSuccess(value, message);
@@ -151,6 +152,9 @@ public class EaseThreadCreatePresenterImpl extends EaseThreadCreatePresenter{
                 runOnUI(() -> mView.sendMessageFail("message is null!"));
             }
             return;
+        }
+        if(TextUtils.isEmpty(message.getTo())) {
+            message.setTo(toChatUsername);
         }
         addMessageAttributes(message);
         if (chatType == EaseConstant.CHATTYPE_GROUP){

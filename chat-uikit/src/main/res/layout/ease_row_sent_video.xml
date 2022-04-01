@@ -43,15 +43,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/thread_region"
+                app:layout_constraintHorizontal_bias="0"
                 app:ease_shape_type="rectangle"
                 app:ease_radius="@dimen/ease_chat_image_corner_radius"
                 android:scaleType="fitCenter" />
 
-            <io.agora.chat.uikit.widget.chatrow.EaseThreadRegionView
+            <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion
                 android:id="@+id/thread_region"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:visibility="visible"
                 style="@style/bubble_inner_start_bottom_end_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -47,7 +47,11 @@
     <color name="ease_chat_thread_region_name_color">@color/black</color>
     <color name="ease_chat_thread_region_msg_count_color">#154DFE</color>
     <color name="ease_chat_thread_region_sender_name_color">@color/black</color>
-    <color name="ease_chat_thread_region_msg_color">#4D4D4D</color>
+    <color name="ease_chat_thread_region_msg_user_color">#000000</color>
+    <color name="ease_chat_thread_region_msg_content_color">#4D4D4D</color>
+    <color name="ease_chat_thread_region_no_message_color">#999999</color>
     <color name="ease_chat_thread_region_time_color">#999999</color>
+
+    <color name="ease_chat_parent_region_owner_color">#4D4D4D</color>
 
 </resources>

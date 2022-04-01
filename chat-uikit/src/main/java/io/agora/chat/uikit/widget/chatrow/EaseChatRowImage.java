@@ -64,8 +64,6 @@ public class EaseChatRowImage extends EaseChatRowFile {
             return;
         }
         showImageView(message);
-
-        setImageIncludeThread(imageView);
     }
 
     @Override
@@ -104,5 +102,6 @@ public class EaseChatRowImage extends EaseChatRowFile {
     @SuppressLint("StaticFieldLeak")
     private void showImageView(final ChatMessage message) {
         EaseImageUtils.showImage(context, imageView, message);
+        setImageIncludeThread(imageView);
     }
 }

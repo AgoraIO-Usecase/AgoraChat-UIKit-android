@@ -34,7 +34,7 @@ public class EaseThreadChatHeaderAdapter extends EaseBaseRecyclerViewAdapter<Cha
 
     @Override
     public ViewHolder<ChatMessage> getViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ease_item_thread_chat_header, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ease_item_thread_chat_header, parent, false);
         return new HeaderViewHolder(view);
     }
     

@@ -47,7 +47,7 @@
                 android:minHeight="90dp"
                 android:minWidth="90dp"/>
 
-            <io.agora.chat.uikit.widget.chatrow.EaseThreadRegionView
+            <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion
                 android:id="@+id/thread_region"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
