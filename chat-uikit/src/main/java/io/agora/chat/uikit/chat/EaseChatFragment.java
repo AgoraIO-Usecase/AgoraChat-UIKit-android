@@ -244,8 +244,12 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     @Override
     public void onThreadNotify(ThreadEvent event) {
         if(event != null && TextUtils.equals(event.getParentId(), conversationId)) {
-            if(event.getType() == ThreadEvent.TYPE.UPDATE_MSG || event.getType() == ThreadEvent.TYPE.RECALL_MSG) {
-                chatLayout.getChatMessageListLayout().refreshMessages();
+            if(event.getType() == ThreadEvent.TYPE.UPDATE_MSG
+                    || event.getType() == ThreadEvent.TYPE.RECALL_MSG
+                    || event.getType() == ThreadEvent.TYPE.UPDATE
+                    || event.getType() == ThreadEvent.TYPE.CREATE
+                    || event.getType() == ThreadEvent.TYPE.DELETE) {
+                runOnUiThread(()->chatLayout.getChatMessageListLayout().refreshMessages());
             }
         }
     }

@@ -43,12 +43,14 @@
                 android:id="@+id/tv_file_name"
                 app:layout_constraintStart_toEndOf="@id/iv_file_icon"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/tv_file_size"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 style="@style/ease_msg_text_file_name"
-                android:paddingRight="8dp"
+                android:paddingEnd="8dp"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constrainedWidth="true"
                 tools:text="Document.docx"/>
 
             <TextView

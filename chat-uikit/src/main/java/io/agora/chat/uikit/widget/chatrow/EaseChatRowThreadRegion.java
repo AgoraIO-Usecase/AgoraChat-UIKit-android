@@ -139,8 +139,10 @@ public class EaseChatRowThreadRegion extends FrameLayout implements View.OnClick
 
     private void setThreadRegion(ThreadInfo info) {
         if(info == null) {
+            setVisibility(GONE);
             return;
         }
+        setVisibility(VISIBLE);
         String threadName = info.getThreadName();
         if(!TextUtils.isEmpty(threadName)) {
             tvThreadName.setText(threadName);
