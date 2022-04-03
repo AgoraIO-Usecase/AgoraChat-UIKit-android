@@ -16,14 +16,14 @@ public class EaseThreadChatPresenterImpl extends EaseThreadChatPresenter {
             @Override
             public void onSuccess(ChatThread value) {
                 if(isActive()) {
-                    mView.onGetThreadInfoSuccess(value);
+                    runOnUI(()->mView.onGetThreadInfoSuccess(value));
                 }
             }
 
             @Override
             public void onError(int error, String errorMsg) {
                 if(isActive()) {
-                    mView.onGetThreadInfoFail(error, errorMsg);
+                    runOnUI(()->mView.onGetThreadInfoFail(error, errorMsg));
                 }
             }
         });
@@ -37,7 +37,7 @@ public class EaseThreadChatPresenterImpl extends EaseThreadChatPresenter {
                 if(isDestroy()) {
                     return;
                 }
-                mView.OnJoinThreadSuccess();
+                runOnUI(()->mView.OnJoinThreadSuccess());
             }
 
             @Override
@@ -45,7 +45,7 @@ public class EaseThreadChatPresenterImpl extends EaseThreadChatPresenter {
                 if(isDestroy()) {
                     return;
                 }
-                mView.OnJoinThreadFail(code, error);
+                runOnUI(()->mView.OnJoinThreadFail(code, error));
             }
 
             @Override
@@ -62,7 +62,7 @@ public class EaseThreadChatPresenterImpl extends EaseThreadChatPresenter {
             if(isDestroy()) {
                 return;
             }
-            mView.onGetGroupInfoSuccess(group);
+            runOnUI(()->mView.onGetGroupInfoSuccess(group));
             return;
         }
         ChatClient.getInstance().groupManager().asyncGetGroupFromServer(groupId, new ValueCallBack<Group>() {
@@ -71,7 +71,7 @@ public class EaseThreadChatPresenterImpl extends EaseThreadChatPresenter {
                 if(isDestroy()) {
                     return;
                 }
-                mView.onGetGroupInfoSuccess(value);
+                runOnUI(()->mView.onGetGroupInfoSuccess(value));
             }
 
             @Override
@@ -79,7 +79,7 @@ public class EaseThreadChatPresenterImpl extends EaseThreadChatPresenter {
                 if(isDestroy()) {
                     return;
                 }
-                mView.onGetGroupInfoFail(error, errorMsg);
+                runOnUI(()->mView.onGetGroupInfoFail(error, errorMsg));
             }
         });
     }

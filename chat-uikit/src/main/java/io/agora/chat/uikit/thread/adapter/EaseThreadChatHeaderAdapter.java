@@ -22,6 +22,7 @@ import io.agora.chat.uikit.utils.EaseUserUtils;
 
 public class EaseThreadChatHeaderAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage> {
     private ChatThread thread;
+    private String threadName;
 
     public EaseThreadChatHeaderAdapter() {
 
@@ -29,6 +30,11 @@ public class EaseThreadChatHeaderAdapter extends EaseBaseRecyclerViewAdapter<Cha
 
     public void setThreadInfo(ChatThread thread) {
         this.thread = thread;
+        notifyDataSetChanged();
+    }
+
+    public void updateThreadName(String threadName) {
+        this.threadName = threadName;
         notifyDataSetChanged();
     }
 
@@ -65,6 +71,9 @@ public class EaseThreadChatHeaderAdapter extends EaseBaseRecyclerViewAdapter<Cha
                                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tvCreateOwner.setText(builder);
                 }
+            }
+            if(!TextUtils.isEmpty(threadName)) {
+                tvThreadName.setText(threadName);
             }
             threadParentMsg.setMessage(item);
         }

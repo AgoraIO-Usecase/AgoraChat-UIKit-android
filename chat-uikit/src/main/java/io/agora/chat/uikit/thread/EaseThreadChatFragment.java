@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.agora.ThreadChangeListener;
 import io.agora.ThreadNotifyListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
@@ -24,7 +25,6 @@ import io.agora.chat.uikit.thread.interfaces.OnThreadRoleResultCallback;
 import io.agora.chat.uikit.thread.presenter.EaseThreadChatPresenter;
 import io.agora.chat.uikit.thread.presenter.EaseThreadChatPresenterImpl;
 import io.agora.chat.uikit.thread.presenter.IThreadChatView;
-import io.agora.util.EMLog;
 
 public class EaseThreadChatFragment extends EaseChatFragment implements IThreadChatView {
     protected String parentMsgId;
@@ -38,7 +38,7 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
     private OnJoinThreadResultListener joinThreadResultListener;
     private OnThreadRoleResultCallback resultCallback;
     private MessageListener messageListener;
-    private NotifyListener notifyListener;
+    private MyThreadChangeListener threadChangeListener;
 
     @Override
     public void initView() {
@@ -85,9 +85,9 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
     public void initListener() {
         super.initListener();
         messageListener = new MessageListener();
-        notifyListener = new NotifyListener();
+        threadChangeListener = new MyThreadChangeListener();
         ChatClient.getInstance().chatManager().addMessageListener(messageListener);
-        ChatClient.getInstance().threadManager().addThreadNotifyListener(notifyListener);
+        ChatClient.getInstance().threadManager().addThreadChangeListener(threadChangeListener);
     }
 
     private class MessageListener extends EaseMessageListener {
@@ -115,17 +115,39 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         }
     }
 
-    private class NotifyListener implements ThreadNotifyListener {
+    private class MyThreadChangeListener implements ThreadChangeListener {
 
         @Override
-        public void onThreadNotify(ThreadEvent event) {
-            if(event.getType() == ThreadEvent.TYPE.DELETE) {
-                mContext.finish();
-            }else if(event.getType() == ThreadEvent.TYPE.UPDATE) {
-                if(mContext != null && !mContext.isFinishing() && titleBar != null) {
-                    titleBar.setTitle(event.getThreadName());
-                }
+        public void onThreadNameUpdated(String parentId, String threadId, String operator, String newThreadName) {
+            if(TextUtils.equals(threadId, conversationId)) {
+                runOnUiThread(()->chatLayout.getChatMessageListLayout().refreshMessages());
             }
+        }
+
+        @Override
+        public void onThreadDestroyed(String parentId, String threadId, String threadName) {
+            exitThreadChat(threadId);
+        }
+
+        @Override
+        public void onMemberJoined(String parentId, String threadId, String threadName, String username) {
+
+        }
+
+        @Override
+        public void onMemberExited(String parentId, String threadId, String threadName, String username) {
+
+        }
+
+        @Override
+        public void onUserRemoved(String parentId, String threadId, String threadName) {
+            exitThreadChat(threadId);
+        }
+    }
+
+    private void exitThreadChat(String threadId) {
+        if(TextUtils.equals(threadId, conversationId)) {
+            mContext.finish();
         }
     }
 
@@ -141,13 +163,30 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
     }
 
     @Override
+    public void onThreadNotify(ThreadEvent event) {
+        super.onThreadNotify(event);
+        if(event != null && TextUtils.equals(event.getThreadId(), conversationId)) {
+            if(event.getType() == ThreadEvent.TYPE.DELETE) {
+                mContext.finish();
+            }else if(event.getType() == ThreadEvent.TYPE.UPDATE) {
+                runOnUiThread(()-> {
+                    headerAdapter.updateThreadName(event.getThreadName());
+                    if(mContext != null && !mContext.isFinishing() && titleBar != null) {
+                        titleBar.setTitle(event.getThreadName());
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if(messageListener != null) {
             ChatClient.getInstance().chatManager().removeMessageListener(messageListener);
         }
-        if(notifyListener != null) {
-            ChatClient.getInstance().threadManager().removeThreadNotifyListener(notifyListener);
+        if(threadChangeListener != null) {
+            ChatClient.getInstance().threadManager().removeThreadChangeListener(threadChangeListener);
         }
     }
 
@@ -184,7 +223,7 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         if(joinThreadResultListener != null) {
             joinThreadResultListener.joinSuccess(conversationId);
         }
-        if(threadRole != EaseThreadRole.CREATOR) {
+        if(threadRole != EaseThreadRole.GROUP_ADMIN && threadRole != EaseThreadRole.CREATOR) {
             threadRole = EaseThreadRole.MEMBER;
             if(resultCallback != null) {
                 resultCallback.onThreadRole(threadRole);
@@ -229,16 +268,18 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
     }
 
     private EaseThreadRole getThreadRole(ChatThread thread) {
-        EaseThreadRole role = EaseThreadRole.UNKNOWN;
+        if(threadRole == EaseThreadRole.GROUP_ADMIN) {
+            return threadRole;
+        }
         if(thread != null) {
             if(TextUtils.equals(thread.getOwner(), ChatClient.getInstance().getCurrentUser())) {
-                role = EaseThreadRole.CREATOR;
+                threadRole = EaseThreadRole.CREATOR;
             }
         }
         if(resultCallback != null) {
             resultCallback.onThreadRole(threadRole);
         }
-        return role;
+        return threadRole;
     }
 
     /**

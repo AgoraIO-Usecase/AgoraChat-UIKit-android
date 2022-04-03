@@ -132,14 +132,14 @@ public class EaseThreadCreatePresenterImpl extends EaseThreadCreatePresenter{
                 toChatUsername = value.getThreadId();
                 sendMessage(message);
                 if(isActive()) {
-                    mView.onCreateThreadSuccess(value, message);
+                    runOnUI(()->mView.onCreateThreadSuccess(value, message));
                 }
             }
 
             @Override
             public void onError(int error, String errorMsg) {
                 if(isActive()) {
-                    mView.onCreateThreadFail(error, errorMsg);
+                    runOnUI(()->mView.onCreateThreadFail(error, errorMsg));
                 }
             }
         });

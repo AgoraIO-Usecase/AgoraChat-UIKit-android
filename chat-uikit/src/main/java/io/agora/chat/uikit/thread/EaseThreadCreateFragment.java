@@ -24,8 +24,10 @@ import io.agora.Error;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
+import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.activities.EaseThreadChatActivity;
+import io.agora.chat.uikit.activities.EaseThreadListActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -37,6 +39,7 @@ import io.agora.chat.uikit.databinding.EaseFragmentCreateThreadBinding;
 import io.agora.chat.uikit.interfaces.EaseMessageListener;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.models.EaseEmojicon;
+import io.agora.chat.uikit.provider.EaseActivityProvider;
 import io.agora.chat.uikit.thread.interfaces.EaseThreadParentMsgViewProvider;
 import io.agora.chat.uikit.thread.interfaces.OnThreadCreatedResultListener;
 import io.agora.chat.uikit.thread.presenter.EaseThreadCreatePresenter;
@@ -305,6 +308,18 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
             messageSendCallBack.onSuccess(message);
         }
         if(resultListener == null  || !resultListener.onThreadCreatedSuccess(messageId, message.conversationId())) {
+            EaseActivityProvider provider = EaseUIKit.getInstance().getActivitiesProvider();
+            if(provider != null) {
+                Class activity = provider.getActivity(EaseThreadChatActivity.class.getSimpleName());
+                if(activity != null) {
+                    Intent intent = new Intent(mContext, activity);
+                    intent.putExtra("parentMsgId", messageId);
+                    intent.putExtra("conversationId", message.conversationId());
+                    startActivity(intent);
+                    mContext.finish();
+                    return;
+                }
+            }
             EaseThreadChatActivity.actionStart(mContext, messageId, message.conversationId());
         }
         mContext.finish();

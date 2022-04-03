@@ -54,7 +54,7 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
         this.chatType = chatType;
         this.toChatUsername = toChatUsername;
         this.isThread = isThread;
-        conversation = ChatClient.getInstance().chatManager().getConversation(toChatUsername, EaseUtils.getConversationType(chatType), true);
+        conversation = ChatClient.getInstance().chatManager().getConversation(toChatUsername, EaseUtils.getConversationType(chatType), true, isThread);
     }
 
     /**
