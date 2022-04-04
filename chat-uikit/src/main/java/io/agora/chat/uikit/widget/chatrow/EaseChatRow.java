@@ -145,10 +145,10 @@ public abstract class EaseChatRow extends LinearLayout {
     private void initView() {
         showSenderType = isSender;
         EaseChatItemStyleHelper helper = getItemStyleHelper();
-        if(helper != null && helper.getStyle() != null) {
-            if(helper.getStyle().getItemShowType() == 1) {
+        if(helper != null && helper.getStyle(getContext()) != null) {
+            if(helper.getStyle(getContext()).getItemShowType() == 1) {
                 showSenderType = false;
-            }else if(helper.getStyle().getItemShowType() == 2) {
+            }else if(helper.getStyle(getContext()).getItemShowType() == 2) {
                 showSenderType = true;
             }
         }
@@ -173,7 +173,7 @@ public abstract class EaseChatRow extends LinearLayout {
     protected void setLayoutStyle() {
         EaseChatItemStyleHelper helper = getItemStyleHelper();
         if(helper != null) {
-            EaseChatSetStyle itemStyle = helper.getStyle();
+            EaseChatSetStyle itemStyle = helper.getStyle(getContext());
             if(bubbleLayout != null) {
                 try {
                     if (isSender()) {
@@ -313,7 +313,7 @@ public abstract class EaseChatRow extends LinearLayout {
     private void setItemStyle() {
         EaseChatItemStyleHelper helper = getItemStyleHelper();
         if(helper != null) {
-            EaseChatSetStyle itemStyle = helper.getStyle();
+            EaseChatSetStyle itemStyle = helper.getStyle(getContext());
             if(userAvatarView != null) {
                 setAvatarOptions(itemStyle);
             }
@@ -398,14 +398,14 @@ public abstract class EaseChatRow extends LinearLayout {
     public void setImageIncludeThread(ImageView imageView) {
         if(shouldShowThreadRegion()) {
             if(isSender()) {
-                Drawable senderBgDrawable = EaseChatItemStyleHelper.getSenderBgDrawable();
+                Drawable senderBgDrawable = EaseChatItemStyleHelper.getSenderBgDrawable(getContext());
                 if(senderBgDrawable != null) {
                     bubbleLayout.setBackground(senderBgDrawable.getConstantState().newDrawable());
                 }else {
                     bubbleLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ease_send_message_et_bg));
                 }
             }else {
-                Drawable receiverBgDrawable = EaseChatItemStyleHelper.getReceiverBgDrawable();
+                Drawable receiverBgDrawable = EaseChatItemStyleHelper.getReceiverBgDrawable(getContext());
                 if(receiverBgDrawable != null) {
                     bubbleLayout.setBackground(receiverBgDrawable.getConstantState().newDrawable());
                 }else {
@@ -454,7 +454,7 @@ public abstract class EaseChatRow extends LinearLayout {
     protected void setAvatarAndNick() {
         if (isSender()) {
             EaseUserUtils.setUserAvatar(context, ChatClient.getInstance().getCurrentUser(), userAvatarView);
-            if(EaseChatItemStyleHelper.getInstance().getStyle().getItemShowType() != EaseChatMessageListLayout.ShowType.LEFT_RIGHT.ordinal()) {
+            if(EaseChatItemStyleHelper.getInstance().getStyle(getContext()).getItemShowType() != EaseChatMessageListLayout.ShowType.LEFT_RIGHT.ordinal()) {
                 EaseUserUtils.setUserNick(message.getFrom(), usernickView);
             }
         } else {

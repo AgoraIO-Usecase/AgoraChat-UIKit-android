@@ -202,10 +202,6 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         }
         conversation.markAllMessagesAsRead();
         List<ChatMessage> allMessages = conversation.getAllMessages();
-        // If conversation is thread, reverse the order
-        if(conversation.isThread()) {
-            Collections.reverse(allMessages);
-        }
         if(isActive()) {
             runOnUI(()->mView.refreshCurrentConSuccess(allMessages, false));
         }
