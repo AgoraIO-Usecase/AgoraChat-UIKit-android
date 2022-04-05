@@ -122,7 +122,7 @@ public class EaseChatRowVideo extends EaseChatRowFile {
     @SuppressLint("StaticFieldLeak")
     private void showVideoThumbView(final ChatMessage message) {
         ViewGroup.LayoutParams params = EaseImageUtils.showVideoThumb(context, imageView, message);
-        setBubbleView(params.width, params.height);
+        //setBubbleView(params.width, params.height);
     }
 
     private void setBubbleView(int width, int height) {
