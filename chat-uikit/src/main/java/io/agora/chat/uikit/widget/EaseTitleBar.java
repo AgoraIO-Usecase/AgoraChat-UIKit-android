@@ -53,6 +53,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     private ConstraintLayout clTitle;
     private EaseImageView ivIcon;
     private OnIconClickListener iconClickListener;
+    private EasePresenceView presenceView;
 
     public EaseTitleBar(Context context) {
         this(context, null);
@@ -95,6 +96,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         titleMenu = findViewById(R.id.right_menu);
         clTitle = findViewById(R.id.cl_title);
         ivIcon = findViewById(R.id.iv_icon);
+        presenceView = findViewById(R.id.presence_view);
         parseStyle(context, attrs);
 
         initToolbar();
@@ -264,6 +266,10 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
             titleMenu.setText(title);
             rightLayout.setVisibility(VISIBLE);
         }
+    }
+
+    public void setRightTitleColor(@ColorRes int color){
+        titleMenu.setTextColor(getResources().getColor(color));
     }
 
     public void setIcon(Drawable icon) {
@@ -439,6 +445,10 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
      */
     public static float sp2px(Context context, float value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, context.getResources().getDisplayMetrics());
+    }
+
+    public EasePresenceView getPresenceView() {
+        return presenceView;
     }
 
     public <T> T getView(int viewId){
