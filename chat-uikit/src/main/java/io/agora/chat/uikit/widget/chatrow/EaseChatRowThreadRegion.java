@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 
-import io.agora.chat.MsgOverview;
+import io.agora.chat.ChatMessage;
 import io.agora.chat.ThreadInfo;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
@@ -150,7 +150,7 @@ public class EaseChatRowThreadRegion extends FrameLayout implements View.OnClick
         String num = EaseUtils.handleBigNum(info.getMessageCount());
         tvThreadMsgCount.setText(num);
 
-        MsgOverview msgOverview = info.getMsgOverview();
+        ChatMessage msgOverview = info.getLastMessage();
         if(msgOverview == null) {
             group_msg.setVisibility(GONE);
             tv_no_msg.setVisibility(VISIBLE);
@@ -174,7 +174,7 @@ public class EaseChatRowThreadRegion extends FrameLayout implements View.OnClick
         tvMsgUser.setText(nickname);
         tvMsgContent.setText(msgContent);
 
-        tvMsgTime.setText(EaseDateUtils.getTimestampSimpleString(getContext(), msgOverview.getTimestamp()));
+        tvMsgTime.setText(EaseDateUtils.getTimestampSimpleString(getContext(), msgOverview.getMsgTime()));
     }
 
     @Override

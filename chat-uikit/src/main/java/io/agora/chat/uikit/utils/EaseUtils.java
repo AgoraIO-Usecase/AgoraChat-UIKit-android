@@ -33,7 +33,6 @@ import java.util.List;
 
 import io.agora.chat.ChatMessage;
 import io.agora.chat.Conversation;
-import io.agora.chat.MsgOverview;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.ThreadInfo;
 import io.agora.chat.uikit.EaseUIKit;
@@ -134,45 +133,6 @@ public class EaseUtils {
                     digest = txtBody.getMessage();
                 }
             }
-            break;
-        case FILE:
-            digest = getString(context, R.string.ease_file);
-            break;
-        default:
-            EMLog.e(TAG, "error, unknow type");
-            return "";
-        }
-        Log.e("TAG", "message text = "+digest);
-        return digest;
-    }
-
-	/**
-     * Get digest according message type and content
-     *
-     * @param message
-     * @param context
-     * @return
-     */
-    public static String getMessageDigest(MsgOverview message, Context context) {
-        String digest = "";
-        switch (message.getType()) {
-        case LOCATION:
-            digest = getString(context, R.string.ease_location);
-            break;
-        case IMAGE:
-            digest = getString(context, R.string.ease_picture);
-            break;
-        case VOICE:
-            digest = getString(context, R.string.ease_voice_prefix);
-            break;
-        case VIDEO:
-            digest = getString(context, R.string.ease_video);
-            break;
-        case CUSTOM:
-            digest = getString(context, R.string.ease_custom);
-            break;
-        case TXT:
-            digest = message.getMessage();
             break;
         case FILE:
             digest = getString(context, R.string.ease_file);

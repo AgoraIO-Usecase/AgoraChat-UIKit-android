@@ -1,5 +1,6 @@
 package io.agora.chat.uikit.widget.dialog;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 
@@ -66,7 +67,9 @@ public class EaseProgressDialog extends ProgressDialog {
 
         public EaseProgressDialog show() {
             EaseProgressDialog dialog = build();
-            dialog.show();
+            if(mContext != null && mContext instanceof Activity && !((Activity) mContext).isFinishing()) {
+                dialog.show();
+            }
             return dialog;
         }
     }

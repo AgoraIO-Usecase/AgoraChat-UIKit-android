@@ -130,7 +130,6 @@ public class EaseThreadCreatePresenterImpl extends EaseThreadCreatePresenter{
             @Override
             public void onSuccess(ChatThread value) {
                 toChatUsername = value.getThreadId();
-                sendMessage(message);
                 if(isActive()) {
                     runOnUI(()->mView.onCreateThreadSuccess(value, message));
                 }

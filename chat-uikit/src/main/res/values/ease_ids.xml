@@ -9,6 +9,8 @@
     <item name="action_chat_delete" type="id"/>
     <!--recall-->
     <item name="action_chat_recall" type="id"/>
+    <!--unsent-->
+    <item name="action_chat_unsent" type="id"/>
     <!--long click-->
     <item name="action_chat_long_click" type="id"/>
 

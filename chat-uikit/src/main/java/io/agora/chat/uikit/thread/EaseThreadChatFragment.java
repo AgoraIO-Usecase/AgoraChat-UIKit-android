@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.agora.ThreadChangeListener;
-import io.agora.ThreadNotifyListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
@@ -20,11 +19,13 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.EaseChatFragment;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.EaseMessageListener;
+import io.agora.chat.uikit.menu.MenuItemBean;
 import io.agora.chat.uikit.thread.adapter.EaseThreadChatHeaderAdapter;
 import io.agora.chat.uikit.thread.interfaces.OnThreadRoleResultCallback;
 import io.agora.chat.uikit.thread.presenter.EaseThreadChatPresenter;
 import io.agora.chat.uikit.thread.presenter.EaseThreadChatPresenterImpl;
 import io.agora.chat.uikit.thread.presenter.IThreadChatView;
+import io.agora.exceptions.ChatException;
 
 public class EaseThreadChatFragment extends EaseChatFragment implements IThreadChatView {
     protected String parentMsgId;
@@ -64,6 +65,12 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
             }
         }
         addHeaderViewToList();
+        setThreadMenu();
+    }
+
+    private void setThreadMenu() {
+        chatLayout.findItemVisible(R.id.action_chat_delete, false);
+        chatLayout.addItemMenu(0, R.id.action_chat_unsent, 100, getString(R.string.ease_action_unsent));
     }
 
     private void addHeaderViewToList() {
@@ -82,12 +89,29 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
     }
 
     @Override
+    public boolean onMenuItemClick(MenuItemBean item, ChatMessage message) {
+        if(item.getItemId() == R.id.action_chat_unsent) {
+            chatLayout.recallMessage(message);
+            return true;
+        }
+        return super.onMenuItemClick(item, message);
+    }
+
+    @Override
     public void initListener() {
         super.initListener();
         messageListener = new MessageListener();
         threadChangeListener = new MyThreadChangeListener();
         ChatClient.getInstance().chatManager().addMessageListener(messageListener);
         ChatClient.getInstance().threadManager().addThreadChangeListener(threadChangeListener);
+    }
+
+    @Override
+    public void onThreadEvent(int event, String target, List<String> usernames) {
+        super.onThreadEvent(event, target, usernames);
+        if((event == 41 || event == 43) && TextUtils.equals(target, conversationId)) {
+            mContext.finish();
+        }
     }
 
     private class MessageListener extends EaseMessageListener {
@@ -118,30 +142,31 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
     private class MyThreadChangeListener implements ThreadChangeListener {
 
         @Override
-        public void onThreadNameUpdated(String parentId, String threadId, String operator, String newThreadName) {
-            if(TextUtils.equals(threadId, conversationId)) {
-                runOnUiThread(()->chatLayout.getChatMessageListLayout().refreshMessages());
+        public void onThreadCreated(ThreadEvent event) {
+
+        }
+
+        @Override
+        public void onThreadUpdated(ThreadEvent event) {
+            if(TextUtils.equals(event.getThreadId(), conversationId)) {
+                runOnUiThread(()->{
+                    chatLayout.getChatMessageListLayout().refreshMessages();
+                    headerAdapter.updateThreadName(event.getThreadName());
+                    if(mContext != null && !mContext.isFinishing() && titleBar != null) {
+                        titleBar.setTitle(event.getThreadName());
+                    }
+                });
             }
         }
 
         @Override
-        public void onThreadDestroyed(String parentId, String threadId, String threadName) {
-            exitThreadChat(threadId);
+        public void onThreadDestroyed(ThreadEvent event) {
+            exitThreadChat(event.getThreadId());
         }
 
         @Override
-        public void onMemberJoined(String parentId, String threadId, String threadName, String username) {
-
-        }
-
-        @Override
-        public void onMemberExited(String parentId, String threadId, String threadName, String username) {
-
-        }
-
-        @Override
-        public void onUserRemoved(String parentId, String threadId, String threadName) {
-            exitThreadChat(threadId);
+        public void onThreadUserRemoved(ThreadEvent event) {
+            exitThreadChat(event.getThreadId());
         }
     }
 
@@ -160,23 +185,6 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
         headerAdapter.setData(data);
         joinThread();
         setGroupInfo();
-    }
-
-    @Override
-    public void onThreadNotify(ThreadEvent event) {
-        super.onThreadNotify(event);
-        if(event != null && TextUtils.equals(event.getThreadId(), conversationId)) {
-            if(event.getType() == ThreadEvent.TYPE.DELETE) {
-                mContext.finish();
-            }else if(event.getType() == ThreadEvent.TYPE.UPDATE) {
-                runOnUiThread(()-> {
-                    headerAdapter.updateThreadName(event.getThreadName());
-                    if(mContext != null && !mContext.isFinishing() && titleBar != null) {
-                        titleBar.setTitle(event.getThreadName());
-                    }
-                });
-            }
-        }
     }
 
     @Override
@@ -272,7 +280,7 @@ public class EaseThreadChatFragment extends EaseChatFragment implements IThreadC
             return threadRole;
         }
         if(thread != null) {
-            if(TextUtils.equals(thread.getOwner(), ChatClient.getInstance().getCurrentUser())) {
+            if(TextUtils.equals(thread.getCreator(), ChatClient.getInstance().getCurrentUser())) {
                 threadRole = EaseThreadRole.CREATOR;
             }
         }

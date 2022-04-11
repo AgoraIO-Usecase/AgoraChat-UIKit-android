@@ -60,9 +60,9 @@ public class EaseThreadChatHeaderAdapter extends EaseBaseRecyclerViewAdapter<Cha
         public void setData(ChatMessage item, int position) {
             if(thread != null) {
                 tvThreadName.setText(thread.getThreadName());
-                if(!TextUtils.isEmpty(thread.getOwner())) {
-                    EaseUser userInfo = EaseUserUtils.getUserInfo(thread.getOwner());
-                    String nickname = userInfo != null ? userInfo.getNickname() : thread.getOwner();
+                if(!TextUtils.isEmpty(thread.getCreator())) {
+                    EaseUser userInfo = EaseUserUtils.getUserInfo(thread.getCreator());
+                    String nickname = userInfo != null ? userInfo.getNickname() : thread.getCreator();
                     String content = mContext.getString(R.string.ease_thread_started_by_user, nickname);
                     SpannableStringBuilder builder = new SpannableStringBuilder(content);
                     builder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.black)),
