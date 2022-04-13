@@ -43,6 +43,14 @@
 
     </RelativeLayout>
 
+    <io.agora.chat.uikit.widget.EasePresenceView
+        android:id="@+id/presence_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/left_layout"
+        android:visibility="gone" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_title"
         android:layout_width="wrap_content"
@@ -75,11 +83,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/sub_title"
             android:layout_marginStart="12dp"
-            app:layout_goneMarginStart="0dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/ease_toolbar_color_title"
             android:textSize="@dimen/ease_toolbar_title_size"
-            android:maxLines="1"
-            android:ellipsize="end"
             app:layout_constrainedWidth="true"
             tools:text="Title"/>
 

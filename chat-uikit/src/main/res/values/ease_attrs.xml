@@ -8,6 +8,7 @@
         <attr name="titleBarLeftImage" format="reference"/>
         <attr name="titleBarRightImage" format="reference"/>
         <attr name="titleBarRightTitle" format="reference|string"/>
+        <attr name="titleBarRightTextColor" format="reference|color" />
         <!-- Toolbar home as up indicator's color -->
         <attr name="titleBarArrowColor" format="reference|color"/>
         <!-- Toolbar Overflow Icon -->

@@ -608,6 +608,11 @@ public abstract class EaseChatRow extends LinearLayout {
      */
     protected void onMessageSuccess() {
         EMLog.i(TAG, "onMessageSuccess");
+        if (ChatClient.getInstance().getOptions().getRequireDeliveryAck()) {
+            if (deliveredView != null && isSender()) {
+                deliveredView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     /**

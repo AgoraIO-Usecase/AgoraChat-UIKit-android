@@ -48,6 +48,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     private int mArrowColorId;
     private int mArrowColor;
     private int mTitleTextColor;
+    private int mRightTextColor;
     private int mSubTitleTextColor;
     private int mWidth;
     private int mHeight;
@@ -56,6 +57,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     private EaseImageView ivIcon;
     private ImageView msgUnreadIcon;
     private OnIconClickListener iconClickListener;
+    private EasePresenceView presenceView;
 
     public EaseTitleBar(Context context) {
         this(context, null);
@@ -99,6 +101,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         titleMenu = findViewById(R.id.right_menu);
         clTitle = findViewById(R.id.cl_title);
         ivIcon = findViewById(R.id.iv_icon);
+        presenceView = findViewById(R.id.presence_view);
         msgUnreadIcon = findViewById(R.id.msg_unread_icon);
         parseStyle(context, attrs);
 
@@ -147,6 +150,14 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
                 String rightTitle = ta.getString(R.styleable.EaseTitleBar_titleBarRightTitle);
                 titleMenu.setText(rightTitle);
             }
+
+            int rightTextColor = ta.getResourceId(R.styleable.EaseTitleBar_titleBarRightTextColor, -1);
+            if(rightTextColor != -1) {
+                mRightTextColor = ContextCompat.getColor(getContext(), rightTextColor);
+            }else {
+                mRightTextColor = ta.getColor(R.styleable.EaseTitleBar_titleBarRightTextColor, ContextCompat.getColor(getContext(), R.color.ease_toolbar_color_title));
+            }
+            titleMenu.setTextColor(mRightTextColor);
 
             boolean rightVisible = ta.getBoolean(R.styleable.EaseTitleBar_titleBarRightVisible, false);
             rightLayout.setVisibility(rightVisible ? VISIBLE : GONE);
@@ -294,6 +305,10 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         }
     }
 
+    public void setRightTitleColor(@ColorRes int color){
+        titleMenu.setTextColor(getResources().getColor(color));
+    }
+
     public void setIcon(Drawable icon) {
         if(icon != null) {
             ivIcon.setImageDrawable(icon);
@@ -372,7 +387,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     public void setUnreadIconVisible(boolean visible) {
         msgUnreadIcon.setVisibility(visible ? VISIBLE : GONE);
     }
-    
+
     public void setBackgroundColor(int color){
         titleLayout.setBackgroundColor(color);
     }
@@ -488,6 +503,10 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
      */
     public static float sp2px(Context context, float value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, context.getResources().getDisplayMetrics());
+    }
+
+    public EasePresenceView getPresenceView() {
+        return presenceView;
     }
 
     public <T> T getView(int viewId){

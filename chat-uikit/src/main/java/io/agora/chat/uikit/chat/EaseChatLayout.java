@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 
+import io.agora.ConversationListener;
 import io.agora.MessageListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatManager;
@@ -67,7 +68,7 @@ import io.agora.util.EMLog;
 
 public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHandleMessageView, IPopupWindow
         , ChatInputMenuListener, MessageListener, EaseChatMessageListLayout.OnMessageTouchListener
-        , MessageListItemClickListener, EaseChatMessageListLayout.OnChatErrorListener {
+        , MessageListItemClickListener, EaseChatMessageListLayout.OnChatErrorListener, ConversationListener {
     private static final String TAG = EaseChatLayout.class.getSimpleName();
     private static final int MSG_TYPING_HEARTBEAT = 0;
     private static final int MSG_TYPING_END = 1;
@@ -175,6 +176,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         messageListLayout.setOnChatErrorListener(this);
         inputMenu.setChatInputMenuListener(this);
         getChatManager().addMessageListener(this);
+        getChatManager().addConversationListener(this);
     }
 
     @Override
@@ -1000,6 +1002,15 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         if(message.direct() == ChatMessage.Direct.RECEIVE ){
             menuHelper.findItemVisible(R.id.action_chat_recall, false);
         }
+    }
+
+    @Override
+    public void onConversationUpdate() {
+    }
+
+    @Override
+    public void onConversationRead(String s, String s1) {
+        messageListLayout.refreshMessages();
     }
 
     private class ChatRoomListener extends EaseChatRoomListener {
