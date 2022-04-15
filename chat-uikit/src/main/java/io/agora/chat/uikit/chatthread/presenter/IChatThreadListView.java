@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.thread.presenter;
+package io.agora.chat.uikit.chatthread.presenter;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,7 @@ import io.agora.chat.CursorResult;
 import io.agora.chat.Group;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
 
-public interface IThreadListView extends ILoadDataView {
+public interface IChatThreadListView extends ILoadDataView {
 
     /**
      * Get thread list success

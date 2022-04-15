@@ -1,10 +1,8 @@
-package io.agora.chat.uikit.thread.presenter;
+package io.agora.chat.uikit.chatthread.presenter;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +13,10 @@ import io.agora.chat.ChatThread;
 import io.agora.chat.CursorResult;
 import io.agora.chat.Group;
 
-public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
+public class EaseChatThreadListPresenterImpl extends EaseChatThreadListPresenter {
     @Override
     public void getJoinedThreadList(String groupId, int limit, String cursor) {
-        ChatClient.getInstance().threadManager().getJoinedThreadsFromServer(groupId, limit, cursor,
+        ChatClient.getInstance().chatThreadManager().getJoinedChatThreadsFromServer(groupId, limit, cursor,
                 new ValueCallBack<CursorResult<ChatThread>>() {
             @Override
             public void onSuccess(CursorResult<ChatThread> value) {
@@ -54,7 +52,7 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
 
     @Override
     public void getMoreJoinedThreadList(String groupId, int limit, String cursor) {
-        ChatClient.getInstance().threadManager().getJoinedThreadsFromServer(groupId, limit, cursor,
+        ChatClient.getInstance().chatThreadManager().getJoinedChatThreadsFromServer(groupId, limit, cursor,
                 new ValueCallBack<CursorResult<ChatThread>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatThread> value) {
@@ -93,7 +91,7 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
 
     @Override
     public void getThreadList(String groupId, int limit, String cursor) {
-        ChatClient.getInstance().threadManager().getThreadsFromServer(groupId, limit, cursor,
+        ChatClient.getInstance().chatThreadManager().getChatThreadsFromServer(groupId, limit, cursor,
                 new ValueCallBack<CursorResult<ChatThread>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatThread> value) {
@@ -129,7 +127,7 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
 
     @Override
     public void getMoreThreadList(String groupId, int limit, String cursor) {
-        ChatClient.getInstance().threadManager().getThreadsFromServer(groupId, limit, cursor,
+        ChatClient.getInstance().chatThreadManager().getChatThreadsFromServer(groupId, limit, cursor,
                 new ValueCallBack<CursorResult<ChatThread>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatThread> value) {
@@ -168,7 +166,7 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
 
     @Override
     public void getThreadLatestMessages(List<String> threadIds) {
-        ChatClient.getInstance().threadManager().getThreadsLatestMessage(threadIds, new ValueCallBack<Map<String, ChatMessage>>() {
+        ChatClient.getInstance().chatThreadManager().getChatThreadLatestMessage(threadIds, new ValueCallBack<Map<String, ChatMessage>>() {
             @Override
             public void onSuccess(Map<String, ChatMessage> value) {
                 if(isDestroy()) {
@@ -236,7 +234,7 @@ public class EaseThreadListPresenterImpl extends EaseThreadListPresenter {
         }
         List<String> threadIds = new ArrayList<>();
         for(int i = 0; i < data.size(); i++) {
-            threadIds.add(data.get(i).getThreadId());
+            threadIds.add(data.get(i).getChatThreadId());
         }
         if(isDestroy()) {
             return;

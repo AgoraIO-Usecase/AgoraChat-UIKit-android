@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.thread;
+package io.agora.chat.uikit.chatthread;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -26,27 +26,27 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.databinding.EaseFragmentThreadListBinding;
 import io.agora.chat.uikit.interfaces.OnTitleBarFinishInflateListener;
-import io.agora.chat.uikit.thread.interfaces.OnItemThreadClickListener;
+import io.agora.chat.uikit.chatthread.interfaces.OnItemChatThreadClickListener;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
-import io.agora.chat.uikit.thread.adapter.EaseThreadListAdapter;
-import io.agora.chat.uikit.thread.presenter.EaseThreadListPresenter;
-import io.agora.chat.uikit.thread.presenter.EaseThreadListPresenterImpl;
-import io.agora.chat.uikit.thread.presenter.IThreadListView;
+import io.agora.chat.uikit.chatthread.adapter.EaseChatThreadListAdapter;
+import io.agora.chat.uikit.chatthread.presenter.EaseChatThreadListPresenter;
+import io.agora.chat.uikit.chatthread.presenter.EaseChatThreadListPresenterImpl;
+import io.agora.chat.uikit.chatthread.presenter.IChatThreadListView;
 import io.agora.chat.uikit.widget.EaseDragRecyclerView;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 
-public class EaseThreadListFragment extends EaseBaseFragment implements IThreadListView {
+public class EaseChatThreadListFragment extends EaseBaseFragment implements IChatThreadListView {
     private EaseTitleBar.OnBackPressListener backPressListener;
     private EaseFragmentThreadListBinding binding;
     private String parentId;
-    private EaseThreadListAdapter mAdapter;
-    private EaseThreadListPresenter presenter;
+    private EaseChatThreadListAdapter mAdapter;
+    private EaseChatThreadListPresenter presenter;
     private int limit = 10;
     private String cursor = "";
     private boolean isGroupAdmin;
     private Group mGroup;
     private OnLoadResultListener resultListener;
-    private OnItemThreadClickListener itemClickListener;
+    private OnItemChatThreadClickListener itemClickListener;
     private OnTitleBarFinishInflateListener inflateListener;
 
     @Nullable
@@ -74,7 +74,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
 
     public void initView() {
         if(presenter == null) {
-            presenter = new EaseThreadListPresenterImpl();
+            presenter = new EaseChatThreadListPresenterImpl();
         }
         if(mContext instanceof AppCompatActivity) {
             ((AppCompatActivity) mContext).getLifecycle().addObserver(presenter);
@@ -118,7 +118,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
     public void setListView() {
         binding.rvList.enableRefresh(false);
         binding.rvList.setLayoutManager(new LinearLayoutManager(mContext));
-        mAdapter = new EaseThreadListAdapter();
+        mAdapter = new EaseChatThreadListAdapter();
         binding.rvList.setAdapter(mAdapter);
     }
 
@@ -130,8 +130,8 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
                     ChatThread item = mAdapter.getItem(position);
                     Map<String, ChatMessage> messageMap = mAdapter.getLatestMessages();
                     String messageId = null;
-                    if(messageMap != null && messageMap.containsKey(item.getThreadId())) {
-                        messageId = messageMap.get(item.getThreadId()).getMsgId();
+                    if(messageMap != null && messageMap.containsKey(item.getChatThreadId())) {
+                        messageId = messageMap.get(item.getChatThreadId()).getMsgId();
                     }
                     itemClickListener.onItemClick(view, item, messageId);
                 }
@@ -140,13 +140,13 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
         binding.srlRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                EaseThreadListFragment.this.onRefresh();
+                EaseChatThreadListFragment.this.onRefresh();
             }
         });
         binding.rvList.setOnLoadMoreListener(new EaseDragRecyclerView.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                EaseThreadListFragment.this.onLoadMore();
+                EaseChatThreadListFragment.this.onLoadMore();
             }
         });
     }
@@ -188,7 +188,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
         this.backPressListener = backPressListener;
     }
 
-    private void setCustomPresenter(EaseThreadListPresenter presenter) {
+    private void setCustomPresenter(EaseChatThreadListPresenter presenter) {
         this.presenter = presenter;
     }
 
@@ -212,7 +212,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
         this.resultListener = listener;
     }
 
-    private void setOnItemClickListener(OnItemThreadClickListener itemClickListener) {
+    private void setOnItemClickListener(OnItemChatThreadClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
 
@@ -378,10 +378,10 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
     public static class Builder {
         private final Bundle bundle;
         private EaseTitleBar.OnBackPressListener backPressListener;
-        private EaseThreadListFragment customFragment;
-        private EaseThreadListPresenter presenter;
+        private EaseChatThreadListFragment customFragment;
+        private EaseChatThreadListPresenter presenter;
         private OnLoadResultListener resultListener;
-        private OnItemThreadClickListener itemClickListener;
+        private OnItemChatThreadClickListener itemClickListener;
         private OnTitleBarFinishInflateListener inflateListener;
 
         public Builder(String parentId) {
@@ -464,7 +464,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
          * @param listener
          * @return
          */
-        public Builder setOnItemClickListener(OnItemThreadClickListener listener) {
+        public Builder setOnItemClickListener(OnItemChatThreadClickListener listener) {
             this.itemClickListener = listener;
             return this;
         }
@@ -485,7 +485,7 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
          * @param <T>
          * @return
          */
-        public <T extends EaseThreadListPresenter> Builder setCustomPresenter(T presenter) {
+        public <T extends EaseChatThreadListPresenter> Builder setCustomPresenter(T presenter) {
             this.presenter = presenter;
             return this;
         }
@@ -496,13 +496,13 @@ public class EaseThreadListFragment extends EaseBaseFragment implements IThreadL
          * @param <T>
          * @return
          */
-        public <T extends EaseThreadListFragment> Builder setCustomFragment(T fragment) {
+        public <T extends EaseChatThreadListFragment> Builder setCustomFragment(T fragment) {
             this.customFragment = fragment;
             return this;
         }
 
-        public EaseThreadListFragment build() {
-            EaseThreadListFragment fragment = this.customFragment != null ? this.customFragment : new EaseThreadListFragment();
+        public EaseChatThreadListFragment build() {
+            EaseChatThreadListFragment fragment = this.customFragment != null ? this.customFragment : new EaseChatThreadListFragment();
             fragment.setArguments(this.bundle);
             fragment.setHeaderBackPressListener(this.backPressListener);
             fragment.setOnLoadResultListener(this.resultListener);

@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.thread.presenter;
+package io.agora.chat.uikit.chatthread.presenter;
 
 import android.text.TextUtils;
 
@@ -8,11 +8,11 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatThread;
 import io.agora.chat.Group;
 
-public class EaseThreadChatPresenterImpl extends EaseThreadChatPresenter {
+public class EaseChatThreadPresenterImpl extends EaseChatThreadPresenter {
 
     @Override
     public void getThreadInfo(String threadId) {
-        ChatClient.getInstance().threadManager().getThreadFromServer(threadId, new ValueCallBack<ChatThread>() {
+        ChatClient.getInstance().chatThreadManager().getChatThreadFromServer(threadId, new ValueCallBack<ChatThread>() {
             @Override
             public void onSuccess(ChatThread value) {
                 if(isActive()) {
@@ -31,7 +31,7 @@ public class EaseThreadChatPresenterImpl extends EaseThreadChatPresenter {
 
     @Override
     public void joinThread(String threadId) {
-        ChatClient.getInstance().threadManager().joinThread(threadId, new CallBack() {
+        ChatClient.getInstance().chatThreadManager().joinChatThread(threadId, new CallBack() {
             @Override
             public void onSuccess() {
                 if(isDestroy()) {

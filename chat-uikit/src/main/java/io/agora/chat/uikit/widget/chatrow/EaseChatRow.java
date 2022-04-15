@@ -24,7 +24,7 @@ import java.util.Date;
 import io.agora.CallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
-import io.agora.chat.ThreadInfo;
+import io.agora.chat.ChatThreadInfo;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.activities.EaseThreadChatActivity;
@@ -584,21 +584,21 @@ public abstract class EaseChatRow extends LinearLayout {
         }
         if(threadRegion != null) {
             threadRegion.setOnClickListener(v -> {
-                ThreadInfo info = message.getThreadOverview();
-                if(info != null && !TextUtils.isEmpty(info.getThreadId())) {
-                    if (itemClickListener != null && itemClickListener.onThreadClick(message.getMsgId(), info.getThreadId())){
+                ChatThreadInfo info = message.getThreadOverview();
+                if(info != null && !TextUtils.isEmpty(info.getChatThreadId())) {
+                    if (itemClickListener != null && itemClickListener.onThreadClick(message.getMsgId(), info.getChatThreadId())){
                         return;
                     }
-                    EaseThreadChatActivity.actionStart(context, message.getMsgId(), info.getThreadId());
+                    EaseThreadChatActivity.actionStart(context, message.getMsgId(), info.getChatThreadId());
                 }else {
                     EMLog.e(TAG, "message's thread info is null");
                 }
             });
             threadRegion.setOnLongClickListener(v -> {
-                ThreadInfo info = message.getThreadOverview();
-                if(info != null && !TextUtils.isEmpty(info.getThreadId())) {
+                ChatThreadInfo info = message.getThreadOverview();
+                if(info != null && !TextUtils.isEmpty(info.getChatThreadId())) {
                     if (itemClickListener != null) {
-                        return itemClickListener.onThreadLongClick(v, message.getMsgId(), info.getThreadId());
+                        return itemClickListener.onThreadLongClick(v, message.getMsgId(), info.getChatThreadId());
                     }
                 }else {
                     EMLog.e(TAG, "message's thread info is null");

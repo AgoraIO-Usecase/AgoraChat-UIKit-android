@@ -1,6 +1,5 @@
 package io.agora.chat.uikit.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,8 +14,8 @@ import io.agora.chat.uikit.base.EaseBaseActivity;
 import io.agora.chat.uikit.databinding.EaseActivityThreadListBinding;
 import io.agora.chat.uikit.interfaces.OnTitleBarFinishInflateListener;
 import io.agora.chat.uikit.provider.EaseActivityProvider;
-import io.agora.chat.uikit.thread.interfaces.OnItemThreadClickListener;
-import io.agora.chat.uikit.thread.EaseThreadListFragment;
+import io.agora.chat.uikit.chatthread.interfaces.OnItemChatThreadClickListener;
+import io.agora.chat.uikit.chatthread.EaseChatThreadListFragment;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 
 public class EaseThreadListActivity extends EaseBaseActivity {
@@ -49,7 +48,7 @@ public class EaseThreadListActivity extends EaseBaseActivity {
     public void initView() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("thread_list");
         if(fragment == null) {
-            fragment = new EaseThreadListFragment.Builder(parentId)
+            fragment = new EaseChatThreadListFragment.Builder(parentId)
                     .useHeader(true)
                     .enableHeaderPressBack(true)
                     .setHeaderBackPressListener(new EaseTitleBar.OnBackPressListener() {
@@ -58,7 +57,7 @@ public class EaseThreadListActivity extends EaseBaseActivity {
                             onBackPressed();
                         }
                     })
-                    .setLoadResultListener(new EaseThreadListFragment.OnLoadResultListener() {
+                    .setLoadResultListener(new EaseChatThreadListFragment.OnLoadResultListener() {
                         @Override
                         public void onLoadFinish() {
 
@@ -69,7 +68,7 @@ public class EaseThreadListActivity extends EaseBaseActivity {
 
                         }
                     })
-                    .setOnItemClickListener(new OnItemThreadClickListener() {
+                    .setOnItemClickListener(new OnItemChatThreadClickListener() {
                         @Override
                         public void onItemClick(View view, ChatThread thread, String messageId) {
                             EaseActivityProvider provider = EaseUIKit.getInstance().getActivitiesProvider();
@@ -78,12 +77,12 @@ public class EaseThreadListActivity extends EaseBaseActivity {
                                 if(activity != null) {
                                     Intent intent = new Intent(EaseThreadListActivity.this, activity);
                                     intent.putExtra("parentMsgId", messageId);
-                                    intent.putExtra("conversationId", thread.getThreadId());
+                                    intent.putExtra("conversationId", thread.getChatThreadId());
                                     EaseThreadListActivity.this.startActivity(intent);
                                     return;
                                 }
                             }
-                            EaseThreadChatActivity.actionStart(EaseThreadListActivity.this, messageId, thread.getThreadId());
+                            EaseThreadChatActivity.actionStart(EaseThreadListActivity.this, messageId, thread.getChatThreadId());
                         }
                     })
                     .setOnTitleBarFinishInflateListener(new OnTitleBarFinishInflateListener() {

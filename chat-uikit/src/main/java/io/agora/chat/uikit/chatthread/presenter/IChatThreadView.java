@@ -1,10 +1,10 @@
-package io.agora.chat.uikit.thread.presenter;
+package io.agora.chat.uikit.chatthread.presenter;
 
 import io.agora.chat.ChatThread;
 import io.agora.chat.Group;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
 
-public interface IThreadChatView extends ILoadDataView {
+public interface IChatThreadView extends ILoadDataView {
 
     /**
      * Get thread info success

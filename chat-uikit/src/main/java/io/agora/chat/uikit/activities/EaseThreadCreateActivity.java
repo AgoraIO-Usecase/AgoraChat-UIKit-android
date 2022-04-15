@@ -12,8 +12,8 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseActivity;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.databinding.EaseActivityThreadCreateBinding;
-import io.agora.chat.uikit.thread.EaseThreadCreateFragment;
-import io.agora.chat.uikit.thread.interfaces.EaseThreadParentMsgViewProvider;
+import io.agora.chat.uikit.chatthread.EaseChatThreadCreateFragment;
+import io.agora.chat.uikit.chatthread.interfaces.EaseChatThreadParentMsgViewProvider;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 
 public class EaseThreadCreateActivity extends EaseBaseActivity {
@@ -56,7 +56,7 @@ public class EaseThreadCreateActivity extends EaseBaseActivity {
     public void initData() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("create_thread");
         if(fragment == null) {
-            EaseThreadCreateFragment.Builder builder = new EaseThreadCreateFragment.Builder(parentId, messageId)
+            EaseChatThreadCreateFragment.Builder builder = new EaseChatThreadCreateFragment.Builder(parentId, messageId)
                     .useHeader(true)
                     .setHeaderBackPressListener(new EaseTitleBar.OnBackPressListener() {
                         @Override
@@ -64,7 +64,7 @@ public class EaseThreadCreateActivity extends EaseBaseActivity {
                             onBackPressed();
                         }
                     })
-                    .setThreadParentMsgViewProvider(new EaseThreadParentMsgViewProvider() {
+                    .setThreadParentMsgViewProvider(new EaseChatThreadParentMsgViewProvider() {
                         @Override
                         public View parentMsgView(ChatMessage message) {
                             // Add your parent view
@@ -83,7 +83,7 @@ public class EaseThreadCreateActivity extends EaseBaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment, fragment, "create_thread").commit();
     }
 
-    public void setChildFragmentBuilder(EaseThreadCreateFragment.Builder builder) {
+    public void setChildFragmentBuilder(EaseChatThreadCreateFragment.Builder builder) {
 
     }
 }

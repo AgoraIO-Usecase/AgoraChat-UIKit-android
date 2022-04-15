@@ -1,6 +1,6 @@
-package io.agora.chat.uikit.thread.interfaces;
+package io.agora.chat.uikit.chatthread.interfaces;
 
-public interface OnThreadCreatedResultListener {
+public interface OnChatThreadCreatedResultListener {
 
     /**
      * Thread created successfully

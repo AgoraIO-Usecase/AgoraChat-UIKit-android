@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.thread.widget;
+package io.agora.chat.uikit.chatthread.widget;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,11 +7,9 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,11 +19,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Date;
 
-import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ImageMessageBody;
 import io.agora.chat.NormalFileMessageBody;
-import io.agora.chat.TextMessageBody;
 import io.agora.chat.VideoMessageBody;
 import io.agora.chat.VoiceMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
@@ -46,28 +42,27 @@ import io.agora.chat.uikit.utils.EaseSmileUtils;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.utils.EaseVoiceLengthUtils;
-import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoice;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoicePlayer;
 import io.agora.util.EMLog;
 import io.agora.util.TextFormater;
 
-public class EaseThreadParentMsgView extends ConstraintLayout {
-    private static final String TAG = EaseThreadParentMsgView.class.getSimpleName();
+public class EaseChatThreadParentMsgView extends ConstraintLayout {
+    private static final String TAG = EaseChatThreadParentMsgView.class.getSimpleName();
     private EaseLayoutChatThreadParentMsgBinding binding;
     private OnMessageItemClickListener itemClickListener;
     private ChatMessage message;
     private EaseChatRowVoicePlayer voicePlayer;
     private AnimationDrawable voiceAnimation;
 
-    public EaseThreadParentMsgView(@NonNull Context context) {
+    public EaseChatThreadParentMsgView(@NonNull Context context) {
         this(context, null);
     }
 
-    public EaseThreadParentMsgView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public EaseChatThreadParentMsgView(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public EaseThreadParentMsgView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public EaseChatThreadParentMsgView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }

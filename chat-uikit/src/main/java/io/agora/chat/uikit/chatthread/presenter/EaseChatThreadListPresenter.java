@@ -1,16 +1,16 @@
-package io.agora.chat.uikit.thread.presenter;
+package io.agora.chat.uikit.chatthread.presenter;
 
 import java.util.List;
 
 import io.agora.chat.uikit.base.EaseBasePresenter;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
 
-public abstract class EaseThreadListPresenter extends EaseBasePresenter {
-    protected IThreadListView mView;
+public abstract class EaseChatThreadListPresenter extends EaseBasePresenter {
+    protected IChatThreadListView mView;
 
     @Override
     public void attachView(ILoadDataView view) {
-        mView = (IThreadListView) view;
+        mView = (IChatThreadListView) view;
     }
 
     @Override

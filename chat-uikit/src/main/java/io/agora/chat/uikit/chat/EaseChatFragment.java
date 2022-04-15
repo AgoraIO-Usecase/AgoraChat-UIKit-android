@@ -23,10 +23,11 @@ import androidx.core.content.ContextCompat;
 import java.io.File;
 import java.util.List;
 
+import io.agora.ChatThreadChangeListener;
 import io.agora.MultiDeviceListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
-import io.agora.chat.ThreadEvent;
+import io.agora.chat.ChatThreadEvent;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
@@ -56,7 +57,7 @@ import io.agora.util.EMLog;
 import io.agora.util.PathUtil;
 import io.agora.util.VersionUtils;
 
-public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutListener, OnMenuChangeListener, OnAddMsgAttrsBeforeSendEvent, OnChatRecordTouchListener, MultiDeviceListener {
+public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutListener, OnMenuChangeListener, OnAddMsgAttrsBeforeSendEvent, OnChatRecordTouchListener, MultiDeviceListener, ChatThreadChangeListener {
     protected static final int REQUEST_CODE_MAP = 1;
     protected static final int REQUEST_CODE_CAMERA = 2;
     protected static final int REQUEST_CODE_LOCAL = 3;
@@ -221,6 +222,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         chatLayout.setOnAddMsgAttrsBeforeSendEvent(sendMsgEvent != null ? sendMsgEvent : this);
         chatLayout.setOnChatRecordTouchListener(recordTouchListener != null ? recordTouchListener : this);
         ChatClient.getInstance().addMultiDeviceListener(this);
+        ChatClient.getInstance().chatThreadManager().addChatThreadChangeListener(this);
     }
 
     public void initData() {
@@ -263,6 +265,12 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         if(isMessageInit) {
             chatLayout.getChatMessageListLayout().refreshMessages();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ChatClient.getInstance().chatThreadManager().removeChatThreadChangeListener(this);
     }
 
     private void setHeaderBackPressListener(EaseTitleBar.OnBackPressListener listener) {
@@ -557,6 +565,32 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     @Override
     public void onThreadEvent(int event, String target, List<String> usernames) {
+
+    }
+
+    @Override
+    public void onChatThreadCreated(ChatThreadEvent event) {
+        if(isMessageInit) {
+            chatLayout.getChatMessageListLayout().refreshToLatest();
+        }
+    }
+
+    @Override
+    public void onChatThreadUpdated(ChatThreadEvent event) {
+        if(isMessageInit) {
+            chatLayout.getChatMessageListLayout().refreshMessage(event.getMessageId());
+        }
+    }
+
+    @Override
+    public void onChatThreadDestroyed(ChatThreadEvent event) {
+        if(isMessageInit) {
+            chatLayout.getChatMessageListLayout().refreshMessage(event.getMessageId());
+        }
+    }
+
+    @Override
+    public void onChatThreadUserRemoved(ChatThreadEvent event) {
 
     }
 

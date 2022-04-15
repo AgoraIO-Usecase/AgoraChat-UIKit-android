@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.thread.presenter;
+package io.agora.chat.uikit.chatthread.presenter;
 
 import android.net.Uri;
 import android.widget.EditText;
@@ -10,8 +10,8 @@ import io.agora.chat.uikit.chat.presenter.IBaseHandleMessage;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
 
-public abstract class EaseThreadCreatePresenter extends EaseBasePresenter implements IBaseHandleMessage {
-    protected IThreadCreateView mView;
+public abstract class EaseChatThreadCreatePresenter extends EaseBasePresenter implements IBaseHandleMessage {
+    protected IChatThreadCreateView mView;
     protected int chatType = EaseConstant.CHATTYPE_GROUP;
     protected EditText etInput;
     protected String toChatUsername;
@@ -20,7 +20,7 @@ public abstract class EaseThreadCreatePresenter extends EaseBasePresenter implem
 
     @Override
     public void attachView(ILoadDataView view) {
-        mView = (IThreadCreateView) view;
+        mView = (IChatThreadCreateView) view;
     }
 
     @Override

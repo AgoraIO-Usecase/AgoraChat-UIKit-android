@@ -17,12 +17,11 @@ import io.agora.chat.uikit.base.EaseBaseActivity;
 import io.agora.chat.uikit.chat.EaseChatFragment;
 import io.agora.chat.uikit.chat.interfaces.OnChatExtendMenuItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatInputChangeListener;
-import io.agora.chat.uikit.chat.interfaces.OnChatLayoutFinishInflateListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
 import io.agora.chat.uikit.databinding.EaseActivityThreadChatBinding;
-import io.agora.chat.uikit.thread.EaseThreadChatFragment;
-import io.agora.chat.uikit.thread.EaseThreadRole;
-import io.agora.chat.uikit.thread.interfaces.OnThreadRoleResultCallback;
+import io.agora.chat.uikit.chatthread.EaseChatThreadFragment;
+import io.agora.chat.uikit.chatthread.EaseChatThreadRole;
+import io.agora.chat.uikit.chatthread.interfaces.OnChatThreadRoleResultCallback;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 import io.agora.util.EMLog;
 
@@ -32,7 +31,7 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
     protected ChatThread thread;
     protected EaseBaseActivity mContext;
     protected EaseActivityThreadChatBinding binding;
-    protected EaseThreadRole threadRole = EaseThreadRole.UNKNOWN;
+    protected EaseChatThreadRole threadRole = EaseChatThreadRole.UNKNOWN;
 
     public static void actionStart(Context context, String parentMsgId, String conversationId) {
         Intent intent = new Intent(context, EaseThreadChatActivity.class);
@@ -61,8 +60,8 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
     public void initView() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("thread_chat");
         if(fragment == null) {
-            EaseChatFragment.Builder builder = new EaseThreadChatFragment.Builder(parentMsgId, conversationId)
-                    .setOnJoinThreadResultListener(new EaseThreadChatFragment.OnJoinThreadResultListener() {
+            EaseChatFragment.Builder builder = new EaseChatThreadFragment.Builder(parentMsgId, conversationId)
+                    .setOnJoinThreadResultListener(new EaseChatThreadFragment.OnJoinThreadResultListener() {
                         @Override
                         public void joinSuccess(String threadId) {
 
@@ -73,9 +72,9 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
 
                         }
                     })
-                    .setOnThreadRoleResultCallback(new OnThreadRoleResultCallback() {
+                    .setOnThreadRoleResultCallback(new OnChatThreadRoleResultCallback() {
                         @Override
-                        public void onThreadRole(EaseThreadRole role) {
+                        public void onThreadRole(EaseChatThreadRole role) {
                             threadRole = role;
                         }
                     })

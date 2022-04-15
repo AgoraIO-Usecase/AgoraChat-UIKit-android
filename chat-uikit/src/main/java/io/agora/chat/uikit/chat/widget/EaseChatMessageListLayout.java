@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -614,6 +615,20 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         int position = messageAdapter.getData().lastIndexOf(message);
         if(position != -1) {
             runOnUi(()-> messageAdapter.notifyItemChanged(position));
+        }
+    }
+
+    @Override
+    public void refreshMessage(String messageId) {
+        if(TextUtils.isEmpty(messageId)) {
+            return;
+        }
+        ChatMessage message = ChatClient.getInstance().chatManager().getMessage(messageId);
+        if(message != null) {
+            int position = messageAdapter.getData().lastIndexOf(message);
+            if(position != -1) {
+                runOnUi(()-> messageAdapter.notifyItemChanged(position));
+            }
         }
     }
 

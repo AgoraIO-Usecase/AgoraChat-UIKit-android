@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.thread;
+package io.agora.chat.uikit.chatthread;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +27,6 @@ import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.activities.EaseThreadChatActivity;
-import io.agora.chat.uikit.activities.EaseThreadListActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -40,12 +39,12 @@ import io.agora.chat.uikit.interfaces.EaseMessageListener;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.provider.EaseActivityProvider;
-import io.agora.chat.uikit.thread.interfaces.EaseThreadParentMsgViewProvider;
-import io.agora.chat.uikit.thread.interfaces.OnThreadCreatedResultListener;
-import io.agora.chat.uikit.thread.presenter.EaseThreadCreatePresenter;
-import io.agora.chat.uikit.thread.presenter.EaseThreadCreatePresenterImpl;
-import io.agora.chat.uikit.thread.presenter.IThreadCreateView;
-import io.agora.chat.uikit.thread.widget.EaseThreadParentMsgView;
+import io.agora.chat.uikit.chatthread.interfaces.EaseChatThreadParentMsgViewProvider;
+import io.agora.chat.uikit.chatthread.interfaces.OnChatThreadCreatedResultListener;
+import io.agora.chat.uikit.chatthread.presenter.EaseChatThreadCreatePresenter;
+import io.agora.chat.uikit.chatthread.presenter.EaseChatThreadCreatePresenterImpl;
+import io.agora.chat.uikit.chatthread.presenter.IChatThreadCreateView;
+import io.agora.chat.uikit.chatthread.widget.EaseChatThreadParentMsgView;
 import io.agora.chat.uikit.utils.EaseCompat;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
@@ -54,7 +53,7 @@ import io.agora.util.EMLog;
 import io.agora.util.PathUtil;
 import io.agora.util.VersionUtils;
 
-public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatInputMenuListener, IThreadCreateView {
+public class EaseChatThreadCreateFragment extends EaseBaseFragment implements ChatInputMenuListener, IChatThreadCreateView {
     protected static final int REQUEST_CODE_MAP = 1;
     protected static final int REQUEST_CODE_CAMERA = 2;
     protected static final int REQUEST_CODE_LOCAL = 3;
@@ -62,13 +61,13 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
     protected static final int REQUEST_CODE_SELECT_VIDEO = 11;
     protected static final int REQUEST_CODE_SELECT_FILE = 12;
 
-    private static final String TAG = EaseThreadCreateFragment.class.getSimpleName();
+    private static final String TAG = EaseChatThreadCreateFragment.class.getSimpleName();
     private EaseFragmentCreateThreadBinding binding;
     private EaseTitleBar.OnBackPressListener backPressListener;
-    private EaseThreadParentMsgViewProvider parentMsgViewProvider;
+    private EaseChatThreadParentMsgViewProvider parentMsgViewProvider;
     private String messageId;
     private String parentId;
-    private EaseThreadCreatePresenter presenter;
+    private EaseChatThreadCreatePresenter presenter;
 
     private OnChatExtendMenuItemClickListener extendMenuItemClickListener;
     private OnMessageItemClickListener chatItemClickListener;
@@ -78,7 +77,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
     private File cameraFile;
     private boolean sendOriginalImage;
     private ChatThread chatThread;
-    private OnThreadCreatedResultListener resultListener;
+    private OnChatThreadCreatedResultListener resultListener;
 
     @Nullable
     @Override
@@ -106,7 +105,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
 
     public void initView() {
         if(presenter == null) {
-            presenter = new EaseThreadCreatePresenterImpl();
+            presenter = new EaseChatThreadCreatePresenterImpl();
         }
         if(mContext instanceof AppCompatActivity) {
             ((AppCompatActivity) mContext).getLifecycle().addObserver(presenter);
@@ -157,7 +156,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
     }
 
     private void addDefaultParentMsgView() {
-        EaseThreadParentMsgView view = new EaseThreadParentMsgView(mContext);
+        EaseChatThreadParentMsgView view = new EaseChatThreadParentMsgView(mContext);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         view.setLayoutParams(layoutParams);
         binding.threadParentMsg.removeAllViews();
@@ -251,11 +250,11 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
         this.backPressListener = listener;
     }
 
-    private void setParentMsgViewProvider(EaseThreadParentMsgViewProvider provider) {
+    private void setParentMsgViewProvider(EaseChatThreadParentMsgViewProvider provider) {
         this.parentMsgViewProvider = provider;
     }
 
-    private void setPresenter(EaseThreadCreatePresenter presenter) {
+    private void setPresenter(EaseChatThreadCreatePresenter presenter) {
         this.presenter = presenter;
     }
 
@@ -279,7 +278,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
         this.recordTouchListener = recordTouchListener;
     }
 
-    private void setOnThreadCreatedResultListener(OnThreadCreatedResultListener resultListener) {
+    private void setOnThreadCreatedResultListener(OnChatThreadCreatedResultListener resultListener) {
         this.resultListener = resultListener;
     }
 
@@ -453,7 +452,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
             EMLog.i(TAG, "To send the ding-type msg, content: " + msgContent);
             // Send the ding-type msg.
             if(chatThread != null) {
-                String conversationId = chatThread.getThreadId();
+                String conversationId = chatThread.getChatThreadId();
                 ChatMessage dingMsg = EaseDingMessageHelper.get().createDingMessage(conversationId, msgContent);
                 presenter.sendGroupDingMessage(dingMsg);
             }
@@ -482,15 +481,15 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
     public static class Builder {
         private final Bundle bundle;
         private EaseTitleBar.OnBackPressListener backPressListener;
-        private EaseThreadParentMsgViewProvider parentMsgViewProvider;
-        private EaseThreadCreateFragment customFragment;
-        private EaseThreadCreatePresenter presenter;
+        private EaseChatThreadParentMsgViewProvider parentMsgViewProvider;
+        private EaseChatThreadCreateFragment customFragment;
+        private EaseChatThreadCreatePresenter presenter;
         private OnChatExtendMenuItemClickListener extendMenuItemClickListener;
         private OnMessageItemClickListener messageItemClickListener;
         private OnMessageSendCallBack messageSendCallBack;
         private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
         private OnChatRecordTouchListener recordTouchListener;
-        private OnThreadCreatedResultListener resultListener;
+        private OnChatThreadCreatedResultListener resultListener;
 
         public Builder(String parentId, String messageId) {
             this.bundle = new Bundle();
@@ -573,7 +572,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
          * @param provider
          * @return
          */
-        public Builder setThreadParentMsgViewProvider(EaseThreadParentMsgViewProvider provider) {
+        public Builder setThreadParentMsgViewProvider(EaseChatThreadParentMsgViewProvider provider) {
             this.parentMsgViewProvider = provider;
             return this;
         }
@@ -629,7 +628,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
             return this;
         }
 
-        public Builder setOnThreadCreatedResultListener(OnThreadCreatedResultListener listener) {
+        public Builder setOnThreadCreatedResultListener(OnChatThreadCreatedResultListener listener) {
             this.resultListener = listener;
             return this;
         }
@@ -640,7 +639,7 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
          * @param <T>
          * @return
          */
-        public <T extends EaseThreadCreateFragment> Builder setCustomFragment(T fragment) {
+        public <T extends EaseChatThreadCreateFragment> Builder setCustomFragment(T fragment) {
             this.customFragment = fragment;
             return this;
         }
@@ -651,13 +650,13 @@ public class EaseThreadCreateFragment extends EaseBaseFragment implements ChatIn
          * @param <T>
          * @return
          */
-        public <T extends EaseThreadCreatePresenter> Builder setCustomPresenter(EaseThreadCreatePresenter presenter) {
+        public <T extends EaseChatThreadCreatePresenter> Builder setCustomPresenter(EaseChatThreadCreatePresenter presenter) {
             this.presenter = presenter;
             return this;
         }
 
-        public EaseThreadCreateFragment build() {
-            EaseThreadCreateFragment fragment = this.customFragment != null ? this.customFragment : new EaseThreadCreateFragment();
+        public EaseChatThreadCreateFragment build() {
+            EaseChatThreadCreateFragment fragment = this.customFragment != null ? this.customFragment : new EaseChatThreadCreateFragment();
             fragment.setArguments(this.bundle);
             fragment.setHeaderBackPressListener(this.backPressListener);
             fragment.setParentMsgViewProvider(this.parentMsgViewProvider);

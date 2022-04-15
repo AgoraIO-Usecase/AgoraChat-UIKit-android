@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.thread.adapter;
+package io.agora.chat.uikit.chatthread.adapter;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -17,14 +17,14 @@ import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.adapter.EaseBaseRecyclerViewAdapter;
 import io.agora.chat.uikit.models.EaseUser;
-import io.agora.chat.uikit.thread.widget.EaseThreadParentMsgView;
+import io.agora.chat.uikit.chatthread.widget.EaseChatThreadParentMsgView;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 
-public class EaseThreadChatHeaderAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage> {
+public class EaseChatThreadHeaderAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage> {
     private ChatThread thread;
     private String threadName;
 
-    public EaseThreadChatHeaderAdapter() {
+    public EaseChatThreadHeaderAdapter() {
 
     }
 
@@ -47,7 +47,7 @@ public class EaseThreadChatHeaderAdapter extends EaseBaseRecyclerViewAdapter<Cha
     private class HeaderViewHolder extends ViewHolder<ChatMessage> {
         private TextView tvThreadName;
         private TextView tvCreateOwner;
-        private EaseThreadParentMsgView threadParentMsg;
+        private EaseChatThreadParentMsgView threadParentMsg;
 
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,7 +59,7 @@ public class EaseThreadChatHeaderAdapter extends EaseBaseRecyclerViewAdapter<Cha
         @Override
         public void setData(ChatMessage item, int position) {
             if(thread != null) {
-                tvThreadName.setText(thread.getThreadName());
+                tvThreadName.setText(thread.getChatThreadName());
                 if(!TextUtils.isEmpty(thread.getCreator())) {
                     EaseUser userInfo = EaseUserUtils.getUserInfo(thread.getCreator());
                     String nickname = userInfo != null ? userInfo.getNickname() : thread.getCreator();

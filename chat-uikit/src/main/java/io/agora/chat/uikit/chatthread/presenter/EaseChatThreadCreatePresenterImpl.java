@@ -1,8 +1,7 @@
-package io.agora.chat.uikit.thread.presenter;
+package io.agora.chat.uikit.chatthread.presenter;
 
 import android.net.Uri;
 import android.text.TextUtils;
-import android.widget.EditText;
 
 import io.agora.CallBack;
 import io.agora.Error;
@@ -18,8 +17,8 @@ import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.util.EMLog;
 
-public class EaseThreadCreatePresenterImpl extends EaseThreadCreatePresenter{
-    private static final String TAG = EaseThreadCreatePresenterImpl.class.getSimpleName();
+public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePresenter {
+    private static final String TAG = EaseChatThreadCreatePresenterImpl.class.getSimpleName();
 
     @Override
     public void sendTextMessage(String content) {
@@ -126,10 +125,10 @@ public class EaseThreadCreatePresenterImpl extends EaseThreadCreatePresenter{
             mView.onCreateThreadFail(Error.GENERAL_ERROR, "Thread name should not be null");
             return;
         }
-        ChatClient.getInstance().threadManager().createThread(parentId, messageId, threadName, new ValueCallBack<ChatThread>() {
+        ChatClient.getInstance().chatThreadManager().createChatThread(parentId, messageId, threadName, new ValueCallBack<ChatThread>() {
             @Override
             public void onSuccess(ChatThread value) {
-                toChatUsername = value.getThreadId();
+                toChatUsername = value.getChatThreadId();
                 if(isActive()) {
                     runOnUI(()->mView.onCreateThreadSuccess(value, message));
                 }

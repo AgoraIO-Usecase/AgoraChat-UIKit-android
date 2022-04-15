@@ -1,10 +1,10 @@
-package io.agora.chat.uikit.thread.presenter;
+package io.agora.chat.uikit.chatthread.presenter;
 
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
 
-public interface IThreadCreateView extends ILoadDataView {
+public interface IChatThreadCreateView extends ILoadDataView {
 
     /**
      * Failed to send message

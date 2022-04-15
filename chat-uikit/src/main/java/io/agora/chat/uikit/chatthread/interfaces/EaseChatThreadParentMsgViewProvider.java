@@ -1,10 +1,10 @@
-package io.agora.chat.uikit.thread.interfaces;
+package io.agora.chat.uikit.chatthread.interfaces;
 
 import android.view.View;
 
 import io.agora.chat.ChatMessage;
 
-public interface EaseThreadParentMsgViewProvider {
+public interface EaseChatThreadParentMsgViewProvider {
     /**
      * Get thread parent msg view
      * @param message

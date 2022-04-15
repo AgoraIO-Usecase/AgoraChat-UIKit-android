@@ -1,4 +1,4 @@
-package io.agora.chat.uikit.thread.adapter;
+package io.agora.chat.uikit.chatthread.adapter;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -21,7 +21,7 @@ import io.agora.chat.uikit.utils.EaseSmileUtils;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 
-public class EaseThreadListAdapter extends EaseBaseRecyclerViewAdapter<ChatThread> {
+public class EaseChatThreadListAdapter extends EaseBaseRecyclerViewAdapter<ChatThread> {
     private Map<String, ChatMessage> messageMap = new HashMap<>();
     @Override
     public ViewHolder<ChatThread> getViewHolder(ViewGroup parent, int viewType) {
@@ -40,8 +40,8 @@ public class EaseThreadListAdapter extends EaseBaseRecyclerViewAdapter<ChatThrea
 
         @Override
         public void setData(ChatThread item, int position) {
-            String threadId = item.getThreadId();
-            binding.name.setText(item.getThreadName());
+            String threadId = item.getChatThreadId();
+            binding.name.setText(item.getChatThreadName());
             ChatMessage message;
             // Prioritize the use of data obtained from the server
             if(messageMap != null &&

@@ -1,6 +1,6 @@
-package io.agora.chat.uikit.thread;
+package io.agora.chat.uikit.chatthread;
 
-public enum EaseThreadRole {
+public enum EaseChatThreadRole {
     /**
      * thread member
      */
@@ -18,8 +18,8 @@ public enum EaseThreadRole {
      */
     UNKNOWN;
 
-    public static EaseThreadRole getThreadRole(int role) {
-        EaseThreadRole threadRole = UNKNOWN;
+    public static EaseChatThreadRole getThreadRole(int role) {
+        EaseChatThreadRole threadRole = UNKNOWN;
         switch (role) {
             case 0 :
                 threadRole = MEMBER;

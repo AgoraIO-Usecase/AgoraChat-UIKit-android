@@ -34,7 +34,6 @@ import java.util.List;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.Conversation;
 import io.agora.chat.TextMessageBody;
-import io.agora.chat.ThreadInfo;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.constants.EaseConstant;
