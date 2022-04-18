@@ -26,7 +26,7 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.activities.EaseThreadChatActivity;
+import io.agora.chat.uikit.activities.EaseChatThreadActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -309,7 +309,7 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
         if(resultListener == null  || !resultListener.onThreadCreatedSuccess(messageId, message.conversationId())) {
             EaseActivityProvider provider = EaseUIKit.getInstance().getActivitiesProvider();
             if(provider != null) {
-                Class activity = provider.getActivity(EaseThreadChatActivity.class.getSimpleName());
+                Class activity = provider.getActivity(EaseChatThreadActivity.class.getSimpleName());
                 if(activity != null) {
                     Intent intent = new Intent(mContext, activity);
                     intent.putExtra("parentMsgId", messageId);
@@ -319,7 +319,7 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
                     return;
                 }
             }
-            EaseThreadChatActivity.actionStart(mContext, messageId, message.conversationId());
+            EaseChatThreadActivity.actionStart(mContext, messageId, message.conversationId());
         }
         mContext.finish();
     }

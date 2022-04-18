@@ -25,7 +25,7 @@ import io.agora.chat.uikit.chatthread.interfaces.OnChatThreadRoleResultCallback;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 import io.agora.util.EMLog;
 
-public class EaseThreadChatActivity extends EaseBaseActivity {
+public class EaseChatThreadActivity extends EaseBaseActivity {
     protected String parentMsgId;
     protected String conversationId;
     protected ChatThread thread;
@@ -34,7 +34,7 @@ public class EaseThreadChatActivity extends EaseBaseActivity {
     protected EaseChatThreadRole threadRole = EaseChatThreadRole.UNKNOWN;
 
     public static void actionStart(Context context, String parentMsgId, String conversationId) {
-        Intent intent = new Intent(context, EaseThreadChatActivity.class);
+        Intent intent = new Intent(context, EaseChatThreadActivity.class);
         intent.putExtra("parentMsgId", parentMsgId);
         intent.putExtra("conversationId", conversationId);
         context.startActivity(intent);

@@ -16,13 +16,13 @@ import io.agora.chat.uikit.chatthread.EaseChatThreadCreateFragment;
 import io.agora.chat.uikit.chatthread.interfaces.EaseChatThreadParentMsgViewProvider;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 
-public class EaseThreadCreateActivity extends EaseBaseActivity {
+public class EaseChatThreadCreateActivity extends EaseBaseActivity {
     public EaseActivityThreadCreateBinding binding;
     public String parentId;
     public String messageId;
 
     public static void actionStart(Context context, String parentId, String messageId) {
-        Intent intent = new Intent(context, EaseThreadCreateActivity.class);
+        Intent intent = new Intent(context, EaseChatThreadCreateActivity.class);
         intent.putExtra("parentId", parentId);
         intent.putExtra("messageId", messageId);
         context.startActivity(intent);

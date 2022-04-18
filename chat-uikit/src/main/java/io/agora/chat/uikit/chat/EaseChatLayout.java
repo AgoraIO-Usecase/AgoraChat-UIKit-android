@@ -33,7 +33,7 @@ import io.agora.chat.Conversation;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.adapter.EMAChatRoomManagerListener;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.activities.EaseThreadCreateActivity;
+import io.agora.chat.uikit.activities.EaseChatThreadCreateActivity;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.IChatLayout;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -1003,7 +1003,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     private void skipToCreateThread(ChatMessage message) {
-        EaseThreadCreateActivity.actionStart(context(), conversationId, message.getMsgId());
+        EaseChatThreadCreateActivity.actionStart(context(), conversationId, message.getMsgId());
     }
 
     private void setMenuByMsgType(ChatMessage message) {

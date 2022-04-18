@@ -8,12 +8,12 @@
         <activity android:name=".activities.EaseShowLocalVideoActivity" />
         <activity android:name=".activities.EaseShowBigImageActivity" />
         <activity
-            android:name=".activities.EaseThreadChatActivity"
+            android:name=".activities.EaseChatThreadActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity android:name=".activities.EaseThreadCreateActivity"
+        <activity android:name=".activities.EaseChatThreadCreateActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity android:name=".activities.EaseThreadListActivity" />
+        <activity android:name=".activities.EaseChatThreadListActivity" />
     </application>
 </manifest>

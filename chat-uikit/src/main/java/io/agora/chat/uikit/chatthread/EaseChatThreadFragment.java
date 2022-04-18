@@ -105,7 +105,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
     @Override
     public void onThreadEvent(int event, String target, List<String> usernames) {
         super.onThreadEvent(event, target, usernames);
-        if((event == 41 || event == 43) && TextUtils.equals(target, conversationId)) {
+        if((event == THREAD_DESTROY || event == THREAD_LEAVE) && TextUtils.equals(target, conversationId)) {
             mContext.finish();
         }
     }
