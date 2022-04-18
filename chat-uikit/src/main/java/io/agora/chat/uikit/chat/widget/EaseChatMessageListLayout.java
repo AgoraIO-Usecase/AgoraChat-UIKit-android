@@ -39,6 +39,7 @@ import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
 import io.agora.chat.uikit.manager.EaseThreadManager;
 import io.agora.chat.uikit.utils.EaseUtils;
+import io.agora.util.EMLog;
 
 
 public class EaseChatMessageListLayout extends RelativeLayout implements IChatMessageListView, IRecyclerViewHandle
@@ -292,7 +293,8 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
     }
 
-    private void loadMoreThreadMessages() {
+    public void loadMoreThreadMessages() {
+        String msgId = getListLastMessageId();
         presenter.loadMoreServerMessages(msgId, pageSize, Conversation.SearchDirection.DOWN);
     }
 
@@ -573,7 +575,13 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     @Override
     public void loadServerMsgSuccess(List<ChatMessage> data) {
         if(loadDataType == LoadDataType.THREAD) {
+            if(data.size() >= pageSize) {
+                loadMoreStatus = LoadMoreStatus.HAS_MORE;
+            }else {
+                loadMoreStatus = LoadMoreStatus.NO_MORE_DATA;
+            }
             presenter.refreshCurrentConversation();
+
         }else {
             presenter.refreshToLatest();
         }
@@ -583,7 +591,16 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     public void loadMoreServerMsgSuccess(List<ChatMessage> data) {
         finishRefresh();
         presenter.refreshCurrentConversation();
-        post(()-> smoothSeekToPosition(data.size() - 1));
+        if(loadDataType == LoadDataType.THREAD) {
+            if(data.size() >= pageSize) {
+                loadMoreStatus = LoadMoreStatus.HAS_MORE;
+            }else {
+                loadMoreStatus = LoadMoreStatus.NO_MORE_DATA;
+            }
+            //post(()-> smoothSeekToPosition(messageAdapter.getData().size() - data.size()));
+        }else {
+            post(()-> smoothSeekToPosition(data.size() - 1));
+        }
     }
 
     @Override

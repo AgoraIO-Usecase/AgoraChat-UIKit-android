@@ -21,8 +21,9 @@ public interface IChatThreadView extends ILoadDataView {
 
     /**
      * Join thread success or have joined
+     * @param thread
      */
-    void OnJoinThreadSuccess();
+    void OnJoinThreadSuccess(ChatThread thread);
 
     /**
      * Join thread failed

@@ -31,13 +31,13 @@ public class EaseChatThreadPresenterImpl extends EaseChatThreadPresenter {
 
     @Override
     public void joinThread(String threadId) {
-        ChatClient.getInstance().chatThreadManager().joinChatThread(threadId, new CallBack() {
+        ChatClient.getInstance().chatThreadManager().joinChatThread(threadId, new ValueCallBack<ChatThread>() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(ChatThread thread) {
                 if(isDestroy()) {
                     return;
                 }
-                runOnUI(()->mView.OnJoinThreadSuccess());
+                runOnUI(()->mView.OnJoinThreadSuccess(thread));
             }
 
             @Override
@@ -46,11 +46,6 @@ public class EaseChatThreadPresenterImpl extends EaseChatThreadPresenter {
                     return;
                 }
                 runOnUI(()->mView.OnJoinThreadFail(code, error));
-            }
-
-            @Override
-            public void onProgress(int progress, String status) {
-
             }
         });
     }

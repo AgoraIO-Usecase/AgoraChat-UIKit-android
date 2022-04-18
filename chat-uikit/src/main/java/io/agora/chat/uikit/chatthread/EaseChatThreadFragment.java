@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.agora.Error;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
@@ -165,9 +166,6 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
 
     @Override
     public void initData() {
-        if(mThread == null) {
-            mPresenter.getThreadInfo(conversationId);
-        }
         setThreadInfo(mThread);
         headerAdapter.setData(data);
         joinThread();
@@ -211,10 +209,13 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
     }
 
     @Override
-    public void OnJoinThreadSuccess() {
+    public void OnJoinThreadSuccess(ChatThread thread) {
         if(joinThreadResultListener != null) {
             joinThreadResultListener.joinSuccess(conversationId);
         }
+        mThread = thread;
+        setThreadInfo(thread);
+        getThreadRole(mThread);
         if(threadRole != EaseChatThreadRole.GROUP_ADMIN && threadRole != EaseChatThreadRole.CREATOR) {
             threadRole = EaseChatThreadRole.MEMBER;
             if(resultCallback != null) {
@@ -226,8 +227,12 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
 
     @Override
     public void OnJoinThreadFail(int error, String errorMsg) {
-        if(joinThreadResultListener != null) {
-            joinThreadResultListener.joinFailed(error, errorMsg);
+        if(error == Error.USER_ALREADY_EXIST) {
+            mPresenter.getThreadInfo(conversationId);
+        }else {
+            if(joinThreadResultListener != null) {
+                joinThreadResultListener.joinFailed(error, errorMsg);
+            }
         }
     }
 

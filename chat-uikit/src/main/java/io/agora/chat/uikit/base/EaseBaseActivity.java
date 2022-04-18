@@ -14,6 +14,7 @@
 
 package io.agora.chat.uikit.base;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -44,6 +45,7 @@ public class EaseBaseActivity extends AppCompatActivity {
     private long dialogCreateTime;
     // Used for the dialog delay to disappear
     private Handler handler = new Handler();
+    protected Activity mContext;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -58,6 +60,7 @@ public class EaseBaseActivity extends AppCompatActivity {
                 return;
             }
         }
+        mContext = this;
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
@@ -186,7 +189,7 @@ public class EaseBaseActivity extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if(dialog != null && dialog.isShowing()) {
+                        if(mContext != null && !mContext.isFinishing() && dialog != null && dialog.isShowing()) {
                             dialog.dismiss();
                             dialog = null;
                         }

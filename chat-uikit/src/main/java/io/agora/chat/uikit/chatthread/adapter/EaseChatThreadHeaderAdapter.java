@@ -39,6 +39,47 @@ public class EaseChatThreadHeaderAdapter extends EaseBaseRecyclerViewAdapter<Cha
     }
 
     @Override
+    protected ViewHolder<ChatMessage> getEmptyViewHolder(ViewGroup parent) {
+        View emptyView = LayoutInflater.from(mContext).inflate(R.layout.ease_item_thread_chat_header_no_parent_message, parent, false);
+        return new ViewHolder<ChatMessage>(emptyView) {
+            private TextView tvNoMsg;
+            private TextView tvThreadName;
+            private TextView tvCreateOwner;
+
+            @Override
+            public void initView(View itemView) {
+                super.initView(itemView);
+                tvNoMsg = findViewById(R.id.tv_no_msg);
+                tvThreadName = findViewById(R.id.tv_thread_name);
+                tvCreateOwner = findViewById(R.id.tv_create_owner);
+            }
+
+            @Override
+            public void setEmptyData() {
+                if(thread != null) {
+                    tvThreadName.setText(thread.getChatThreadName());
+                    if(!TextUtils.isEmpty(thread.getCreator())) {
+                        EaseUser userInfo = EaseUserUtils.getUserInfo(thread.getCreator());
+                        String nickname = userInfo != null ? userInfo.getNickname() : thread.getCreator();
+                        String content = mContext.getString(R.string.ease_thread_started_by_user, nickname);
+                        SpannableStringBuilder builder = new SpannableStringBuilder(content);
+                        builder.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.black)),
+                                content.length() - nickname.length(),
+                                content.length(),
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tvCreateOwner.setText(builder);
+                    }
+                }
+            }
+
+            @Override
+            public void setData(ChatMessage item, int position) {
+
+            }
+        };
+    }
+
+    @Override
     public ViewHolder<ChatMessage> getViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ease_item_thread_chat_header, parent, false);
         return new HeaderViewHolder(view);

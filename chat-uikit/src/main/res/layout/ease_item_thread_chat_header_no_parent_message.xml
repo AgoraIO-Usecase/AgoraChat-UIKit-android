@@ -48,15 +48,25 @@
         android:textSize="14sp"
         android:textColor="@color/ease_chat_parent_region_owner_color"/>
 
-    <io.agora.chat.uikit.chatthread.widget.EaseChatThreadParentMsgView
-        android:id="@+id/thread_parent_msg"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/tv_no_msg"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:layout_marginTop="15dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@id/iv_thread_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_create_owner"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_bias="0"
+        android:visibility="visible"
+        android:layout_marginEnd="8dp"
+        android:paddingBottom="15dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="@dimen/ease_no_parent_message_text_size"
+        android:text="@string/ease_no_parent_message"
+        android:textStyle="italic"
+        android:textColor="@color/ease_chat_thread_region_no_message_color"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

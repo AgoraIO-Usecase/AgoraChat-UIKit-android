@@ -175,7 +175,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                 new ValueCallBack<CursorResult<ChatMessage>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
-                        conversation.loadMoreMsgFromDB(msgId, pageSize);
+                        conversation.loadMoreMsgFromDB(msgId, pageSize, direction);
                         runOnUI(() -> {
                             if(isActive()) {
                                 mView.loadMoreServerMsgSuccess(value.getData());
