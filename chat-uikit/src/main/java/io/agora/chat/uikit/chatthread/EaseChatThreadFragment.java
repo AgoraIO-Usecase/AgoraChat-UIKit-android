@@ -17,8 +17,10 @@ import io.agora.chat.ChatThreadEvent;
 import io.agora.chat.Group;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.EaseChatFragment;
+import io.agora.chat.uikit.chatthread.interfaces.EaseChatThreadParentMsgViewProvider;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.EaseMessageListener;
+import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 import io.agora.chat.uikit.chatthread.adapter.EaseChatThreadHeaderAdapter;
 import io.agora.chat.uikit.chatthread.interfaces.OnChatThreadRoleResultCallback;
@@ -38,6 +40,8 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
     private OnJoinThreadResultListener joinThreadResultListener;
     private OnChatThreadRoleResultCallback resultCallback;
     private MessageListener messageListener;
+    private boolean hideHeader;
+    private EaseChatThreadParentMsgViewProvider parentMsgViewProvider;
 
     @Override
     public void initView() {
@@ -53,6 +57,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         Bundle bundle = getArguments();
         if(bundle != null) {
             parentMsgId = bundle.getString(Constant.KEY_PARENT_MESSAGE_ID);
+            hideHeader = bundle.getBoolean(Constant.KEY_HIDE_HEADER, false);
         }
         if(mThread == null && parentMsgId != null) {
             ChatMessage message = ChatClient.getInstance().chatManager().getMessage(parentMsgId);
@@ -67,12 +72,16 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
     }
 
     private void setThreadMenu() {
-        chatLayout.findItemVisible(R.id.action_chat_delete, false);
-        chatLayout.addItemMenu(0, R.id.action_chat_unsent, 100, getString(R.string.ease_action_unsent));
+        MenuItemBean unsentMenu = new MenuItemBean(0, R.id.action_chat_unsent, 100, getString(R.string.ease_action_unsent));
+        unsentMenu.setResourceId(R.drawable.ease_chat_item_menu_delete);
+        chatLayout.addItemMenu(unsentMenu);
     }
 
     private void addHeaderViewToList() {
-        headerAdapter = new EaseChatThreadHeaderAdapter();
+        if(hideHeader) {
+            return;
+        }
+        headerAdapter = new EaseChatThreadHeaderAdapter(parentMsgViewProvider);
         chatLayout.getChatMessageListLayout().addHeaderAdapter(headerAdapter);
     }
 
@@ -83,7 +92,19 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         if(titleBar != null) {
             titleBar.setTitle(thread.getChatThreadName());
         }
-        headerAdapter.setThreadInfo(thread);
+        if(headerAdapter != null) {
+            headerAdapter.setThreadInfo(thread);
+        }
+    }
+
+    @Override
+    public void onPreMenu(EasePopupWindowHelper helper, ChatMessage message) {
+        super.onPreMenu(helper, message);
+        // Chat Thread is load from server, not need to delete from local
+        helper.findItemVisible(R.id.action_chat_delete, false);
+        if(!message.isThread() || message.direct() == ChatMessage.Direct.RECEIVE) {
+            helper.findItemVisible(R.id.action_chat_unsent, false);
+        }
     }
 
     @Override
@@ -140,7 +161,9 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         if(TextUtils.equals(event.getChatThreadId(), conversationId)) {
             runOnUiThread(()->{
                 chatLayout.getChatMessageListLayout().refreshMessages();
-                headerAdapter.updateThreadName(event.getChatThreadName());
+                if(headerAdapter != null) {
+                    headerAdapter.updateThreadName(event.getChatThreadName());
+                }
                 if(mContext != null && !mContext.isFinishing() && titleBar != null) {
                     titleBar.setTitle(event.getChatThreadName());
                 }
@@ -167,7 +190,9 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
     @Override
     public void initData() {
         setThreadInfo(mThread);
-        headerAdapter.setData(data);
+        if(headerAdapter != null) {
+            headerAdapter.setData(data);
+        }
         joinThread();
         setGroupInfo();
     }
@@ -229,6 +254,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
     public void OnJoinThreadFail(int error, String errorMsg) {
         if(error == Error.USER_ALREADY_EXIST) {
             mPresenter.getThreadInfo(conversationId);
+            runOnUiThread(super::initData);
         }else {
             if(joinThreadResultListener != null) {
                 joinThreadResultListener.joinFailed(error, errorMsg);
@@ -250,6 +276,10 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
     @Override
     public void onGetGroupInfoFail(int error, String errorMsg) {
 
+    }
+
+    private void setParentMsgViewProvider(EaseChatThreadParentMsgViewProvider parentMsgViewProvider) {
+        this.parentMsgViewProvider = parentMsgViewProvider;
     }
 
     private void setThreadPresenter(EaseChatThreadPresenter presenter) {
@@ -312,10 +342,11 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         private EaseChatThreadPresenter presenter;
         private OnJoinThreadResultListener listener;
         private OnChatThreadRoleResultCallback resultCallback;
+        private EaseChatThreadParentMsgViewProvider parentMsgViewProvider;
 
         /**
          * Constructor
-         * @param parentMsgId    Usually is the group ID
+         * @param parentMsgId    Usually is the group message ID
          * @param conversationId Agora Chat ID
          */
         public Builder(String parentMsgId, String conversationId) {
@@ -334,6 +365,26 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
             super(conversationId, EaseConstant.CHATTYPE_GROUP, historyMsgId);
             this.bundle.putString(Constant.KEY_PARENT_MESSAGE_ID, parentMsgId);
             this.bundle.putBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, true);
+        }
+
+        /**
+         * Set header adapter hidden.
+         * @param hideHeader
+         * @return
+         */
+        public Builder hideHeader(boolean hideHeader) {
+            this.bundle.putBoolean(Constant.KEY_HIDE_HEADER, hideHeader);
+            return this;
+        }
+
+        /**
+         * Set thread parent message view provider
+         * @param provider
+         * @return
+         */
+        public Builder setThreadParentMsgViewProvider(EaseChatThreadParentMsgViewProvider provider) {
+            this.parentMsgViewProvider = provider;
+            return this;
         }
 
         /**
@@ -373,6 +424,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
             }
             setThreadMessage(true);
             if(this.customFragment instanceof EaseChatThreadFragment) {
+                ((EaseChatThreadFragment)this.customFragment).setParentMsgViewProvider(this.parentMsgViewProvider);
                 ((EaseChatThreadFragment)this.customFragment).setThreadPresenter(this.presenter);
                 ((EaseChatThreadFragment)this.customFragment).setOnJoinThreadResultListener(this.listener);
                 ((EaseChatThreadFragment)this.customFragment).setOnThreadRoleResultCallback(this.resultCallback);
@@ -385,6 +437,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
     private static final class Constant {
         public static final String KEY_PARENT_MESSAGE_ID = "key_parent_message_id";
         public static final String KEY_THREAD_MESSAGE_FLAG = "key_thread_message_flag";
+        public static final String KEY_HIDE_HEADER = "key_hide_header";
     }
 
 }

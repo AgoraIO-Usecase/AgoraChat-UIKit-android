@@ -384,6 +384,10 @@ public class EaseChatThreadListFragment extends EaseBaseFragment implements ICha
         private OnItemChatThreadClickListener itemClickListener;
         private OnTitleBarFinishInflateListener inflateListener;
 
+        /**
+         * Constructor
+         * @param parentId Usually is group id.
+         */
         public Builder(String parentId) {
             this.bundle = new Bundle();
             bundle.putString(Constant.KEY_PARENT_ID, parentId);

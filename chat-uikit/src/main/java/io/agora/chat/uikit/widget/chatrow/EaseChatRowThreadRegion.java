@@ -25,6 +25,7 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 import io.agora.chat.uikit.utils.EaseDateUtils;
+import io.agora.chat.uikit.utils.EaseSmileUtils;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseImageView;
@@ -159,20 +160,18 @@ public class EaseChatRowThreadRegion extends FrameLayout implements View.OnClick
         group_msg.setVisibility(VISIBLE);
         tv_no_msg.setVisibility(GONE);
         String nickname = msgOverview.getFrom();
-        String msgContent = "";
         EaseUserProfileProvider userProvider = EaseUIKit.getInstance().getUserProvider();
         if(userProvider != null && !TextUtils.isEmpty(nickname)) {
             EaseUserUtils.setUserAvatar(getContext(), msgOverview.getFrom(), null, null, ivUserIcon);
-
             EaseUser user = userProvider.getUser(msgOverview.getFrom());
             if(user != null) {
                 nickname = user.getNickname();
-                msgContent = EaseUtils.getMessageDigest(msgOverview, getContext());
             }
         }
 
         tvMsgUser.setText(nickname);
-        tvMsgContent.setText(msgContent);
+        Spannable span = EaseSmileUtils.getSmiledText(getContext(), EaseUtils.getMessageDigest(msgOverview, getContext()));
+        tvMsgContent.setText(span, TextView.BufferType.SPANNABLE);
 
         tvMsgTime.setText(EaseDateUtils.getTimestampSimpleString(getContext(), msgOverview.getMsgTime()));
     }

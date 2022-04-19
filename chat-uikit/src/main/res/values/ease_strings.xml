@@ -32,8 +32,8 @@
     <string name="ease_chat_were_mentioned">[@Mentioning me]</string>
     <string name="ease_chat_were_not_send_msg">[Draft]</string>
 
-    <string name="ease_msg_recall_by_self">You recalled a message</string>
-    <string name="ease_msg_recall_by_user">%1$s recalled a message</string>
+    <string name="ease_msg_recall_by_self">You unsent a message</string>
+    <string name="ease_msg_recall_by_user">%1$s unsent a message</string>
 
     <string name="ease_not_download">Not download:</string>
     <string name="ease_text_ack_msg">Read</string>

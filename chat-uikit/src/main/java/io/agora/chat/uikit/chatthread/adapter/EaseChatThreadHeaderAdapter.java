@@ -7,6 +7,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.adapter.EaseBaseRecyclerViewAdapter;
+import io.agora.chat.uikit.chatthread.interfaces.EaseChatThreadParentMsgViewProvider;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.chatthread.widget.EaseChatThreadParentMsgView;
 import io.agora.chat.uikit.utils.EaseUserUtils;
@@ -23,9 +25,10 @@ import io.agora.chat.uikit.utils.EaseUserUtils;
 public class EaseChatThreadHeaderAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage> {
     private ChatThread thread;
     private String threadName;
+    private EaseChatThreadParentMsgViewProvider parentMsgViewProvider;
 
-    public EaseChatThreadHeaderAdapter() {
-
+    public EaseChatThreadHeaderAdapter(EaseChatThreadParentMsgViewProvider parentMsgViewProvider) {
+        this.parentMsgViewProvider = parentMsgViewProvider;
     }
 
     public void setThreadInfo(ChatThread thread) {
@@ -88,7 +91,7 @@ public class EaseChatThreadHeaderAdapter extends EaseBaseRecyclerViewAdapter<Cha
     private class HeaderViewHolder extends ViewHolder<ChatMessage> {
         private TextView tvThreadName;
         private TextView tvCreateOwner;
-        private EaseChatThreadParentMsgView threadParentMsg;
+        private FrameLayout threadParentMsg;
 
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -116,7 +119,20 @@ public class EaseChatThreadHeaderAdapter extends EaseBaseRecyclerViewAdapter<Cha
             if(!TextUtils.isEmpty(threadName)) {
                 tvThreadName.setText(threadName);
             }
-            threadParentMsg.setMessage(item);
+            if(parentMsgViewProvider != null && parentMsgViewProvider.parentMsgView(item) != null) {
+                View view = parentMsgViewProvider.parentMsgView(item);
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                view.setLayoutParams(layoutParams);
+                threadParentMsg.removeAllViews();
+                threadParentMsg.addView(view);
+            }else {
+                EaseChatThreadParentMsgView view = new EaseChatThreadParentMsgView(mContext);
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                view.setLayoutParams(layoutParams);
+                threadParentMsg.removeAllViews();
+                threadParentMsg.addView(view);
+                view.setMessage(item);
+            }
         }
     }
 }

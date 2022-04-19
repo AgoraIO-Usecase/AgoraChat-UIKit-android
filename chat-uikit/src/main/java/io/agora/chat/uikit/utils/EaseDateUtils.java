@@ -9,12 +9,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import io.agora.util.TimeInfo;
 
 public class EaseDateUtils {
 
 	private static final long INTERVAL_IN_MILLISECONDS = 30 * 1000;
+	private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
 	public static String getTimestampString(Context context, Date messageDate) {
 	    String format = null;
@@ -283,7 +285,6 @@ public class EaseDateUtils {
 	}
 
 	public static String getTimestampSimpleString(Context context, long msgTimestamp) {
-		String format = null;
 		String language = Locale.getDefault().getLanguage();
 		boolean isZh = language.startsWith("zh");
 		StringBuilder builder = new StringBuilder();
@@ -343,19 +344,19 @@ public class EaseDateUtils {
 	}
 
 	private static boolean isWithinOneMinute(long msgTimestamp) {
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(UTC);
 		long current = calendar.getTime().getTime();
 		return current > msgTimestamp && current - msgTimestamp < 60 * 1000;
 	}
 
 	private static boolean isWithinOneHour(long msgTimestamp) {
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(UTC);
 		long current = calendar.getTime().getTime();
 		return current > msgTimestamp && current - msgTimestamp < 60 * 60 * 1000;
 	}
 
 	private static boolean isWithin24Hour(long msgTimestamp) {
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(UTC);
 		long current = calendar.getTime().getTime();
 		return current > msgTimestamp && current - msgTimestamp < 24 * 60 * 60 * 1000;
 	}
@@ -381,7 +382,7 @@ public class EaseDateUtils {
 		if(!isWithinOneHour(msgTimestamp)) {
 		    return -1;
 		}
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(UTC);
 		return (int) (Math.ceil((calendar.getTime().getTime() - msgTimestamp)*1.0f/(60 * 1000)));
 	}
 
@@ -394,7 +395,7 @@ public class EaseDateUtils {
 		if(!isWithin24Hour(msgTimestamp)) {
 		    return -1;
 		}
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(UTC);
 		return (int) (Math.ceil((calendar.getTime().getTime() - msgTimestamp)*1.0f/(60 * 60 * 1000)));
 	}
 
@@ -404,7 +405,7 @@ public class EaseDateUtils {
 	 * @return
 	 */
 	private static int getDayDifWithinSameWeek(long msgTimestamp) {
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(UTC);
 		int curYear = calendar.get(Calendar.YEAR);
 		int curWeek = calendar.get(Calendar.WEEK_OF_YEAR);
 		int curDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -425,7 +426,7 @@ public class EaseDateUtils {
 	 * @return
 	 */
 	private static int getWeekDifWithinSameMonth(long msgTimestamp) {
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(UTC);
 		int curYear = calendar.get(Calendar.YEAR);
 		int curMonth = calendar.get(Calendar.MONTH);
 		int curWeekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
@@ -447,7 +448,7 @@ public class EaseDateUtils {
 	 * @return
 	 */
 	private static int getMonthDifWithinSameYear(long msgTimestamp) {
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(UTC);
 		int curYear = calendar.get(Calendar.YEAR);
 		int curMonth = calendar.get(Calendar.MONTH);
 
@@ -462,7 +463,7 @@ public class EaseDateUtils {
 	}
 
 	private static int getYearDif(long msgTimestamp) {
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = Calendar.getInstance(UTC);
 		int curYear = calendar.get(Calendar.YEAR);
 
 		calendar.setTime(new Date(msgTimestamp));

@@ -25,34 +25,36 @@ public abstract class EaseChatThreadListPresenter extends EaseBasePresenter {
     }
 
     /**
-     * Get joined thread list
+     * Get joined thread list by parent id
+     * @param parentId  Usually is group id
      * @param limit
      * @param cursor
      */
-    public abstract void getJoinedThreadList(String groupId, int limit, String cursor);
+    public abstract void getJoinedThreadList(String parentId, int limit, String cursor);
 
     /**
-     * Get more joined thread list
+     * Get more joined thread list by parent id
+     * @param parentId  Usually is group id
      * @param limit
      * @param cursor
      */
-    public abstract void getMoreJoinedThreadList(String groupId, int limit, String cursor);
+    public abstract void getMoreJoinedThreadList(String parentId, int limit, String cursor);
 
     /**
-     * Get thread list by group id
-     * @param groupId
+     * Get thread list by parent id
+     * @param parentId  Usually is group id
      * @param limit
      * @param cursor
      */
-    public abstract void getThreadList(String groupId, int limit, String cursor);
+    public abstract void getThreadList(String parentId, int limit, String cursor);
 
     /**
-     * Get more thread list by group id
-     * @param groupId
+     * Get more thread list by parent id
+     * @param parentId Usually is group id
      * @param limit
      * @param cursor
      */
-    public abstract void getMoreThreadList(String groupId, int limit, String cursor);
+    public abstract void getMoreThreadList(String parentId, int limit, String cursor);
 
     /**
      * Get thread latest messages
@@ -62,7 +64,7 @@ public abstract class EaseChatThreadListPresenter extends EaseBasePresenter {
 
     /**
      * Get thread's parent, first from local, if local is null, will get from server, usually is a group
-     * @param parentId
+     * @param parentId  Usually is group id
      */
     public abstract void getThreadParent(String parentId);
 }

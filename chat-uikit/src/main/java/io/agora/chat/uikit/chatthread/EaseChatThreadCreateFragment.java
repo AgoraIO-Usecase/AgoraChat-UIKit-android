@@ -491,6 +491,11 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
         private OnChatRecordTouchListener recordTouchListener;
         private OnChatThreadCreatedResultListener resultListener;
 
+        /**
+         * Constructor
+         * @param parentId Usually is group id.
+         * @param messageId Usually is group message id.
+         */
         public Builder(String parentId, String messageId) {
             this.bundle = new Bundle();
             bundle.putString(Constant.KEY_PARENT_ID, parentId);

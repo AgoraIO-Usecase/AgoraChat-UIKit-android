@@ -15,8 +15,8 @@ import io.agora.chat.Group;
 
 public class EaseChatThreadListPresenterImpl extends EaseChatThreadListPresenter {
     @Override
-    public void getJoinedThreadList(String groupId, int limit, String cursor) {
-        ChatClient.getInstance().chatThreadManager().getJoinedChatThreadsFromServer(groupId, limit, cursor,
+    public void getJoinedThreadList(String parentId, int limit, String cursor) {
+        ChatClient.getInstance().chatThreadManager().getJoinedChatThreadsFromServer(parentId, limit, cursor,
                 new ValueCallBack<CursorResult<ChatThread>>() {
             @Override
             public void onSuccess(CursorResult<ChatThread> value) {
@@ -51,8 +51,8 @@ public class EaseChatThreadListPresenterImpl extends EaseChatThreadListPresenter
     }
 
     @Override
-    public void getMoreJoinedThreadList(String groupId, int limit, String cursor) {
-        ChatClient.getInstance().chatThreadManager().getJoinedChatThreadsFromServer(groupId, limit, cursor,
+    public void getMoreJoinedThreadList(String parentId, int limit, String cursor) {
+        ChatClient.getInstance().chatThreadManager().getJoinedChatThreadsFromServer(parentId, limit, cursor,
                 new ValueCallBack<CursorResult<ChatThread>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatThread> value) {
@@ -90,8 +90,8 @@ public class EaseChatThreadListPresenterImpl extends EaseChatThreadListPresenter
     }
 
     @Override
-    public void getThreadList(String groupId, int limit, String cursor) {
-        ChatClient.getInstance().chatThreadManager().getChatThreadsFromServer(groupId, limit, cursor,
+    public void getThreadList(String parentId, int limit, String cursor) {
+        ChatClient.getInstance().chatThreadManager().getChatThreadsFromServer(parentId, limit, cursor,
                 new ValueCallBack<CursorResult<ChatThread>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatThread> value) {
@@ -126,8 +126,8 @@ public class EaseChatThreadListPresenterImpl extends EaseChatThreadListPresenter
     }
 
     @Override
-    public void getMoreThreadList(String groupId, int limit, String cursor) {
-        ChatClient.getInstance().chatThreadManager().getChatThreadsFromServer(groupId, limit, cursor,
+    public void getMoreThreadList(String parentId, int limit, String cursor) {
+        ChatClient.getInstance().chatThreadManager().getChatThreadsFromServer(parentId, limit, cursor,
                 new ValueCallBack<CursorResult<ChatThread>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatThread> value) {
