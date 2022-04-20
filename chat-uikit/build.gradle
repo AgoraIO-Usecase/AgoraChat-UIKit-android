@@ -40,7 +40,8 @@ dependencies {
     // swipe refresh layout
     api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     // Agora Chat SDK
-    api 'io.agora.rtc:chat-sdk:1.0.1'
+    //api 'io.agora.rtc:chat-sdk:1.0.1'
+	api files('libs/agorachat_3.9.0.jar')
 }
 
 //apply from: "../maven-push-release.gradle"

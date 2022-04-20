@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ease_live_message_input_tip">Say hi …</string>
+    <string name="ease_live_message_member_add">Joined</string>
+    <string name="ease_live_role_type_streamer">Streamer</string>
+    <string name="ease_live_role_type_moderator">Moderator</string>
+    <string name="ease_live_unread_message_tip">%1$d New Messages</string>
+</resources>
