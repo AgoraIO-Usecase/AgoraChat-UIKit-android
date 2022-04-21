@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.chatthread.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -56,6 +57,8 @@ public class EaseChatThreadListAdapter extends EaseBaseRecyclerViewAdapter<ChatT
             }
 
             if(message != null && message.isThread()) {
+                binding.groupUser.setVisibility(View.VISIBLE);
+                binding.tvNoMsg.setVisibility(View.GONE);
                 EaseUser userInfo = EaseUserUtils.getUserInfo(message.getFrom());
                 String username;
                 if(userInfo == null) {
@@ -67,6 +70,9 @@ public class EaseChatThreadListAdapter extends EaseBaseRecyclerViewAdapter<ChatT
                 EaseUserUtils.setUserAvatar(mContext, message.getFrom(), binding.avatar);
                 binding.message.setText(EaseSmileUtils.getSmiledText(mContext, EaseUtils.getMessageDigest(message, mContext)));
                 binding.time.setText(EaseDateUtils.getTimestampString(mContext, new Date(message.getMsgTime())));
+            }else {
+                binding.groupUser.setVisibility(View.GONE);
+                binding.tvNoMsg.setVisibility(View.VISIBLE);
             }
 
         }

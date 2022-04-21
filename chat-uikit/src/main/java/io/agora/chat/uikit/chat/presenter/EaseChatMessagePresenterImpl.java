@@ -201,9 +201,11 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
             throw new NullPointerException("should first set up with conversation");
         }
         conversation.markAllMessagesAsRead();
-        List<ChatMessage> allMessages = conversation.getAllMessages();
-        if(isActive()) {
-            runOnUI(()->mView.refreshCurrentConSuccess(allMessages, false));
+        if(!conversation.isThread()) {
+            List<ChatMessage> allMessages = conversation.getAllMessages();
+            if(isActive()) {
+                runOnUI(()->mView.refreshCurrentConSuccess(allMessages, false));
+            }
         }
     }
 

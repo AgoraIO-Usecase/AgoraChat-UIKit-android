@@ -581,7 +581,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                 loadMoreStatus = LoadMoreStatus.NO_MORE_DATA;
             }
             presenter.refreshCurrentConversation();
-
+            messageAdapter.setData(data);
         }else {
             presenter.refreshToLatest();
         }
@@ -597,6 +597,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             }else {
                 loadMoreStatus = LoadMoreStatus.NO_MORE_DATA;
             }
+            messageAdapter.addData(data);
             //post(()-> smoothSeekToPosition(messageAdapter.getData().size() - data.size()));
         }else {
             post(()-> smoothSeekToPosition(data.size() - 1));

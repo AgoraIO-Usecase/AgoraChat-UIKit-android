@@ -1031,7 +1031,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
         }
-        if(message.getChatType() == ChatMessage.ChatType.GroupChat) {
+        if(message.getChatType() == ChatMessage.ChatType.GroupChat && message.getThreadOverview() == null) {
             menuHelper.findItemVisible(R.id.action_chat_reply, true);
         }
 
