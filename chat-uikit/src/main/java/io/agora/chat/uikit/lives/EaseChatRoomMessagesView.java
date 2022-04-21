@@ -56,7 +56,6 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
     private ConstraintLayout mMessageInputLayout;
     private TextView mMessageInputTip;
     private RelativeLayout mViewLayout;
-    private View mBottomView;
     private TextView mUnreadMessageView;
 
     private MessageViewListener mMessageViewListener;
@@ -87,7 +86,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         mMessageListView = findViewById(R.id.room_message_list);
         mMessageInputEt = findViewById(R.id.message_input_et);
         mMessageInputLayout = findViewById(R.id.message_input_layout);
-        mBottomView = findViewById(R.id.bottom_view);
+        View bottomView = findViewById(R.id.bottom_view);
         mViewLayout = findViewById(R.id.view_layout);
         mMessageInputTip = findViewById(R.id.message_input_tip);
         mUnreadMessageView = findViewById(R.id.unread_message_view);
@@ -150,9 +149,9 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
             navigationBarHeight = getNavBarHeight(mContext);
         }
         navigationBarHeight += (int) inputEditMarginBottom;
-        RelativeLayout.LayoutParams bottomViewParams = (RelativeLayout.LayoutParams) mBottomView.getLayoutParams();
+        RelativeLayout.LayoutParams bottomViewParams = (RelativeLayout.LayoutParams) bottomView.getLayoutParams();
         bottomViewParams.height = navigationBarHeight;
-        mBottomView.setLayoutParams(bottomViewParams);
+        bottomView.setLayoutParams(bottomViewParams);
     }
 
     public void setShow(boolean show) {
@@ -244,6 +243,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
                         mUnreadMessageView.setVisibility(VISIBLE);
                         mUnreadMessageView.setText(mContext.getString(R.string.ease_live_unread_message_tip, mConversation.getUnreadMsgCount()));
                     }
+                    updateData();
                 }
             });
         } else {
@@ -266,6 +266,10 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
                     if (mConversation.getUnreadMsgCount() > 0) {
                         mUnreadMessageView.setVisibility(VISIBLE);
                         mUnreadMessageView.setText(mContext.getString(R.string.ease_live_unread_message_tip, mConversation.getUnreadMsgCount()));
+                    }
+                    updateData();
+                    if (mAdapter.getItemCount() > 1) {
+                        mMessageListView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
                     }
                 }
             });
@@ -357,56 +361,8 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         }
     }
 
-/*    private class MessageViewHolder extends EaseChatRowViewHolder {
-        EaseImageView avatar;
-        TextView joinNickname;
-        Group joinGroup;
-
-        TextView txtMessageNickname;
-        TextView txtMessageNicknameRole;
-        TextView txtMessageContent;
-        Group txtMessageGroup;
-
-        public MessageViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
-            super(itemView, itemClickListener);
-            avatar = itemView.findViewById(R.id.iv_avatar);
-            joinNickname = itemView.findViewById(R.id.joined_nickname);
-            joinGroup = itemView.findViewById(R.id.join_group);
-
-            txtMessageNickname = itemView.findViewById(R.id.txt_message_nickname);
-            txtMessageNicknameRole = itemView.findViewById(R.id.txt_message_nickname_role);
-            txtMessageContent = itemView.findViewById(R.id.txt_message_content);
-            txtMessageGroup = itemView.findViewById(R.id.txt_message_group);
-
-            if (-1 != mNicknameMaxEms) {
-                joinNickname.setMaxEms(mNicknameMaxEms);
-                txtMessageNickname.setMaxEms(mNicknameMaxEms);
-            }
-
-            if (-1 != mNicknameEllipsize) {
-                TextUtils.TruncateAt truncateAt = TextUtils.TruncateAt.END;
-                switch (mNicknameEllipsize) {
-                    case 0:
-                        truncateAt = TextUtils.TruncateAt.START;
-                        break;
-                    case 1:
-                        truncateAt = TextUtils.TruncateAt.MIDDLE;
-                        break;
-                    case 2:
-                        truncateAt = TextUtils.TruncateAt.END;
-                        break;
-                    case 3:
-                        truncateAt = TextUtils.TruncateAt.MARQUEE;
-                        break;
-                }
-                joinNickname.setEllipsize(truncateAt);
-                txtMessageNickname.setEllipsize(truncateAt);
-            }
-        }
-    }*/
-
     private class MessageViewHolder extends EaseBaseRecyclerViewAdapter.ViewHolder<ChatMessage> {
-        private Context context;
+        private final Context context;
         private EaseImageView avatar;
         private TextView joinNickname;
         private Group joinGroup;
@@ -460,6 +416,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
 
         @Override
         public void setData(ChatMessage message, int position) {
+            avatar.setVisibility(VISIBLE);
             joinGroup.setVisibility(GONE);
             txtMessageGroup.setVisibility(GONE);
 
@@ -467,8 +424,8 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
             if (message.getBody() instanceof TextMessageBody) {
                 boolean memberAdd = false;
                 Map<String, Object> ext = message.ext();
-                if (ext.containsKey(EaseLiveMessageConstant.LIVE_MESSAGE_KEY_MEMBER_ADD)) {
-                    memberAdd = (boolean) ext.get(EaseLiveMessageConstant.LIVE_MESSAGE_KEY_MEMBER_ADD);
+                if (ext.containsKey(EaseLiveMessageConstant.LIVE_MESSAGE_KEY_MEMBER_JOIN)) {
+                    memberAdd = (boolean) ext.get(EaseLiveMessageConstant.LIVE_MESSAGE_KEY_MEMBER_JOIN);
                 }
                 String content = ((TextMessageBody) message.getBody()).getMessage();
                 if (memberAdd) {

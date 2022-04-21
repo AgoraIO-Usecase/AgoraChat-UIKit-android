@@ -11,6 +11,7 @@
         android:layout_height="32dp"
         android:layout_marginStart="2dp"
         android:src="@drawable/ease_default_avatar"
+        android:visibility="gone"
         app:ease_shape_type="round"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -23,30 +24,26 @@
         android:layout_marginLeft="5dp"
         android:ellipsize="end"
         android:maxEms="8"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textColor="#BDFFFFFF"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="@id/iv_avatar"
-        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toRightOf="@id/iv_avatar"
-        app:layout_constraintRight_toLeftOf="@id/joined"
-        app:layout_constraintTop_toTopOf="@id/iv_avatar"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toTopOf="@id/iv_avatar" />
 
     <TextView
         android:id="@+id/joined"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
         android:text="@string/ease_live_message_member_add"
         android:textColor="@color/white"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="@id/iv_avatar"
-        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toRightOf="@id/joined_nickname"
-        app:layout_constraintRight_toLeftOf="@id/iv_join_welcome"
-        app:layout_constraintTop_toTopOf="@id/iv_avatar"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toTopOf="@id/iv_avatar" />
 
     <io.agora.chat.uikit.widget.EaseImageView
         android:id="@+id/iv_join_welcome"
@@ -55,11 +52,12 @@
         android:layout_marginStart="2dp"
         android:src="@drawable/ease_live_member_join_welcome"
         app:ease_shape_type="round"
-        app:layout_constraintBottom_toBottomOf="@id/iv_avatar"
         app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintBottom_toBottomOf="@id/iv_avatar"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toRightOf="@id/joined"
-        app:layout_constraintTop_toTopOf="@id/iv_avatar"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_avatar" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/join_group"
@@ -105,10 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="2dp"
-        android:ellipsize="none"
-        android:inputType="textMultiLine"
         android:maxLines="50"
-        android:singleLine="false"
         android:textColor="@color/white"
         android:textSize="12sp"
         app:layout_constraintLeft_toRightOf="@id/iv_avatar"

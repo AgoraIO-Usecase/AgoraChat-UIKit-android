@@ -3,19 +3,11 @@ package io.agora.chat.uikit.lives;
 import android.text.TextUtils;
 
 public enum EaseLiveMessageType {
-    /**
-     * 礼物消息
-     */
+
     CHATROOM_GIFT("chatroom_gift"),
 
-    /**
-     * 点赞
-     */
     CHATROOM_PRAISE("chatroom_praise"),
 
-    /**
-     * 弹幕
-     */
     CHATROOM_BARRAGE("chatroom_barrage");
 
     private String name;

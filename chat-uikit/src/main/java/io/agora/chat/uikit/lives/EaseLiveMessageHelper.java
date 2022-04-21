@@ -12,34 +12,15 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.CustomMessageBody;
 import io.agora.chat.MessageBody;
+import io.agora.util.EMLog;
 
-/**
- * 自定义消息的帮助类（目前主要用于聊天室中礼物，点赞及弹幕消息）。
- * 用法如下：
- * （1）初始化 {@link #init()}，添加消息监听，根据业务需求，选择合适的地方初始化。
- * （2）设置聊天室信息 {@link #setChatRoomInfo(String)} 设置聊天室的id，用于筛选聊天室消息
- * （3）设置自定义消息监听{@link #setOnCustomMsgReceiveListener(OnLiveMessageReceiveListener)}
- * 用于接收不同的自定义消息类型（目前仅礼物，点赞及弹幕消息）。
- * （4）发送自定义消息：
- * a、如果自定义消息类型与library相同，且所传参数相同或者相近，可以直接调用如下方法：
- * {@link #sendGiftMsg(String, int, OnLiveMessageCallBack)},
- * {@link #sendPraiseMsg(int, OnLiveMessageCallBack)},
- * {@link #sendBarrageMsg(String, OnLiveMessageCallBack)} 或者
- * {@link #sendGiftMsg(Map, OnLiveMessageCallBack)},
- * {@link #sendPraiseMsg(Map, OnLiveMessageCallBack)},
- * {@link #sendBarrageMsg(Map, OnLiveMessageCallBack)}
- * b、如果有其他自定义消息类型，可以调用如下方法：
- * {@link #sendCustomMsg(String, Map, OnLiveMessageCallBack)},
- * {@link #sendCustomMsg(String, ChatMessage.ChatType, String, Map, OnLiveMessageCallBack)}。
- * （5）自定义消息类型枚举{@link EaseLiveMessageType} 定义了礼物，点赞及弹幕消息类型（以event区分）
- */
-public class EaseLiveMessageHelper implements MessageListener {
+public class EaseLiveMessageHelper {
     private static EaseLiveMessageHelper instance;
+    private final LiveMessageListener messageListener;
 
-    private String chatRoomId;
-    private OnLiveMessageReceiveListener listener;
 
     private EaseLiveMessageHelper() {
+        messageListener = new LiveMessageListener();
     }
 
     public static EaseLiveMessageHelper getInstance() {
@@ -53,207 +34,115 @@ public class EaseLiveMessageHelper implements MessageListener {
         return instance;
     }
 
-    /**
-     * 根据业务要求，放在application或者其他需要初始化的地方
-     */
-    public void init() {
-        ChatClient.getInstance().chatManager().addMessageListener(instance);
+    public void init(String chatRoomId) {
+        messageListener.setChatRoomId(chatRoomId);
+        ChatClient.getInstance().chatManager().addMessageListener(messageListener);
+    }
+
+    public void removeMessageListener() {
+        ChatClient.getInstance().chatManager().removeMessageListener(messageListener);
+    }
+
+    public void setLiveMessageListener(OnLiveMessageListener liveMessageListener) {
+        messageListener.setLiveMessageListener(liveMessageListener);
     }
 
     /**
-     * 设置聊天室id
-     *
-     * @param chatRoomId
-     */
-    public void setChatRoomInfo(String chatRoomId) {
-        this.chatRoomId = chatRoomId;
-    }
-
-    /**
-     * 设置接收消息的监听
-     *
-     * @param listener
-     */
-    public void setOnCustomMsgReceiveListener(OnLiveMessageReceiveListener listener) {
-        this.listener = listener;
-    }
-
-    /**
-     * 移除监听（在页面中初始化后，记得在onDestroy()生命周期中移除）
-     */
-    public void removeListener() {
-        ChatClient.getInstance().chatManager().removeMessageListener(this);
-    }
-
-    @Override
-    public void onMessageReceived(List<ChatMessage> messages) {
-        for (ChatMessage message : messages) {
-            // 先判断是否自定义消息
-            if (message.getType() != ChatMessage.Type.CUSTOM) {
-                continue;
-            }
-            // 再排除单聊
-            if (message.getChatType() != ChatMessage.ChatType.GroupChat && message.getChatType() != ChatMessage.ChatType.ChatRoom) {
-                continue;
-            }
-            String username = message.getTo();
-            // 判断是否同一个聊天室或者群组
-            if (!TextUtils.equals(username, chatRoomId)) {
-                continue;
-            }
-            // 判断是否是自定消息，然后区分礼物，点赞及弹幕消息
-            CustomMessageBody body = (CustomMessageBody) message.getBody();
-            String event = body.event();
-            // 如果event为空，则不处理
-            if (TextUtils.isEmpty(event)) {
-                continue;
-            }
-            EaseLiveMessageType msgType = getCustomMsgType(event);
-            if (msgType == null) {
-                continue;
-            }
-            // 最后返回各自的消息类型
-            switch (msgType) {
-                case CHATROOM_GIFT:
-                    if (listener != null) {
-                        listener.onReceiveGiftMsg(message);
-                    }
-                    break;
-                case CHATROOM_PRAISE:
-                    if (listener != null) {
-                        listener.onReceivePraiseMsg(message);
-                    }
-                    break;
-                case CHATROOM_BARRAGE:
-                    if (listener != null) {
-                        listener.onReceiveBarrageMsg(message);
-                    }
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onCmdMessageReceived(List<ChatMessage> list) {
-
-    }
-
-    @Override
-    public void onMessageRead(List<ChatMessage> list) {
-
-    }
-
-    @Override
-    public void onMessageDelivered(List<ChatMessage> list) {
-
-    }
-
-    @Override
-    public void onMessageRecalled(List<ChatMessage> list) {
-
-    }
-
-    @Override
-    public void onMessageChanged(ChatMessage ChatMessage, Object o) {
-
-    }
-
-    /**
-     * 发送礼物消息
+     * send gift message
      *
      * @param giftId
      * @param num
      * @param callBack
      */
-    public void sendGiftMsg(String giftId, int num, OnLiveMessageCallBack callBack) {
+    public void sendGiftMsg(String chatRoomId, String giftId, int num, OnSendLiveMessageCallBack callBack) {
         Map<String, String> params = new HashMap<>();
         params.put(EaseLiveMessageConstant.LIVE_MESSAGE_GIFT_KEY_ID, giftId);
         params.put(EaseLiveMessageConstant.LIVE_MESSAGE_GIFT_KEY_NUM, String.valueOf(num));
-        sendGiftMsg(params, callBack);
+        sendGiftMsg(chatRoomId, params, callBack);
     }
 
     /**
-     * 发送礼物消息(多参数)
+     * send gift message
      *
      * @param params
      * @param callBack
      */
-    public void sendGiftMsg(Map<String, String> params, final OnLiveMessageCallBack callBack) {
+    public void sendGiftMsg(String chatRoomId, Map<String, String> params, final OnSendLiveMessageCallBack callBack) {
         if (params.size() <= 0) {
             return;
         }
-        sendCustomMsg(EaseLiveMessageType.CHATROOM_GIFT.getName(), params, callBack);
+        sendCustomMsg(chatRoomId, EaseLiveMessageType.CHATROOM_GIFT.getName(), params, callBack);
     }
 
     /**
-     * 发送点赞消息
+     * send praise message
      *
      * @param num
      * @param callBack
      */
-    public void sendPraiseMsg(int num, OnLiveMessageCallBack callBack) {
+    public void sendPraiseMsg(String chatRoomId, int num, OnSendLiveMessageCallBack callBack) {
         if (num <= 0) {
             return;
         }
         Map<String, String> params = new HashMap<>();
         params.put(EaseLiveMessageConstant.LIVE_MESSAGE_PRAISE_KEY_NUM, String.valueOf(num));
-        sendPraiseMsg(params, callBack);
+        sendPraiseMsg(chatRoomId, params, callBack);
     }
 
     /**
-     * 发送点赞消息(多参数)
+     * send praise message
      *
      * @param params
      * @param callBack
      */
-    public void sendPraiseMsg(Map<String, String> params, final OnLiveMessageCallBack callBack) {
+    public void sendPraiseMsg(String chatRoomId, Map<String, String> params, final OnSendLiveMessageCallBack callBack) {
         if (params.size() <= 0) {
             return;
         }
-        sendCustomMsg(EaseLiveMessageType.CHATROOM_PRAISE.getName(), params, callBack);
+        sendCustomMsg(chatRoomId, EaseLiveMessageType.CHATROOM_PRAISE.getName(), params, callBack);
     }
 
     /**
-     * 发送弹幕消息
+     * send barrage message
      *
      * @param content
      * @param callBack
      */
-    public void sendBarrageMsg(String content, final OnLiveMessageCallBack callBack) {
+    public void sendBarrageMsg(String chatRoomId, String content, final OnSendLiveMessageCallBack callBack) {
         if (TextUtils.isEmpty(content)) {
             return;
         }
         Map<String, String> params = new HashMap<>();
         params.put(EaseLiveMessageConstant.LIVE_MESSAGE_BARRAGE_KEY_TXT, content);
-        sendBarrageMsg(params, callBack);
+        sendBarrageMsg(chatRoomId, params, callBack);
     }
 
     /**
-     * 发送弹幕消息(多参数)
+     * send barrage message
      *
      * @param params
      * @param callBack
      */
-    public void sendBarrageMsg(Map<String, String> params, final OnLiveMessageCallBack callBack) {
+    public void sendBarrageMsg(String chatRoomId, Map<String, String> params, final OnSendLiveMessageCallBack callBack) {
         if (params.size() <= 0) {
             return;
         }
-        sendCustomMsg(EaseLiveMessageType.CHATROOM_BARRAGE.getName(), params, callBack);
+        sendCustomMsg(chatRoomId, EaseLiveMessageType.CHATROOM_BARRAGE.getName(), params, callBack);
     }
 
     /**
-     * 发送自定义消息
+     * send custom message
      *
      * @param event
      * @param params
      * @param callBack
      */
-    public void sendCustomMsg(String event, Map<String, String> params, final OnLiveMessageCallBack callBack) {
+    public void sendCustomMsg(String chatRoomId, String event, Map<String, String> params, final OnSendLiveMessageCallBack callBack) {
         sendCustomMsg(chatRoomId, ChatMessage.ChatType.ChatRoom, event, params, callBack);
     }
 
     /**
-     * 发送自定义消息
+     * send custom message
      *
      * @param to
      * @param chatType
@@ -261,7 +150,7 @@ public class EaseLiveMessageHelper implements MessageListener {
      * @param params
      * @param callBack
      */
-    public void sendCustomMsg(String to, ChatMessage.ChatType chatType, String event, Map<String, String> params, final OnLiveMessageCallBack callBack) {
+    public void sendCustomMsg(String to, ChatMessage.ChatType chatType, String event, Map<String, String> params, final OnSendLiveMessageCallBack callBack) {
         final ChatMessage sendMessage = ChatMessage.createSendMessage(ChatMessage.Type.CUSTOM);
         CustomMessageBody body = new CustomMessageBody(event);
         body.setParams(params);
@@ -272,7 +161,6 @@ public class EaseLiveMessageHelper implements MessageListener {
             @Override
             public void onSuccess() {
                 if (callBack != null) {
-                    callBack.onSuccess();
                     callBack.onSuccess(sendMessage);
                 }
             }
@@ -280,7 +168,6 @@ public class EaseLiveMessageHelper implements MessageListener {
             @Override
             public void onError(int i, String s) {
                 if (callBack != null) {
-                    callBack.onError(i, s);
                     callBack.onError(sendMessage.getMsgId(), i, s);
                 }
             }
@@ -296,7 +183,7 @@ public class EaseLiveMessageHelper implements MessageListener {
     }
 
     /**
-     * 获取礼物消息中礼物的id
+     * get gift id from message
      *
      * @param msg
      * @return
@@ -313,7 +200,7 @@ public class EaseLiveMessageHelper implements MessageListener {
     }
 
     /**
-     * 获取礼物消息中礼物的数量
+     * get the number of gift in message
      *
      * @param msg
      * @return
@@ -338,7 +225,7 @@ public class EaseLiveMessageHelper implements MessageListener {
     }
 
     /**
-     * 获取点赞消息中点赞的数目
+     * get the number of praise in message
      *
      * @param msg
      * @return
@@ -354,7 +241,7 @@ public class EaseLiveMessageHelper implements MessageListener {
                 return 0;
             }
             try {
-                return Integer.valueOf(num);
+                return Integer.parseInt(num);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
@@ -363,7 +250,7 @@ public class EaseLiveMessageHelper implements MessageListener {
     }
 
     /**
-     * 获取弹幕消息中的文本
+     * get the content of barrage in message
      *
      * @param msg
      * @return
@@ -380,7 +267,7 @@ public class EaseLiveMessageHelper implements MessageListener {
     }
 
     /**
-     * 判断是否是礼物消息
+     * whether is gift message
      *
      * @param msg
      * @return
@@ -390,7 +277,7 @@ public class EaseLiveMessageHelper implements MessageListener {
     }
 
     /**
-     * 判断是否是点赞消息
+     * whether is praise message
      *
      * @param msg
      * @return
@@ -400,7 +287,7 @@ public class EaseLiveMessageHelper implements MessageListener {
     }
 
     /**
-     * 判断是否是弹幕消息
+     * whether is barrage message
      *
      * @param msg
      * @return
@@ -410,7 +297,7 @@ public class EaseLiveMessageHelper implements MessageListener {
     }
 
     /**
-     * 获取自定义消息中的event字段
+     * get the event of custom message
      *
      * @param message
      * @return
@@ -426,7 +313,7 @@ public class EaseLiveMessageHelper implements MessageListener {
     }
 
     /**
-     * 获取自定义消息中的参数
+     * get the params of message
      *
      * @param message
      * @return
@@ -443,7 +330,7 @@ public class EaseLiveMessageHelper implements MessageListener {
     }
 
     /**
-     * 获取自定义消息类型
+     * get the type of custom message
      *
      * @param event
      * @return
@@ -453,5 +340,96 @@ public class EaseLiveMessageHelper implements MessageListener {
             return null;
         }
         return EaseLiveMessageType.fromName(event);
+    }
+
+    static class LiveMessageListener implements MessageListener {
+        private String chatRoomId;
+        private OnLiveMessageListener liveMessageListener;
+
+
+        public void setChatRoomId(String chatRoomId) {
+            this.chatRoomId = chatRoomId;
+
+        }
+
+        public void setLiveMessageListener(OnLiveMessageListener liveMessageListener) {
+            this.liveMessageListener = liveMessageListener;
+        }
+
+        @Override
+        public void onMessageReceived(List<ChatMessage> messages) {
+            EMLog.i("lives", "messages size=" + messages.size());
+            for (ChatMessage message : messages) {
+                if (message.getType() != ChatMessage.Type.CUSTOM) {
+                    continue;
+                }
+
+                if (message.getChatType() != ChatMessage.ChatType.GroupChat && message.getChatType() != ChatMessage.ChatType.ChatRoom) {
+                    continue;
+                }
+                String username = message.getTo();
+
+                if (!TextUtils.equals(username, chatRoomId)) {
+                    continue;
+                }
+
+                CustomMessageBody body = (CustomMessageBody) message.getBody();
+                String event = body.event();
+
+                if (TextUtils.isEmpty(event)) {
+                    continue;
+                }
+                EaseLiveMessageType msgType = EaseLiveMessageHelper.getInstance().getCustomMsgType(event);
+                if (msgType == null) {
+                    continue;
+                }
+
+                switch (msgType) {
+                    case CHATROOM_GIFT:
+                        if (null != liveMessageListener) {
+                            liveMessageListener.onGiftMessageReceived(message);
+                        }
+                        break;
+                    case CHATROOM_PRAISE:
+                        if (null != liveMessageListener) {
+                            liveMessageListener.onPraiseMessageReceived(message);
+                        }
+                        break;
+                    case CHATROOM_BARRAGE:
+                        if (null != liveMessageListener) {
+                            liveMessageListener.onBarrageMessageReceived(message);
+                        }
+                        break;
+                }
+            }
+
+            if (null != liveMessageListener) {
+                liveMessageListener.onMessageReceived(messages);
+            }
+        }
+
+        @Override
+        public void onCmdMessageReceived(List<ChatMessage> messages) {
+            ChatMessage message = messages.get(messages.size() - 1);
+//            if (DemoConstants.CMD_GIFT.equals(((CmdMessageBody) message.getBody()).action())) {
+//                //showLeftGiftView(message.getFrom());
+//            } else if (DemoConstants.CMD_PRAISE.equals(((CmdMessageBody) message.getBody()).action())) {
+//                if (onChatRoomListener != null) {
+//                    // onChatRoomListener.onReceivePraiseMsg(message.getIntAttribute(DemoConstants.EXTRA_PRAISE_COUNT, 1));
+//                }
+//            }
+        }
+
+        @Override
+        public void onMessageRecalled(List<ChatMessage> list) {
+
+        }
+
+        @Override
+        public void onMessageChanged(ChatMessage chatMessage, Object o) {
+            if (null != liveMessageListener) {
+                liveMessageListener.onMessageChanged();
+            }
+        }
     }
 }

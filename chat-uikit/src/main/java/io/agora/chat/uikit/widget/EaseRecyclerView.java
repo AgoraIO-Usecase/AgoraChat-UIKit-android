@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.agora.util.EMLog;
+
 /**
  * Can add headers and footers
  * Refer to：https://github.com/idisfkj/EnhanceRecyclerView
@@ -48,7 +50,7 @@ public class EaseRecyclerView extends RecyclerView {
         info.viewType = BASE_HEADER_VIEW_TYPE + mHeaderViewInfos.size();
         mHeaderViewInfos.add(info);
 
-        if(mAdapter != null) {
+        if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -57,10 +59,10 @@ public class EaseRecyclerView extends RecyclerView {
      * Remove all headers
      */
     public void removeHeaderViews() {
-        if(mHeaderViewInfos != null) {
+        if (mHeaderViewInfos != null) {
             mHeaderViewInfos.clear();
         }
-        if(mAdapter != null) {
+        if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -71,31 +73,31 @@ public class EaseRecyclerView extends RecyclerView {
         info.viewType = BASE_FOOTER_VIEW_TYPE + mFooterViewInfos.size();
         mFooterViewInfos.add(info);
 
-        if(mAdapter != null) {
+        if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
     public void setAdapter(@Nullable Adapter adapter) {
-        if(!(adapter instanceof WrapperRecyclerViewAdapter)) {
-            if(adapter != null) {
+        if (!(adapter instanceof WrapperRecyclerViewAdapter)) {
+            if (adapter != null) {
                 adapter.registerAdapterDataObserver(mObserver);
             }
             mAdapter = new WrapperRecyclerViewAdapter(adapter);
-            if(adapter != null) {
+            if (adapter != null) {
                 mAdapter.setHasStableIds(adapter.hasStableIds());
             }
         }
         super.setAdapter(mAdapter);
-        if(isShouldSpan) {
-            ((WrapperRecyclerViewAdapter)mAdapter).adjustSpanSize(this);
+        if (isShouldSpan) {
+            ((WrapperRecyclerViewAdapter) mAdapter).adjustSpanSize(this);
         }
     }
 
     @Override
     public void setLayoutManager(@Nullable LayoutManager layout) {
-        if(layout instanceof GridLayoutManager || layout instanceof  StaggeredGridLayoutManager) {
+        if (layout instanceof GridLayoutManager || layout instanceof StaggeredGridLayoutManager) {
             isShouldSpan = true;
         }
         super.setLayoutManager(layout);
@@ -109,7 +111,7 @@ public class EaseRecyclerView extends RecyclerView {
     @Override
     public boolean showContextMenuForChild(View originalView) {
         int longPressPosition = getChildBindingAdapterPosition(originalView);
-        if(longPressPosition >= 0) {
+        if (longPressPosition >= 0) {
             long longPressId = getAdapter().getItemId(longPressPosition);
             mContextMenuInfo = new RecyclerViewContextMenuInfo(longPressPosition, longPressId);
             return super.showContextMenuForChild(originalView);
@@ -157,10 +159,10 @@ public class EaseRecyclerView extends RecyclerView {
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            if(viewType >= BASE_HEADER_VIEW_TYPE && viewType < BASE_HEADER_VIEW_TYPE + getHeadersCount()) {
+            if (viewType >= BASE_HEADER_VIEW_TYPE && viewType < BASE_HEADER_VIEW_TYPE + getHeadersCount()) {
                 View view = mHeaderViewInfos.get(viewType - BASE_HEADER_VIEW_TYPE).view;
                 return viewHolder(view);
-            }else if(viewType >= BASE_FOOTER_VIEW_TYPE && viewType < BASE_FOOTER_VIEW_TYPE + getFootersCount()) {
+            } else if (viewType >= BASE_FOOTER_VIEW_TYPE && viewType < BASE_FOOTER_VIEW_TYPE + getFootersCount()) {
                 View view = mFooterViewInfos.get(viewType - BASE_FOOTER_VIEW_TYPE).view;
                 return viewHolder(view);
             }
@@ -169,7 +171,7 @@ public class EaseRecyclerView extends RecyclerView {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            if(isHeaderOrFooter(holder)) {
+            if (isHeaderOrFooter(holder)) {
                 return;
             }
             position -= getHeadersCount();
@@ -179,17 +181,17 @@ public class EaseRecyclerView extends RecyclerView {
         @Override
         public int findRelativeAdapterPositionIn(@NonNull Adapter<? extends RecyclerView.ViewHolder> adapter,
                                                  @NonNull RecyclerView.ViewHolder viewHolder, int localPosition) {
-            if(adapter == this) {
+            if (adapter == this) {
                 return localPosition;
-            }else {
-                if(mAdapter instanceof ConcatAdapter) {
+            } else {
+                if (mAdapter instanceof ConcatAdapter) {
                     List<? extends Adapter<? extends RecyclerView.ViewHolder>> adapters = ((ConcatAdapter) mAdapter).getAdapters();
                     int prePosition = 0;
-                    for(int i = 0; i < adapters.size(); i++) {
+                    for (int i = 0; i < adapters.size(); i++) {
                         Adapter<? extends RecyclerView.ViewHolder> curAdapter = adapters.get(i);
-                        if(curAdapter == adapter) {
+                        if (curAdapter == adapter) {
                             return localPosition - prePosition;
-                        }else {
+                        } else {
                             prePosition += curAdapter.getItemCount();
                         }
                     }
@@ -201,7 +203,7 @@ public class EaseRecyclerView extends RecyclerView {
 
         @Override
         public long getItemId(int position) {
-            if(isHeaderOrFooter(position)) {
+            if (isHeaderOrFooter(position)) {
                 return -1;
             }
             position -= getHeadersCount();
@@ -215,10 +217,10 @@ public class EaseRecyclerView extends RecyclerView {
 
         @Override
         public int getItemViewType(int position) {
-            if(isHeader(position)) {
+            if (isHeader(position)) {
                 return mHeaderViewInfos.get(position).viewType;
             }
-            if(isFooter(position)) {
+            if (isFooter(position)) {
                 return mFooterViewInfos.get(position - getHeadersCount() - getContentCount()).viewType;
             }
             return mAdapter.getItemViewType(position - getHeadersCount());
@@ -245,14 +247,14 @@ public class EaseRecyclerView extends RecyclerView {
         }
 
         public void adjustSpanSize(RecyclerView recyclerView) {
-            if(recyclerView.getLayoutManager() instanceof GridLayoutManager) {
+            if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
                 final GridLayoutManager manager = (GridLayoutManager) recyclerView.getLayoutManager();
                 manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int position) {
                         int headersCount = getHeadersCount();
                         int adjPosition = position - headersCount;
-                        if(position < headersCount || adjPosition >= mAdapter.getItemCount()) {
+                        if (position < headersCount || adjPosition >= mAdapter.getItemCount()) {
                             return manager.getSpanCount();
                         }
                         return 1;
@@ -260,7 +262,7 @@ public class EaseRecyclerView extends RecyclerView {
                 });
             }
 
-            if(recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
+            if (recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
                 isStaggered = true;
             }
         }
@@ -271,7 +273,7 @@ public class EaseRecyclerView extends RecyclerView {
     }
 
     private RecyclerView.ViewHolder viewHolder(View itemView) {
-        if(isStaggered) {
+        if (isStaggered) {
             StaggeredGridLayoutManager.LayoutParams params =
                     new StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setFullSpan(true);
@@ -325,7 +327,7 @@ public class EaseRecyclerView extends RecyclerView {
         }
     };
 
-//=====================Fix add item shortcut menu======================================
+    //=====================Fix add item shortcut menu======================================
     public static class RecyclerViewContextMenuInfo implements ContextMenu.ContextMenuInfo {
         public int position;
         public long id;

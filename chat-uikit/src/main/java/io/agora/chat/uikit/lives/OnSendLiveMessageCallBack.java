@@ -4,19 +4,15 @@ package io.agora.chat.uikit.lives;
 import io.agora.CallBack;
 import io.agora.chat.ChatMessage;
 
-public abstract class OnLiveMessageCallBack implements CallBack {
+public abstract class OnSendLiveMessageCallBack implements CallBack {
 
-    /**
-     * 为了回调发送的message，不建议使用此回调
-     */
-    @Deprecated
     @Override
     public void onSuccess() {
 
     }
 
     /**
-     * 用于发送弹幕消息的成功回调
+     * A successful callback for sending a bullet screen message
      *
      * @param message
      */
@@ -34,7 +30,7 @@ public abstract class OnLiveMessageCallBack implements CallBack {
     }
 
     /**
-     * 返回消息id，方便根据错误对相应的消息进行删除
+     * Returns the message id, which is convenient for deleting the corresponding message according to the error
      *
      * @param messageId
      * @param code
