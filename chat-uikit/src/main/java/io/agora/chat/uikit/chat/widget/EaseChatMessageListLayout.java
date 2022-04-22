@@ -625,7 +625,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     @Override
     public void refreshToLatest() {
-        presenter.refreshToLatest();
+        presenter.refreshToLatest(!(loadDataType == LoadDataType.THREAD && loadMoreStatus == LoadMoreStatus.HAS_MORE));
     }
 
     @Override

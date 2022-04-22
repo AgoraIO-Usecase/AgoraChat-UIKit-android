@@ -106,5 +106,11 @@ public abstract class EaseChatMessagePresenter extends EaseBasePresenter {
      * Refresh the current session and move to the latest
      */
     public abstract void refreshToLatest();
+
+    /**
+     * Refresh the current session and move to the latest
+     * @param useCacheData Whether to use cached message data.
+     */
+    public abstract void refreshToLatest(boolean useCacheData);
 }
 

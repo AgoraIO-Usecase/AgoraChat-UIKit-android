@@ -201,23 +201,32 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
             throw new NullPointerException("should first set up with conversation");
         }
         conversation.markAllMessagesAsRead();
-        if(!conversation.isThread()) {
-            List<ChatMessage> allMessages = conversation.getAllMessages();
-            if(isActive()) {
-                runOnUI(()->mView.refreshCurrentConSuccess(allMessages, false));
-            }
+        // Not use cache data when is chat thread conversation
+        if(conversation.isThread()) {
+            return;
+        }
+        List<ChatMessage> allMessages = conversation.getAllMessages();
+        if(isActive()) {
+            runOnUI(()->mView.refreshCurrentConSuccess(allMessages, false));
         }
     }
 
     @Override
     public void refreshToLatest() {
+        refreshToLatest(true);
+    }
+
+    @Override
+    public void refreshToLatest(boolean useCacheData) {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");
         }
         conversation.markAllMessagesAsRead();
-        List<ChatMessage> allMessages = conversation.getAllMessages();
-        if(isActive()) {
-            runOnUI(()->mView.refreshCurrentConSuccess(allMessages, true));
+        if(useCacheData) {
+            List<ChatMessage> allMessages = conversation.getAllMessages();
+            if(isActive()) {
+                runOnUI(()->mView.refreshCurrentConSuccess(allMessages, true));
+            }
         }
     }
 
