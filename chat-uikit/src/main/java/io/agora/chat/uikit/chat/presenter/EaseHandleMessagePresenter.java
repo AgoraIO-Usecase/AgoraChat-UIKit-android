@@ -156,5 +156,21 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter {
     public boolean isGroupChat() {
         return chatType == EaseConstant.CHATTYPE_GROUP;
     }
+
+    /**
+     * add reaction
+     *
+     * @param message
+     * @param reaction
+     */
+    public abstract void addReaction(ChatMessage message, String reaction);
+
+    /**
+     * remove reaction
+     *
+     * @param message
+     * @param reaction
+     */
+    public abstract void removeReaction(ChatMessage message, String reaction);
 }
 

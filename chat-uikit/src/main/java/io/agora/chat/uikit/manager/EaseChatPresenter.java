@@ -9,6 +9,7 @@ import io.agora.MessageListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.GroupReadAck;
+import io.agora.chat.MessageReactionChange;
 import io.agora.chat.uikit.EaseUIKit;
 
 public class EaseChatPresenter implements MessageListener {
@@ -85,6 +86,11 @@ public class EaseChatPresenter implements MessageListener {
         for (GroupReadAck ack : groupReadAcks) {
             EaseDingMessageHelper.get().handleGroupReadAck(ack);
         }
+    }
+
+    @Override
+    public void onReactionChanged(List<MessageReactionChange> list) {
+
     }
 
     public EaseNotifier getNotifier() {
