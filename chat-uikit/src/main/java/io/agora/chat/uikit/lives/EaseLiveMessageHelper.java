@@ -15,8 +15,10 @@ import io.agora.chat.MessageBody;
 import io.agora.util.EMLog;
 
 public class EaseLiveMessageHelper {
+    private final static String TAG = EaseLiveMessageHelper.class.getSimpleName();
     private static EaseLiveMessageHelper instance;
     private final LiveMessageListener messageListener;
+    private static String chatroomId;
 
 
     private EaseLiveMessageHelper() {
@@ -35,6 +37,7 @@ public class EaseLiveMessageHelper {
     }
 
     public void init(String chatRoomId) {
+        this.chatroomId = chatRoomId;
         messageListener.setChatRoomId(chatRoomId);
         ChatClient.getInstance().chatManager().addMessageListener(messageListener);
     }
@@ -45,6 +48,36 @@ public class EaseLiveMessageHelper {
 
     public void setLiveMessageListener(OnLiveMessageListener liveMessageListener) {
         messageListener.setLiveMessageListener(liveMessageListener);
+    }
+
+    /**
+     * Send a text message
+     *
+     * @param content
+     * @param callBack
+     */
+    public void sendTxtMsg(String content, OnSendLiveMessageCallBack callBack) {
+        ChatMessage message = ChatMessage.createTxtSendMessage(content, chatroomId);
+        message.setChatType(ChatMessage.ChatType.ChatRoom);
+        message.setMessageStatusCallback(new CallBack() {
+            @Override
+            public void onSuccess() {
+                callBack.onSuccess();
+                callBack.onSuccess(message);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                callBack.onError(i, s);
+                callBack.onError(message.getMsgId(), i, s);
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+                callBack.onProgress(i, s);
+            }
+        });
+        ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
     /**
@@ -358,7 +391,7 @@ public class EaseLiveMessageHelper {
 
         @Override
         public void onMessageReceived(List<ChatMessage> messages) {
-            EMLog.i("lives", "messages size=" + messages.size());
+            EMLog.i(TAG, "onMessageReceived messages size=" + messages.size());
             for (ChatMessage message : messages) {
                 if (message.getType() != ChatMessage.Type.CUSTOM) {
                     continue;

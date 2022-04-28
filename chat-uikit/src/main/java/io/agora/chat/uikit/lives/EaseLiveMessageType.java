@@ -12,7 +12,7 @@ public enum EaseLiveMessageType {
 
     private String name;
 
-    private EaseLiveMessageType(String name) {
+    EaseLiveMessageType(String name) {
         this.name = name;
     }
 

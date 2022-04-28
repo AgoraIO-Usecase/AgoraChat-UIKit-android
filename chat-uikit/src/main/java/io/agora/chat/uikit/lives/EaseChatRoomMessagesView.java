@@ -1,5 +1,6 @@
 package io.agora.chat.uikit.lives;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -174,6 +175,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         return mMessageInputEt;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     public void init(String chatroomId) {
         mChatRoom = ChatClient.getInstance().chatroomManager().getChatRoom(chatroomId);
         mConversation = ChatClient.getInstance().chatManager().getConversation(chatroomId, Conversation.ConversationType.ChatRoom, true);

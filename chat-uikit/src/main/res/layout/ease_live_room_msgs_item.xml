@@ -34,7 +34,7 @@
 
     <TextView
         android:id="@+id/joined"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
         android:text="@string/ease_live_message_member_add"
