@@ -37,7 +37,7 @@ public class EaseLiveMessageHelper {
     }
 
     public void init(String chatRoomId) {
-        this.chatroomId = chatRoomId;
+        chatroomId = chatRoomId;
         messageListener.setChatRoomId(chatRoomId);
         ChatClient.getInstance().chatManager().addMessageListener(messageListener);
     }

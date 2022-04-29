@@ -175,6 +175,14 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         return mMessageInputEt;
     }
 
+    public RecyclerView getMessageListView() {
+        return mMessageListView;
+    }
+
+    public TextView getInputTipTextView() {
+        return mMessageInputTip;
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     public void init(String chatroomId) {
         mChatRoom = ChatClient.getInstance().chatroomManager().getChatRoom(chatroomId);

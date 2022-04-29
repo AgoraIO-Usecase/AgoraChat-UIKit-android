@@ -10,9 +10,11 @@ public interface OnLiveMessageListener {
 
     void onGiftMessageReceived(ChatMessage message);
 
-    void onPraiseMessageReceived(ChatMessage message);
+    default void onPraiseMessageReceived(ChatMessage message) {
+    }
 
-    void onBarrageMessageReceived(ChatMessage message);
+    default void onBarrageMessageReceived(ChatMessage message) {
+    }
 
     void onMessageChanged();
 
