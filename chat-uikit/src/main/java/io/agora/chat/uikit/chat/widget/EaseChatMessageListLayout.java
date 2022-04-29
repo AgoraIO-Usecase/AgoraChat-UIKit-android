@@ -39,7 +39,6 @@ import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
 import io.agora.chat.uikit.manager.EaseThreadManager;
 import io.agora.chat.uikit.utils.EaseUtils;
-import io.agora.util.EMLog;
 
 
 public class EaseChatMessageListLayout extends RelativeLayout implements IChatMessageListView, IRecyclerViewHandle
@@ -610,6 +609,12 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         if(toLatest) {
             seekToPosition(data.size() - 1);
         }
+    }
+
+    @Override
+    public void insertMessageToLast(ChatMessage message) {
+        messageAdapter.addData(message);
+        seekToPosition(messageAdapter.getData().size() - 1);
     }
 
     @Override

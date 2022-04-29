@@ -647,7 +647,18 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void onMessageRecalled(List<ChatMessage> messages) {
-        if(getChatMessageListLayout() != null) {
+        boolean isRefresh = false;
+        if(messages != null && messages.size() > 0) {
+            for(ChatMessage message : messages) {
+                if(TextUtils.equals(message.conversationId(), conversationId)) {
+                    isRefresh = true;
+                    if(getChatMessageListLayout() != null) {
+                        getChatMessageListLayout().removeMessage(message);
+                    }
+                }
+            }
+        }
+        if(getChatMessageListLayout() != null && isRefresh) {
             getChatMessageListLayout().refreshMessages();
         }
     }
@@ -708,9 +719,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     @Override
-    public void recallMessageFinish(ChatMessage message) {
+    public void recallMessageFinish(ChatMessage originalMessage, ChatMessage notification) {
         if(recallMessageListener != null) {
-            recallMessageListener.recallSuccess(message);
+            recallMessageListener.recallSuccess(originalMessage, notification);
         }
         messageListLayout.refreshMessages();
     }

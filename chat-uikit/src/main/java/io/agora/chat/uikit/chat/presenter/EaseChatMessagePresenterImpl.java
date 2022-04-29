@@ -3,7 +3,10 @@ package io.agora.chat.uikit.chat.presenter;
 import android.text.TextUtils;
 
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import io.agora.ValueCallBack;
@@ -138,6 +141,15 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
                         conversation.loadMoreMsgFromDB("", pageSize, direction);
+                        if(conversation.isThread()) {
+                            List<ChatMessage> chatMessages = checkLocalChatThreadMessage(value.getData(), direction);
+                            runOnUI(() -> {
+                                if(isActive()) {
+                                    mView.loadServerMsgSuccess(chatMessages);
+                                }
+                            });
+                            return;
+                        }
                         runOnUI(() -> {
                             if(isActive()) {
                                 mView.loadServerMsgSuccess(value.getData());
@@ -155,6 +167,57 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                         });
                     }
                 });
+    }
+
+    /**
+     * Check local chat thread message, for example: unsent message.
+     * @param data
+     * @param direction
+     * @return
+     */
+    private List<ChatMessage> checkLocalChatThreadMessage(List<ChatMessage> data, Conversation.SearchDirection direction) {
+        if(data == null || data.size() == 0) {
+            return data;
+        }
+        List<ChatMessage> chatMessages = conversation.loadMoreMsgFromDB(data.get(0).getMsgId(), data.size() - 1, direction);
+        List<ChatMessage> reverseMessages = conversation.loadMoreMsgFromDB(data.get(data.size() - 1).getMsgId(), data.size() - 1,
+                direction == Conversation.SearchDirection.UP ? Conversation.SearchDirection.DOWN : Conversation.SearchDirection.UP);
+        if(chatMessages == null) {
+            chatMessages = new ArrayList<>();
+        }
+        chatMessages.addAll(reverseMessages);
+        for(int i = 0; i < data.size(); i++) {
+            ChatMessage message = data.get(i);
+            String msgId = message.getMsgId();
+            Iterator<ChatMessage> iterator = chatMessages.iterator();
+            while (iterator.hasNext()) {
+                ChatMessage next = iterator.next();
+                if(TextUtils.equals(msgId, next.getMsgId())) {
+                    iterator.remove();
+                }
+            }
+        }
+        data.addAll(chatMessages);
+        Collections.sort(data, new Comparator<ChatMessage>() {
+            @Override
+            public int compare(ChatMessage o1, ChatMessage o2) {
+                long val = o1.getMsgTime() - o2.getMsgTime();
+                if (val > 0) {
+                    if(direction == Conversation.SearchDirection.DOWN) {
+                        return -1;
+                    }
+                    return 1;
+                } else if (val == 0) {
+                    return 0;
+                } else {
+                    if(direction == Conversation.SearchDirection.DOWN) {
+                        return 1;
+                    }
+                    return -1;
+                }
+            }
+        });
+        return data;
     }
 
     @Override
@@ -176,6 +239,15 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
                         conversation.loadMoreMsgFromDB(msgId, pageSize, direction);
+                        if(conversation.isThread()) {
+                            List<ChatMessage> chatMessages = checkLocalChatThreadMessage(value.getData(), direction);
+                            runOnUI(() -> {
+                                if(isActive()) {
+                                    mView.loadMoreServerMsgSuccess(chatMessages);
+                                }
+                            });
+                            return;
+                        }
                         runOnUI(() -> {
                             if(isActive()) {
                                 mView.loadMoreServerMsgSuccess(value.getData());
@@ -223,6 +295,13 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         }
         conversation.markAllMessagesAsRead();
         if(useCacheData) {
+            if(conversation.isThread()) {
+                ChatMessage lastMessage = conversation.getLastMessage();
+                if(isActive()) {
+                    mView.insertMessageToLast(lastMessage);
+                }
+                return;
+            }
             List<ChatMessage> allMessages = conversation.getAllMessages();
             if(isActive()) {
                 runOnUI(()->mView.refreshCurrentConSuccess(allMessages, true));

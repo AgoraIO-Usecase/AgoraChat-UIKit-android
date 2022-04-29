@@ -13,6 +13,7 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseActivity;
 import io.agora.chat.uikit.databinding.EaseActivityThreadListBinding;
 import io.agora.chat.uikit.interfaces.OnTitleBarFinishInflateListener;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.provider.EaseActivityProvider;
 import io.agora.chat.uikit.chatthread.interfaces.OnItemChatThreadClickListener;
 import io.agora.chat.uikit.chatthread.EaseChatThreadListFragment;
@@ -71,18 +72,8 @@ public class EaseChatThreadListActivity extends EaseBaseActivity {
                     .setOnItemClickListener(new OnItemChatThreadClickListener() {
                         @Override
                         public void onItemClick(View view, ChatThread thread, String messageId) {
-                            EaseActivityProvider provider = EaseUIKit.getInstance().getActivitiesProvider();
-                            if(provider != null) {
-                                Class activity = provider.getActivity(EaseChatThreadActivity.class.getSimpleName());
-                                if(activity != null) {
-                                    Intent intent = new Intent(EaseChatThreadListActivity.this, activity);
-                                    intent.putExtra("parentMsgId", messageId);
-                                    intent.putExtra("conversationId", thread.getChatThreadId());
-                                    EaseChatThreadListActivity.this.startActivity(intent);
-                                    return;
-                                }
-                            }
-                            EaseChatThreadActivity.actionStart(EaseChatThreadListActivity.this, messageId, thread.getChatThreadId());
+                            EaseActivityProviderHelper.startToChatThreadActivity(EaseChatThreadListActivity.this,
+                                    thread.getChatThreadId(), thread.getMessageId());
                         }
                     })
                     .setOnTitleBarFinishInflateListener(new OnTitleBarFinishInflateListener() {

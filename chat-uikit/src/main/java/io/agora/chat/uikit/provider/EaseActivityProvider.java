@@ -1,6 +1,5 @@
 package io.agora.chat.uikit.provider;
 
-import android.app.Activity;
 
 public interface EaseActivityProvider {
     /**

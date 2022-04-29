@@ -36,6 +36,7 @@ import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageSendCallBack;
 import io.agora.chat.uikit.databinding.EaseFragmentCreateThreadBinding;
 import io.agora.chat.uikit.interfaces.EaseMessageListener;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.provider.EaseActivityProvider;
@@ -307,19 +308,7 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
             messageSendCallBack.onSuccess(message);
         }
         if(resultListener == null  || !resultListener.onThreadCreatedSuccess(messageId, message.conversationId())) {
-            EaseActivityProvider provider = EaseUIKit.getInstance().getActivitiesProvider();
-            if(provider != null) {
-                Class activity = provider.getActivity(EaseChatThreadActivity.class.getSimpleName());
-                if(activity != null) {
-                    Intent intent = new Intent(mContext, activity);
-                    intent.putExtra("parentMsgId", messageId);
-                    intent.putExtra("conversationId", message.conversationId());
-                    startActivity(intent);
-                    mContext.finish();
-                    return;
-                }
-            }
-            EaseChatThreadActivity.actionStart(mContext, messageId, message.conversationId());
+            EaseActivityProviderHelper.startToChatThreadActivity(mContext, message.conversationId(), messageId);
         }
         mContext.finish();
     }

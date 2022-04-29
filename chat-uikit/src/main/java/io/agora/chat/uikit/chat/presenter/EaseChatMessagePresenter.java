@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.chat.presenter;
 
 
+import io.agora.chat.ChatMessage;
 import io.agora.chat.Conversation;
 import io.agora.chat.uikit.base.EaseBasePresenter;
 import io.agora.chat.uikit.interfaces.ILoadDataView;

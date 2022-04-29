@@ -1,14 +1,7 @@
 package io.agora.chat.uikit.chat.presenter;
 
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.text.TextUtils;
-
-
-import java.io.File;
-import java.io.FileOutputStream;
 
 import io.agora.CallBack;
 import io.agora.chat.ChatClient;
@@ -25,7 +18,6 @@ import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.exceptions.ChatException;
 import io.agora.util.EMLog;
-import io.agora.util.PathUtil;
 
 public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     private static final String TAG = EaseChatLayout.class.getSimpleName();
@@ -213,7 +205,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             ChatClient.getInstance().chatManager().recallMessage(message);
             ChatClient.getInstance().chatManager().saveMessage(msgNotification);
             if(isActive()) {
-                runOnUI(()->mView.recallMessageFinish(msgNotification));
+                runOnUI(()->mView.recallMessageFinish(message, msgNotification));
             }
         } catch (ChatException e) {
             e.printStackTrace();

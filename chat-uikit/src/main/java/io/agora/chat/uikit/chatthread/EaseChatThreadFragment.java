@@ -17,6 +17,7 @@ import io.agora.chat.ChatThreadEvent;
 import io.agora.chat.Group;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.EaseChatFragment;
+import io.agora.chat.uikit.chat.interfaces.OnRecallMessageResultListener;
 import io.agora.chat.uikit.chatthread.interfaces.EaseChatThreadParentMsgViewProvider;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.EaseMessageListener;
@@ -28,7 +29,7 @@ import io.agora.chat.uikit.chatthread.presenter.EaseChatThreadPresenter;
 import io.agora.chat.uikit.chatthread.presenter.EaseChatThreadPresenterImpl;
 import io.agora.chat.uikit.chatthread.presenter.IChatThreadView;
 
-public class EaseChatThreadFragment extends EaseChatFragment implements IChatThreadView {
+public class EaseChatThreadFragment extends EaseChatFragment implements IChatThreadView, OnRecallMessageResultListener {
     protected String parentMsgId;
     protected ChatThread mThread;
     protected String parentId;
@@ -102,6 +103,8 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         super.onPreMenu(helper, message);
         // Chat Thread is load from server, not need to delete from local
         helper.findItemVisible(R.id.action_chat_delete, false);
+        // Chat Thread can not reply again
+        helper.findItemVisible(R.id.action_chat_reply, false);
         if(!message.isThread() || message.direct() == ChatMessage.Direct.RECEIVE) {
             helper.findItemVisible(R.id.action_chat_unsent, false);
         }
@@ -121,6 +124,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         super.initListener();
         messageListener = new MessageListener();
         ChatClient.getInstance().chatManager().addMessageListener(messageListener);
+        chatLayout.setOnRecallMessageResultListener(this);
     }
 
     @Override
@@ -130,7 +134,19 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
             mContext.finish();
         }
     }
-    
+
+    @Override
+    public void recallSuccess(ChatMessage originalMessage, ChatMessage notification) {
+        if(chatLayout != null) {
+            chatLayout.getChatMessageListLayout().removeMessage(originalMessage);
+        }
+    }
+
+    @Override
+    public void recallFail(int code, String errorMsg) {
+
+    }
+
     private class MessageListener extends EaseMessageListener {
 
         @Override

@@ -73,4 +73,10 @@ public interface IChatMessageListView extends ILoadDataView {
      * @param data
      */
     void refreshCurrentConSuccess(List<ChatMessage> data, boolean toLatest);
+
+    /**
+     * Insert the message to the last of message list
+     * @param message
+     */
+    void insertMessageToLast(ChatMessage message);
 }
