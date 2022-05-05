@@ -123,7 +123,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         mMessageInputTip.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setInputState(true);
+                enableInputViewShow(true);
             }
         });
 
@@ -155,7 +155,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         bottomView.setLayoutParams(bottomViewParams);
     }
 
-    public void setShow(boolean show) {
+    public void enableMessagesViewShow(boolean show) {
         if (show) {
             mViewLayout.setVisibility(View.VISIBLE);
             refreshSelectLast();
@@ -179,7 +179,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         return mMessageListView;
     }
 
-    public TextView getInputTipTextView() {
+    public TextView getInputTipView() {
         return mMessageInputTip;
     }
 
@@ -200,7 +200,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         mMessageListView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                setInputState(false);
+                enableInputViewShow(false);
                 return false;
             }
         });
@@ -216,7 +216,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         });
     }
 
-    public void setInputState(boolean state) {
+    public void enableInputViewShow(boolean state) {
         if (state) {
             mMessageInputTip.setVisibility(INVISIBLE);
             mMessageInputLayout.setVisibility(VISIBLE);
@@ -299,7 +299,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         }
     }
 
-    public int getNavigationBarHeight(Context context) {
+    private int getNavigationBarHeight(Context context) {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         DisplayMetrics dm = new DisplayMetrics();
