@@ -59,14 +59,16 @@ public interface IChatMessageListView extends ILoadDataView {
     /**
      * Load roaming data
      * @param data
+     * @param cursor
      */
-    void loadServerMsgSuccess(List<ChatMessage> data);
+    void loadServerMsgSuccess(List<ChatMessage> data, String cursor);
 
     /**
      * Load more roaming data
      * @param data
+     * @param cursor
      */
-    void loadMoreServerMsgSuccess(List<ChatMessage> data);
+    void loadMoreServerMsgSuccess(List<ChatMessage> data, String cursor);
 
     /**
      * Refresh current conversation

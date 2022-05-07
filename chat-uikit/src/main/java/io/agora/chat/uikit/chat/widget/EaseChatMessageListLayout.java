@@ -80,7 +80,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     private int recyclerViewLastHeight;
     private MessageListItemClickListener messageListItemClickListener;
     private EaseChatItemStyleHelper chatSetHelper;
-    private boolean isThread;
+    private String messageCursor;
 
     public EaseChatMessageListLayout(@NonNull Context context) {
         this(context, null);
@@ -293,8 +293,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     public void loadMoreThreadMessages() {
-        String msgId = getListLastMessageId();
-        presenter.loadMoreServerMessages(msgId, pageSize, Conversation.SearchDirection.DOWN);
+        presenter.loadMoreServerMessages(messageCursor, pageSize, Conversation.SearchDirection.DOWN);
     }
 
     private String getListFirstMessageId() {
@@ -572,9 +571,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     @Override
-    public void loadServerMsgSuccess(List<ChatMessage> data) {
+    public void loadServerMsgSuccess(List<ChatMessage> data, String cursor) {
+        messageCursor = cursor;
         if(loadDataType == LoadDataType.THREAD) {
-            if(data.size() >= pageSize) {
+            if(data.size() >= pageSize || !TextUtils.isEmpty(cursor)) {
                 loadMoreStatus = LoadMoreStatus.HAS_MORE;
             }else {
                 loadMoreStatus = LoadMoreStatus.NO_MORE_DATA;
@@ -587,11 +587,12 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     @Override
-    public void loadMoreServerMsgSuccess(List<ChatMessage> data) {
+    public void loadMoreServerMsgSuccess(List<ChatMessage> data, String cursor) {
+        messageCursor = cursor;
         finishRefresh();
         presenter.refreshCurrentConversation();
         if(loadDataType == LoadDataType.THREAD) {
-            if(data.size() >= pageSize) {
+            if(data.size() >= pageSize || !TextUtils.isEmpty(cursor)) {
                 loadMoreStatus = LoadMoreStatus.HAS_MORE;
             }else {
                 loadMoreStatus = LoadMoreStatus.NO_MORE_DATA;

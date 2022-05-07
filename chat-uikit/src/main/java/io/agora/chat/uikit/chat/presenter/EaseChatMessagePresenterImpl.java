@@ -143,18 +143,9 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
                         conversation.loadMoreMsgFromDB("", pageSize, direction);
-                        if(conversation.isThread()) {
-                            List<ChatMessage> chatMessages = checkLocalChatThreadMessage(value.getData(), direction);
-                            runOnUI(() -> {
-                                if(isActive()) {
-                                    mView.loadServerMsgSuccess(chatMessages);
-                                }
-                            });
-                            return;
-                        }
                         runOnUI(() -> {
                             if(isActive()) {
-                                mView.loadServerMsgSuccess(value.getData());
+                                mView.loadServerMsgSuccess(value.getData(), value.getCursor());
                             }
                         });
                     }
@@ -169,67 +160,6 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                         });
                     }
                 });
-    }
-
-    /**
-     * Check local chat thread message, for example: unsent message.
-     * @param data
-     * @param direction
-     * @return
-     */
-    private List<ChatMessage> checkLocalChatThreadMessage(List<ChatMessage> data, Conversation.SearchDirection direction) {
-        if(data == null || data.size() == 0) {
-            return data;
-        }
-        List<ChatMessage> chatMessages = conversation.loadMoreMsgFromDB(data.get(0).getMsgId(), data.size() - 1, direction);
-        List<ChatMessage> reverseMessages = conversation.loadMoreMsgFromDB(data.get(data.size() - 1).getMsgId(), data.size() - 1,
-                direction == Conversation.SearchDirection.UP ? Conversation.SearchDirection.DOWN : Conversation.SearchDirection.UP);
-        if(chatMessages == null) {
-            chatMessages = new ArrayList<>();
-        }
-        chatMessages.addAll(reverseMessages);
-        for(int i = 0; i < data.size(); i++) {
-            ChatMessage message = data.get(i);
-            String msgId = message.getMsgId();
-            Iterator<ChatMessage> iterator = chatMessages.iterator();
-            while (iterator.hasNext()) {
-                ChatMessage next = iterator.next();
-                if(TextUtils.equals(msgId, next.getMsgId())) {
-                    iterator.remove();
-                }
-            }
-        }
-        data.addAll(chatMessages);
-        Collections.sort(data, new Comparator<ChatMessage>() {
-            @Override
-            public int compare(ChatMessage o1, ChatMessage o2) {
-                long val = o1.getMsgTime() - o2.getMsgTime();
-                if (val > 0) {
-                    if(direction == Conversation.SearchDirection.UP) {
-                        return -1;
-                    }
-                    return 1;
-                } else if (val == 0) {
-                    return 0;
-                } else {
-                    if(direction == Conversation.SearchDirection.UP) {
-                        return 1;
-                    }
-                    return -1;
-                }
-            }
-        });
-        for(int i = 0; i < data.size(); i++) {
-            ChatMessage message = data.get(i);
-            ChatMessage.Type type = message.getType();
-            if(type == ChatMessage.Type.TXT) {
-                TextMessageBody body = (TextMessageBody) message.getBody();
-                String content = body.getMessage();
-                long msgTime = message.getMsgTime();
-                EMLog.e("message", "content: "+content+ " msgTime: "+msgTime);
-            }
-        }
-        return data;
     }
 
     @Override
@@ -251,18 +181,9 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
                         conversation.loadMoreMsgFromDB(msgId, pageSize, direction);
-                        if(conversation.isThread()) {
-                            List<ChatMessage> chatMessages = checkLocalChatThreadMessage(value.getData(), direction);
-                            runOnUI(() -> {
-                                if(isActive()) {
-                                    mView.loadMoreServerMsgSuccess(chatMessages);
-                                }
-                            });
-                            return;
-                        }
                         runOnUI(() -> {
                             if(isActive()) {
-                                mView.loadMoreServerMsgSuccess(value.getData());
+                                mView.loadMoreServerMsgSuccess(value.getData(), value.getCursor());
                             }
                         });
                     }
