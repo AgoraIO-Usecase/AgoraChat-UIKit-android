@@ -21,6 +21,7 @@ import io.agora.chat.uikit.chat.interfaces.OnRecallMessageResultListener;
 import io.agora.chat.uikit.chatthread.interfaces.EaseChatThreadParentMsgViewProvider;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.EaseMessageListener;
+import io.agora.chat.uikit.interfaces.OnJoinChatThreadResultListener;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 import io.agora.chat.uikit.chatthread.adapter.EaseChatThreadHeaderAdapter;
@@ -38,7 +39,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
     protected EaseChatThreadPresenter mPresenter;
     private EaseChatThreadHeaderAdapter headerAdapter;
     private List<ChatMessage> data = new ArrayList<>();
-    private OnJoinThreadResultListener joinThreadResultListener;
+    private OnJoinChatThreadResultListener joinThreadResultListener;
     private OnChatThreadRoleResultCallback resultCallback;
     private MessageListener messageListener;
     private boolean hideHeader;
@@ -302,7 +303,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         this.mPresenter = presenter;
     }
 
-    private void setOnJoinThreadResultListener(OnJoinThreadResultListener listener) {
+    private void setOnJoinThreadResultListener(OnJoinChatThreadResultListener listener) {
         this.joinThreadResultListener = listener;
     }
 
@@ -339,24 +340,9 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
                         group.getAdminList().contains(ChatClient.getInstance().getCurrentUser()));
     }
 
-    public interface OnJoinThreadResultListener {
-        /**
-         * Join thread success
-         * @param threadId
-         */
-        void joinSuccess(String threadId);
-
-        /**
-         * Join thread failed
-         * @param errorCode
-         * @param message
-         */
-        void joinFailed(int errorCode, String message);
-    }
-
     public static class Builder extends EaseChatFragment.Builder {
         private EaseChatThreadPresenter presenter;
-        private OnJoinThreadResultListener listener;
+        private OnJoinChatThreadResultListener listener;
         private OnChatThreadRoleResultCallback resultCallback;
         private EaseChatThreadParentMsgViewProvider parentMsgViewProvider;
 
@@ -418,7 +404,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
          * @param listener
          * @return
          */
-        public Builder setOnJoinThreadResultListener(OnJoinThreadResultListener listener) {
+        public Builder setOnJoinThreadResultListener(OnJoinChatThreadResultListener listener) {
             this.listener = listener;
             return this;
         }

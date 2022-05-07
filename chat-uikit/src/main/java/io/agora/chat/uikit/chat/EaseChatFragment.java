@@ -525,7 +525,13 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     @Override
     public void onPreMenu(EasePopupWindowHelper helper, ChatMessage message) {
-
+        boolean isThreadNotify = message.getBooleanAttribute(EaseConstant.EASE_THREAD_NOTIFICATION_TYPE, false);
+        if(isThreadNotify) {
+            helper.findItemVisible(R.id.action_chat_copy, false);
+            helper.findItemVisible(R.id.action_chat_reply, false);
+            helper.findItemVisible(R.id.action_chat_unsent, false);
+            helper.findItemVisible(R.id.action_chat_delete, true);
+        }
     }
 
     @Override

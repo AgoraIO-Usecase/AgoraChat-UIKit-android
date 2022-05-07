@@ -22,6 +22,7 @@ import io.agora.chat.uikit.databinding.EaseActivityThreadChatBinding;
 import io.agora.chat.uikit.chatthread.EaseChatThreadFragment;
 import io.agora.chat.uikit.chatthread.EaseChatThreadRole;
 import io.agora.chat.uikit.chatthread.interfaces.OnChatThreadRoleResultCallback;
+import io.agora.chat.uikit.interfaces.OnJoinChatThreadResultListener;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 import io.agora.util.EMLog;
 
@@ -61,15 +62,15 @@ public class EaseChatThreadActivity extends EaseBaseActivity {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("thread_chat");
         if(fragment == null) {
             EaseChatFragment.Builder builder = new EaseChatThreadFragment.Builder(parentMsgId, conversationId)
-                    .setOnJoinThreadResultListener(new EaseChatThreadFragment.OnJoinThreadResultListener() {
+                    .setOnJoinThreadResultListener(new OnJoinChatThreadResultListener() {
                         @Override
                         public void joinSuccess(String threadId) {
-
+                            joinChatThreadSuccess(threadId);
                         }
 
                         @Override
                         public void joinFailed(int errorCode, String message) {
-
+                            joinChatThreadFailed(errorCode, message);
                         }
                     })
                     .setOnThreadRoleResultCallback(new OnChatThreadRoleResultCallback() {
@@ -138,6 +139,14 @@ public class EaseChatThreadActivity extends EaseBaseActivity {
             fragment = builder.build();
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_fragment, fragment, "thread_chat").commit();
+    }
+
+    protected void joinChatThreadSuccess(String threadId) {
+
+    }
+
+    protected void joinChatThreadFailed(int errorCode, String message) {
+        finish();
     }
 
     public void initListener() {

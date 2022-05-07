@@ -15,6 +15,8 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatRoom;
 import io.agora.chat.Conversation;
 import io.agora.chat.CursorResult;
+import io.agora.chat.TextMessageBody;
+import io.agora.util.EMLog;
 
 public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
 
@@ -203,20 +205,30 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
             public int compare(ChatMessage o1, ChatMessage o2) {
                 long val = o1.getMsgTime() - o2.getMsgTime();
                 if (val > 0) {
-                    if(direction == Conversation.SearchDirection.DOWN) {
+                    if(direction == Conversation.SearchDirection.UP) {
                         return -1;
                     }
                     return 1;
                 } else if (val == 0) {
                     return 0;
                 } else {
-                    if(direction == Conversation.SearchDirection.DOWN) {
+                    if(direction == Conversation.SearchDirection.UP) {
                         return 1;
                     }
                     return -1;
                 }
             }
         });
+        for(int i = 0; i < data.size(); i++) {
+            ChatMessage message = data.get(i);
+            ChatMessage.Type type = message.getType();
+            if(type == ChatMessage.Type.TXT) {
+                TextMessageBody body = (TextMessageBody) message.getBody();
+                String content = body.getMessage();
+                long msgTime = message.getMsgTime();
+                EMLog.e("message", "content: "+content+ " msgTime: "+msgTime);
+            }
+        }
         return data;
     }
 
