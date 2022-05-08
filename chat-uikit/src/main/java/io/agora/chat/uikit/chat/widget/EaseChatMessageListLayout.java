@@ -580,7 +580,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                 loadMoreStatus = LoadMoreStatus.NO_MORE_DATA;
             }
             presenter.refreshCurrentConversation();
-            messageAdapter.setData(data);
         }else {
             presenter.refreshToLatest();
         }
@@ -597,7 +596,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             }else {
                 loadMoreStatus = LoadMoreStatus.NO_MORE_DATA;
             }
-            messageAdapter.addData(data);
             //post(()-> smoothSeekToPosition(messageAdapter.getData().size() - data.size()));
         }else {
             post(()-> smoothSeekToPosition(data.size() - 1));
@@ -631,7 +629,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     @Override
     public void refreshToLatest() {
-        presenter.refreshToLatest(!(loadDataType == LoadDataType.THREAD && loadMoreStatus == LoadMoreStatus.HAS_MORE));
+        presenter.refreshToLatest();
     }
 
     @Override
@@ -931,6 +929,16 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     public void runOnUi(Runnable runnable) {
         EaseThreadManager.getInstance().runOnMainThread(runnable);
+    }
+
+    /**
+     * Set current conversation's send message
+     * @param message
+     */
+    public void setSendOrReceiveMessage(ChatMessage message) {
+        if(presenter != null) {
+            presenter.setSendOrReceiveMessage(message);
+        }
     }
 
     public interface OnMessageTouchListener {

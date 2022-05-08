@@ -3,9 +3,6 @@ package io.agora.chat.uikit.chat.presenter;
 import android.text.TextUtils;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,8 +12,6 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatRoom;
 import io.agora.chat.Conversation;
 import io.agora.chat.CursorResult;
-import io.agora.chat.TextMessageBody;
-import io.agora.util.EMLog;
 
 public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
 
@@ -143,6 +138,9 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
                         conversation.loadMoreMsgFromDB("", pageSize, direction);
+                        if(conversation.isThread()) {
+                            checkIfReachFirstSendMessage(value);
+                        }
                         runOnUI(() -> {
                             if(isActive()) {
                                 mView.loadServerMsgSuccess(value.getData(), value.getCursor());
@@ -160,6 +158,29 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                         });
                     }
                 });
+    }
+
+    private void checkIfReachFirstSendMessage(CursorResult<ChatMessage> cursorResult) {
+        if(cursorResult == null || isReachFirstFlagMessage) {
+            return;
+        }
+        // if not more data, make isReachFirstFlagMessage to ture
+        if(TextUtils.isEmpty(cursorResult.getCursor())) {
+            isReachFirstFlagMessage = true;
+            return;
+        }
+        List<ChatMessage> data = cursorResult.getData();
+        if(data == null || data.isEmpty() || reachFlagMessage == null) {
+            return;
+        }
+        for (ChatMessage message : data) {
+            String msgId = message.getMsgId();
+            String firstSendMessageMsgId = reachFlagMessage.getMsgId();
+            if(TextUtils.equals(msgId, firstSendMessageMsgId)) {
+                isReachFirstFlagMessage = true;
+                break;
+            }
+        }
     }
 
     @Override
@@ -181,6 +202,9 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
                         conversation.loadMoreMsgFromDB(msgId, pageSize, direction);
+                        if(conversation.isThread()) {
+                            checkIfReachFirstSendMessage(value);
+                        }
                         runOnUI(() -> {
                             if(isActive()) {
                                 mView.loadMoreServerMsgSuccess(value.getData(), value.getCursor());
@@ -206,39 +230,46 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
             throw new NullPointerException("should first set up with conversation");
         }
         conversation.markAllMessagesAsRead();
-        // Not use cache data when is chat thread conversation
-        if(conversation.isThread()) {
-            return;
-        }
         List<ChatMessage> allMessages = conversation.getAllMessages();
+        if(conversation.isThread() && reachFlagMessage != null && !isReachFirstFlagMessage) {
+            removeNotReachedMessages(allMessages);
+        }
         if(isActive()) {
             runOnUI(()->mView.refreshCurrentConSuccess(allMessages, false));
         }
     }
 
-    @Override
-    public void refreshToLatest() {
-        refreshToLatest(true);
+    /**
+     * Delete messages with timestamps after the first sent message
+     * @param allMessages
+     */
+    private void removeNotReachedMessages(List<ChatMessage> allMessages) {
+        if(reachFlagMessage == null) {
+            return;
+        }
+        long firstSendMsgTime  = reachFlagMessage.getMsgTime();
+        Iterator<ChatMessage> iterator = allMessages.iterator();
+        while (iterator.hasNext()) {
+            long msgTime = iterator.next().getMsgTime();
+
+            if(msgTime >= firstSendMsgTime) {
+                iterator.remove();
+            }
+        }
     }
 
     @Override
-    public void refreshToLatest(boolean useCacheData) {
+    public void refreshToLatest() {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");
         }
         conversation.markAllMessagesAsRead();
-        if(useCacheData) {
-            if(conversation.isThread()) {
-                ChatMessage lastMessage = conversation.getLastMessage();
-                if(isActive()) {
-                    mView.insertMessageToLast(lastMessage);
-                }
-                return;
-            }
-            List<ChatMessage> allMessages = conversation.getAllMessages();
-            if(isActive()) {
-                runOnUI(()->mView.refreshCurrentConSuccess(allMessages, true));
-            }
+        List<ChatMessage> allMessages = conversation.getAllMessages();
+        if(conversation.isThread() && !isReachFirstFlagMessage) {
+            removeNotReachedMessages(allMessages);
+        }
+        if(isActive()) {
+            runOnUI(()->mView.refreshCurrentConSuccess(allMessages, true));
         }
     }
 

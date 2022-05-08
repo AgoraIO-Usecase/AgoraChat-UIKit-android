@@ -572,7 +572,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 refresh = true;
             }
         }
-        if(refresh) {
+        if(refresh && getChatMessageListLayout() != null && !messages.isEmpty()) {
+            getChatMessageListLayout().setSendOrReceiveMessage(messages.get(0));
             getChatMessageListLayout().refreshToLatest();
         }
     }
@@ -709,6 +710,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void sendMessageFinish(ChatMessage message) {
         if(getChatMessageListLayout() != null) {
+            getChatMessageListLayout().setSendOrReceiveMessage(message);
             getChatMessageListLayout().refreshToLatest();
         }
     }

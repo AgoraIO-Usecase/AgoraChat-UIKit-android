@@ -73,7 +73,7 @@ public class EaseChatThreadListActivity extends EaseBaseActivity {
                         @Override
                         public void onItemClick(View view, ChatThread thread, String messageId) {
                             EaseActivityProviderHelper.startToChatThreadActivity(EaseChatThreadListActivity.this,
-                                    thread.getChatThreadId(), thread.getMessageId());
+                                    thread.getChatThreadId(), thread.getMessageId(), thread.getParentId());
                         }
                     })
                     .setOnTitleBarFinishInflateListener(new OnTitleBarFinishInflateListener() {

@@ -5,10 +5,16 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.Conversation;
 import io.agora.chat.uikit.base.EaseBasePresenter;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
+import io.agora.util.EMLog;
 
 public abstract class EaseChatMessagePresenter extends EaseBasePresenter {
     public IChatMessageListView mView;
     public Conversation conversation;
+    protected ChatMessage reachFlagMessage;
+    /**
+     * The flag whether the current conversation is reach the first flag message
+     */
+    protected boolean isReachFirstFlagMessage = false;
 
     @Override
     public void attachView(ILoadDataView view) {
@@ -32,6 +38,11 @@ public abstract class EaseChatMessagePresenter extends EaseBasePresenter {
      */
     public void setupWithConversation(Conversation conversation) {
         this.conversation = conversation;
+        EMLog.e("EaseChatMessagePresenter", "conversation isThread: "+conversation.isThread()+"conversationId: "+conversation.conversationId());
+        // Chat thread conversation should clear cache data
+        if(conversation != null && conversation.isThread()) {
+            conversation.clear();
+        }
     }
 
     public abstract void joinChatRoom(String username);
@@ -109,9 +120,13 @@ public abstract class EaseChatMessagePresenter extends EaseBasePresenter {
     public abstract void refreshToLatest();
 
     /**
-     * Refresh the current session and move to the latest
-     * @param useCacheData Whether to use cached message data.
+     * Set current conversation flag message used for chat thread conversation
+     * @param message
      */
-    public abstract void refreshToLatest(boolean useCacheData);
+    public void setSendOrReceiveMessage(ChatMessage message) {
+        if(reachFlagMessage == null) {
+            reachFlagMessage = message;
+        }
+    }
 }
 

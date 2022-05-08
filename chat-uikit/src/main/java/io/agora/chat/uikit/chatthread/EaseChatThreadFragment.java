@@ -59,6 +59,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         Bundle bundle = getArguments();
         if(bundle != null) {
             parentMsgId = bundle.getString(Constant.KEY_PARENT_MESSAGE_ID);
+            parentId = bundle.getString(Constant.KEY_PARENT_ID);
             hideHeader = bundle.getBoolean(Constant.KEY_HIDE_HEADER, false);
         }
         if(mThread == null && parentMsgId != null) {
@@ -351,9 +352,10 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
          * @param parentMsgId    Usually is the group message ID
          * @param conversationId Agora Chat ID
          */
-        public Builder(String parentMsgId, String conversationId) {
+        public Builder(String parentMsgId, String conversationId, String parentId) {
             super(conversationId, EaseConstant.CHATTYPE_GROUP);
             this.bundle.putString(Constant.KEY_PARENT_MESSAGE_ID, parentMsgId);
+            this.bundle.putString(Constant.KEY_PARENT_ID, parentId);
             this.bundle.putBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, true);
         }
 
@@ -363,9 +365,10 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
          * @param conversationId    Agora Chat ID
          * @param historyMsgId
          */
-        public Builder(String parentMsgId, String conversationId, String historyMsgId) {
+        public Builder(String parentMsgId, String conversationId, String parentId, String historyMsgId) {
             super(conversationId, EaseConstant.CHATTYPE_GROUP, historyMsgId);
             this.bundle.putString(Constant.KEY_PARENT_MESSAGE_ID, parentMsgId);
+            this.bundle.putString(Constant.KEY_PARENT_ID, parentId);
             this.bundle.putBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, true);
         }
 
@@ -438,6 +441,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
 
     private static final class Constant {
         public static final String KEY_PARENT_MESSAGE_ID = "key_parent_message_id";
+        public static final String KEY_PARENT_ID = "key_parent_id";
         public static final String KEY_THREAD_MESSAGE_FLAG = "key_thread_message_flag";
         public static final String KEY_HIDE_HEADER = "key_hide_header";
     }

@@ -27,7 +27,6 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThreadInfo;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.activities.EaseChatThreadActivity;
 import io.agora.chat.uikit.adapter.EaseBaseAdapter;
 import io.agora.chat.uikit.chat.model.EaseChatItemStyleHelper;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
@@ -590,7 +589,7 @@ public abstract class EaseChatRow extends LinearLayout {
                     if (itemClickListener != null && itemClickListener.onThreadClick(message.getMsgId(), info.getChatThreadId())){
                         return;
                     }
-                    EaseActivityProviderHelper.startToChatThreadActivity(context, info.getChatThreadId(), message.getMsgId());
+                    EaseActivityProviderHelper.startToChatThreadActivity(context, info.getChatThreadId(), message.getMsgId(), info.getParentId());
                 }else {
                     EMLog.e(TAG, "message's thread info is null");
                 }

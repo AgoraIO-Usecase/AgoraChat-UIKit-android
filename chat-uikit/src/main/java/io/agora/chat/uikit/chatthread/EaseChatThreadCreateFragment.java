@@ -24,9 +24,7 @@ import io.agora.Error;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
-import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.activities.EaseChatThreadActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -39,7 +37,6 @@ import io.agora.chat.uikit.interfaces.EaseMessageListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.models.EaseEmojicon;
-import io.agora.chat.uikit.provider.EaseActivityProvider;
 import io.agora.chat.uikit.chatthread.interfaces.EaseChatThreadParentMsgViewProvider;
 import io.agora.chat.uikit.chatthread.interfaces.OnChatThreadCreatedResultListener;
 import io.agora.chat.uikit.chatthread.presenter.EaseChatThreadCreatePresenter;
@@ -308,7 +305,7 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
             messageSendCallBack.onSuccess(message);
         }
         if(resultListener == null  || !resultListener.onThreadCreatedSuccess(messageId, message.conversationId())) {
-            EaseActivityProviderHelper.startToChatThreadActivity(mContext, message.conversationId(), messageId);
+            EaseActivityProviderHelper.startToChatThreadActivity(mContext, message.conversationId(), messageId, parentId);
         }
         mContext.finish();
     }

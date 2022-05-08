@@ -33,14 +33,24 @@ public class EaseChatThreadActivity extends EaseBaseActivity {
     protected EaseBaseActivity mContext;
     protected EaseActivityThreadChatBinding binding;
     protected EaseChatThreadRole threadRole = EaseChatThreadRole.UNKNOWN;
+    // Usually is group id
+    private String parentId;
 
-    public static void actionStart(Context context, String parentMsgId, String conversationId) {
+    public static void actionStart(Context context, String conversationId, String parentMsgId) {
         Intent intent = new Intent(context, EaseChatThreadActivity.class);
         intent.putExtra("parentMsgId", parentMsgId);
         intent.putExtra("conversationId", conversationId);
         context.startActivity(intent);
     }
-    
+
+    public static void actionStart(Context context, String conversationId, String parentMsgId, String parentId) {
+        Intent intent = new Intent(context, EaseChatThreadActivity.class);
+        intent.putExtra("parentMsgId", parentMsgId);
+        intent.putExtra("conversationId", conversationId);
+        intent.putExtra("parentId", parentId);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
@@ -56,12 +66,13 @@ public class EaseChatThreadActivity extends EaseBaseActivity {
     public void initIntent(Intent intent) {
         parentMsgId = intent.getStringExtra("parentMsgId");
         conversationId = intent.getStringExtra("conversationId");
+        parentId = intent.getStringExtra("parentId");
     }
 
     public void initView() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("thread_chat");
         if(fragment == null) {
-            EaseChatFragment.Builder builder = new EaseChatThreadFragment.Builder(parentMsgId, conversationId)
+            EaseChatFragment.Builder builder = new EaseChatThreadFragment.Builder(parentMsgId, conversationId, parentId)
                     .setOnJoinThreadResultListener(new OnJoinChatThreadResultListener() {
                         @Override
                         public void joinSuccess(String threadId) {

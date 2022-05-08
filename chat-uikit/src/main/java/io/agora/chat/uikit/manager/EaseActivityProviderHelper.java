@@ -13,8 +13,9 @@ public class EaseActivityProviderHelper {
      * @param context
      * @param conversationId
      * @param messageId
+     * @param parentId
      */
-    public static void startToChatThreadActivity(Context context, String conversationId, String messageId) {
+    public static void startToChatThreadActivity(Context context, String conversationId, String messageId, String parentId) {
         EaseActivityProvider provider = EaseUIKit.getInstance().getActivitiesProvider();
         if(provider != null) {
             Class activity = provider.getActivity(EaseChatThreadActivity.class.getSimpleName());
@@ -22,10 +23,11 @@ public class EaseActivityProviderHelper {
                 Intent intent = new Intent(context, activity);
                 intent.putExtra("parentMsgId", messageId);
                 intent.putExtra("conversationId", conversationId);
+                intent.putExtra("parentId", parentId);
                 context.startActivity(intent);
                 return;
             }
         }
-        EaseChatThreadActivity.actionStart(context, messageId, conversationId);
+        EaseChatThreadActivity.actionStart(context, conversationId, messageId, parentId);
     }
 }
