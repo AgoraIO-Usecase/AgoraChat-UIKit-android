@@ -34,6 +34,8 @@
             app:layout_constrainedWidth="true"
             android:minHeight="@dimen/ease_chat_file_bubble_min_height"
             android:layout_marginEnd="@dimen/ease_margin_chat_activity"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toStartOf="@id/iv_userhead"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_goneMarginEnd="@dimen/ease_chat_avatar_margin"
@@ -95,6 +97,18 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <io.agora.chat.uikit.chat.widget.EaseChatReactionView
+            android:id="@+id/tv_subReactionContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="2dp"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            app:ease_chat_item_sender="true"
+            android:layout_marginTop="-8dp"
+            app:layout_constraintEnd_toEndOf="@id/bubble"
+            app:layout_constraintTop_toTopOf="@id/bubble" />
 
         <ImageView
             android:id="@+id/msg_status"

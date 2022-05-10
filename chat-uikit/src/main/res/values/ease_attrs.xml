@@ -161,5 +161,8 @@
             <enum name="right" value="2"/>
         </attr>
     </declare-styleable>
-
+    <declare-styleable name="EaseChatReactionView">
+        <!-- whether is sender -->
+        <attr name="ease_chat_item_sender" format="boolean" />
+    </declare-styleable>
 </resources>

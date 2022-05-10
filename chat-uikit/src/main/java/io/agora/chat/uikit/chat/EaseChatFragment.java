@@ -31,14 +31,15 @@ import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.chat.interfaces.OnChatExtendMenuItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatInputChangeListener;
-import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
+import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageSendCallBack;
 import io.agora.chat.uikit.chat.interfaces.OnPeerTypingListener;
+import io.agora.chat.uikit.chat.interfaces.OnReactionMessageListener;
+import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
 import io.agora.chat.uikit.chat.widget.EaseChatExtendMenuDialog;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
-import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
@@ -54,7 +55,7 @@ import io.agora.util.FileHelper;
 import io.agora.util.PathUtil;
 import io.agora.util.VersionUtils;
 
-public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutListener, OnMenuChangeListener, OnAddMsgAttrsBeforeSendEvent, OnChatRecordTouchListener {
+public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutListener, OnMenuChangeListener, OnAddMsgAttrsBeforeSendEvent, OnChatRecordTouchListener, OnReactionMessageListener {
     protected static final int REQUEST_CODE_MAP = 1;
     protected static final int REQUEST_CODE_CAMERA = 2;
     protected static final int REQUEST_CODE_LOCAL = 3;
@@ -79,6 +80,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     private OnPeerTypingListener otherTypingListener;
     private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
     private OnChatRecordTouchListener recordTouchListener;
+    private OnReactionMessageListener reactionMessageListener;
     private EaseMessageAdapter messageAdapter;
     private boolean sendOriginalImage;
 
@@ -204,6 +206,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         chatLayout.setOnPopupWindowItemClickListener(this);
         chatLayout.setOnAddMsgAttrsBeforeSendEvent(sendMsgEvent != null ? sendMsgEvent : this);
         chatLayout.setOnChatRecordTouchListener(recordTouchListener != null ? recordTouchListener : this);
+        chatLayout.setOnReactionListener(reactionMessageListener != null ? reactionMessageListener : this);
     }
 
     public void initData() {
@@ -274,6 +277,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     private void setOnChatRecordTouchListener(OnChatRecordTouchListener recordTouchListener) {
         this.recordTouchListener = recordTouchListener;
+    }
+
+    private void setOnReactionMessageListener(OnReactionMessageListener reactionMessageListener) {
+        this.reactionMessageListener = reactionMessageListener;
     }
 
     private void setCustomAdapter(EaseMessageAdapter adapter) {
@@ -517,6 +524,26 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         return true;
     }
 
+    @Override
+    public void addReactionMessageSuccess(ChatMessage message) {
+
+    }
+
+    @Override
+    public void addReactionMessageFail(ChatMessage message, int code, String error) {
+
+    }
+
+    @Override
+    public void removeReactionMessageSuccess(ChatMessage message) {
+
+    }
+
+    @Override
+    public void removeReactionMessageFail(ChatMessage message, int code, String error) {
+
+    }
+
     public static class Builder {
         private final Bundle bundle;
         private EaseTitleBar.OnBackPressListener backPressListener;
@@ -528,6 +555,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         private OnPeerTypingListener peerTypingListener;
         private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
         private OnChatRecordTouchListener recordTouchListener;
+        private OnReactionMessageListener reactionMessageListener;
         private EaseChatFragment customFragment;
 
         /**
@@ -682,6 +710,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
          */
         public Builder setOnChatRecordTouchListener(OnChatRecordTouchListener recordTouchListener) {
             this.recordTouchListener = recordTouchListener;
+            return this;
+        }
+
+        /**
+         * Set reaction listener
+         * @param reactionMessageListener
+         * @return
+         */
+        public Builder setOnReactionMessageListener(OnReactionMessageListener reactionMessageListener) {
+            this.reactionMessageListener = reactionMessageListener;
             return this;
         }
 

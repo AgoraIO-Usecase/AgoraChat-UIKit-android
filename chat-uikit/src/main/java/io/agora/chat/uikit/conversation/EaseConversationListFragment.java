@@ -17,6 +17,7 @@ import java.util.List;
 
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
+import io.agora.chat.MessageReactionChange;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.conversation.adapter.EaseConversationListAdapter;
@@ -252,6 +253,10 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
         @Override
         public void onMessageChanged(ChatMessage message, Object change) {
             refreshList();
+        }
+
+        @Override
+        public void onReactionChanged(List<MessageReactionChange> list) {
         }
     };
 

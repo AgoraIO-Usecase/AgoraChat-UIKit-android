@@ -37,6 +37,7 @@ import io.agora.chat.uikit.chat.presenter.IChatMessageListView;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
 import io.agora.chat.uikit.manager.EaseThreadManager;
+import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.utils.EaseUtils;
 
 
@@ -425,6 +426,20 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             public void onMessageInProgress(ChatMessage message, int progress) {
                 if(messageListItemClickListener != null) {
                     messageListItemClickListener.onMessageInProgress(message, progress);
+                }
+            }
+
+            @Override
+            public void onRemoveReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
+                if (messageListItemClickListener != null) {
+                    messageListItemClickListener.onRemoveReaction(message, reactionEntity);
+                }
+            }
+
+            @Override
+            public void onAddReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
+                if (messageListItemClickListener != null) {
+                    messageListItemClickListener.onAddReaction(message, reactionEntity);
                 }
             }
         });

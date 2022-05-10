@@ -31,6 +31,7 @@ import io.agora.chat.ChatManager;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.CmdMessageBody;
 import io.agora.chat.Conversation;
+import io.agora.chat.MessageReactionChange;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.adapter.EMAChatRoomManagerListener;
 import io.agora.chat.uikit.R;
@@ -39,6 +40,7 @@ import io.agora.chat.uikit.chat.interfaces.IChatLayout;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
+import io.agora.chat.uikit.chat.interfaces.OnReactionMessageListener;
 import io.agora.chat.uikit.chat.interfaces.OnRecallMessageResultListener;
 import io.agora.chat.uikit.chat.presenter.EaseHandleMessagePresenter;
 import io.agora.chat.uikit.chat.presenter.EaseHandleMessagePresenterImpl;
@@ -54,10 +56,12 @@ import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseThreadManager;
-import io.agora.chat.uikit.menu.EasePopupWindow;
-import io.agora.chat.uikit.menu.EasePopupWindowHelper;
+import io.agora.chat.uikit.menu.EaseMessageMenuHelper;
+import io.agora.chat.uikit.menu.EaseMessageMenuPopupWindow;
 import io.agora.chat.uikit.menu.MenuItemBean;
+import io.agora.chat.uikit.menu.ReactionItemBean;
 import io.agora.chat.uikit.models.EaseEmojicon;
+import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
@@ -119,9 +123,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     /**
      * Long press entry menu help category
      */
-    private EasePopupWindowHelper menuHelper;
+    private EaseMessageMenuHelper mMessageMenuHelper;
     private ClipboardManager clipboard;
     private OnMenuChangeListener menuChangeListener;
+
+    private OnReactionMessageListener reactionMessageListener;
     /**
      * Withdraw monitoring
      */
@@ -166,7 +172,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
         presenter.attachView(this);
 
-        menuHelper = new EasePopupWindowHelper();
+        mMessageMenuHelper = new EaseMessageMenuHelper();
         clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
@@ -792,7 +798,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public boolean onBubbleLongClick(View v, ChatMessage message) {
         if(showDefaultMenu) {
-            showDefaultMenu(v, message);
+            showMessageMenu(v, message);
             if(listener != null) {
                 return listener.onBubbleLongClick(v, message);
             }
@@ -847,6 +853,16 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     @Override
+    public void onRemoveReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
+        presenter.removeReaction(message, reactionEntity.getEmojicon().getIdentityCode());
+    }
+
+    @Override
+    public void onAddReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
+        presenter.addReaction(message, reactionEntity.getEmojicon().getIdentityCode());
+    }
+
+    @Override
     public void onChatError(int code, String errorMsg) {
         if(listener != null) {
             listener.onError(code, errorMsg);
@@ -860,32 +876,32 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void clearMenu() {
-        menuHelper.clear();
+        mMessageMenuHelper.clear();
     }
 
     @Override
     public void addItemMenu(MenuItemBean item) {
-        menuHelper.addItemMenu(item);
+        mMessageMenuHelper.addItemMenu(item);
     }
 
     @Override
     public void addItemMenu(int groupId, int itemId, int order, String title) {
-        menuHelper.addItemMenu(groupId, itemId, order, title);
+        mMessageMenuHelper.addItemMenu(groupId, itemId, order, title);
     }
 
     @Override
     public MenuItemBean findItem(int id) {
-        return menuHelper.findItem(id);
+        return mMessageMenuHelper.findItem(id);
     }
 
     @Override
     public void findItemVisible(int id, boolean visible) {
-        menuHelper.findItemVisible(id, visible);
+        mMessageMenuHelper.findItemVisible(id, visible);
     }
 
     @Override
-    public EasePopupWindowHelper getMenuHelper() {
-        return menuHelper;
+    public EaseMessageMenuHelper getMenuHelper() {
+        return mMessageMenuHelper;
     }
 
     @Override
@@ -928,75 +944,79 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         }
     }
 
-    private void showDefaultMenu(View v, ChatMessage message) {
-        menuHelper.initMenu(getContext());
-        menuHelper.setDefaultMenus();
-        menuHelper.setOutsideTouchable(true);
+    private void showMessageMenu(View v, ChatMessage message) {
+        mMessageMenuHelper.init(getContext());
+        mMessageMenuHelper.setMessageReactions(message.getMessageReaction());
+        mMessageMenuHelper.setOutsideTouchable(true);
+        mMessageMenuHelper.setDefaultMenus();
         setMenuByMsgType(message);
-        if(menuChangeListener != null) {
-            menuChangeListener.onPreMenu(menuHelper, message);
-        }
-        menuHelper.setOnPopupMenuItemClickListener(new EasePopupWindow.OnPopupWindowItemClickListener() {
+        mMessageMenuHelper.setOnPopupReactionItemClickListener(new EaseMessageMenuPopupWindow.OnPopupWindowItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItemBean item) {
-                if(menuChangeListener != null && menuChangeListener.onMenuItemClick(item, message)) {
-                    return true;
+            public void onReactionItemClick(ReactionItemBean item, boolean isAdd) {
+                if (isAdd) {
+                    presenter.addReaction(message, item.getIdentityCode());
+                } else {
+                    presenter.removeReaction(message, item.getIdentityCode());
                 }
-                if(showDefaultMenu) {
+            }
+
+            @Override
+            public void onMenuItemClick(MenuItemBean item) {
+                if (menuChangeListener != null && menuChangeListener.onMenuItemClick(item, message)) {
+                    return;
+                }
+                if (showDefaultMenu) {
                     int itemId = item.getItemId();
-                    if(itemId == R.id.action_chat_copy) {
+                    if (itemId == R.id.action_chat_copy) {
                         clipboard.setPrimaryClip(ClipData.newPlainText(null,
                                 ((TextMessageBody) message.getBody()).getMessage()));
                         EMLog.i(TAG, "copy success");
-                    }else if(itemId == R.id.action_chat_delete) {
+                    } else if (itemId == R.id.action_chat_delete) {
                         deleteMessage(message);
-                        EMLog.i(TAG,"currentMsgId = "+message.getMsgId() + " timestamp = "+message.getMsgTime());
-                    }else if(itemId == R.id.action_chat_recall) {
+                        EMLog.i(TAG, "currentMsgId = " + message.getMsgId() + " timestamp = " + message.getMsgTime());
+                    } else if (itemId == R.id.action_chat_recall) {
                         recallMessage(message);
                     }
-                    return true;
                 }
-                return false;
             }
         });
-        menuHelper.setOnPopupMenuDismissListener(new EasePopupWindow.OnPopupWindowDismissListener() {
+        mMessageMenuHelper.setOnPopupMenuDismissListener(new EaseMessageMenuPopupWindow.OnPopupWindowDismissListener() {
             @Override
             public void onDismiss(PopupWindow menu) {
-                if(menuChangeListener != null) {
-                    menuChangeListener.onDismiss(menu);
-                }
+
             }
         });
-        menuHelper.show(this, v);
+        mMessageMenuHelper.show(v.getRootView(), v);
     }
+
 
     private void setMenuByMsgType(ChatMessage message) {
         ChatMessage.Type type = message.getType();
-        menuHelper.findItemVisible(R.id.action_chat_copy, false);
-        menuHelper.findItemVisible(R.id.action_chat_recall, false);
-        menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_action_delete));
+        mMessageMenuHelper.findItemVisible(R.id.action_chat_copy, false);
+        mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, false);
+        mMessageMenuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_action_delete));
         switch (type) {
             case TXT:
-                menuHelper.findItemVisible(R.id.action_chat_copy, true);
-                menuHelper.findItemVisible(R.id.action_chat_recall, true);
+                mMessageMenuHelper.findItemVisible(R.id.action_chat_copy, true);
+                mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
             case LOCATION:
             case FILE:
             case IMAGE:
-                menuHelper.findItemVisible(R.id.action_chat_recall, true);
+                mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
             case VOICE:
-                menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_voice));
-                menuHelper.findItemVisible(R.id.action_chat_recall, true);
+                mMessageMenuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_voice));
+                mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
             case VIDEO:
-                menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_video));
-                menuHelper.findItemVisible(R.id.action_chat_recall, true);
+                mMessageMenuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_video));
+                mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
         }
 
         if(message.direct() == ChatMessage.Direct.RECEIVE ){
-            menuHelper.findItemVisible(R.id.action_chat_recall, false);
+            mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, false);
         }
     }
 
@@ -1007,6 +1027,16 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onConversationRead(String s, String s1) {
         messageListLayout.refreshMessages();
+    }
+
+    @Override
+    public void onReactionChanged(List<MessageReactionChange> list) {
+        EMLog.i(TAG, "onReactionChanged");
+        for (MessageReactionChange reactionChange : list) {
+            if (conversationId.equals(reactionChange.getConversionID())) {
+                refreshMessage(ChatClient.getInstance().chatManager().getMessage(reactionChange.getMessageId()));
+            }
+        }
     }
 
     private class ChatRoomListener extends EaseChatRoomListener {
@@ -1059,6 +1089,45 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     private void finishCurrent() {
         if(getContext() instanceof Activity) {
             ((Activity) getContext()).finish();
+        }
+    }
+
+    @Override
+    public void setOnReactionListener(OnReactionMessageListener reactionListener) {
+        this.reactionMessageListener = reactionListener;
+    }
+
+    @Override
+    public void addReactionMessageSuccess(ChatMessage message) {
+        EMLog.e(TAG, "addReactionMessageSuccess");
+        refreshMessage(message);
+        if (null != reactionMessageListener) {
+            reactionMessageListener.addReactionMessageSuccess(message);
+        }
+    }
+
+    @Override
+    public void addReactionMessageFail(ChatMessage message, int code, String error) {
+        EMLog.e(TAG, "addReactionMessageFail,code = " + code + ",error=" + error);
+        if (null != reactionMessageListener) {
+            reactionMessageListener.addReactionMessageFail(message, code, error);
+        }
+    }
+
+    @Override
+    public void removeReactionMessageSuccess(ChatMessage message) {
+        EMLog.e(TAG, "removeReactionMessageSuccess");
+        refreshMessage(message);
+        if (null != reactionMessageListener) {
+            reactionMessageListener.removeReactionMessageSuccess(message);
+        }
+    }
+
+    @Override
+    public void removeReactionMessageFail(ChatMessage message, int code, String error) {
+        EMLog.e(TAG, "removeReactionMessageFail");
+        if (null != reactionMessageListener) {
+            reactionMessageListener.removeReactionMessageFail(message, code, error);
         }
     }
 
