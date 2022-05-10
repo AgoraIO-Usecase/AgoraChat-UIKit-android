@@ -897,6 +897,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             fragment.setOnAddMsgAttrsBeforeSendEvent(this.sendMsgEvent);
             fragment.setOnChatRecordTouchListener(this.recordTouchListener);
             fragment.setCustomAdapter(this.adapter);
+            fragment.setOnReactionMessageListener(this.reactionMessageListener);
             return fragment;
         }
     }
