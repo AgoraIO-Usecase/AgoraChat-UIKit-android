@@ -271,6 +271,8 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
     @Override
     public void OnJoinThreadFail(int error, String errorMsg) {
         if(error == Error.USER_ALREADY_EXIST) {
+            // If has joined the chat thread, make the role to member
+            threadRole = EaseChatThreadRole.MEMBER;
             mPresenter.getThreadInfo(conversationId);
             runOnUiThread(super::initData);
         }else {

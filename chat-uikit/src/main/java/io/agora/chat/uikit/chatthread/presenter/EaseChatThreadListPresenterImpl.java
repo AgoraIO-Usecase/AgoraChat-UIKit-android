@@ -28,13 +28,8 @@ public class EaseChatThreadListPresenterImpl extends EaseChatThreadListPresenter
                         mView.getNoJoinedThreadListData();
                         return;
                     }
-                    List<ChatThread> data = value.getData();
-                    if(data == null || data.size() == 0) {
-                        mView.getNoJoinedThreadListData();
-                        return;
-                    }
                     mView.getJoinedThreadListSuccess(value);
-                    getThreadIdList(data);
+                    getThreadIdList(value.getData());
                 });
             }
 
