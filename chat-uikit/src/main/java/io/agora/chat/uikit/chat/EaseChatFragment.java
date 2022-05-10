@@ -29,6 +29,7 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThreadEvent;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.activities.EaseImageGridActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -54,6 +55,7 @@ import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 import io.agora.chat.uikit.widget.dialog.EaseAlertDialog;
 import io.agora.util.EMLog;
+import io.agora.util.FileHelper;
 import io.agora.util.PathUtil;
 import io.agora.util.VersionUtils;
 
@@ -416,8 +418,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                 onActivityResultForLocalPhotos(data);
             } else if (requestCode == REQUEST_CODE_DING_MSG) { // To send the ding-type msg.
                 onActivityResultForDingMsg(data);
-            }else if(requestCode == REQUEST_CODE_SELECT_FILE) {
+            } else if (requestCode == REQUEST_CODE_SELECT_FILE) {
                 onActivityResultForLocalFiles(data);
+            } else if (REQUEST_CODE_SELECT_VIDEO == requestCode) {
+                onActivityResultForLocalVideos(data);
             }
         }
     }
@@ -449,7 +453,8 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
      * select local video
      */
     protected void selectVideoFromLocal() {
-
+        Intent intent = new Intent(getActivity(), EaseImageGridActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
     }
 
     /**
@@ -515,6 +520,20 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                     EaseFileUtils.saveUriPermission(mContext, uri, data);
                     chatLayout.sendFileMessage(uri);
                 }
+            }
+        }
+    }
+
+    protected void onActivityResultForLocalVideos(@Nullable Intent data) {
+        if (data != null) {
+            int duration = data.getIntExtra("dur", 0);
+            String videoPath = data.getStringExtra("path");
+            String uriString = data.getStringExtra("uri");
+            if (!TextUtils.isEmpty(videoPath)) {
+                chatLayout.sendVideoMessage(Uri.parse(videoPath), duration);
+            } else {
+                Uri videoUri = FileHelper.getInstance().formatInUri(uriString);
+                chatLayout.sendVideoMessage(videoUri, duration);
             }
         }
     }

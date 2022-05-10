@@ -279,6 +279,10 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         }
     }
 
+    public void setRightTitleColor(@ColorRes int color){
+        titleMenu.setTextColor(getResources().getColor(color));
+    }
+
     public void setIcon(Drawable icon) {
         if(icon != null) {
             ivIcon.setImageDrawable(icon);

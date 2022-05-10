@@ -7,6 +7,7 @@
         <activity android:name=".activities.EaseShowNormalFileActivity" />
         <activity android:name=".activities.EaseShowLocalVideoActivity" />
         <activity android:name=".activities.EaseShowBigImageActivity" />
+        <activity android:name=".activities.EaseImageGridActivity" />
         <activity
             android:name=".activities.EaseChatThreadActivity"
             android:screenOrientation="portrait"

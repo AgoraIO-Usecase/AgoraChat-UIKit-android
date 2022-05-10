@@ -84,6 +84,17 @@
     <string name="ease_download_the_pictures">Downloading image: 0%</string>
     <string name="ease_download_the_pictures_new">Downloading image:</string>
 
+    <string name="ease_title_image_grid">Camera and Video</string>
+    <string name="ease_take_video_capture">Shoot video</string>
+    <string name="ease_presence_online">Online</string>
+    <string name="ease_presence_busy">Busy</string>
+    <string name="ease_presence_do_not_disturb">Do not Disturb</string>
+    <string name="ease_presence_leave">Leave</string>
+    <string name="ease_presence_offline">Offline</string>
+    <string name="ease_presence_custom">Custom Status</string>
+    <string name="ease_presence_status">Status</string>
+    <string name="ease_presence_done">Done</string>
+
     <string name="ease_thread_create_mentions">Send a message to start a thread in this Group Chat.</string>
     <string name="ease_thread_create_title">New Thread</string>
     <string name="ease_thread_create_input_hint">Thread Name</string>
@@ -98,5 +109,4 @@
 
     <string name="ease_thread_region_no_message">No Messages.</string>
     <string name="ease_no_parent_message">Sorry, unable to load Original message.</string>
-
 </resources>

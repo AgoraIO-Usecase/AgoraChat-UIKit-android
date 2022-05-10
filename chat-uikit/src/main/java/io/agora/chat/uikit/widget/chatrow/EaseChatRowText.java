@@ -95,6 +95,7 @@ public class EaseChatRowText extends EaseChatRow {
 
     @Override
     protected void onMessageSuccess() {
+        super.onMessageSuccess();
         setStatus(View.GONE, View.GONE);
 
         // Show "1 Read" if this msg is a ding-type msg.

@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -143,7 +144,7 @@ public class EaseUtils {
         Log.e("TAG", "message text = "+digest);
         return digest;
     }
-
+    
     static String getString(Context context, int resId){
         return context.getResources().getString(resId);
     }
@@ -366,6 +367,31 @@ public class EaseUtils {
             e.printStackTrace();
         }
         return enable;
+    }
+
+    public static boolean hasFroyo() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+
+    }
+
+    public static boolean hasGingerbread() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
+    }
+
+    public static boolean hasHoneycomb() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+    }
+
+    public static boolean hasHoneycombMR1() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
+    }
+
+    public static boolean hasJellyBean() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+    }
+
+    public static boolean hasKitKat() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
     /**

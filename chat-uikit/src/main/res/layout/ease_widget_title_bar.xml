@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:minWidth="50dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@drawable/ease_common_tab_bg" >
 
         <ImageView
@@ -49,8 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -64,7 +63,6 @@
             android:visibility="gone"
             app:ease_shape_type="round"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintHorizontal_bias="0"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -75,7 +73,7 @@
             app:layout_constraintStart_toEndOf="@id/iv_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/sub_title"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="12dp"
             app:layout_goneMarginStart="0dp"
             android:textColor="@color/ease_toolbar_color_title"
