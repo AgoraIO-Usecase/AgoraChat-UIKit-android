@@ -43,7 +43,8 @@
     <color name="ease_btn_gray_pressed_status">#b5b5b6</color>
     <color name="ease_btn_gray_pressed">#666667</color>
     <color name="ease_dialog_chat_extend_cancel">#037BFD</color>
-    
+    <color name="ease_message_unsend_menu_txt">#FF14CC</color>
+
     <color name="ease_chat_thread_region_name_color">@color/black</color>
     <color name="ease_chat_thread_region_msg_count_color">#154DFE</color>
     <color name="ease_chat_thread_region_sender_name_color">@color/black</color>

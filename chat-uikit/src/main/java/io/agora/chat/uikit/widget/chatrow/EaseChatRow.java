@@ -29,11 +29,14 @@ import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.adapter.EaseBaseAdapter;
 import io.agora.chat.uikit.chat.model.EaseChatItemStyleHelper;
-import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.chat.model.EaseChatSetStyle;
+import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
+import io.agora.chat.uikit.chat.widget.EaseChatReactionView;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
+import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
+import io.agora.chat.uikit.options.EaseReactionOptions;
 import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
@@ -114,6 +117,7 @@ public abstract class EaseChatRow extends LinearLayout {
     protected MessageListItemClickListener itemClickListener;
     private EaseChatRowActionCallback itemActionCallback;
     private EaseChatRowThreadRegion threadRegion;
+    protected EaseChatReactionView reactionContentView;
 
     public EaseChatRow(Context context, boolean isSender) {
         super(context);
@@ -162,6 +166,7 @@ public abstract class EaseChatRow extends LinearLayout {
         statusView = (ImageView) findViewById(R.id.msg_status);
         ackedView = (TextView) findViewById(R.id.tv_ack);
         deliveredView = (TextView) findViewById(R.id.tv_delivered);
+        reactionContentView = findViewById(R.id.tv_subReactionContent);
         threadRegion = (EaseChatRowThreadRegion) findViewById(R.id.thread_region);
 
         setLayoutStyle();
@@ -248,6 +253,7 @@ public abstract class EaseChatRow extends LinearLayout {
 
         setUpBaseView();
         onSetUpView();
+        onSetUpReactionView();
         //setLayoutStyle();
         setClickListener();
     }
@@ -632,6 +638,37 @@ public abstract class EaseChatRow extends LinearLayout {
                 EMLog.i(TAG, "default");
                 break;
         }
+    }
+
+    protected void onSetUpReactionView() {
+        if (null == message || null == reactionContentView) {
+            EMLog.e(TAG, "view is null, don't setup reaction view");
+            return;
+        }
+
+        EaseReactionOptions reactionOptions = EaseUIKit.getInstance().getReactionOptions();
+        if (null == reactionOptions || !reactionOptions.isOpen()) {
+            EMLog.i(TAG, "reaction option don't show reaction view");
+            reactionContentView.setVisibility(GONE);
+            return;
+        }
+
+        reactionContentView.updateMessageInfo(message);
+        reactionContentView.setOnReactionItemListener(new EaseChatReactionView.OnReactionItemListener() {
+            @Override
+            public void removeReaction(EaseReactionEmojiconEntity reactionEntity) {
+                if (itemClickListener != null) {
+                    itemClickListener.onRemoveReaction(message, reactionEntity);
+                }
+            }
+
+            @Override
+            public void addReaction(EaseReactionEmojiconEntity reactionEntity) {
+                if (itemClickListener != null) {
+                    itemClickListener.onAddReaction(message, reactionEntity);
+                }
+            }
+        });
     }
 
     private class EaseChatCallback implements CallBack {

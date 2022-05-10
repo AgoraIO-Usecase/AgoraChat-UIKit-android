@@ -218,5 +218,53 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     private String getThumbPath(Uri videoUri) {
         return EaseFileUtils.getThumbPath(mView.context(), videoUri);
     }
+
+    @Override
+    public void addReaction(ChatMessage message, String reaction) {
+        ChatClient.getInstance().chatManager().asyncAddReaction(message.getMsgId(), reaction, new CallBack() {
+            @Override
+            public void onSuccess() {
+                if (isActive()) {
+                    runOnUI(() -> mView.addReactionMessageSuccess(message));
+                }
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                if (isActive()) {
+                    runOnUI(() -> mView.addReactionMessageFail(message, error, errorMsg));
+                }
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
+            }
+        });
+    }
+
+    @Override
+    public void removeReaction(ChatMessage message, String reaction) {
+        ChatClient.getInstance().chatManager().asyncRemoveReaction(message.getMsgId(), reaction, new CallBack() {
+            @Override
+            public void onSuccess() {
+                if (isActive()) {
+                    runOnUI(() -> mView.removeReactionMessageSuccess(message));
+                }
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                if (isActive()) {
+                    runOnUI(() -> mView.removeReactionMessageFail(message, error, errorMsg));
+                }
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
+            }
+        });
+    }
 }
 

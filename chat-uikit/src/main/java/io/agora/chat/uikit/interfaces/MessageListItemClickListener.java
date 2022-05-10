@@ -3,6 +3,7 @@ package io.agora.chat.uikit.interfaces;
 import android.view.View;
 
 import io.agora.chat.ChatMessage;
+import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 
 
 /**
@@ -87,4 +88,22 @@ public interface MessageListItemClickListener {
 	 * @param progress
 	 */
 	default void onMessageInProgress(ChatMessage message, int progress) {}
+
+	/**
+	 * remove reaction
+	 *
+	 * @param message
+	 * @param reactionEntity
+	 */
+	default void onRemoveReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
+	}
+
+	/**
+	 * add reaction
+	 *
+	 * @param message
+	 * @param reactionEntity
+	 */
+	default void onAddReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
+	}
 }

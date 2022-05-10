@@ -15,8 +15,10 @@ import io.agora.chat.uikit.manager.EaseNotifier;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
 import io.agora.chat.uikit.provider.EaseActivityProvider;
 import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
+import io.agora.chat.uikit.options.EaseReactionOptions;
 import io.agora.chat.uikit.provider.EaseEmojiconInfoProvider;
 import io.agora.chat.uikit.provider.EaseFileIconProvider;
+import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
 import io.agora.chat.uikit.provider.EaseSettingsProvider;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 
@@ -70,6 +72,11 @@ public class EaseUIKit {
      */
     private boolean sendOriginalImage;
     private OnEaseChatConnectionListener chatConnectionListener;
+
+    /**
+     * Whether to  show reaction view
+     */
+    private EaseReactionOptions reactionOptions;
 
     private EaseUIKit() {}
 
@@ -332,6 +339,19 @@ public class EaseUIKit {
                 return false;
             }
         };
+    }
+
+    /**
+     * Set to reaction options
+     *
+     * @param reactionOptions
+     */
+    public void setReactionOptions(EaseReactionOptions reactionOptions) {
+        this.reactionOptions = reactionOptions;
+    }
+
+    public EaseReactionOptions getReactionOptions() {
+        return reactionOptions;
     }
 
     /**

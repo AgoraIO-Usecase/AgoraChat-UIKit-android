@@ -31,6 +31,7 @@ import io.agora.chat.ChatManager;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.CmdMessageBody;
 import io.agora.chat.Conversation;
+import io.agora.chat.MessageReactionChange;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.adapter.EMAChatRoomManagerListener;
 import io.agora.chat.uikit.R;
@@ -40,6 +41,7 @@ import io.agora.chat.uikit.chat.interfaces.IChatLayout;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
+import io.agora.chat.uikit.chat.interfaces.OnReactionMessageListener;
 import io.agora.chat.uikit.chat.interfaces.OnRecallMessageResultListener;
 import io.agora.chat.uikit.chat.presenter.EaseHandleMessagePresenter;
 import io.agora.chat.uikit.chat.presenter.EaseHandleMessagePresenterImpl;
@@ -58,7 +60,9 @@ import io.agora.chat.uikit.manager.EaseThreadManager;
 import io.agora.chat.uikit.menu.EasePopupWindow;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
+import io.agora.chat.uikit.menu.ReactionItemBean;
 import io.agora.chat.uikit.models.EaseEmojicon;
+import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
@@ -123,6 +127,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     private EasePopupWindowHelper menuHelper;
     private ClipboardManager clipboard;
     private OnMenuChangeListener menuChangeListener;
+
+    private OnReactionMessageListener reactionMessageListener;
     /**
      * Withdraw monitoring
      */
@@ -655,9 +661,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
             for(ChatMessage message : messages) {
                 if(TextUtils.equals(message.conversationId(), conversationId)) {
                     isRefresh = true;
-                    if(getChatMessageListLayout() != null) {
-                        getChatMessageListLayout().removeMessage(message);
-                    }
                 }
             }
         }
@@ -882,6 +885,16 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     @Override
+    public void onRemoveReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
+        presenter.removeReaction(message, reactionEntity.getEmojicon().getIdentityCode());
+    }
+
+    @Override
+    public void onAddReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
+        presenter.addReaction(message, reactionEntity.getEmojicon().getIdentityCode());
+    }
+
+    @Override
     public void onChatError(int code, String errorMsg) {
         if(listener != null) {
             listener.onError(code, errorMsg);
@@ -998,8 +1011,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                         EMLog.i(TAG,"currentMsgId = "+message.getMsgId() + " timestamp = "+message.getMsgTime());
                     }else if(itemId == R.id.action_chat_recall) {
                         recallMessage(message);
-                    }else if(itemId == R.id.action_chat_reply) {
-                        skipToCreateThread(message);
                     }
                     return true;
                 }
@@ -1023,7 +1034,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     private void setMenuByMsgType(ChatMessage message) {
         ChatMessage.Type type = message.getType();
-        menuHelper.findItemVisible(R.id.action_chat_reply, false);
         menuHelper.findItemVisible(R.id.action_chat_copy, false);
         menuHelper.findItemVisible(R.id.action_chat_recall, false);
         menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_action_delete));
@@ -1046,9 +1056,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
         }
-        if(message.getChatType() == ChatMessage.ChatType.GroupChat && message.getThreadOverview() == null) {
-            menuHelper.findItemVisible(R.id.action_chat_reply, true);
-        }
 
         if(message.direct() == ChatMessage.Direct.RECEIVE ){
             menuHelper.findItemVisible(R.id.action_chat_recall, false);
@@ -1062,6 +1069,16 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onConversationRead(String s, String s1) {
         messageListLayout.refreshMessages();
+    }
+
+    @Override
+    public void onReactionChanged(List<MessageReactionChange> list) {
+        EMLog.i(TAG, "onReactionChanged");
+        for (MessageReactionChange reactionChange : list) {
+            if (conversationId.equals(reactionChange.getConversionID())) {
+                refreshMessage(ChatClient.getInstance().chatManager().getMessage(reactionChange.getMessageId()));
+            }
+        }
     }
 
     private class ChatRoomListener extends EaseChatRoomListener {
@@ -1114,6 +1131,45 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     private void finishCurrent() {
         if(getContext() instanceof Activity) {
             ((Activity) getContext()).finish();
+        }
+    }
+
+    @Override
+    public void setOnReactionListener(OnReactionMessageListener reactionListener) {
+        this.reactionMessageListener = reactionListener;
+    }
+
+    @Override
+    public void addReactionMessageSuccess(ChatMessage message) {
+        EMLog.e(TAG, "addReactionMessageSuccess");
+        refreshMessage(message);
+        if (null != reactionMessageListener) {
+            reactionMessageListener.addReactionMessageSuccess(message);
+        }
+    }
+
+    @Override
+    public void addReactionMessageFail(ChatMessage message, int code, String error) {
+        EMLog.e(TAG, "addReactionMessageFail,code = " + code + ",error=" + error);
+        if (null != reactionMessageListener) {
+            reactionMessageListener.addReactionMessageFail(message, code, error);
+        }
+    }
+
+    @Override
+    public void removeReactionMessageSuccess(ChatMessage message) {
+        EMLog.e(TAG, "removeReactionMessageSuccess");
+        refreshMessage(message);
+        if (null != reactionMessageListener) {
+            reactionMessageListener.removeReactionMessageSuccess(message);
+        }
+    }
+
+    @Override
+    public void removeReactionMessageFail(ChatMessage message, int code, String error) {
+        EMLog.e(TAG, "removeReactionMessageFail");
+        if (null != reactionMessageListener) {
+            reactionMessageListener.removeReactionMessageFail(message, code, error);
         }
     }
 
