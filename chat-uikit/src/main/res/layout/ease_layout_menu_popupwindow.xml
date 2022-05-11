@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/ease_menu_popupwindow_layer_bg">
+    android:background="@drawable/ease_bg_message_menu_popupwindow">
 
     <FrameLayout
         android:id="@+id/expand_icon"

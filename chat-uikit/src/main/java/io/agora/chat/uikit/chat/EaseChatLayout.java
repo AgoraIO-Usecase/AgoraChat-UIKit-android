@@ -57,8 +57,10 @@ import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseThreadManager;
+import io.agora.chat.uikit.menu.EaseMessageMenuPopupWindow;
 import io.agora.chat.uikit.menu.EasePopupWindow;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
+import io.agora.chat.uikit.menu.EaseReactionMenuHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 import io.agora.chat.uikit.menu.ReactionItemBean;
 import io.agora.chat.uikit.models.EaseEmojicon;
@@ -146,6 +148,14 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     private Drawable preBackground;
     // To flag whether has get the background drawable of input menu
     private boolean hasGetInputBgFlag;
+    /**
+     * Message's header view, default is Reaction view
+     */
+    private View mMenuHeaderView;
+    /**
+     * Whether to show reaction view
+     */
+    private boolean mIsShowReactionView = true;
 
     public EaseChatLayout(Context context) {
         this(context, null);
@@ -951,6 +961,16 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         this.menuChangeListener = listener;
     }
 
+    @Override
+    public void addHeaderView(View view) {
+        this.mMenuHeaderView = view;
+    }
+
+    @Override
+    public void hideReactionView(boolean hide) {
+        this.mIsShowReactionView = !hide;
+    }
+
     /**
      * input @
      * only for group chat
@@ -988,6 +1008,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     private void showDefaultMenu(View v, ChatMessage message) {
         menuHelper.initMenu(getContext());
+        menuHelper.addHeaderView(checkHeaderViewForDefaultMenu(message));
         menuHelper.setDefaultMenus();
         menuHelper.setOutsideTouchable(true);
         setMenuByMsgType(message);
@@ -1026,6 +1047,36 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
             }
         });
         menuHelper.show(this, v);
+    }
+
+    private View checkHeaderViewForDefaultMenu(ChatMessage message) {
+        if(mMenuHeaderView != null) {
+            return mMenuHeaderView;
+        }
+        if(!mIsShowReactionView) {
+            return null;
+        }
+        // Use reaction view
+        EaseReactionMenuHelper helper = new EaseReactionMenuHelper();
+        helper.init(getContext(), menuHelper);
+        helper.setMessageReactions(message.getMessageReaction());
+        helper.show();
+        helper.setReactionItemClickListener(new EaseMessageMenuPopupWindow.OnPopupWindowItemClickListener() {
+            @Override
+            public void onReactionItemClick(ReactionItemBean item, boolean isAdd) {
+                if (isAdd) {
+                    presenter.addReaction(message, item.getIdentityCode());
+                } else {
+                    presenter.removeReaction(message, item.getIdentityCode());
+                }
+            }
+
+            @Override
+            public void onMenuItemClick(MenuItemBean item) {
+
+            }
+        });
+        return helper.getView();
     }
 
     private void skipToCreateThread(ChatMessage message) {

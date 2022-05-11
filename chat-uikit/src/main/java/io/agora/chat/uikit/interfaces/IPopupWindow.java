@@ -1,6 +1,8 @@
 package io.agora.chat.uikit.interfaces;
 
 
+import android.view.View;
+
 import io.agora.chat.uikit.menu.EasePopupWindow;
 import io.agora.chat.uikit.menu.EaseMessageMenuHelper;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
@@ -43,5 +45,17 @@ public interface IPopupWindow {
 
     void setOnPopupWindowItemClickListener(OnMenuChangeListener listener);
 
-    EaseMessageMenuHelper getMenuHelper();
+    /**
+     * Add header view for message menu
+     * @param view
+     */
+    void addHeaderView(View view);
+
+    /**
+     * Hide default reaction view
+     * @param hide
+     */
+    void hideReactionView(boolean hide);
+
+    EasePopupWindowHelper getMenuHelper();
 }

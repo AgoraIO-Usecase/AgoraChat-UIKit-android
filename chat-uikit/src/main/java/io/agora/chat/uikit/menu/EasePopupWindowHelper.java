@@ -56,6 +56,7 @@ public class EasePopupWindowHelper {
     private EasePopupWindow.Style menuStyle = EasePopupWindow.Style.BOTTOM_SCREEN;
     private boolean itemMenuIconVisible = true;
     private RelativeLayout rvTop;
+    private View headerView;
 
     public EasePopupWindowHelper() {
         if(pMenu != null) {
@@ -102,6 +103,23 @@ public class EasePopupWindowHelper {
                     return true;
                 }
             });
+        }
+    }
+
+    /**
+     * Add header view for menu layout
+     * @param headerView
+     */
+    public void addHeaderView(View headerView) {
+        this.headerView = headerView;
+        if(menuStyle != EasePopupWindow.Style.ATTACH_ITEM_VIEW) {
+            if(rvTop != null && headerView != null) {
+                rvTop.removeAllViews();
+                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                rvTop.addView(headerView, params);
+                rvTop.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -345,6 +363,11 @@ public class EasePopupWindowHelper {
                     R.layout.ease_layout_item_menu_popupwindow :
                     R.layout.ease_layout_item_menu_popupwindow_horizontal, parent, false);
             return new MenuViewHolder(view);
+        }
+
+        @Override
+        public int getEmptyLayoutId() {
+            return R.layout.ease_layout_no_data_show_nothing;
         }
 
         private class MenuViewHolder extends ViewHolder<MenuItemBean> {

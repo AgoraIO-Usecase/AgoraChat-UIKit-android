@@ -149,7 +149,7 @@ public class EaseChatReactionView extends LinearLayout implements OnItemClickLis
             return;
         }
         //default gone
-        mLayout.setVisibility(GONE);
+        this.setVisibility(GONE);
 
         List<MessageReaction> messageReactions = message.getMessageReaction();
         if (null != messageReactions && messageReactions.size() > 0) {
@@ -168,7 +168,7 @@ public class EaseChatReactionView extends LinearLayout implements OnItemClickLis
                 }
             }
             if (0 != list.size()) {
-                mLayout.setVisibility(VISIBLE);
+                this.setVisibility(VISIBLE);
                 updateData(list, message.getMsgId());
             }
         }

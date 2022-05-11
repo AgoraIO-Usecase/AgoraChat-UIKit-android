@@ -90,6 +90,15 @@ public class EaseMessageReactionHelper {
         mMainThreadHandler = new Handler(Looper.getMainLooper());
     }
 
+    public void init(@NonNull Context context) {
+        this.mContext = context;
+        mLayout = View.inflate(context.getApplicationContext(), R.layout.ease_layout_message_reaction_popupwindow, null);
+        mReactionListView = mLayout.findViewById(R.id.rv_reaction_list);
+        LinearLayoutManager ms = new LinearLayoutManager(mContext);
+        ms.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mReactionListView.setLayoutManager(ms);
+    }
+
     /**
      * @param context
      */
