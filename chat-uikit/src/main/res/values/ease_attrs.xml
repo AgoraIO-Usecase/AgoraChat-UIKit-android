@@ -160,20 +160,6 @@
             <enum name="left" value="1" />
             <enum name="right" value="2" />
         </attr>
+
     </declare-styleable>
-
-    <declare-styleable name="EaseChatRoomMessagesView">
-        <attr name="ease_live_input_edit_margin_bottom" format="dimension" />
-        <attr name="ease_live_input_edit_margin_end" format="dimension" />
-        <attr name="ease_live_message_list_margin_end" format="dimension" />
-        <attr name="ease_live_message_nick_name_max_ems" format="integer" />
-        <attr name="ease_live_message_nick_name_ellipsize" format="enum">
-            <enum name="start" value="0" />
-            <enum name="middle" value="1" />
-            <enum name="end" value="2" />
-            <enum name="marquee" value="3" />
-        </attr>
-    </declare-styleable>
-
-
 </resources>
