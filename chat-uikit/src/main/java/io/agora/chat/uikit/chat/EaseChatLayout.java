@@ -302,7 +302,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     /**
      * Send channel ack message
-     * (1) If it is a 1v1 session, the other party will receive a channel ack callback, the callback method is {@link io.agora.ConversationListener#onConversationRead(String, String)}
+     * (1) If it is a 1v1 session, the other party will receive a channel ack callback, the callback method is {@link ConversationListener#onConversationRead(String, String)}
      * The SDK will set the isAcked of the message sent for this session to true.
      * (2) If it is a multi-terminal device, the other end will receive a channel ack callback, and the SDK will set the session as read.
      * (3) Not send channel ack when the conversation is thread
@@ -1032,6 +1032,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                         EMLog.i(TAG,"currentMsgId = "+message.getMsgId() + " timestamp = "+message.getMsgTime());
                     }else if(itemId == R.id.action_chat_recall) {
                         recallMessage(message);
+                    }else if(itemId == R.id.action_chat_reply) {
+                        skipToCreateThread(message);
                     }
                     return true;
                 }
@@ -1085,6 +1087,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     private void setMenuByMsgType(ChatMessage message) {
         ChatMessage.Type type = message.getType();
+        menuHelper.findItemVisible(R.id.action_chat_reply, false);
         menuHelper.findItemVisible(R.id.action_chat_copy, false);
         menuHelper.findItemVisible(R.id.action_chat_recall, false);
         menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_action_delete));
@@ -1106,6 +1109,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_video));
                 menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
+        }
+        if(message.getChatType() == ChatMessage.ChatType.GroupChat && message.getThreadOverview() == null) {
+            menuHelper.findItemVisible(R.id.action_chat_reply, true);
         }
 
         if(message.direct() == ChatMessage.Direct.RECEIVE ){
