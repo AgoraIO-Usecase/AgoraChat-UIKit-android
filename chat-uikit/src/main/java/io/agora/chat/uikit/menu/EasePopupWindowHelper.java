@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.MenuAdapter;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,6 +55,8 @@ public class EasePopupWindowHelper {
     private EasePopupWindow.Style menuStyle = EasePopupWindow.Style.BOTTOM_SCREEN;
     private boolean itemMenuIconVisible = true;
     private RelativeLayout rvTop;
+    private FrameLayout flBottom;
+    int pRealHeight;
 
     public EasePopupWindowHelper() {
         if(pMenu != null) {
@@ -61,7 +65,7 @@ public class EasePopupWindowHelper {
         menuItems.clear();
         menuItemMap.clear();
     }
-
+    private View mPopupView;
     /**
      * @param context
      */
@@ -74,9 +78,11 @@ public class EasePopupWindowHelper {
         pMenu = new EasePopupWindow(context, closeChangeBg);
         layout = LayoutInflater.from(context).inflate(R.layout.ease_layout_menu_popupwindow, null);
         pMenu.setContentView(layout);
+        mPopupView = layout.findViewById(R.id.popup_view);
         tvTitle = layout.findViewById(R.id.tv_title);
         rvMenuList = layout.findViewById(R.id.rv_menu_list);
         rvTop = layout.findViewById(R.id.rl_top);
+        flBottom = layout.findViewById(R.id.fl_bottom);
         adapter = new MenuAdapter();
         rvMenuList.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemClickListener() {
@@ -88,18 +94,6 @@ public class EasePopupWindowHelper {
                 }
             }
         });
-        // Only bottom screen style will show expand icon
-        if(menuStyle == EasePopupWindow.Style.BOTTOM_SCREEN) {
-            View expandIcon = layout.findViewById(R.id.expand_icon);
-            expandIcon.setVisibility(View.VISIBLE);
-            expandIcon.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    dismiss();
-                    return true;
-                }
-            });
-        }
     }
 
     /**
@@ -256,15 +250,105 @@ public class EasePopupWindowHelper {
     }
 
     private void showBottomToScreen(View parent, View v) {
+        setBottomStyleTouchEvent();
         // Set screen's alpha
         pMenu.setBackgroundAlpha(screenBgAlpha);
         // Set popup window's background alpha
         getView().setAlpha(popupWindowBgAlpha);
         rvMenuList.setLayoutManager(new LinearLayoutManager(context));
+        pMenu.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        pMenu.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        pMenu.setAnimationStyle(R.style.message_menu_popup_window_anim_style);
         pMenu.showAtLocation(parent, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        ViewGroup.LayoutParams layoutParams = getView().getLayoutParams();
-        layoutParams.width = (int) EaseUtils.getScreenInfo(context)[0];
-        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+        ViewGroup.LayoutParams params = mPopupView.getLayoutParams();
+        params.width = (int) EaseUtils.getScreenInfo(context)[0];
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+
+        mPopupView.post(()->{
+            pRealHeight = mPopupView.getMeasuredHeight();
+            Log.e("TAG", "pRealHeight: "+pRealHeight);
+        });
+    }
+
+    private void setBottomStyleTouchEvent() {
+        final float screenHeight = EaseUtils.getScreenInfo(context)[1];
+        final int minPopupWindowHeight = (int) screenHeight * 2 / 5;
+        final int maxPopupWindowHeight = (int) screenHeight - (int) EaseUtils.dip2px(context, 50);
+        View expandIcon = layout.findViewById(R.id.expand_icon);
+        expandIcon.setVisibility(View.VISIBLE);
+        expandIcon.setOnTouchListener(new View.OnTouchListener() {
+            int orgX, orgY;
+            int offsetX, offsetY;
+            int popupWindowCurHeight;
+            int slippingHeight;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        orgX = (int) event.getRawX();
+                        orgY = (int) event.getRawY();
+                        if(popupWindowCurHeight == 0) {
+                            popupWindowCurHeight = pRealHeight;
+                        }
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        offsetX = (int) event.getRawX() - orgX;
+                        offsetY = (int) event.getRawY() - orgY;
+                        slippingHeight = popupWindowCurHeight - offsetY;
+                        ViewGroup.LayoutParams layoutParams = mPopupView.getLayoutParams();
+                        layoutParams.height = slippingHeight;
+                        mPopupView.requestLayout();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if(offsetY > 0) {// slip down
+                            if(minPopupWindowHeight > pRealHeight) {
+                                if(slippingHeight > minPopupWindowHeight) {
+                                    popupWindowCurHeight = minPopupWindowHeight;
+                                }else if(slippingHeight < pRealHeight - EaseUtils.dip2px(context, 20)){
+                                    dismiss();
+                                }else {
+                                    popupWindowCurHeight = pRealHeight;
+                                }
+                            }else {
+                                if(slippingHeight < pRealHeight - EaseUtils.dip2px(context, 20)){
+                                    dismiss();
+                                }else {
+                                    popupWindowCurHeight = pRealHeight;
+                                }
+                            }
+                        }else { // slip up
+                            if(minPopupWindowHeight > pRealHeight) {
+                                if(slippingHeight > minPopupWindowHeight) {
+                                    popupWindowCurHeight = maxPopupWindowHeight;
+                                }else if(slippingHeight > pRealHeight) {
+                                    popupWindowCurHeight = minPopupWindowHeight;
+                                }else {
+                                    dismiss();
+                                }
+                            }else {
+                                if(slippingHeight > pRealHeight) {
+                                    popupWindowCurHeight = maxPopupWindowHeight;
+                                }else {
+                                    dismiss();
+                                }
+                            }
+                        }
+                        ViewGroup.LayoutParams layoutParams2 = mPopupView.getLayoutParams();
+                        layoutParams2.height = popupWindowCurHeight;
+                        mPopupView.requestLayout();
+                        break;
+                }
+                return true;
+            }
+        });
+        layout.findViewById(R.id.top_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     private void showAttachItemViewStyle(View parent, View v, boolean isTop) {

@@ -57,7 +57,6 @@ import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseThreadManager;
-import io.agora.chat.uikit.menu.EaseMessageMenuPopupWindow;
 import io.agora.chat.uikit.menu.EasePopupWindow;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.EaseReactionMenuHelper;
@@ -941,10 +940,10 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         menuHelper.findItemVisible(id, visible);
     }
 
-    @Override
-    public void setMenuStyle(EasePopupWindow.Style style) {
-        menuHelper.setMenuStyle(style);
-    }
+//    @Override
+//    public void setMenuStyle(EasePopupWindow.Style style) {
+//        menuHelper.setMenuStyle(style);
+//    }
 
     @Override
     public void setItemMenuIconVisible(boolean visible) {

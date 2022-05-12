@@ -3,8 +3,6 @@ package io.agora.chat.uikit.interfaces;
 
 import android.view.View;
 
-import io.agora.chat.uikit.menu.EasePopupWindow;
-import io.agora.chat.uikit.menu.EaseMessageMenuHelper;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 
@@ -35,7 +33,7 @@ public interface IPopupWindow {
      * Set menu popup window's style
      * @param style
      */
-    void setMenuStyle(EasePopupWindow.Style style);
+    //void setMenuStyle(EasePopupWindow.Style style);
 
     /**
      * Set whether show item menu icon

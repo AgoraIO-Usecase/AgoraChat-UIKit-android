@@ -52,8 +52,8 @@ public class EaseMessageReactionHelper {
     private Context mContext;
     private ReactionAdapter mReactionAdapter;
     private UserListAdapter mUserAdapter;
-    private EaseMessageMenuPopupWindow.OnPopupWindowItemClickListener mItemClickListener;
-    private EaseMessageMenuPopupWindow.OnPopupWindowDismissListener mDismissListener;
+    private EasePopupWindow.OnPopupWindowItemClickListener mItemClickListener;
+    private EasePopupWindow.OnPopupWindowDismissListener mDismissListener;
     private boolean mTouchable;
     private Drawable mBackground;
     private View mLayout;
@@ -349,7 +349,7 @@ public class EaseMessageReactionHelper {
      *
      * @param listener
      */
-    public void setOnPopupReactionItemClickListener(EaseMessageMenuPopupWindow.OnPopupWindowItemClickListener listener) {
+    public void setOnPopupReactionItemClickListener(EasePopupWindow.OnPopupWindowItemClickListener listener) {
         this.mItemClickListener = listener;
     }
 
@@ -358,7 +358,7 @@ public class EaseMessageReactionHelper {
      *
      * @param listener
      */
-    public void setOnPopupMenuDismissListener(EaseMessageMenuPopupWindow.OnPopupWindowDismissListener listener) {
+    public void setOnPopupMenuDismissListener(EasePopupWindow.OnPopupWindowDismissListener listener) {
         this.mDismissListener = listener;
     }
 

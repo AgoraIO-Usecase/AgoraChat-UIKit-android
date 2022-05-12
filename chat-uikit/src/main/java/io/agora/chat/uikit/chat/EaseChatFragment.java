@@ -49,6 +49,7 @@ import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
+import io.agora.chat.uikit.menu.EasePopupWindow;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 import io.agora.chat.uikit.utils.EaseCompat;
