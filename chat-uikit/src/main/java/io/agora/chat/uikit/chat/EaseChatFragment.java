@@ -558,9 +558,11 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         if(isThreadNotify) {
             helper.findItemVisible(R.id.action_chat_copy, false);
             helper.findItemVisible(R.id.action_chat_reply, false);
-            helper.findItemVisible(R.id.action_chat_unsent, false);
+            helper.findItemVisible(R.id.action_chat_recall, false);
             helper.findItemVisible(R.id.action_chat_delete, true);
+            helper.showHeaderView(false);
         }
+        helper.findItem(R.id.action_chat_recall).setTitleColor(ContextCompat.getColor(mContext, R.color.ease_message_unsend_menu_txt));
     }
 
     @Override

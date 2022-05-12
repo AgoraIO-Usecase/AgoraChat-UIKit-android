@@ -71,13 +71,6 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
             }
         }
         addHeaderViewToList();
-        setThreadMenu();
-    }
-
-    private void setThreadMenu() {
-        MenuItemBean unsentMenu = new MenuItemBean(0, R.id.action_chat_unsent, 100, getString(R.string.ease_action_unsent));
-        unsentMenu.setResourceId(R.drawable.ease_chat_item_menu_delete);
-        chatLayout.addItemMenu(unsentMenu);
     }
 
     private void addHeaderViewToList() {
@@ -105,20 +98,13 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         super.onPreMenu(helper, message);
         // Chat Thread is load from server, not need to delete from local
         helper.findItemVisible(R.id.action_chat_delete, false);
+        // Chat Thread can not to add reaction at moment
+        helper.showHeaderView(false);
         // Chat Thread can not reply again
         helper.findItemVisible(R.id.action_chat_reply, false);
         if(!message.isThread() || message.direct() == ChatMessage.Direct.RECEIVE) {
-            helper.findItemVisible(R.id.action_chat_unsent, false);
+            helper.findItemVisible(R.id.action_chat_recall, false);
         }
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItemBean item, ChatMessage message) {
-        if(item.getItemId() == R.id.action_chat_unsent) {
-            chatLayout.recallMessage(message);
-            return true;
-        }
-        return super.onMenuItemClick(item, message);
     }
 
     @Override

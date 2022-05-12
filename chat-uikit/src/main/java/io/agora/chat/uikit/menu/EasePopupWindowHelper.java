@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -32,12 +31,10 @@ import java.util.Map;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.adapter.EaseBaseRecyclerViewAdapter;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
+import io.agora.chat.uikit.models.EaseMessageMenuData;
 import io.agora.chat.uikit.utils.EaseUtils;
 
 public class EasePopupWindowHelper {
-    private static final int[] itemIds = {R.id.action_chat_reply, R.id.action_chat_copy, R.id.action_chat_delete};
-    private static final int[] titles = {R.string.ease_action_reply, R.string.ease_action_copy, R.string.ease_action_delete, R.string.ease_action_recall};
-    private static final int[] icons = {R.drawable.ease_chat_item_menu_reply, R.drawable.ease_chat_item_menu_copy, R.drawable.ease_chat_item_menu_delete};
     private static final int SPAN_COUNT = 5;
     private static float screenBgAlpha = 0.3f;
     private static float popupWindowBgAlpha = 0.8f;
@@ -56,7 +53,6 @@ public class EasePopupWindowHelper {
     private EasePopupWindow.Style menuStyle = EasePopupWindow.Style.BOTTOM_SCREEN;
     private boolean itemMenuIconVisible = true;
     private RelativeLayout rvTop;
-    private View headerView;
 
     public EasePopupWindowHelper() {
         if(pMenu != null) {
@@ -111,7 +107,6 @@ public class EasePopupWindowHelper {
      * @param headerView
      */
     public void addHeaderView(View headerView) {
-        this.headerView = headerView;
         if(menuStyle != EasePopupWindow.Style.ATTACH_ITEM_VIEW) {
             if(rvTop != null && headerView != null) {
                 rvTop.removeAllViews();
@@ -130,9 +125,10 @@ public class EasePopupWindowHelper {
 
     public void setDefaultMenus() {
         MenuItemBean bean;
-        for(int i = 0; i < itemIds.length; i++) {
-            bean = new MenuItemBean(0, itemIds[i], (i+1)*10, context.getString(titles[i]));
-            bean.setResourceId(icons[i]);
+        for (int i = 0; i < EaseMessageMenuData.MENU_ITEM_IDS.length; i++) {
+            bean = new MenuItemBean(0, EaseMessageMenuData.MENU_ITEM_IDS[i], (i + 1) * 10,
+                    context.getString(EaseMessageMenuData.MENU_TITLES[i]));
+            bean.setResourceId(EaseMessageMenuData.MENU_ICONS[i]);
             addItemMenu(bean);
         }
     }
@@ -167,6 +163,12 @@ public class EasePopupWindowHelper {
 
     public void setBackgroundDrawable(Drawable background) {
         this.background = background;
+    }
+
+    public void showHeaderView(boolean showHeaderView) {
+        if(rvTop != null) {
+            rvTop.setVisibility(showHeaderView ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void showPre() {
@@ -389,6 +391,9 @@ public class EasePopupWindowHelper {
                 String title = item.getTitle();
                 if(!TextUtils.isEmpty(title)) {
                     tvActionName.setText(title);
+                }
+                if(item.getTitleColor() != 0) {
+                    tvActionName.setTextColor(item.getTitleColor());
                 }
                 if(item.getResourceId() != 0 && itemMenuIconVisible) {
                     ivActionIcon.setVisibility(View.VISIBLE);
