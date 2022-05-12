@@ -208,17 +208,24 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         if(params instanceof LayoutParams) {
             if(titlePosition == 0) { //Middle
                 ((LayoutParams) params).addRule(RelativeLayout.CENTER_IN_PARENT);
+                ((LayoutParams) params).removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                ((LayoutParams) params).removeRule(RelativeLayout.CENTER_VERTICAL);
+                ((LayoutParams) params).removeRule(RelativeLayout.RIGHT_OF);
             }else if(titlePosition == 1) { //Left
                 ((LayoutParams) params).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 ((LayoutParams) params).addRule(RelativeLayout.CENTER_VERTICAL);
                 ((LayoutParams) params).addRule(RelativeLayout.RIGHT_OF, leftLayout.getId());
             }else { //Right
+                ((LayoutParams) params).removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                ((LayoutParams) params).removeRule(RelativeLayout.CENTER_VERTICAL);
+                ((LayoutParams) params).removeRule(RelativeLayout.RIGHT_OF);
                 ((LayoutParams) params).addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 ((LayoutParams) params).addRule(RelativeLayout.CENTER_VERTICAL);
                 ((LayoutParams) params).addRule(LEFT_OF, rightLayout.getId());
                 ((LayoutParams) params).setMargins(0, 0, (int) dip2px(getContext(), 60), 0);
             }
         }
+        clTitle.setLayoutParams(params);
     }
 
     private void initToolbar() {
