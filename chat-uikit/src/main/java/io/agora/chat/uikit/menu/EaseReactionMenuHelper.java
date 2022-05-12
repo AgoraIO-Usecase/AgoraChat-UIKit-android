@@ -40,7 +40,7 @@ public class EaseReactionMenuHelper {
     private RecyclerView mReactionListView;
     private ReactionAdapter mReactionAdapter;
     private EasePopupWindowHelper popupWindowHelper;
-    private EaseMessageMenuPopupWindow.OnPopupWindowItemClickListener mItemClickListener;
+    private EasePopupWindow.OnPopupWindowItemClickListener mItemClickListener;
     private boolean mIsShowReactionView = true;
 
     public void init(Context context, EasePopupWindowHelper popupWindowHelper) {
@@ -115,7 +115,7 @@ public class EaseReactionMenuHelper {
         return mLayout;
     }
 
-    public void setReactionItemClickListener(EaseMessageMenuPopupWindow.OnPopupWindowItemClickListener listener) {
+    public void setReactionItemClickListener(EasePopupWindow.OnPopupWindowItemClickListener listener) {
         mItemClickListener = listener;
     }
 

@@ -1063,7 +1063,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         helper.init(getContext(), menuHelper);
         helper.setMessageReactions(message.getMessageReaction());
         helper.show();
-        helper.setReactionItemClickListener(new EaseMessageMenuPopupWindow.OnPopupWindowItemClickListener() {
+        helper.setReactionItemClickListener(new EasePopupWindow.OnPopupWindowItemClickListener() {
             @Override
             public void onReactionItemClick(ReactionItemBean item, boolean isAdd) {
                 if (isAdd) {
@@ -1074,8 +1074,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
             }
 
             @Override
-            public void onMenuItemClick(MenuItemBean item) {
-
+            public boolean onMenuItemClick(MenuItemBean item) {
+                return false;
             }
         });
         return helper.getView();
