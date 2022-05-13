@@ -181,10 +181,11 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/ease_chat_nick_margin_left"
             android:textSize="@dimen/ease_chat_nick_text_size"
+            android:text="som"
             android:textColor="@color/ease_msg_name_color"
-            app:layout_constraintBottom_toTopOf="@id/bubble"
+            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
             app:layout_constraintRight_toRightOf="@id/bubble"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

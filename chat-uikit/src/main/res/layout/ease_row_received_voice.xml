@@ -101,7 +101,8 @@
             android:layout_marginLeft="10dp"
             app:layout_constraintStart_toEndOf="@id/bubble"
             app:layout_constraintTop_toTopOf="@id/bubble"
-            android:src="@drawable/ease_chat_voice_unread_icon" />
+            android:src="@drawable/ease_chat_voice_unread_icon"
+            android:visibility="gone"/>
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -112,7 +113,7 @@
             android:indeterminateDrawable="@drawable/ease_chat_loading_progress_bar"
             app:layout_constraintStart_toEndOf="@id/bubble"
             app:layout_constraintBottom_toBottomOf="@id/bubble"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
          <TextView
             android:id="@+id/tv_userid"
@@ -123,7 +124,7 @@
             android:textSize="@dimen/ease_chat_nick_text_size"
             android:visibility="gone"
             android:layout_marginBottom="5dp"
-            app:layout_constraintBottom_toTopOf="@id/bubble"
+            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
             app:layout_constraintStart_toStartOf="@id/bubble" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -98,7 +98,7 @@
             android:textSize="@dimen/ease_chat_nick_text_size"
             android:visibility="gone"
             android:layout_marginBottom="6dp"
-            app:layout_constraintBottom_toTopOf="@id/bubble"
+            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
             app:layout_constraintStart_toStartOf="@id/bubble" />
 
         <io.agora.chat.uikit.chat.widget.EaseChatReactionView
