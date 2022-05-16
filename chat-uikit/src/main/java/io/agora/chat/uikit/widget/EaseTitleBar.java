@@ -47,6 +47,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     private int mArrowColorId;
     private int mArrowColor;
     private int mTitleTextColor;
+    private int mRightTextColor;
     private int mWidth;
     private int mHeight;
     private boolean mDisplayHomeAsUpEnabled;
@@ -137,6 +138,14 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
                 String rightTitle = ta.getString(R.styleable.EaseTitleBar_titleBarRightTitle);
                 titleMenu.setText(rightTitle);
             }
+
+            int rightTextColor = ta.getResourceId(R.styleable.EaseTitleBar_titleBarRightTextColor, -1);
+            if(rightTextColor != -1) {
+                mRightTextColor = ContextCompat.getColor(getContext(), rightTextColor);
+            }else {
+                mRightTextColor = ta.getColor(R.styleable.EaseTitleBar_titleBarRightTextColor, ContextCompat.getColor(getContext(), R.color.ease_toolbar_color_title));
+            }
+            titleMenu.setTextColor(mRightTextColor);
 
             boolean rightVisible = ta.getBoolean(R.styleable.EaseTitleBar_titleBarRightVisible, false);
             rightLayout.setVisibility(rightVisible ? VISIBLE : GONE);
