@@ -161,4 +161,25 @@ public class EaseLiveMessageStyleHelper {
     public void setNicknameEllipsize(int nicknameEllipsize) {
         this.nicknameEllipsize = nicknameEllipsize;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "EaseLiveMessageStyleHelper{" +
+                "inputEditMarginBottom=" + inputEditMarginBottom +
+                ", inputEditMarginEnd=" + inputEditMarginEnd +
+                ", messageListMarginEnd=" + messageListMarginEnd +
+                ", messageListBackground=" + messageListBackground +
+                ", messageItemTxtColor=" + messageItemTxtColor +
+                ", messageItemTxtSize=" + messageItemTxtSize +
+                ", messageItemBubblesBackground=" + messageItemBubblesBackground +
+                ", messageNicknameColor=" + messageNicknameColor +
+                ", messageNicknameSize=" + messageNicknameSize +
+                ", messageShowNickname=" + messageShowNickname +
+                ", messageShowAvatar=" + messageShowAvatar +
+                ", messageAvatarShapeType=" + messageAvatarShapeType +
+                ", nicknameMaxEms=" + nicknameMaxEms +
+                ", nicknameEllipsize=" + nicknameEllipsize +
+                '}';
+    }
 }

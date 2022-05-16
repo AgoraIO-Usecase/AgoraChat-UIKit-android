@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.interfaces;
 
 
+import io.agora.chat.uikit.menu.EaseMessageMenuHelper;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 
@@ -24,5 +25,5 @@ public interface IPopupWindow {
 
     void setOnPopupWindowItemClickListener(OnMenuChangeListener listener);
 
-    EasePopupWindowHelper getMenuHelper();
+    EaseMessageMenuHelper getMenuHelper();
 }

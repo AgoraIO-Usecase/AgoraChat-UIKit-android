@@ -156,4 +156,10 @@ public interface IChatLayout {
      */
     void setOnAddMsgAttrsBeforeSendEvent(OnAddMsgAttrsBeforeSendEvent sendMsgEvent);
 
+    /**
+     * The listener of reaction
+     *
+     * @param reactionListener
+     */
+    void setOnReactionListener(OnReactionMessageListener reactionListener);
 }

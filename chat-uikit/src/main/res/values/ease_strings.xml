@@ -90,4 +90,8 @@
     <string name="ease_presence_custom">Custom Status</string>
     <string name="ease_presence_status">Status</string>
     <string name="ease_presence_done">Done</string>
+    <string name="action_reaction">Reactions</string>
+    <string name="ease_number_ninety_nine_more">99+</string>
+    <string name="ease_number_point_ninety_nine_more">&#183;&#183;&#183; 99+</string>
+    <string name="ease_number_more">&#183;&#183;&#183; %1$d</string>
 </resources>

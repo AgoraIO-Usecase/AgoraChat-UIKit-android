@@ -3,31 +3,32 @@
 
     <declare-styleable name="EaseTitleBar">
         <!-- title -->
-        <attr name="titleBarTitle" format="reference|string" />
-        <attr name="titleBarLeftImage" format="reference" />
-        <attr name="titleBarRightImage" format="reference" />
-        <attr name="titleBarRightTitle" format="reference|string" />
+        <attr name="titleBarTitle" format="reference|string"/>
+        <attr name="titleBarLeftImage" format="reference"/>
+        <attr name="titleBarRightImage" format="reference"/>
+        <attr name="titleBarRightTitle" format="reference|string"/>
+        <attr name="titleBarRightTextColor" format="reference|color" />
         <!-- Toolbar home as up indicator's color -->
-        <attr name="titleBarArrowColor" format="reference|color" />
+        <attr name="titleBarArrowColor" format="reference|color"/>
         <!-- Toolbar Overflow Icon -->
-        <attr name="titleBarMenuResource" format="reference" />
-        <attr name="titleBarDisplayHomeAsUpEnabled" format="boolean" />
+        <attr name="titleBarMenuResource" format="reference"/>
+        <attr name="titleBarDisplayHomeAsUpEnabled" format="boolean"/>
         <!-- Right region visible -->
-        <attr name="titleBarRightVisible" format="boolean" />
+        <attr name="titleBarRightVisible" format="boolean"/>
         <!-- title's position-->
         <attr name="titleBarTitlePosition" format="enum">
-            <enum name="center" value="0" />
-            <enum name="left" value="1" />
-            <enum name="right" value="2" />
+            <enum name="center" value="0"/>
+            <enum name="left" value="1"/>
+            <enum name="right" value="2"/>
         </attr>
         <!-- Title size -->
-        <attr name="titleBarTitleTextSize" format="dimension" />
+        <attr name="titleBarTitleTextSize" format="dimension"/>
         <!-- Title color -->
-        <attr name="titleBarTitleTextColor" format="reference|color" />
+        <attr name="titleBarTitleTextColor" format="reference|color"/>
         <!-- Title icon-->
-        <attr name="titleBarIcon" format="reference" />
+        <attr name="titleBarIcon" format="reference"/>
         <!-- Title icon size-->
-        <attr name="titleBarIconSize" format="reference|dimension" />
+        <attr name="titleBarIconSize" format="reference|dimension"/>
     </declare-styleable>
 
     <declare-styleable name="EaseImageView">
@@ -44,38 +45,38 @@
     </declare-styleable>
 
     <declare-styleable name="EaseChatExtendMenu">
-        <attr name="numColumns" format="integer" />
-        <attr name="numRows" format="integer" />
+        <attr name="numColumns" format="integer"/>
+        <attr name="numRows" format="integer"/>
     </declare-styleable>
 
     <declare-styleable name="EaseEmojiconMenu">
-        <attr name="bigEmojiconRows" format="integer" />
-        <attr name="emojiconColumns" format="integer" />
+        <attr name="bigEmojiconRows" format="integer"/>
+        <attr name="emojiconColumns" format="integer"/>
     </declare-styleable>
 
     <declare-styleable name="EaseChatInputMenu">
-        <attr name="chat_extend_menu_num_columns" format="integer" />
-        <attr name="chat_extend_menu_vertical_spacing" format="dimension" />
+        <attr name="chat_extend_menu_num_columns" format="integer"/>
+        <attr name="chat_extend_menu_vertical_spacing" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="EaseChatMessageList">
-        <attr name="msgListMyBubbleBackground" format="reference" />
-        <attr name="msgListOtherBubbleBackground" format="reference" />
-        <attr name="msgListShowUserAvatar" format="boolean" />
-        <attr name="msgListShowUserNick" format="boolean" />
+        <attr name="msgListMyBubbleBackground" format="reference"/>
+        <attr name="msgListOtherBubbleBackground" format="reference"/>
+        <attr name="msgListShowUserAvatar" format="boolean"/>
+        <attr name="msgListShowUserNick" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="EaseConversationListLayout">
-        <attr name="ease_con_item_title_text_size" format="dimension" />
-        <attr name="ease_con_item_title_text_color" format="reference|color" />
-        <attr name="ease_con_item_content_text_size" format="dimension" />
-        <attr name="ease_con_item_content_text_color" format="reference|color" />
-        <attr name="ease_con_item_date_text_size" format="dimension" />
-        <attr name="ease_con_item_date_text_color" format="reference|color" />
-        <attr name="ease_con_item_mention_text_size" format="dimension" />
-        <attr name="ease_con_item_mention_text_color" format="reference|color" />
+        <attr name="ease_con_item_title_text_size" format="dimension"/>
+        <attr name="ease_con_item_title_text_color" format="reference|color"/>
+        <attr name="ease_con_item_content_text_size" format="dimension"/>
+        <attr name="ease_con_item_content_text_color" format="reference|color"/>
+        <attr name="ease_con_item_date_text_size" format="dimension"/>
+        <attr name="ease_con_item_date_text_color" format="reference|color"/>
+        <attr name="ease_con_item_mention_text_size" format="dimension"/>
+        <attr name="ease_con_item_mention_text_color" format="reference|color"/>
         <!-- avatar size -->
-        <attr name="ease_con_item_avatar_size" format="dimension" />
+        <attr name="ease_con_item_avatar_size" format="dimension"/>
         <!-- avatar shape type -->
         <attr name="ease_con_item_avatar_shape_type" format="enum">
             <enum name="none" value="0" />
@@ -83,34 +84,34 @@
             <enum name="rectangle" value="2" />
         </attr>
         <!-- avatar radius if set shape type is round -->
-        <attr name="ease_con_item_avatar_radius" format="dimension" />
+        <attr name="ease_con_item_avatar_radius" format="dimension"/>
         <!-- border width -->
-        <attr name="ease_con_item_avatar_border_width" format="dimension" />
+        <attr name="ease_con_item_avatar_border_width" format="dimension"/>
         <!-- border color -->
-        <attr name="ease_con_item_avatar_border_color" format="reference|color" />
+        <attr name="ease_con_item_avatar_border_color" format="reference|color"/>
         <!-- conversation item height -->
-        <attr name="ease_con_item_height" format="dimension" />
-        <attr name="ease_con_item_background" format="reference|color" />
+        <attr name="ease_con_item_height" format="dimension"/>
+        <attr name="ease_con_item_background" format="reference|color"/>
         <attr name="ease_con_item_unread_dot_position" format="enum">
-            <enum name="left" value="0" />
-            <enum name="right" value="1" />
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
         </attr>
         <attr name="ease_con_item_unread_style" format="enum">
-            <enum name="num" value="0" />
-            <enum name="dot" value="1" />
+            <enum name="num" value="0"/>
+            <enum name="dot" value="1"/>
         </attr>
     </declare-styleable>
 
     <declare-styleable name="EaseContactListLayout">
-        <attr name="ease_contact_item_title_text_size" format="dimension" />
-        <attr name="ease_contact_item_title_text_color" format="reference|color" />
-        <attr name="ease_contact_item_header_text_size" format="dimension" />
-        <attr name="ease_contact_item_header_text_color" format="reference|color" />
-        <attr name="ease_contact_item_header_background" format="reference|color" />
+        <attr name="ease_contact_item_title_text_size" format="dimension"/>
+        <attr name="ease_contact_item_title_text_color" format="reference|color"/>
+        <attr name="ease_contact_item_header_text_size" format="dimension"/>
+        <attr name="ease_contact_item_header_text_color" format="reference|color"/>
+        <attr name="ease_contact_item_header_background" format="reference|color"/>
         <!-- default avatar -->
-        <attr name="ease_contact_item_avatar_default_src" format="reference" />
+        <attr name="ease_contact_item_avatar_default_src" format="reference"/>
         <!-- avatar size -->
-        <attr name="ease_contact_item_avatar_size" format="dimension" />
+        <attr name="ease_contact_item_avatar_size" format="dimension"/>
         <!-- avatar shape type -->
         <attr name="ease_contact_item_avatar_shape_type" format="enum">
             <enum name="none" value="0" />
@@ -118,30 +119,30 @@
             <enum name="rectangle" value="2" />
         </attr>
         <!-- avatar radius if set shape type is round -->
-        <attr name="ease_contact_item_avatar_radius" format="dimension" />
+        <attr name="ease_contact_item_avatar_radius" format="dimension"/>
         <!-- border width -->
-        <attr name="ease_contact_item_avatar_border_width" format="dimension" />
+        <attr name="ease_contact_item_avatar_border_width" format="dimension"/>
         <!-- border color -->
-        <attr name="ease_contact_item_avatar_border_color" format="reference|color" />
-        <attr name="ease_contact_item_height" format="dimension" />
-        <attr name="ease_contact_item_background" format="reference|color" />
+        <attr name="ease_contact_item_avatar_border_color" format="reference|color"/>
+        <attr name="ease_contact_item_height" format="dimension"/>
+        <attr name="ease_contact_item_background" format="reference|color"/>
     </declare-styleable>
 
     <declare-styleable name="EaseChatMessageListLayout">
         <!-- Text size of text message -->
-        <attr name="ease_chat_item_text_size" format="dimension" />
+        <attr name="ease_chat_item_text_size" format="dimension"/>
         <!-- Text color of text message  -->
-        <attr name="ease_chat_item_text_color" format="reference|color" />
+        <attr name="ease_chat_item_text_color" format="reference|color"/>
         <!-- Min height of text message -->
-        <attr name="ease_chat_item_min_height" format="dimension" />
+        <attr name="ease_chat_item_min_height" format="dimension"/>
         <!-- Text size of time -->
-        <attr name="ease_chat_item_time_text_size" format="dimension" />
+        <attr name="ease_chat_item_time_text_size" format="dimension"/>
         <!-- Text color of time -->
-        <attr name="ease_chat_item_time_text_color" format="reference|color" />
+        <attr name="ease_chat_item_time_text_color" format="reference|color"/>
         <!-- Background of time -->
-        <attr name="ease_chat_item_time_background" format="reference|color" />
+        <attr name="ease_chat_item_time_background" format="reference|color"/>
         <!-- Default avatar -->
-        <attr name="ease_chat_item_avatar_default_src" format="reference" />
+        <attr name="ease_chat_item_avatar_default_src" format="reference"/>
         <!--<attr name="ease_chat_item_avatar_size" format="dimension"/>-->
         <!-- avatar shape type -->
         <attr name="ease_chat_item_avatar_shape_type" format="enum">
@@ -150,16 +151,19 @@
             <enum name="rectangle" value="2" />
         </attr>
         <!-- Background of item -->
-        <attr name="ease_chat_item_receiver_background" format="reference|color" />
-        <attr name="ease_chat_item_sender_background" format="reference|color" />
+        <attr name="ease_chat_item_receiver_background" format="reference|color"/>
+        <attr name="ease_chat_item_sender_background" format="reference|color"/>
         <!-- Whether to show nickname -->
-        <attr name="ease_chat_item_show_nickname" format="boolean" />
+        <attr name="ease_chat_item_show_nickname" format="boolean"/>
         <!-- Item show type -->
         <attr name="ease_chat_item_show_type" format="enum">
-            <enum name="normal" value="0" />
-            <enum name="left" value="1" />
-            <enum name="right" value="2" />
+            <enum name="normal" value="0"/>
+            <enum name="left" value="1"/>
+            <enum name="right" value="2"/>
         </attr>
-
+    </declare-styleable>
+    <declare-styleable name="EaseChatReactionView">
+        <!-- whether is sender -->
+        <attr name="ease_chat_item_sender" format="boolean" />
     </declare-styleable>
 </resources>
