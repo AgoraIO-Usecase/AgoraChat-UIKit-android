@@ -13,6 +13,7 @@ import io.agora.chat.Group;
 import io.agora.chat.MessageBody;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.util.EMLog;
@@ -155,9 +156,9 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
             message.setTo(toChatUsername);
         }
         addMessageAttributes(message);
-        if (chatType == EaseConstant.CHATTYPE_GROUP){
+        if (chatType == EaseChatType.GROUP_CHAT){
             message.setChatType(ChatMessage.ChatType.GroupChat);
-        }else if(chatType == EaseConstant.CHATTYPE_CHATROOM){
+        }else if(chatType == EaseChatType.CHATROOM){
             message.setChatType(ChatMessage.ChatType.ChatRoom);
         }
         // Add thread label for message

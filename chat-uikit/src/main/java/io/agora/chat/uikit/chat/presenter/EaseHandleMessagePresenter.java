@@ -10,12 +10,13 @@ import io.agora.chat.Conversation;
 import io.agora.chat.uikit.base.EaseBasePresenter;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.utils.EaseUtils;
 
 
 public abstract class EaseHandleMessagePresenter extends EaseBasePresenter implements IBaseHandleMessage{
     protected IHandleMessageView mView;
-    protected int chatType;
+    protected EaseChatType chatType;
     protected String toChatUsername;
     protected Conversation conversation;
     protected boolean isThread;
@@ -41,7 +42,7 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
      * @param chatType
      * @param toChatUsername
      */
-    public void setupWithToUser(int chatType, @NonNull String toChatUsername) {
+    public void setupWithToUser(EaseChatType chatType, @NonNull String toChatUsername) {
         setupWithToUser(chatType, toChatUsername, false);
     }
     
@@ -50,7 +51,7 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
      * @param chatType
      * @param toChatUsername
      */
-    public void setupWithToUser(int chatType, @NonNull String toChatUsername, boolean isThread) {
+    public void setupWithToUser(EaseChatType chatType, @NonNull String toChatUsername, boolean isThread) {
         this.chatType = chatType;
         this.toChatUsername = toChatUsername;
         this.isThread = isThread;
@@ -117,7 +118,7 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
      * @return
      */
     public boolean isGroupChat() {
-        return chatType == EaseConstant.CHATTYPE_GROUP;
+        return chatType == EaseChatType.GROUP_CHAT;
     }
 
     /**

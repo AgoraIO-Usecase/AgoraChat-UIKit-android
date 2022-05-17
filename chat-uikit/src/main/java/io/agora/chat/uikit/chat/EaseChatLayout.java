@@ -57,6 +57,7 @@ import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseThreadManager;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.menu.EasePopupWindow;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.EaseReactionMenuHelper;
@@ -106,9 +107,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      */
     private String conversationId;
     /**
-     * Chat type
+     * Chat type, see {@link EaseChatType}
      */
-    private int chatType;
+    private EaseChatType chatType;
     /**
      * Used to monitor changes in messages
      */
@@ -222,7 +223,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      * @param username chat id
      * @param chatType Chat type, single chat, group chat or chat room
      */
-    public void init(String username, int chatType) {
+    public void init(String username, EaseChatType chatType) {
         init(EaseChatMessageListLayout.LoadDataType.LOCAL, username, chatType);
     }
 
@@ -233,7 +234,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      *                            or the group id or chat room id
      * @param chatType Chat type, single chat, group chat or chat room
      */
-    public void init(EaseChatMessageListLayout.LoadDataType loadDataType, String conversationId, int chatType) {
+    public void init(EaseChatMessageListLayout.LoadDataType loadDataType, String conversationId, EaseChatType chatType) {
         this.conversationId = conversationId;
         this.chatType = chatType;
         messageListLayout.init(loadDataType, this.conversationId, chatType);
@@ -256,7 +257,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      * @param toChatUsername
      * @param chatType
      */
-    public void initHistoryModel(String toChatUsername, int chatType) {
+    public void initHistoryModel(String toChatUsername, EaseChatType chatType) {
         init(EaseChatMessageListLayout.LoadDataType.HISTORY, toChatUsername, chatType);
     }
 
@@ -330,7 +331,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 //            return;
 //        }
         // Only support single-chat type conversation.
-        if (chatType != EaseConstant.CHATTYPE_SINGLE)
+        if (chatType != EaseChatType.SINGLE_CHAT)
             return;
         handler.removeMessages(MSG_OTHER_TYPING_END);
         if(listener != null) {
@@ -345,7 +346,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     private void setTypingBeginMsg(Handler handler) {
         if (!turnOnTyping) return;
         // Only support single-chat type conversation.
-        if (chatType != EaseConstant.CHATTYPE_SINGLE)
+        if (chatType != EaseChatType.SINGLE_CHAT)
             return;
         // Send TYPING-BEGIN cmd msg
         presenter.sendCmdMessage(ACTION_TYPING_BEGIN);
@@ -360,7 +361,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         if (!turnOnTyping) return;
 
         // Only support single-chat type conversation.
-        if (chatType != EaseConstant.CHATTYPE_SINGLE)
+        if (chatType != EaseChatType.SINGLE_CHAT)
             return;
 
         isNotFirstSend = false;

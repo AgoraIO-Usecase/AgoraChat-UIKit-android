@@ -49,6 +49,7 @@ import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.menu.EasePopupWindow;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
@@ -75,7 +76,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     public EaseChatLayout chatLayout;
     public EaseTitleBar titleBar;
     public String conversationId;
-    public int chatType;
+    public EaseChatType chatType;
     public String historyMsgId;
     public boolean isFromServer;
     public boolean isMessageInit;
@@ -118,7 +119,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         Bundle bundle = getArguments();
         if(bundle != null) {
             conversationId = bundle.getString(EaseConstant.EXTRA_CONVERSATION_ID);
-            chatType = bundle.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
+            chatType = EaseChatType.from(bundle.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseChatType.SINGLE_CHAT.getChatType()));
             historyMsgId = bundle.getString(EaseConstant.HISTORY_MSG_ID);
             isFromServer = bundle.getBoolean(EaseConstant.EXTRA_IS_FROM_SERVER, false);
             isThread = bundle.getBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, false);
@@ -674,24 +675,24 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         /**
          * Constructor
          * @param conversationId Agora Chat ID
-         * @param chatType       1: single chat; 2: group chat; 3: chat room
+         * @param chatType       See {@link EaseChatType}
          */
-        public Builder(String conversationId, int chatType) {
+        public Builder(String conversationId, EaseChatType chatType) {
             this.bundle = new Bundle();
             bundle.putString(EaseConstant.EXTRA_CONVERSATION_ID, conversationId);
-            bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType);
+            bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType.getChatType());
         }
 
         /**
          * Constructor
          * @param conversationId Agora Chat ID
-         * @param chatType       1: single chat; 2: group chat; 3: chat room
+         * @param chatType       See {@link EaseChatType}
          * @param historyMsgId   Message ID
          */
-        public Builder(String conversationId, int chatType, String historyMsgId) {
+        public Builder(String conversationId, EaseChatType chatType, String historyMsgId) {
             this.bundle = new Bundle();
             bundle.putString(EaseConstant.EXTRA_CONVERSATION_ID, conversationId);
-            bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType);
+            bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType.getChatType());
             bundle.putString(EaseConstant.HISTORY_MSG_ID, historyMsgId);
         }
 

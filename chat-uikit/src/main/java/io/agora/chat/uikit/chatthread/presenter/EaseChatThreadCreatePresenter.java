@@ -9,10 +9,11 @@ import io.agora.chat.uikit.base.EaseBasePresenter;
 import io.agora.chat.uikit.chat.presenter.IBaseHandleMessage;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
+import io.agora.chat.uikit.menu.EaseChatType;
 
 public abstract class EaseChatThreadCreatePresenter extends EaseBasePresenter implements IBaseHandleMessage {
     protected IChatThreadCreateView mView;
-    protected int chatType = EaseConstant.CHATTYPE_GROUP;
+    protected EaseChatType chatType = EaseChatType.GROUP_CHAT;
     protected EditText etInput;
     protected String toChatUsername;
     protected String parentId;
@@ -89,7 +90,7 @@ public abstract class EaseChatThreadCreatePresenter extends EaseBasePresenter im
      * @return
      */
     public boolean isGroupChat() {
-        return chatType == EaseConstant.CHATTYPE_GROUP;
+        return chatType == EaseChatType.GROUP_CHAT;
     }
 
 }

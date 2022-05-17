@@ -38,6 +38,7 @@ import io.agora.chat.uikit.chat.presenter.IChatMessageListView;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
 import io.agora.chat.uikit.manager.EaseThreadManager;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.utils.EaseUtils;
 
@@ -194,7 +195,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
     }
 
-    public void init(LoadDataType loadDataType, String username, int chatType) {
+    public void init(LoadDataType loadDataType, String username, EaseChatType chatType) {
         this.username = username;
         this.loadDataType = loadDataType;
         this.conType = EaseUtils.getConversationType(chatType);
@@ -206,7 +207,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
     }
 
-    public void init(String username, int chatType) {
+    public void init(String username, EaseChatType chatType) {
         init(LoadDataType.LOCAL, username, chatType);
     }
 

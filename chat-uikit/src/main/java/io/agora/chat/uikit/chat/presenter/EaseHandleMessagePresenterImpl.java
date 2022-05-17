@@ -14,6 +14,7 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.EaseChatLayout;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.exceptions.ChatException;
@@ -125,9 +126,9 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             return;
         }
         addMessageAttributes(message);
-        if (chatType == EaseConstant.CHATTYPE_GROUP){
+        if (chatType == EaseChatType.GROUP_CHAT){
             message.setChatType(ChatMessage.ChatType.GroupChat);
-        }else if(chatType == EaseConstant.CHATTYPE_CHATROOM){
+        }else if(chatType == EaseChatType.CHATROOM){
             message.setChatType(ChatMessage.ChatType.ChatRoom);
         }
         // Should add thread label if it is a thread conversation

@@ -22,6 +22,7 @@ import io.agora.chat.uikit.chatthread.interfaces.EaseChatThreadParentMsgViewProv
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.EaseMessageListener;
 import io.agora.chat.uikit.interfaces.OnJoinChatThreadResultListener;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 import io.agora.chat.uikit.chatthread.adapter.EaseChatThreadHeaderAdapter;
@@ -341,7 +342,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
          * @param conversationId Agora Chat ID
          */
         public Builder(String parentMsgId, String conversationId, String parentId) {
-            super(conversationId, EaseConstant.CHATTYPE_GROUP);
+            super(conversationId, EaseChatType.GROUP_CHAT);
             this.bundle.putString(Constant.KEY_PARENT_MESSAGE_ID, parentMsgId);
             this.bundle.putString(Constant.KEY_PARENT_ID, parentId);
             this.bundle.putBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, true);
@@ -354,7 +355,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
          * @param historyMsgId
          */
         public Builder(String parentMsgId, String conversationId, String parentId, String historyMsgId) {
-            super(conversationId, EaseConstant.CHATTYPE_GROUP, historyMsgId);
+            super(conversationId, EaseChatType.GROUP_CHAT, historyMsgId);
             this.bundle.putString(Constant.KEY_PARENT_MESSAGE_ID, parentMsgId);
             this.bundle.putString(Constant.KEY_PARENT_ID, parentId);
             this.bundle.putBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, true);
