@@ -61,8 +61,13 @@ public class EaseChatRowVideo extends EaseChatRowFile {
         }
         VideoMessageBody videoBody = (VideoMessageBody) message.getBody();
 
-        if (videoBody.getDuration() > 0) {
-            String time = EaseDateUtils.toTime(videoBody.getDuration());
+        if (videoBody.getDuration() >= 0) {
+            String time;
+            if(videoBody.getDuration() > 1000) {
+                time = EaseDateUtils.toTime(videoBody.getDuration());
+            }else {
+                time = EaseDateUtils.toTimeBySecond(videoBody.getDuration());
+            }
             timeLengthView.setText(time);
         }
 

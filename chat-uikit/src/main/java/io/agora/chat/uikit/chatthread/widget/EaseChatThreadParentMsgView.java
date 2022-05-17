@@ -292,7 +292,12 @@ public class EaseChatThreadParentMsgView extends ConstraintLayout {
         VideoMessageBody videoBody = (VideoMessageBody) message.getBody();
 
         if (videoBody.getDuration() > 0) {
-            String time = EaseDateUtils.toTime(videoBody.getDuration());
+            String time;
+            if(videoBody.getDuration() > 1000) {
+                time = EaseDateUtils.toTime(videoBody.getDuration());
+            }else {
+                time = EaseDateUtils.toTimeBySecond(videoBody.getDuration());
+            }
             binding.chattingLengthIv.setText(time);
         }
 

@@ -538,6 +538,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     protected void onActivityResultForLocalVideos(@Nullable Intent data) {
         if (data != null) {
             int duration = data.getIntExtra("dur", 0);
+            if(duration == -1) {
+                duration = 0;
+            }
+            duration = (int) Math.round(duration * 1.0 / 1000);
             String videoPath = data.getStringExtra("path");
             String uriString = data.getStringExtra("uri");
             if (!TextUtils.isEmpty(videoPath)) {
