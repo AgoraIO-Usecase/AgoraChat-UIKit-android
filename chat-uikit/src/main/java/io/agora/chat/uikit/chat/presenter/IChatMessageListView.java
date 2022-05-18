@@ -81,4 +81,9 @@ public interface IChatMessageListView extends ILoadDataView {
      * @param message
      */
     void insertMessageToLast(ChatMessage message);
+
+    /**
+     * Whether thread message list has reached the lasted message
+     */
+    void reachedLatestThreadMessage();
 }

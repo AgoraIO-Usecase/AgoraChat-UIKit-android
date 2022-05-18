@@ -167,6 +167,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         // if not more data, make isReachFirstFlagMessage to ture
         if(TextUtils.isEmpty(cursorResult.getCursor())) {
             isReachFirstFlagMessage = true;
+            isReachFirstFlagMessage();
             return;
         }
         List<ChatMessage> data = cursorResult.getData();
@@ -178,9 +179,18 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
             String firstSendMessageMsgId = reachFlagMessage.getMsgId();
             if(TextUtils.equals(msgId, firstSendMessageMsgId)) {
                 isReachFirstFlagMessage = true;
+                isReachFirstFlagMessage();
                 break;
             }
         }
+    }
+
+    private void isReachFirstFlagMessage() {
+        runOnUI(() -> {
+            if(isActive()) {
+                mView.reachedLatestThreadMessage();
+            }
+        });
     }
 
     @Override

@@ -143,8 +143,12 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
             for (ChatMessage message:messages) {
                 // Determine if there is new group information, and display a red dot if there is new group information
                 if (message.getChatType() == ChatMessage.ChatType.GroupChat || message.getChatType() == ChatMessage.ChatType.ChatRoom) {
-                    if(TextUtils.equals(parentId, message.getTo())) {
-                        titleBar.setUnreadIconVisible(true);
+                    if(TextUtils.equals(parentId, message.conversationId())) {
+                        runOnUiThread(()-> {
+                            if(titleBar != null) {
+                                titleBar.setUnreadIconVisible(true);
+                            }
+                        });
                     }
                 }
             }

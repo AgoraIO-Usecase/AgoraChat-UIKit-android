@@ -83,6 +83,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     private MessageListItemClickListener messageListItemClickListener;
     private EaseChatItemStyleHelper chatSetHelper;
     private String messageCursor;
+    /**
+     * When is thread conversation, whether thread message list has reached the latest message
+     */
+    private boolean isReachedLatestThreadMessage = false;
 
     public EaseChatMessageListLayout(@NonNull Context context) {
         this(context, null);
@@ -633,6 +637,15 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     @Override
+    public void reachedLatestThreadMessage() {
+        this.isReachedLatestThreadMessage = true;
+    }
+
+    public boolean isReachedLatestThreadMessage() {
+        return isReachedLatestThreadMessage;
+    }
+
+    @Override
     public void canUseDefaultRefresh(boolean canUseRefresh) {
         this.canUseRefresh = canUseRefresh;
         srlRefresh.setEnabled(canUseRefresh);
@@ -893,11 +906,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         });
         animator.setDuration(800);
         animator.start();
-    }
-
-    @Override
-    public void setThreadMessage(boolean isThread) {
-        
     }
 
     @Override

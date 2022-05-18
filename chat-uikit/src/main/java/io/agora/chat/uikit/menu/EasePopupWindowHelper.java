@@ -267,7 +267,6 @@ public class EasePopupWindowHelper {
 
         mPopupView.post(()->{
             pRealHeight = mPopupView.getMeasuredHeight();
-            Log.e("TAG", "pRealHeight: "+pRealHeight);
         });
     }
 

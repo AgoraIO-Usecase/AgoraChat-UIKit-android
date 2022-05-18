@@ -29,19 +29,18 @@
             android:scaleType="centerInside"
             tools:src="@drawable/ease_mm_title_back"/>
 
-        <ImageView
-            android:id="@+id/msg_unread_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/left_image"
-            android:layout_alignStart="@id/left_image"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="2dp"
-            android:scaleType="centerInside"
-            android:visibility="gone"
-            android:src="@drawable/ease_msg_unread"/>
-
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/msg_unread_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="2dp"
+        android:layout_alignTop="@id/cl_title"
+        android:scaleType="centerInside"
+        android:visibility="gone"
+        android:src="@drawable/ease_msg_unread"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_title"

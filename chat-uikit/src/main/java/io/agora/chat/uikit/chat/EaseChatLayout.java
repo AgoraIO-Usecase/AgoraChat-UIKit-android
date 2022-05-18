@@ -756,6 +756,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onPresenterMessageSuccess(ChatMessage message) {
         EMLog.i(TAG, "send message onPresenterMessageSuccess");
+        if(message.isThread() && messageListLayout != null && messageListLayout.isReachedLatestThreadMessage()) {
+            message.setAttribute(EaseConstant.FLAG_REACH_LATEST_THREAD_MESSAGE, true);
+        }
         if(listener != null) {
             listener.onSuccess(message);
         }
@@ -876,6 +879,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onMessageSuccess(ChatMessage message) {
         EMLog.i(TAG, "send message onMessageSuccess");
+        if(message.isThread() && messageListLayout != null && messageListLayout.isReachedLatestThreadMessage()) {
+            message.setAttribute(EaseConstant.FLAG_REACH_LATEST_THREAD_MESSAGE, true);
+        }
         if(listener != null) {
             listener.onSuccess(message);
         }

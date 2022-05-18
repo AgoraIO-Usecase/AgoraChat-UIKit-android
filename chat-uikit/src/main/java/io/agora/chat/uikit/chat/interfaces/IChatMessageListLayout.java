@@ -9,8 +9,6 @@ import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 
 public interface IChatMessageListLayout extends IRecyclerView {
     
-    void setThreadMessage(boolean isThread);
-
     /**
      * Set custom data presenter
      * @param presenter
