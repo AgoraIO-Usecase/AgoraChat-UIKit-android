@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +26,7 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.activities.EaseImageGridActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -32,6 +34,7 @@ import io.agora.chat.uikit.chat.interfaces.OnChatExtendMenuItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageSendCallBack;
+import io.agora.chat.uikit.chat.widget.EaseChatExtendMenuDialog;
 import io.agora.chat.uikit.databinding.EaseFragmentCreateThreadBinding;
 import io.agora.chat.uikit.interfaces.EaseMessageListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
@@ -47,7 +50,9 @@ import io.agora.chat.uikit.utils.EaseCompat;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseTitleBar;
+import io.agora.chat.uikit.widget.dialog.EaseAlertDialog;
 import io.agora.util.EMLog;
+import io.agora.util.FileHelper;
 import io.agora.util.PathUtil;
 import io.agora.util.VersionUtils;
 
@@ -151,6 +156,22 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
                 addDefaultParentMsgView();
             }
         }
+        setCustomExtendMenu();
+    }
+
+    /**
+     * Set custom extend menu
+     */
+    public void setCustomExtendMenu() {
+        EaseChatExtendMenuDialog chatMenuDialog = new EaseChatExtendMenuDialog(mContext);
+        chatMenuDialog.init();
+        EaseChatExtendMenuDialog dialog = new EaseAlertDialog.Builder<EaseChatExtendMenuDialog>(mContext)
+                .setCustomDialog(chatMenuDialog)
+                .setFullWidth()
+                .setGravity(Gravity.BOTTOM)
+                .setFromBottomAnimation()
+                .create();
+        binding.layoutMenu.setCustomExtendMenu(dialog);
     }
 
     private void addDefaultParentMsgView() {
@@ -370,7 +391,8 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
      * select local video
      */
     protected void selectVideoFromLocal() {
-
+        Intent intent = new Intent(getActivity(), EaseImageGridActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
     }
 
     /**
@@ -407,6 +429,26 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
                 onActivityResultForDingMsg(data);
             }else if(requestCode == REQUEST_CODE_SELECT_FILE) {
                 onActivityResultForLocalFiles(data);
+            } else if (REQUEST_CODE_SELECT_VIDEO == requestCode) {
+                onActivityResultForLocalVideos(data);
+            }
+        }
+    }
+
+    protected void onActivityResultForLocalVideos(@Nullable Intent data) {
+        if (data != null) {
+            int duration = data.getIntExtra("dur", 0);
+            if(duration == -1) {
+                duration = 0;
+            }
+            duration = (int) Math.round(duration * 1.0 / 1000);
+            String videoPath = data.getStringExtra("path");
+            String uriString = data.getStringExtra("uri");
+            if (!TextUtils.isEmpty(videoPath)) {
+                presenter.sendVideoMessage(Uri.parse(videoPath), duration);
+            } else {
+                Uri videoUri = FileHelper.getInstance().formatInUri(uriString);
+                presenter.sendVideoMessage(videoUri, duration);
             }
         }
     }
