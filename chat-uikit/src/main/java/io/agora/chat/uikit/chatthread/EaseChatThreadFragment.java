@@ -15,6 +15,8 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
 import io.agora.chat.ChatThreadEvent;
 import io.agora.chat.Group;
+import io.agora.chat.ImageMessageBody;
+import io.agora.chat.MessageBody;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.EaseChatFragment;
 import io.agora.chat.uikit.chat.interfaces.OnRecallMessageResultListener;
@@ -198,6 +200,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
 
     @Override
     public void initData() {
+        initChatLayout();
         setThreadInfo(mThread);
         if(headerAdapter != null) {
             headerAdapter.setData(data);
@@ -256,7 +259,10 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
                 resultCallback.onThreadRole(threadRole);
             }
         }
-        runOnUiThread(super::initData);
+        runOnUiThread(()-> {
+            loadData();
+            isMessageInit = true;
+        });
     }
 
     @Override
@@ -265,7 +271,10 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
             // If has joined the chat thread, make the role to member
             threadRole = EaseChatThreadRole.MEMBER;
             mPresenter.getThreadInfo(conversationId);
-            runOnUiThread(super::initData);
+            runOnUiThread(()-> {
+                loadData();
+                isMessageInit = true;
+            });
         }else {
             if(joinThreadResultListener != null) {
                 joinThreadResultListener.joinFailed(error, errorMsg);

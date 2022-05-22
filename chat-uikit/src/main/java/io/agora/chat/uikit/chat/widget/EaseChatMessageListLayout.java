@@ -653,7 +653,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     @Override
     public void refreshMessages() {
-        presenter.refreshCurrentConversation();
+        try {
+            presenter.refreshCurrentConversation();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

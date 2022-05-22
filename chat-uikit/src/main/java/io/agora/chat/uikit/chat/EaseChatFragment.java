@@ -236,9 +236,14 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     }
 
     public void initData() {
+        initChatLayout();
+        loadData();
+        isMessageInit = true;
+    }
+
+    public void initChatLayout() {
         if(!TextUtils.isEmpty(historyMsgId)) {
             chatLayout.init(EaseChatMessageListLayout.LoadDataType.HISTORY, conversationId, chatType);
-            chatLayout.loadData(historyMsgId);
         }else {
             if(isThread) {
                 chatLayout.init(EaseChatMessageListLayout.LoadDataType.THREAD, conversationId, chatType);
@@ -249,9 +254,15 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                     chatLayout.init(conversationId, chatType);
                 }
             }
+        }
+    }
+
+    public void loadData() {
+        if(!TextUtils.isEmpty(historyMsgId)) {
+            chatLayout.loadData(historyMsgId);
+        }else {
             chatLayout.loadDefaultData();
         }
-        isMessageInit = true;
     }
 
     /**
