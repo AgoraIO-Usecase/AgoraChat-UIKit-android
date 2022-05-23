@@ -29,11 +29,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.agora.MessageListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatRoom;
@@ -49,8 +51,7 @@ import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseImageView;
 
 
-public class EaseChatRoomMessagesView extends RelativeLayout {
-    private Conversation mConversation;
+public class EaseChatRoomMessagesView extends RelativeLayout implements MessageListener {
     private Context mContext;
 
     private RecyclerView mMessageListView;
@@ -63,16 +64,17 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
 
     private MessageViewListener mMessageViewListener;
     private boolean mMessageStopRefresh;
-    private ChatRoom mChatRoom;
     private List<ChatMessage> mChatMessageList;
     private EaseLiveMessageStyleHelper mMessageStyleHelper;
 
+    private String mChatroomId;
+    private ChatRoom mChatRoom;
+    private Conversation mConversation;
     private int mTxtNicknameHeight = 0;
 
 
     public EaseChatRoomMessagesView(Context context) {
-        super(context);
-        init(context, null);
+        this(context, null, 0);
     }
 
     public EaseChatRoomMessagesView(Context context, AttributeSet attrs) {
@@ -81,10 +83,11 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
 
     public EaseChatRoomMessagesView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        initView(context, attrs);
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    @SuppressLint("ClickableViewAccessibility")
+    private void initView(Context context, AttributeSet attrs) {
         mContext = context;
         mMessageStyleHelper = EaseLiveMessageStyleHelper.getInstance();
 
@@ -148,11 +151,60 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         RelativeLayout.LayoutParams listParams = (RelativeLayout.LayoutParams) mMessageListView.getLayoutParams();
         listParams.setMarginEnd((int) mMessageStyleHelper.getMessageListMarginEnd());
         mMessageListView.setLayoutParams(listParams);
+
+        mAdapter = new MessageListAdapter();
+        mAdapter.hideEmptyView(true);
+        mMessageListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mMessageListView.setAdapter(mAdapter);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setSize(0, (int) EaseUtils.dip2px(getContext(), 4));
+        itemDecoration.setDrawable(drawable);
+        mMessageListView.addItemDecoration(itemDecoration);
+
+        mMessageListView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                enableInputViewShow(false);
+                return false;
+            }
+        });
+
+        mMessageListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (RecyclerView.SCROLL_STATE_IDLE != newState && !mMessageStopRefresh) {
+                    mMessageStopRefresh = true;
+                }
+
+                if (RecyclerView.SCROLL_STATE_IDLE == newState && mMessageStopRefresh) {
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    if (null != layoutManager && layoutManager.findLastVisibleItemPosition() == recyclerView.getLayoutManager().getItemCount() - 1) {
+                        mMessageStopRefresh = false;
+                    }
+                }
+
+                super.onScrollStateChanged(recyclerView, newState);
+
+            }
+        });
+
+
+        mAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                mMessageStopRefresh = true;
+                if (null != mMessageViewListener) {
+                    mMessageViewListener.onChatRoomMessageItemClickListener(mAdapter.getItem(position));
+                }
+            }
+        });
+
         mUnreadMessageView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 mMessageStopRefresh = false;
-                refreshSelectLast();
+                refresh();
             }
         });
         if (null != mMessageStyleHelper.getMessageListBackground()) {
@@ -176,9 +228,24 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
                 if (actionId == EditorInfo.IME_ACTION_SEND
                         || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction())) {
                     if (!TextUtils.isEmpty(mMessageInputEt.getText().toString())) {
-                        if (null != mMessageViewListener) {
-                            mMessageViewListener.onMessageSend(mMessageInputEt.getText().toString(), false);
-                        }
+                        EaseLiveMessageHelper.getInstance().sendTxtMsg(mMessageInputEt.getText().toString(), new OnSendLiveMessageCallBack() {
+                            @Override
+                            public void onSuccess(ChatMessage message) {
+                                mMessageStopRefresh = false;
+                                if (null != mMessageViewListener) {
+                                    mMessageViewListener.onSendTextMessageSuccess(message);
+                                }
+                                refresh();
+                            }
+
+                            @Override
+                            public void onError(int code, String error) {
+                                if (null != mMessageViewListener) {
+                                    mMessageViewListener.onSendTextMessageError(code, error);
+                                }
+                            }
+                        });
+
                         mMessageInputEt.setText("");
                     }
                     return true;
@@ -198,10 +265,25 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         bottomView.setLayoutParams(bottomViewParams);
     }
 
-    public void enableMessagesViewShow(boolean show) {
-        if (show) {
+    /**
+     * init with chatroom id
+     *
+     * @param chatroomId
+     */
+    public void init(String chatroomId) {
+        mChatroomId = chatroomId;
+        mChatRoom = ChatClient.getInstance().chatroomManager().getChatRoom(mChatroomId);
+        mConversation = ChatClient.getInstance().chatManager().getConversation(mChatroomId, Conversation.ConversationType.ChatRoom, true);
+        refresh();
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+
+        if (View.VISIBLE == visibility) {
             mViewLayout.setVisibility(View.VISIBLE);
-            refreshSelectLast();
+            refresh();
         } else {
             if (null != mMessageViewListener) {
                 mMessageViewListener.onHiderBottomBar(false);
@@ -210,56 +292,118 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
         }
     }
 
-    public boolean isShowing() {
-        return mViewLayout.getVisibility() == VISIBLE;
+    @Override
+    public int getVisibility() {
+        return mViewLayout.getVisibility();
     }
 
+    /**
+     * Get the input edit view
+     *
+     * @return
+     */
     public EditText getInputView() {
         return mMessageInputEt;
     }
 
+
+    /**
+     * Get the list view of message
+     *
+     * @return
+     */
     public RecyclerView getMessageListView() {
         return mMessageListView;
     }
 
+    /**
+     * Get the view of input tip
+     *
+     * @return
+     */
     public TextView getInputTipView() {
         return mMessageInputTip;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    public void init(String chatroomId) {
-        mChatRoom = ChatClient.getInstance().chatroomManager().getChatRoom(chatroomId);
-        mConversation = ChatClient.getInstance().chatManager().getConversation(chatroomId, Conversation.ConversationType.ChatRoom, true);
-        mAdapter = new MessageListAdapter();
-        mAdapter.hideEmptyView(true);
-        mMessageListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mMessageListView.setAdapter(mAdapter);
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setSize(0, (int) EaseUtils.dip2px(getContext(), 4));
-        itemDecoration.setDrawable(drawable);
-        mMessageListView.addItemDecoration(itemDecoration);
-
-        mMessageListView.setOnTouchListener(new OnTouchListener() {
+    public void enableInputView(boolean enable) {
+        mMessageInputTip.post(new Runnable() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                enableInputViewShow(false);
-                return false;
-            }
-        });
-
-        mAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                mMessageStopRefresh = true;
-                if (null != mMessageViewListener) {
-                    mMessageViewListener.onItemClickListener(mAdapter.getItem(position));
+            public void run() {
+                mMessageInputTip.setEnabled(enable);
+                if (!enable) {
+                    enableInputViewShow(false);
                 }
             }
         });
     }
 
-    public void enableInputViewShow(boolean state) {
+
+    public void setMessageViewListener(MessageViewListener messageViewListener) {
+        this.mMessageViewListener = messageViewListener;
+    }
+
+    /**
+     * Whether the message list can be refreshed to the bottom
+     *
+     * @param messageStopRefresh can be refresh
+     */
+    public void setMessageStopRefresh(boolean messageStopRefresh) {
+        this.mMessageStopRefresh = messageStopRefresh;
+    }
+
+    public void refresh() {
+        if (mMessageStopRefresh) {
+            mUnreadMessageView.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mConversation.getUnreadMsgCount() > 0) {
+                        mUnreadMessageView.setVisibility(VISIBLE);
+                        mUnreadMessageView.setText(mContext.getString(R.string.ease_live_unread_message_tip, mConversation.getUnreadMsgCount()));
+                    }
+                    updateData();
+                }
+            });
+        } else {
+            mUnreadMessageView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mUnreadMessageView.setVisibility(GONE);
+                    if (mAdapter != null) {
+                        updateData();
+                        if (mAdapter.getItemCount() > 1) {
+                            mMessageListView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    public void setInputEditMarginBottom(float inputEditMarginBottom) {
+        mMessageStyleHelper.setInputEditMarginBottom(inputEditMarginBottom);
+    }
+
+    public void setInputEditMarginEnd(float inputEditMarginEnd) {
+        mMessageStyleHelper.setInputEditMarginEnd(inputEditMarginEnd);
+    }
+
+    public void setMessageListMarginEnd(float messageListMarginEnd) {
+        mMessageStyleHelper.setMessageListMarginEnd(messageListMarginEnd);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        ChatClient.getInstance().chatManager().addMessageListener(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        ChatClient.getInstance().chatManager().removeMessageListener(this);
+    }
+
+    private void enableInputViewShow(boolean state) {
         if (state) {
             mMessageInputTip.setVisibility(INVISIBLE);
             mMessageInputLayout.setVisibility(VISIBLE);
@@ -280,65 +424,6 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
             mMessageInputEt.setFocusable(false);
             mMessageInputEt.setFocusableInTouchMode(false);
             mMessageInputEt.clearFocus();
-        }
-    }
-
-    public void setMessageViewListener(MessageViewListener messageViewListener) {
-        this.mMessageViewListener = messageViewListener;
-    }
-
-    public void refresh() {
-        if (mMessageStopRefresh) {
-            mUnreadMessageView.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mConversation.getUnreadMsgCount() > 0) {
-                        mUnreadMessageView.setVisibility(VISIBLE);
-                        mUnreadMessageView.setText(mContext.getString(R.string.ease_live_unread_message_tip, mConversation.getUnreadMsgCount()));
-                    }
-                    updateData();
-                }
-            });
-        } else {
-            mUnreadMessageView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mUnreadMessageView.setVisibility(INVISIBLE);
-                    updateData();
-                }
-            });
-
-        }
-    }
-
-    public void refreshSelectLast() {
-        if (mMessageStopRefresh) {
-            mUnreadMessageView.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mConversation.getUnreadMsgCount() > 0) {
-                        mUnreadMessageView.setVisibility(VISIBLE);
-                        mUnreadMessageView.setText(mContext.getString(R.string.ease_live_unread_message_tip, mConversation.getUnreadMsgCount()));
-                    }
-                    updateData();
-                    if (mAdapter.getItemCount() > 1) {
-                        mMessageListView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
-                    }
-                }
-            });
-        } else {
-            mUnreadMessageView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mUnreadMessageView.setVisibility(INVISIBLE);
-                    if (mAdapter != null) {
-                        updateData();
-                        if (mAdapter.getItemCount() > 1) {
-                            mMessageListView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
-                        }
-                    }
-                }
-            });
         }
     }
 
@@ -379,22 +464,42 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
     }
 
     private void updateData() {
-        if (null == mAdapter) {
+        if (null == mAdapter || null == mConversation) {
             return;
         }
         ChatMessage[] messages = mConversation.getAllMessages().toArray(new ChatMessage[0]);
-        mConversation.markAllMessagesAsRead();
+        if (!mMessageStopRefresh) {
+            mConversation.markAllMessagesAsRead();
+        }
         if (null == mChatMessageList) {
             mChatMessageList = new ArrayList<>(messages.length);
         } else {
             mChatMessageList.clear();
         }
         for (ChatMessage message : messages) {
-            if (message.getBody() instanceof TextMessageBody) {
-                mChatMessageList.add(message);
+            if (ChatMessage.Status.SUCCESS == message.status()) {
+                if (message.getBody() instanceof TextMessageBody) {
+                    mChatMessageList.add(message);
+                }
             }
         }
         mAdapter.setData(mChatMessageList);
+    }
+
+    @Override
+    public void onMessageReceived(List<ChatMessage> messages) {
+        for (ChatMessage message : messages) {
+            String username = null;
+            if (message.getChatType() == ChatMessage.ChatType.GroupChat
+                    || message.getChatType() == ChatMessage.ChatType.ChatRoom) {
+                username = message.getTo();
+            } else {
+                username = message.getFrom();
+            }
+            if (username.equals(mChatroomId)) {
+                refresh();
+            }
+        }
     }
 
     private class MessageListAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage> {
@@ -443,8 +548,9 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
             txtMessageContent = findViewById(R.id.txt_message_content);
             txtMessageGroup = findViewById(R.id.txt_message_group);
 
-
-            avatar.setShapeType(mMessageStyleHelper.getMessageAvatarShapeType());
+            if (-1 != mMessageStyleHelper.getMessageAvatarShapeType()) {
+                avatar.setShapeType(mMessageStyleHelper.getMessageAvatarShapeType());
+            }
 
             if (0 != mMessageStyleHelper.getMessageItemTxtSize()) {
                 txtMessageContent.setTextSize(mMessageStyleHelper.getMessageItemTxtSize());
@@ -524,7 +630,6 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
             if (null != mMessageStyleHelper.getMessageItemBubblesBackground()) {
                 itemBg.setBackground(mMessageStyleHelper.getMessageItemBubblesBackground());
             }
-
             joinGroup.setVisibility(GONE);
             txtMessageGroup.setVisibility(VISIBLE);
             joinNickname.setVisibility(View.GONE);
@@ -535,6 +640,9 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
                 txtMessageNicknameRole.setVisibility(View.GONE);
                 return;
             }
+
+            EaseUserUtils.setUserNick(id, txtMessageNickname);
+            EaseUserUtils.setUserAvatar(context, id, avatar);
 
             if (mChatRoom.getOwner().equals(id)) {
                 txtMessageNicknameRole.setVisibility(View.VISIBLE);
@@ -565,17 +673,44 @@ public class EaseChatRoomMessagesView extends RelativeLayout {
                     });
                 }
             }
-
-            EaseUserUtils.setUserNick(id, txtMessageNickname);
-            EaseUserUtils.setUserAvatar(context, id, avatar);
         }
     }
 
     public interface MessageViewListener {
-        void onMessageSend(String content, boolean isBarrageMsg);
+        /**
+         * send text message success
+         *
+         * @param message message
+         */
+        default void onSendTextMessageSuccess(ChatMessage message) {
+        }
 
-        void onItemClickListener(ChatMessage message);
+        /**
+         * send text message error
+         *
+         * @param code
+         * @param msg
+         */
+        void onSendTextMessageError(int code, String msg);
 
+        /**
+         * send barrageMessage message
+         *
+         * @param content
+         */
+        default void onSendBarrageMessageContent(String content) {
+        }
+
+        /**
+         * @param message
+         */
+        void onChatRoomMessageItemClickListener(ChatMessage message);
+
+        /**
+         * hide bootom bar
+         *
+         * @param hide
+         */
         void onHiderBottomBar(boolean hide);
     }
 

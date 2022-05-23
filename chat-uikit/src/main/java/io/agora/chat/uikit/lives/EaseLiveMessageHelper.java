@@ -2,14 +2,17 @@ package io.agora.chat.uikit.lives;
 
 import android.text.TextUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import io.agora.CallBack;
+import io.agora.Error;
 import io.agora.MessageListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
+import io.agora.chat.Conversation;
 import io.agora.chat.CustomMessageBody;
 import io.agora.chat.MessageBody;
 import io.agora.util.EMLog;
@@ -23,6 +26,7 @@ public class EaseLiveMessageHelper {
 
     private EaseLiveMessageHelper() {
         messageListener = new LiveMessageListener();
+        ChatClient.getInstance().chatManager().addMessageListener(messageListener);
     }
 
     public static EaseLiveMessageHelper getInstance() {
@@ -39,16 +43,16 @@ public class EaseLiveMessageHelper {
     public void init(String chatRoomId) {
         chatroomId = chatRoomId;
         messageListener.setChatRoomId(chatRoomId);
-        ChatClient.getInstance().chatManager().addMessageListener(messageListener);
     }
 
-    public void removeMessageListener() {
-        ChatClient.getInstance().chatManager().removeMessageListener(messageListener);
+    public void addLiveMessageListener(OnLiveMessageListener liveMessageListener) {
+        messageListener.addLiveMessageListener(liveMessageListener);
     }
 
-    public void setLiveMessageListener(OnLiveMessageListener liveMessageListener) {
-        messageListener.setLiveMessageListener(liveMessageListener);
+    public void removeLiveMessageListener(OnLiveMessageListener liveMessageListener) {
+        messageListener.removeLiveMessageListener(liveMessageListener);
     }
+
 
     /**
      * Send a text message
@@ -62,19 +66,21 @@ public class EaseLiveMessageHelper {
         message.setMessageStatusCallback(new CallBack() {
             @Override
             public void onSuccess() {
-                callBack.onSuccess();
-                callBack.onSuccess(message);
+                if (null != callBack) {
+                    callBack.onSuccess(message);
+                }
             }
 
             @Override
             public void onError(int i, String s) {
-                callBack.onError(i, s);
-                callBack.onError(message.getMsgId(), i, s);
+                if (null != callBack) {
+                    callBack.onError(i, s);
+                }
+                deleteMuteMsg(message.getMsgId(), i);
             }
 
             @Override
             public void onProgress(int i, String s) {
-                callBack.onProgress(i, s);
             }
         });
         ChatClient.getInstance().chatManager().sendMessage(message);
@@ -201,15 +207,13 @@ public class EaseLiveMessageHelper {
             @Override
             public void onError(int i, String s) {
                 if (callBack != null) {
-                    callBack.onError(sendMessage.getMsgId(), i, s);
+                    callBack.onError(i, s);
                 }
+                deleteMuteMsg(sendMessage.getMsgId(), i);
             }
 
             @Override
             public void onProgress(int i, String s) {
-                if (callBack != null) {
-                    callBack.onProgress(i, s);
-                }
             }
         });
         ChatClient.getInstance().chatManager().sendMessage(sendMessage);
@@ -375,18 +379,40 @@ public class EaseLiveMessageHelper {
         return EaseLiveMessageType.fromName(event);
     }
 
+    private void deleteMuteMsg(String messageId, int code) {
+        if (code == Error.USER_MUTED || code == Error.MESSAGE_ILLEGAL_WHITELIST) {
+            Conversation conversation = ChatClient.getInstance().chatManager().getConversation(chatroomId, Conversation.ConversationType.ChatRoom, true);
+            conversation.removeMessage(messageId);
+        }
+    }
+
     static class LiveMessageListener implements MessageListener {
         private String chatRoomId;
-        private OnLiveMessageListener liveMessageListener;
+        private final List<OnLiveMessageListener> liveMessageListeners;
 
+        public LiveMessageListener() {
+            liveMessageListeners = new ArrayList<>();
+        }
 
         public void setChatRoomId(String chatRoomId) {
             this.chatRoomId = chatRoomId;
 
         }
 
-        public void setLiveMessageListener(OnLiveMessageListener liveMessageListener) {
-            this.liveMessageListener = liveMessageListener;
+        public void addLiveMessageListener(OnLiveMessageListener liveMessageListener) {
+            if (liveMessageListener == null) {
+                return;
+            }
+            if (!liveMessageListeners.contains(liveMessageListener)) {
+                liveMessageListeners.add(liveMessageListener);
+            }
+        }
+
+        public void removeLiveMessageListener(OnLiveMessageListener liveMessageListener) {
+            if (liveMessageListener == null) {
+                return;
+            }
+            liveMessageListeners.remove(liveMessageListener);
         }
 
         @Override
@@ -419,49 +445,25 @@ public class EaseLiveMessageHelper {
 
                 switch (msgType) {
                     case CHATROOM_GIFT:
-                        if (null != liveMessageListener) {
+                        for (OnLiveMessageListener liveMessageListener : liveMessageListeners) {
                             liveMessageListener.onGiftMessageReceived(message);
                         }
                         break;
                     case CHATROOM_PRAISE:
-                        if (null != liveMessageListener) {
+                        for (OnLiveMessageListener liveMessageListener : liveMessageListeners) {
                             liveMessageListener.onPraiseMessageReceived(message);
                         }
                         break;
                     case CHATROOM_BARRAGE:
-                        if (null != liveMessageListener) {
+                        for (OnLiveMessageListener liveMessageListener : liveMessageListeners) {
                             liveMessageListener.onBarrageMessageReceived(message);
                         }
                         break;
                 }
             }
 
-            if (null != liveMessageListener) {
+            for (OnLiveMessageListener liveMessageListener : liveMessageListeners) {
                 liveMessageListener.onMessageReceived(messages);
-            }
-        }
-
-        @Override
-        public void onCmdMessageReceived(List<ChatMessage> messages) {
-            ChatMessage message = messages.get(messages.size() - 1);
-//            if (DemoConstants.CMD_GIFT.equals(((CmdMessageBody) message.getBody()).action())) {
-//                //showLeftGiftView(message.getFrom());
-//            } else if (DemoConstants.CMD_PRAISE.equals(((CmdMessageBody) message.getBody()).action())) {
-//                if (onChatRoomListener != null) {
-//                    // onChatRoomListener.onReceivePraiseMsg(message.getIntAttribute(DemoConstants.EXTRA_PRAISE_COUNT, 1));
-//                }
-//            }
-        }
-
-        @Override
-        public void onMessageRecalled(List<ChatMessage> list) {
-
-        }
-
-        @Override
-        public void onMessageChanged(ChatMessage chatMessage, Object o) {
-            if (null != liveMessageListener) {
-                liveMessageListener.onMessageChanged();
             }
         }
     }

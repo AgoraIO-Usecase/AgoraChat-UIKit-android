@@ -6,7 +6,8 @@ import java.util.List;
 import io.agora.chat.ChatMessage;
 
 public interface OnLiveMessageListener {
-    void onMessageReceived(List<ChatMessage> messages);
+    default void onMessageReceived(List<ChatMessage> messages) {
+    }
 
     void onGiftMessageReceived(ChatMessage message);
 
@@ -15,7 +16,4 @@ public interface OnLiveMessageListener {
 
     default void onBarrageMessageReceived(ChatMessage message) {
     }
-
-    void onMessageChanged();
-
 }
