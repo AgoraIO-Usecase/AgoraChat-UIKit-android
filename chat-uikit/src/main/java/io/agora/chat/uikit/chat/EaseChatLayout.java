@@ -34,6 +34,7 @@ import io.agora.chat.Conversation;
 import io.agora.chat.MessageReactionChange;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.adapter.EMAChatRoomManagerListener;
+import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.activities.EaseChatThreadCreateActivity;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
@@ -54,6 +55,7 @@ import io.agora.chat.uikit.interfaces.EaseGroupListener;
 import io.agora.chat.uikit.interfaces.IPopupWindow;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseThreadManager;
@@ -66,6 +68,7 @@ import io.agora.chat.uikit.menu.ReactionItemBean;
 import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.models.EaseUser;
+import io.agora.chat.uikit.provider.EaseActivityProvider;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseDialog;
@@ -1088,7 +1091,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     private void skipToCreateThread(ChatMessage message) {
-        EaseChatThreadCreateActivity.actionStart(context(), conversationId, message.getMsgId());
+        EaseActivityProviderHelper.startToCreateChatThreadActivity(context(), conversationId, message.getMsgId());
     }
 
     private void setMenuByMsgType(ChatMessage message) {
