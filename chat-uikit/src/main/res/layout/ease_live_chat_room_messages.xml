@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/unread_message_view"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="15dp" />
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:id="@+id/unread_message_view"

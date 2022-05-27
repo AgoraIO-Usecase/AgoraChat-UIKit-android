@@ -18,17 +18,16 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -521,15 +520,19 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
 
     private class MessageViewHolder extends EaseBaseRecyclerViewAdapter.ViewHolder<ChatMessage> {
         private final Context context;
-        private ConstraintLayout itemBg;
-        private EaseImageView avatar;
-        private TextView joinNickname;
-        private Group joinGroup;
+        private View itemBg;
 
+        private EaseImageView avatar;
+
+        private View joinLayout;
+        private TextView joinNickname;
+        private TextView joinText;
+        private ImageView joinIcon;
+
+        View textMessageLayout;
         private TextView txtMessageNickname;
         private TextView txtMessageNicknameRole;
         private TextView txtMessageContent;
-        private Group txtMessageGroup;
 
         public MessageViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
@@ -540,13 +543,20 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
         public void initView(View itemView) {
             itemBg = findViewById(R.id.item_layout);
             avatar = findViewById(R.id.iv_avatar);
-            joinNickname = findViewById(R.id.joined_nickname);
-            joinGroup = findViewById(R.id.join_group);
 
+            joinLayout = findViewById(R.id.join_layout);
+            joinNickname = findViewById(R.id.joined_nickname);
+            joinText = findViewById(R.id.joined);
+            joinIcon = findViewById(R.id.iv_join_welcome);
+
+            textMessageLayout = findViewById(R.id.text_message_layout);
             txtMessageNickname = findViewById(R.id.txt_message_nickname);
             txtMessageNicknameRole = findViewById(R.id.txt_message_nickname_role);
             txtMessageContent = findViewById(R.id.txt_message_content);
-            txtMessageGroup = findViewById(R.id.txt_message_group);
+
+            if (null != mMessageStyleHelper.getMessageItemBubblesBackground()) {
+                itemBg.setBackground(mMessageStyleHelper.getMessageItemBubblesBackground());
+            }
 
             if (-1 != mMessageStyleHelper.getMessageAvatarShapeType()) {
                 avatar.setShapeType(mMessageStyleHelper.getMessageAvatarShapeType());
@@ -596,8 +606,6 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
 
         @Override
         public void setData(ChatMessage message, int position) {
-            joinGroup.setVisibility(GONE);
-            txtMessageGroup.setVisibility(GONE);
             avatar.setVisibility(mMessageStyleHelper.isMessageShowAvatar() ? View.VISIBLE : View.GONE);
             String from = message.getFrom();
             if (message.getBody() instanceof TextMessageBody) {
@@ -618,20 +626,32 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
         }
 
         private void showMemberAddMsg(final String id) {
-            txtMessageGroup.setVisibility(GONE);
-            joinGroup.setVisibility(VISIBLE);
+            joinLayout.setVisibility(VISIBLE);
+            textMessageLayout.setVisibility(GONE);
             joinNickname.setVisibility(mMessageStyleHelper.isMessageShowNickname() ? View.VISIBLE : View.GONE);
             txtMessageNickname.setVisibility(View.GONE);
             EaseUserUtils.setUserNick(id, joinNickname);
             EaseUserUtils.setUserAvatar(context, id, avatar);
+
+            int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+            joinText.measure(spec, spec);
+            final int joinTextWidth = joinText.getMeasuredWidth() ;
+
+            joinNickname.post(new Runnable() {
+                @Override
+                public void run() {
+                    joinNickname.setMaxWidth(mMessageListView.getWidth() - mMessageListView.getPaddingLeft() - mMessageListView.getPaddingRight() -
+                            joinTextWidth - joinText.getPaddingLeft() - joinText.getPaddingRight() -
+                            joinIcon.getWidth() - joinIcon.getPaddingLeft() - joinIcon.getPaddingRight() -
+                            avatar.getWidth() - avatar.getPaddingLeft() - avatar.getPaddingRight() -
+                            (int) EaseUtils.dip2px(mContext, 15));
+                }
+            });
         }
 
         private void showText(String id, String content) {
-            if (null != mMessageStyleHelper.getMessageItemBubblesBackground()) {
-                itemBg.setBackground(mMessageStyleHelper.getMessageItemBubblesBackground());
-            }
-            joinGroup.setVisibility(GONE);
-            txtMessageGroup.setVisibility(VISIBLE);
+            joinLayout.setVisibility(GONE);
+            textMessageLayout.setVisibility(VISIBLE);
             joinNickname.setVisibility(View.GONE);
             txtMessageNickname.setVisibility(mMessageStyleHelper.isMessageShowNickname() ? View.VISIBLE : View.GONE);
 
@@ -655,6 +675,23 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
             } else {
                 txtMessageNicknameRole.setVisibility(View.GONE);
             }
+
+            int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+            txtMessageNicknameRole.measure(spec, spec);
+            final int txtMessageNicknameRoleWidth = View.VISIBLE == txtMessageNicknameRole.getVisibility() ?
+                    txtMessageNicknameRole.getMeasuredWidth() : 0;
+
+            txtMessageNickname.post(new Runnable() {
+                @Override
+                public void run() {
+                    txtMessageNickname.setMaxWidth(
+                            mMessageListView.getMeasuredWidth() - mMessageListView.getPaddingLeft() - mMessageListView.getPaddingRight() -
+                                    txtMessageNicknameRoleWidth - txtMessageNicknameRole.getPaddingLeft() - txtMessageNicknameRole.getPaddingRight() -
+                                    avatar.getMeasuredWidth() - avatar.getPaddingLeft() - avatar.getPaddingRight() -
+                                    (int) EaseUtils.dip2px(mContext, 15)
+                    );
+                }
+            });
 
             if (txtMessageNickname.getVisibility() == View.GONE && txtMessageNicknameRole.getVisibility() == View.VISIBLE) {
                 if (0 != mTxtNicknameHeight) {
