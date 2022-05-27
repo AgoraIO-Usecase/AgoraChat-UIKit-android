@@ -1053,6 +1053,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             fragment.setOnChatRecordTouchListener(this.recordTouchListener);
             fragment.setOnChatLayoutFinishInflateListener(this.finishInflateListener);
             fragment.setCustomAdapter(this.adapter);
+            fragment.setOnReactionMessageListener(this.reactionMessageListener);
             return fragment;
         }
     }

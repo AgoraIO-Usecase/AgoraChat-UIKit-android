@@ -23,6 +23,7 @@
         android:layout_marginEnd="5dp"
         android:gravity="center_vertical"
         android:paddingEnd="5dp"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/rv_list"
         app:layout_constraintTop_toTopOf="parent" />
