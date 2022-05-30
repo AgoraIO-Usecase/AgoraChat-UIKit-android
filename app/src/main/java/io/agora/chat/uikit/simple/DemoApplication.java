@@ -21,7 +21,7 @@ public class DemoApplication extends Application {
 
     public void initAgoraChatSDK() {
         ChatOptions options = new ChatOptions();
-        options.setAppKey("easemob-demo#easeim");
+        options.setAppKey("Your appkey");
         EaseUIKit.getInstance().init(this, options);
     }
 }
