@@ -38,9 +38,9 @@ public abstract class EaseChatMessagePresenter extends EaseBasePresenter {
      */
     public void setupWithConversation(Conversation conversation) {
         this.conversation = conversation;
-        EMLog.e("EaseChatMessagePresenter", "conversation isThread: "+conversation.isThread()+"conversationId: "+conversation.conversationId());
+        EMLog.e("EaseChatMessagePresenter", "conversation isThread: "+conversation.isChatThread()+"conversationId: "+conversation.conversationId());
         // Chat thread conversation should clear cache data
-        if(conversation != null && conversation.isThread()) {
+        if(conversation != null && conversation.isChatThread()) {
             conversation.clear();
         }
     }
