@@ -638,7 +638,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     }
 
     @Override
-    public void onThreadEvent(int event, String target, List<String> usernames) {
+    public void onChatThreadEvent(int event, String target, List<String> usernames) {
 
     }
 
@@ -652,14 +652,14 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     @Override
     public void onChatThreadUpdated(ChatThreadEvent event) {
         if(isMessageInit) {
-            chatLayout.getChatMessageListLayout().refreshMessage(event.getMessageId());
+            chatLayout.getChatMessageListLayout().refreshMessage(event.getChatThread().getMessageId());
         }
     }
 
     @Override
     public void onChatThreadDestroyed(ChatThreadEvent event) {
         if(isMessageInit) {
-            chatLayout.getChatMessageListLayout().refreshMessage(event.getMessageId());
+            chatLayout.getChatMessageListLayout().refreshMessage(event.getChatThread().getMessageId());
         }
     }
 
