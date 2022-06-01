@@ -1,5 +1,7 @@
 package io.agora.chat.uikit.menu;
 
+import androidx.annotation.ColorInt;
+
 import java.util.Objects;
 
 public class MenuItemBean {
@@ -9,6 +11,7 @@ public class MenuItemBean {
     private String title;
     private boolean visible = true;
     private int resourceId;
+    private int titleColor;
 
     public MenuItemBean(int groupId, int itemId, int order, String title) {
         this.groupId = groupId;
@@ -63,6 +66,14 @@ public class MenuItemBean {
 
     public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
+    }
+
+    public int getTitleColor() {
+        return titleColor;
+    }
+
+    public void setTitleColor(@ColorInt int titleColor) {
+        this.titleColor = titleColor;
     }
 
     @Override

@@ -26,12 +26,12 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.adapter.ReactionGridAdapter;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
 import io.agora.chat.uikit.interfaces.OnItemLongClickListener;
-import io.agora.chat.uikit.menu.EaseMessageMenuHelper;
-import io.agora.chat.uikit.menu.EaseMessageMenuPopupWindow;
 import io.agora.chat.uikit.menu.EaseMessageReactionHelper;
+import io.agora.chat.uikit.menu.EasePopupWindow;
 import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.models.EaseMessageMenuData;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
+import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseRecyclerView;
 import io.agora.chat.uikit.widget.chatextend.RecyclerViewFlowLayoutManager;
 import io.agora.util.EMLog;
@@ -82,7 +82,7 @@ public class EaseChatReactionView extends LinearLayout implements OnItemClickLis
         mListAdapter.setOnItemLongClickListener(this);
         mListAdapter.setOnItemClickListener(this);
         reactionList.setAdapter(mListAdapter);
-        reactionList.addItemDecoration(new ReactionSpacesItemDecoration((int) EaseMessageMenuHelper.dip2px(context, 5)));
+        reactionList.addItemDecoration(new ReactionSpacesItemDecoration((int) EaseUtils.dip2px(context, 5)));
 
         reactionList.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -134,7 +134,7 @@ public class EaseChatReactionView extends LinearLayout implements OnItemClickLis
             }
         });
         mReactionHelper.setOutsideTouchable(true);
-        mReactionHelper.setOnPopupMenuDismissListener(new EaseMessageMenuPopupWindow.OnPopupWindowDismissListener() {
+        mReactionHelper.setOnPopupMenuDismissListener(new EasePopupWindow.OnPopupWindowDismissListener() {
             @Override
             public void onDismiss(PopupWindow menu) {
                 mReactionHelper = null;
@@ -149,7 +149,7 @@ public class EaseChatReactionView extends LinearLayout implements OnItemClickLis
             return;
         }
         //default gone
-        mLayout.setVisibility(GONE);
+        this.setVisibility(GONE);
 
         List<MessageReaction> messageReactions = message.getMessageReaction();
         if (null != messageReactions && messageReactions.size() > 0) {
@@ -168,7 +168,7 @@ public class EaseChatReactionView extends LinearLayout implements OnItemClickLis
                 }
             }
             if (0 != list.size()) {
-                mLayout.setVisibility(VISIBLE);
+                this.setVisibility(VISIBLE);
                 updateData(list, message.getMsgId());
             }
         }

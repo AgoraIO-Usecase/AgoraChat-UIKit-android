@@ -1,14 +1,7 @@
 package io.agora.chat.uikit.chat.presenter;
 
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.text.TextUtils;
-
-
-import java.io.File;
-import java.io.FileOutputStream;
 
 import io.agora.CallBack;
 import io.agora.chat.ChatClient;
@@ -21,11 +14,11 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.EaseChatLayout;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.exceptions.ChatException;
 import io.agora.util.EMLog;
-import io.agora.util.PathUtil;
 
 public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     private static final String TAG = EaseChatLayout.class.getSimpleName();
@@ -133,11 +126,13 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             return;
         }
         addMessageAttributes(message);
-        if (chatType == EaseConstant.CHATTYPE_GROUP){
+        if (chatType == EaseChatType.GROUP_CHAT){
             message.setChatType(ChatMessage.ChatType.GroupChat);
-        }else if(chatType == EaseConstant.CHATTYPE_CHATROOM){
+        }else if(chatType == EaseChatType.CHATROOM){
             message.setChatType(ChatMessage.ChatType.ChatRoom);
         }
+        // Should add thread label if it is a thread conversation
+        message.setIsThread(isThread);
         message.setMessageStatusCallback(new CallBack() {
             @Override
             public void onSuccess() {
@@ -207,10 +202,11 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             msgNotification.setLocalTime(message.getMsgTime());
             msgNotification.setAttribute(EaseConstant.MESSAGE_TYPE_RECALL, true);
             msgNotification.setStatus(ChatMessage.Status.SUCCESS);
+            msgNotification.setIsThread(message.isThread());
             ChatClient.getInstance().chatManager().recallMessage(message);
             ChatClient.getInstance().chatManager().saveMessage(msgNotification);
             if(isActive()) {
-                runOnUI(()->mView.recallMessageFinish(msgNotification));
+                runOnUI(()->mView.recallMessageFinish(message, msgNotification));
             }
         } catch (ChatException e) {
             e.printStackTrace();
@@ -221,44 +217,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     }
 
     private String getThumbPath(Uri videoUri) {
-        if(!EaseFileUtils.isFileExistByUri(mView.context(), videoUri)) {
-            return "";
-        }
-        String filePath = EaseFileUtils.getFilePath(mView.context(), videoUri);
-        File file = new File(PathUtil.getInstance().getVideoPath(), "thvideo" + System.currentTimeMillis()+".jpeg");
-        boolean createSuccess = true;
-        if(!TextUtils.isEmpty(filePath) && new File(filePath).exists()) {
-            try {
-                FileOutputStream fos = new FileOutputStream(file);
-                Bitmap ThumbBitmap = ThumbnailUtils.createVideoThumbnail(filePath, 3);
-                ThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-                EMLog.e(TAG, e.getMessage());
-                if(isActive()) {
-                    runOnUI(() -> mView.createThumbFileFail(e.getMessage()));
-                }
-                createSuccess = false;
-            }
-        }else {
-            try {
-                FileOutputStream fos = new FileOutputStream(file);
-                MediaMetadataRetriever media = new MediaMetadataRetriever();
-                media.setDataSource(mView.context(), videoUri);
-                Bitmap frameAtTime = media.getFrameAtTime();
-                frameAtTime.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-                EMLog.e(TAG, e.getMessage());
-                if(isActive()) {
-                    runOnUI(() -> mView.createThumbFileFail(e.getMessage()));
-                }
-                createSuccess = false;
-            }
-        }
-        return createSuccess ? file.getAbsolutePath() : "";
+        return EaseFileUtils.getThumbPath(mView.context(), videoUri);
     }
 
     @Override

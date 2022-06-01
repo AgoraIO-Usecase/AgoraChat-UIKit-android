@@ -13,6 +13,8 @@ import io.agora.chat.uikit.interfaces.OnEaseChatConnectionListener;
 import io.agora.chat.uikit.manager.EaseChatPresenter;
 import io.agora.chat.uikit.manager.EaseNotifier;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
+import io.agora.chat.uikit.provider.EaseActivityProvider;
+import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
 import io.agora.chat.uikit.options.EaseReactionOptions;
 import io.agora.chat.uikit.provider.EaseEmojiconInfoProvider;
 import io.agora.chat.uikit.provider.EaseFileIconProvider;
@@ -46,6 +48,10 @@ public class EaseUIKit {
      */
     private EaseFileIconProvider fileIconProvider;
     /**
+     * Activity provider
+     */
+    private EaseActivityProvider activitiesProvider;
+    /**
      * the notifier
      */
     private EaseNotifier notifier = null;
@@ -72,8 +78,7 @@ public class EaseUIKit {
      */
     private EaseReactionOptions reactionOptions;
 
-    private EaseUIKit() {
-    }
+    private EaseUIKit() {}
 
     public static EaseUIKit getInstance() {
         if(instance == null) {
@@ -347,5 +352,23 @@ public class EaseUIKit {
 
     public EaseReactionOptions getReactionOptions() {
         return reactionOptions;
+    }
+
+    /**
+     * get file icon provider
+     * @return
+     */
+    public EaseActivityProvider getActivitiesProvider() {
+        return activitiesProvider;
+    }
+
+    /**
+     * set file icon provider
+     * @param provider
+     * @return
+     */
+    public EaseUIKit setActivityProvider(EaseActivityProvider provider) {
+        this.activitiesProvider = provider;
+        return this;
     }
 }

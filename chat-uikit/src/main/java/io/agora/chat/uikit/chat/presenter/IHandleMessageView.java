@@ -37,9 +37,10 @@ public interface IHandleMessageView extends ILoadDataView {
 
     /**
      * Complete withdrawal message
-     * @param message
+     * @param originalMessage The message was unsent
+     * @param notification  The notification message
      */
-    void recallMessageFinish(ChatMessage message);
+    void recallMessageFinish(ChatMessage originalMessage, ChatMessage notification);
 
     /**
      * Failed to withdraw the message

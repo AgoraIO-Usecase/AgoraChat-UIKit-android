@@ -284,6 +284,11 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
 
     private EaseMultiDeviceListener multiDeviceListener = new EaseMultiDeviceListener() {
         @Override
+        public void onThreadEvent(int event, String target, List<String> usernames) {
+
+        }
+
+        @Override
         protected void onContactAllow(String target, String ext) {
             refreshList();
         }

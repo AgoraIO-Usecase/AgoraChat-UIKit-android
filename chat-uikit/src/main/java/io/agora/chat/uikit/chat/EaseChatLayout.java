@@ -34,7 +34,9 @@ import io.agora.chat.Conversation;
 import io.agora.chat.MessageReactionChange;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.adapter.EMAChatRoomManagerListener;
+import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.activities.EaseChatThreadCreateActivity;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.IChatLayout;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -53,16 +55,20 @@ import io.agora.chat.uikit.interfaces.EaseGroupListener;
 import io.agora.chat.uikit.interfaces.IPopupWindow;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseThreadManager;
-import io.agora.chat.uikit.menu.EaseMessageMenuHelper;
-import io.agora.chat.uikit.menu.EaseMessageMenuPopupWindow;
+import io.agora.chat.uikit.menu.EaseChatType;
+import io.agora.chat.uikit.menu.EasePopupWindow;
+import io.agora.chat.uikit.menu.EasePopupWindowHelper;
+import io.agora.chat.uikit.menu.EaseReactionMenuHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 import io.agora.chat.uikit.menu.ReactionItemBean;
 import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.models.EaseUser;
+import io.agora.chat.uikit.provider.EaseActivityProvider;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseDialog;
@@ -104,9 +110,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      */
     private String conversationId;
     /**
-     * Chat type
+     * Chat type, see {@link EaseChatType}
      */
-    private int chatType;
+    private EaseChatType chatType;
     /**
      * Used to monitor changes in messages
      */
@@ -123,7 +129,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     /**
      * Long press entry menu help category
      */
-    private EaseMessageMenuHelper mMessageMenuHelper;
+    private EasePopupWindowHelper menuHelper;
     private ClipboardManager clipboard;
     private OnMenuChangeListener menuChangeListener;
 
@@ -145,6 +151,14 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     private Drawable preBackground;
     // To flag whether has get the background drawable of input menu
     private boolean hasGetInputBgFlag;
+    /**
+     * Message's header view, default is Reaction view
+     */
+    private View mMenuHeaderView;
+    /**
+     * Whether to show reaction view
+     */
+    private boolean mIsShowReactionView = true;
 
     public EaseChatLayout(Context context) {
         this(context, null);
@@ -172,7 +186,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
         presenter.attachView(this);
 
-        mMessageMenuHelper = new EaseMessageMenuHelper();
+        menuHelper = new EasePopupWindowHelper();
         clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
@@ -212,7 +226,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      * @param username chat id
      * @param chatType Chat type, single chat, group chat or chat room
      */
-    public void init(String username, int chatType) {
+    public void init(String username, EaseChatType chatType) {
         init(EaseChatMessageListLayout.LoadDataType.LOCAL, username, chatType);
     }
 
@@ -223,18 +237,20 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      *                            or the group id or chat room id
      * @param chatType Chat type, single chat, group chat or chat room
      */
-    public void init(EaseChatMessageListLayout.LoadDataType loadDataType, String conversationId, int chatType) {
+    public void init(EaseChatMessageListLayout.LoadDataType loadDataType, String conversationId, EaseChatType chatType) {
         this.conversationId = conversationId;
         this.chatType = chatType;
         messageListLayout.init(loadDataType, this.conversationId, chatType);
-        presenter.setupWithToUser(chatType, this.conversationId);
-        if(isChatRoomCon()) {
-            chatRoomListener = new ChatRoomListener();
-            ChatClient.getInstance().chatroomManager().addChatRoomChangeListener(chatRoomListener);
-        }else if(isGroupCon()) {
-            EaseAtMessageHelper.get().removeAtMeGroup(conversationId);
-            groupListener = new GroupListener();
-            ChatClient.getInstance().groupManager().addGroupChangeListener(groupListener);
+        presenter.setupWithToUser(chatType, this.conversationId, loadDataType == EaseChatMessageListLayout.LoadDataType.THREAD);
+        if(loadDataType != EaseChatMessageListLayout.LoadDataType.THREAD) {
+            if(isChatRoomCon()) {
+                chatRoomListener = new ChatRoomListener();
+                ChatClient.getInstance().chatroomManager().addChatRoomChangeListener(chatRoomListener);
+            }else if(isGroupCon()) {
+                EaseAtMessageHelper.get().removeAtMeGroup(conversationId);
+                groupListener = new GroupListener();
+                ChatClient.getInstance().groupManager().addGroupChangeListener(groupListener);
+            }
         }
         initTypingHandler();
     }
@@ -244,7 +260,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      * @param toChatUsername
      * @param chatType
      */
-    public void initHistoryModel(String toChatUsername, int chatType) {
+    public void initHistoryModel(String toChatUsername, EaseChatType chatType) {
         init(EaseChatMessageListLayout.LoadDataType.HISTORY, toChatUsername, chatType);
     }
 
@@ -289,14 +305,16 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     /**
      * Send channel ack message
-     * (1) If it is a 1v1 session, the other party will receive a channel ack callback, the callback method is {@link io.agora.ConversationListener#onConversationRead(String, String)}
+     * (1) If it is a 1v1 session, the other party will receive a channel ack callback, the callback method is {@link ConversationListener#onConversationRead(String, String)}
      * The SDK will set the isAcked of the message sent for this session to true.
      * (2) If it is a multi-terminal device, the other end will receive a channel ack callback, and the SDK will set the session as read.
+     * (3) Not send channel ack when the conversation is thread
      */
     private void sendChannelAck() {
         if(EaseConfigsManager.enableSendChannelAck()) {
             Conversation conversation = ChatClient.getInstance().chatManager().getConversation(conversationId);
-            if(conversation == null || conversation.getUnreadMsgCount() <= 0) {
+            // Not send channel ack when the conversation is thread
+            if(conversation == null || conversation.getUnreadMsgCount() <= 0 || conversation.isThread()) {
                 return;
             }
             try {
@@ -316,7 +334,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 //            return;
 //        }
         // Only support single-chat type conversation.
-        if (chatType != EaseConstant.CHATTYPE_SINGLE)
+        if (chatType != EaseChatType.SINGLE_CHAT)
             return;
         handler.removeMessages(MSG_OTHER_TYPING_END);
         if(listener != null) {
@@ -331,7 +349,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     private void setTypingBeginMsg(Handler handler) {
         if (!turnOnTyping) return;
         // Only support single-chat type conversation.
-        if (chatType != EaseConstant.CHATTYPE_SINGLE)
+        if (chatType != EaseChatType.SINGLE_CHAT)
             return;
         // Send TYPING-BEGIN cmd msg
         presenter.sendCmdMessage(ACTION_TYPING_BEGIN);
@@ -346,7 +364,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         if (!turnOnTyping) return;
 
         // Only support single-chat type conversation.
-        if (chatType != EaseConstant.CHATTYPE_SINGLE)
+        if (chatType != EaseChatType.SINGLE_CHAT)
             return;
 
         isNotFirstSend = false;
@@ -575,7 +593,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 refresh = true;
             }
         }
-        if(refresh) {
+        if(refresh && getChatMessageListLayout() != null && !messages.isEmpty()) {
+            getChatMessageListLayout().setSendOrReceiveMessage(messages.get(0));
             getChatMessageListLayout().refreshToLatest();
         }
     }
@@ -650,7 +669,15 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void onMessageRecalled(List<ChatMessage> messages) {
-        if(getChatMessageListLayout() != null) {
+        boolean isRefresh = false;
+        if(messages != null && messages.size() > 0) {
+            for(ChatMessage message : messages) {
+                if(TextUtils.equals(message.conversationId(), conversationId)) {
+                    isRefresh = true;
+                }
+            }
+        }
+        if(getChatMessageListLayout() != null && isRefresh) {
             getChatMessageListLayout().refreshMessages();
         }
     }
@@ -701,6 +728,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void sendMessageFinish(ChatMessage message) {
         if(getChatMessageListLayout() != null) {
+            getChatMessageListLayout().setSendOrReceiveMessage(message);
             getChatMessageListLayout().refreshToLatest();
         }
     }
@@ -711,9 +739,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     @Override
-    public void recallMessageFinish(ChatMessage message) {
+    public void recallMessageFinish(ChatMessage originalMessage, ChatMessage notification) {
         if(recallMessageListener != null) {
-            recallMessageListener.recallSuccess(message);
+            recallMessageListener.recallSuccess(originalMessage, notification);
         }
         messageListLayout.refreshMessages();
     }
@@ -731,6 +759,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onPresenterMessageSuccess(ChatMessage message) {
         EMLog.i(TAG, "send message onPresenterMessageSuccess");
+        if(message.isThread() && messageListLayout != null && messageListLayout.isReachedLatestThreadMessage()) {
+            message.setAttribute(EaseConstant.FLAG_REACH_LATEST_THREAD_MESSAGE, true);
+        }
         if(listener != null) {
             listener.onSuccess(message);
         }
@@ -798,7 +829,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public boolean onBubbleLongClick(View v, ChatMessage message) {
         if(showDefaultMenu) {
-            showMessageMenu(v, message);
+            inputMenu.hideSoftKeyboard();
+            showDefaultMenu(v, message);
             if(listener != null) {
                 return listener.onBubbleLongClick(v, message);
             }
@@ -827,6 +859,22 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     @Override
+    public boolean onThreadClick(String messageId, String threadId) {
+        if(listener != null) {
+            return listener.onThreadClick(messageId, threadId);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onThreadLongClick(View v, String messageId, String threadId) {
+        if(listener != null) {
+            return listener.onThreadLongClick(v, messageId, threadId);
+        }
+        return false;
+    }
+
+    @Override
     public void onMessageCreate(ChatMessage message) {
         EMLog.i(TAG, "onMessageCreate");
     }
@@ -834,6 +882,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onMessageSuccess(ChatMessage message) {
         EMLog.i(TAG, "send message onMessageSuccess");
+        if(message.isThread() && messageListLayout != null && messageListLayout.isReachedLatestThreadMessage()) {
+            message.setAttribute(EaseConstant.FLAG_REACH_LATEST_THREAD_MESSAGE, true);
+        }
         if(listener != null) {
             listener.onSuccess(message);
         }
@@ -876,37 +927,57 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void clearMenu() {
-        mMessageMenuHelper.clear();
+        menuHelper.clear();
     }
 
     @Override
     public void addItemMenu(MenuItemBean item) {
-        mMessageMenuHelper.addItemMenu(item);
+        menuHelper.addItemMenu(item);
     }
 
     @Override
     public void addItemMenu(int groupId, int itemId, int order, String title) {
-        mMessageMenuHelper.addItemMenu(groupId, itemId, order, title);
+        menuHelper.addItemMenu(groupId, itemId, order, title);
     }
 
     @Override
     public MenuItemBean findItem(int id) {
-        return mMessageMenuHelper.findItem(id);
+        return menuHelper.findItem(id);
     }
 
     @Override
     public void findItemVisible(int id, boolean visible) {
-        mMessageMenuHelper.findItemVisible(id, visible);
+        menuHelper.findItemVisible(id, visible);
+    }
+
+//    @Override
+//    public void setMenuStyle(EasePopupWindow.Style style) {
+//        menuHelper.setMenuStyle(style);
+//    }
+
+    @Override
+    public void setItemMenuIconVisible(boolean visible) {
+        menuHelper.setItemMenuIconVisible(visible);
     }
 
     @Override
-    public EaseMessageMenuHelper getMenuHelper() {
-        return mMessageMenuHelper;
+    public EasePopupWindowHelper getMenuHelper() {
+        return menuHelper;
     }
 
     @Override
     public void setOnPopupWindowItemClickListener(OnMenuChangeListener listener) {
         this.menuChangeListener = listener;
+    }
+
+    @Override
+    public void addHeaderView(View view) {
+        this.mMenuHeaderView = view;
+    }
+
+    @Override
+    public void hideReactionView(boolean hide) {
+        this.mIsShowReactionView = !hide;
     }
 
     /**
@@ -944,13 +1015,64 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         }
     }
 
-    private void showMessageMenu(View v, ChatMessage message) {
-        mMessageMenuHelper.init(getContext());
-        mMessageMenuHelper.setMessageReactions(message.getMessageReaction());
-        mMessageMenuHelper.setOutsideTouchable(true);
-        mMessageMenuHelper.setDefaultMenus();
+    private void showDefaultMenu(View v, ChatMessage message) {
+        menuHelper.initMenu(getContext());
+        menuHelper.addHeaderView(checkHeaderViewForDefaultMenu(message));
+        menuHelper.setDefaultMenus();
+        menuHelper.setOutsideTouchable(true);
         setMenuByMsgType(message);
-        mMessageMenuHelper.setOnPopupReactionItemClickListener(new EaseMessageMenuPopupWindow.OnPopupWindowItemClickListener() {
+        if(menuChangeListener != null) {
+            menuChangeListener.onPreMenu(menuHelper, message);
+        }
+        menuHelper.setOnPopupMenuItemClickListener(new EasePopupWindow.OnPopupWindowItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItemBean item) {
+                if(menuChangeListener != null && menuChangeListener.onMenuItemClick(item, message)) {
+                    return true;
+                }
+                if(showDefaultMenu) {
+                    int itemId = item.getItemId();
+                    if(itemId == R.id.action_chat_copy) {
+                        clipboard.setPrimaryClip(ClipData.newPlainText(null,
+                                ((TextMessageBody) message.getBody()).getMessage()));
+                        EMLog.i(TAG, "copy success");
+                    }else if(itemId == R.id.action_chat_delete) {
+                        deleteMessage(message);
+                        EMLog.i(TAG,"currentMsgId = "+message.getMsgId() + " timestamp = "+message.getMsgTime());
+                    }else if(itemId == R.id.action_chat_recall) {
+                        recallMessage(message);
+                    }else if(itemId == R.id.action_chat_reply) {
+                        skipToCreateThread(message);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+        menuHelper.setOnPopupMenuDismissListener(new EasePopupWindow.OnPopupWindowDismissListener() {
+            @Override
+            public void onDismiss(PopupWindow menu) {
+                if(menuChangeListener != null) {
+                    menuChangeListener.onDismiss(menu);
+                }
+            }
+        });
+        menuHelper.show(this, v);
+    }
+
+    private View checkHeaderViewForDefaultMenu(ChatMessage message) {
+        if(mMenuHeaderView != null) {
+            return mMenuHeaderView;
+        }
+        if(!mIsShowReactionView) {
+            return null;
+        }
+        // Use reaction view
+        EaseReactionMenuHelper helper = new EaseReactionMenuHelper();
+        helper.init(getContext(), menuHelper);
+        helper.setMessageReactions(message.getMessageReaction());
+        helper.show();
+        helper.setReactionItemClickListener(new EasePopupWindow.OnPopupWindowItemClickListener() {
             @Override
             public void onReactionItemClick(ReactionItemBean item, boolean isAdd) {
                 if (isAdd) {
@@ -961,62 +1083,48 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
             }
 
             @Override
-            public void onMenuItemClick(MenuItemBean item) {
-                if (menuChangeListener != null && menuChangeListener.onMenuItemClick(item, message)) {
-                    return;
-                }
-                if (showDefaultMenu) {
-                    int itemId = item.getItemId();
-                    if (itemId == R.id.action_chat_copy) {
-                        clipboard.setPrimaryClip(ClipData.newPlainText(null,
-                                ((TextMessageBody) message.getBody()).getMessage()));
-                        EMLog.i(TAG, "copy success");
-                    } else if (itemId == R.id.action_chat_delete) {
-                        deleteMessage(message);
-                        EMLog.i(TAG, "currentMsgId = " + message.getMsgId() + " timestamp = " + message.getMsgTime());
-                    } else if (itemId == R.id.action_chat_recall) {
-                        recallMessage(message);
-                    }
-                }
+            public boolean onMenuItemClick(MenuItemBean item) {
+                return false;
             }
         });
-        mMessageMenuHelper.setOnPopupMenuDismissListener(new EaseMessageMenuPopupWindow.OnPopupWindowDismissListener() {
-            @Override
-            public void onDismiss(PopupWindow menu) {
-
-            }
-        });
-        mMessageMenuHelper.show(v.getRootView(), v);
+        return helper.getView();
     }
 
+    private void skipToCreateThread(ChatMessage message) {
+        EaseActivityProviderHelper.startToCreateChatThreadActivity(context(), conversationId, message.getMsgId());
+    }
 
     private void setMenuByMsgType(ChatMessage message) {
         ChatMessage.Type type = message.getType();
-        mMessageMenuHelper.findItemVisible(R.id.action_chat_copy, false);
-        mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, false);
-        mMessageMenuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_action_delete));
+        menuHelper.findItemVisible(R.id.action_chat_reply, false);
+        menuHelper.findItemVisible(R.id.action_chat_copy, false);
+        menuHelper.findItemVisible(R.id.action_chat_recall, false);
+        menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_action_delete));
         switch (type) {
             case TXT:
-                mMessageMenuHelper.findItemVisible(R.id.action_chat_copy, true);
-                mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, true);
+                menuHelper.findItemVisible(R.id.action_chat_copy, true);
+                menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
             case LOCATION:
             case FILE:
             case IMAGE:
-                mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, true);
+                menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
             case VOICE:
-                mMessageMenuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_voice));
-                mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, true);
+                menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_voice));
+                menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
             case VIDEO:
-                mMessageMenuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_video));
-                mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, true);
+                menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_delete_video));
+                menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
+        }
+        if(message.getChatType() == ChatMessage.ChatType.GroupChat && message.getThreadOverview() == null) {
+            menuHelper.findItemVisible(R.id.action_chat_reply, true);
         }
 
         if(message.direct() == ChatMessage.Direct.RECEIVE ){
-            mMessageMenuHelper.findItemVisible(R.id.action_chat_recall, false);
+            menuHelper.findItemVisible(R.id.action_chat_recall, false);
         }
     }
 

@@ -10,14 +10,16 @@ import io.agora.chat.Conversation;
 import io.agora.chat.uikit.base.EaseBasePresenter;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.utils.EaseUtils;
 
 
-public abstract class EaseHandleMessagePresenter extends EaseBasePresenter {
+public abstract class EaseHandleMessagePresenter extends EaseBasePresenter implements IBaseHandleMessage{
     protected IHandleMessageView mView;
-    protected int chatType;
+    protected EaseChatType chatType;
     protected String toChatUsername;
     protected Conversation conversation;
+    protected boolean isThread;
 
     @Override
     public void attachView(ILoadDataView view) {
@@ -40,10 +42,20 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter {
      * @param chatType
      * @param toChatUsername
      */
-    public void setupWithToUser(int chatType, @NonNull String toChatUsername) {
+    public void setupWithToUser(EaseChatType chatType, @NonNull String toChatUsername) {
+        setupWithToUser(chatType, toChatUsername, false);
+    }
+    
+    /**
+     * Bind sender id
+     * @param chatType
+     * @param toChatUsername
+     */
+    public void setupWithToUser(EaseChatType chatType, @NonNull String toChatUsername, boolean isThread) {
         this.chatType = chatType;
         this.toChatUsername = toChatUsername;
-        conversation = ChatClient.getInstance().chatManager().getConversation(toChatUsername, EaseUtils.getConversationType(chatType), true);
+        this.isThread = isThread;
+        conversation = ChatClient.getInstance().chatManager().getConversation(toChatUsername, EaseUtils.getConversationType(chatType), true, isThread);
     }
 
     /**
@@ -51,13 +63,6 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter {
      * @param content
      */
     public abstract void sendTextMessage(String content);
-
-    /**
-     * Send text message
-     * @param content
-     * @param isNeedGroupAck Whether need a group receipt
-     */
-    public abstract void sendTextMessage(String content, boolean isNeedGroupAck);
 
     /**
      * Send @ message
@@ -73,57 +78,16 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter {
     public abstract void sendBigExpressionMessage(String name, String identityCode);
 
     /**
-     * Send voice message
-     * @param filePath
-     * @param length
-     */
-    public abstract void sendVoiceMessage(Uri filePath, int length);
-
-    /**
      * Send image message
      * @param imageUri
      */
     public abstract void sendImageMessage(Uri imageUri);
 
     /**
-     * Send image message
-     * @param imageUri
-     * @param sendOriginalImage
-     */
-    public abstract void sendImageMessage(Uri imageUri, boolean sendOriginalImage);
-
-    /**
-     * Send location message
-     * @param latitude
-     * @param longitude
-     * @param locationAddress
-     */
-    public abstract void sendLocationMessage(double latitude, double longitude, String locationAddress);
-
-    /**
-     * Send video message
-     * @param videoUri
-     * @param videoLength
-     */
-    public abstract void sendVideoMessage(Uri videoUri, int videoLength);
-
-    /**
-     * Send file message
-     * @param fileUri
-     */
-    public abstract void sendFileMessage(Uri fileUri);
-
-    /**
      * Add extension fields to the message
      * @param message
      */
     public abstract void addMessageAttributes(ChatMessage message);
-
-    /**
-     * Send message
-     * @param message
-     */
-    public abstract void sendMessage(ChatMessage message);
 
     /**
      * Send cmd message
@@ -154,7 +118,7 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter {
      * @return
      */
     public boolean isGroupChat() {
-        return chatType == EaseConstant.CHATTYPE_GROUP;
+        return chatType == EaseChatType.GROUP_CHAT;
     }
 
     /**

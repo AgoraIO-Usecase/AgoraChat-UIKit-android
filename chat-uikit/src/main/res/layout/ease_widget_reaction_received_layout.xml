@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_reaction_container"
     android:layout_width="wrap_content"
-    android:layout_height="21dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/ease_chat_bubble_bg">
 
 
     <io.agora.chat.uikit.widget.EaseRecyclerView
         android:id="@+id/rv_list"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

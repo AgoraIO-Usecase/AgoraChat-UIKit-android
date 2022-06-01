@@ -5,19 +5,31 @@ import android.util.Log;
 
 import java.util.List;
 
+import io.agora.ChatThreadChangeListener;
 import io.agora.MessageListener;
+import io.agora.MultiDeviceListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
+import io.agora.chat.ChatThreadEvent;
+import io.agora.chat.Conversation;
 import io.agora.chat.GroupReadAck;
-import io.agora.chat.MessageReactionChange;
+import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
+import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.constants.EaseConstant;
+import io.agora.chat.uikit.models.EaseUser;
+import io.agora.chat.uikit.utils.EaseUserUtils;
 
-public class EaseChatPresenter implements MessageListener {
+public class EaseChatPresenter implements MessageListener, ChatThreadChangeListener, MultiDeviceListener {
     private static final String TAG = EaseChatPresenter.class.getSimpleName();
     public Context context;
 
     public EaseChatPresenter() {
         ChatClient.getInstance().chatManager().addMessageListener(this);
+        //Add thread change listener
+        ChatClient.getInstance().chatThreadManager().addChatThreadChangeListener(this);
+        //Add multi-terminal login monitoring
+        ChatClient.getInstance().addMultiDeviceListener(this);
     }
 
 
@@ -88,12 +100,75 @@ public class EaseChatPresenter implements MessageListener {
         }
     }
 
+    public EaseNotifier getNotifier() {
+        return EaseUIKit.getInstance().getNotifier();
+    }
+
     @Override
-    public void onReactionChanged(List<MessageReactionChange> list) {
+    public void onChatThreadCreated(ChatThreadEvent event) {
+        createThreadCreatedMsg(event);
+    }
+
+    @Override
+    public void onChatThreadUpdated(ChatThreadEvent event) {
 
     }
 
-    public EaseNotifier getNotifier() {
-        return EaseUIKit.getInstance().getNotifier();
+    @Override
+    public void onChatThreadDestroyed(ChatThreadEvent event) {
+        Conversation conversation = ChatClient.getInstance().chatManager().getConversation(event.getParentId());
+        if(conversation != null) {
+            conversation.removeMessage(event.getChatThreadId());
+        }
+    }
+
+    @Override
+    public void onChatThreadUserRemoved(ChatThreadEvent event) {
+
+    }
+
+    @Override
+    public void onContactEvent(int event, String target, String ext) {
+
+    }
+
+    @Override
+    public void onGroupEvent(int event, String target, List<String> usernames) {
+
+    }
+
+    @Override
+    public void onThreadEvent(int event, String target, List<String> usernames) {
+        if(event == THREAD_DESTROY || event == THREAD_LEAVE) {
+            ChatMessage message = ChatClient.getInstance().chatManager().getMessage(target);
+            if(message != null) {
+                Conversation conversation = ChatClient.getInstance().chatManager().getConversation(message.conversationId());
+                if(conversation != null) {
+                    conversation.removeMessage(target);
+                }
+            }
+        }
+    }
+
+    private void createThreadCreatedMsg(ChatThreadEvent event) {
+        ChatMessage msg = ChatMessage.createReceiveMessage(ChatMessage.Type.TXT);
+        msg.setChatType(ChatMessage.ChatType.GroupChat);
+        msg.setFrom(event.getOperatorId());
+        msg.setTo(event.getParentId());
+        // 将thread id设置消息id，方便后面移除
+        msg.setMsgId(event.getChatThreadId());
+        msg.setAttribute(EaseConstant.EASE_THREAD_NOTIFICATION_TYPE, true);
+        msg.setAttribute(EaseConstant.EASE_THREAD_PARENT_MSG_ID, event.getMessageId());
+        StringBuilder builder = new StringBuilder();
+        EaseUser userInfo = EaseUserUtils.getUserInfo(event.getOperatorId());
+        builder.append(userInfo != null ? userInfo.getNickname() : event.getOperatorId());
+        builder.append(" ");
+        builder.append(context.getResources().getString(R.string.ease_start_a_thread));
+        builder.append(event.getChatThreadName());
+        builder.append("\n");
+        builder.append(context.getResources().getString(R.string.ease_join_the_thread));
+        msg.addBody(new TextMessageBody(builder.toString()));
+        msg.setStatus(ChatMessage.Status.SUCCESS);
+        ChatClient.getInstance().chatManager().saveMessage(msg);
     }
 }

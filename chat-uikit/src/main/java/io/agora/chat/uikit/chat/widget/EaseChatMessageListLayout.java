@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,7 @@ import io.agora.chat.uikit.chat.presenter.IChatMessageListView;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
 import io.agora.chat.uikit.manager.EaseThreadManager;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.utils.EaseUtils;
 
@@ -80,6 +82,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     private int recyclerViewLastHeight;
     private MessageListItemClickListener messageListItemClickListener;
     private EaseChatItemStyleHelper chatSetHelper;
+    private String messageCursor;
+    /**
+     * When is thread conversation, whether thread message list has reached the latest message
+     */
+    private boolean isReachedLatestThreadMessage = false;
 
     public EaseChatMessageListLayout(@NonNull Context context) {
         this(context, null);
@@ -92,8 +99,9 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     public EaseChatMessageListLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.ease_chat_message_list, this);
-        EaseChatItemStyleHelper.getInstance().clear();
+        EaseChatItemStyleHelper.getInstance().clear(context);
         chatSetHelper = EaseChatItemStyleHelper.getInstance();
+        chatSetHelper.setCurrentContext(context);
         presenter = new EaseChatMessagePresenterImpl();
         if(context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).getLifecycle().addObserver(presenter);
@@ -107,7 +115,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EaseChatMessageListLayout);
             float textSize = a.getDimension(R.styleable.EaseChatMessageListLayout_ease_chat_item_text_size
                     , 0);
-            chatSetHelper.setTextSize((int) textSize);
+            chatSetHelper.setTextSize(context, (int) textSize);
             int textColorRes = a.getResourceId(R.styleable.EaseChatMessageListLayout_ease_chat_item_text_color, -1);
             int textColor;
             if(textColorRes != -1) {
@@ -115,13 +123,13 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             }else {
                 textColor = a.getColor(R.styleable.EaseChatMessageListLayout_ease_chat_item_text_color, 0);
             }
-            chatSetHelper.setTextColor(textColor);
+            chatSetHelper.setTextColor(context, textColor);
 
             float itemMinHeight = a.getDimension(R.styleable.EaseChatMessageListLayout_ease_chat_item_min_height, 0);
-            chatSetHelper.setItemMinHeight((int) itemMinHeight);
+            chatSetHelper.setItemMinHeight(context, (int) itemMinHeight);
 
             float timeTextSize = a.getDimension(R.styleable.EaseChatMessageListLayout_ease_chat_item_time_text_size, 0);
-            chatSetHelper.setTimeTextSize((int) timeTextSize);
+            chatSetHelper.setTimeTextSize(context, (int) timeTextSize);
             int timeTextColorRes = a.getResourceId(R.styleable.EaseChatMessageListLayout_ease_chat_item_time_text_color, -1);
             int timeTextColor;
             if(timeTextColorRes != -1) {
@@ -129,8 +137,8 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             }else {
                 timeTextColor = a.getColor(R.styleable.EaseChatMessageListLayout_ease_chat_item_time_text_color, 0);
             }
-            chatSetHelper.setTimeTextColor(timeTextColor);
-            chatSetHelper.setTimeBgDrawable(a.getDrawable(R.styleable.EaseChatMessageListLayout_ease_chat_item_time_background));
+            chatSetHelper.setTimeTextColor(context, timeTextColor);
+            chatSetHelper.setTimeBgDrawable(context, a.getDrawable(R.styleable.EaseChatMessageListLayout_ease_chat_item_time_background));
 
             Drawable avatarDefaultDrawable = a.getDrawable(R.styleable.EaseChatMessageListLayout_ease_chat_item_avatar_default_src);
             //float avatarSize = a.getDimension(R.styleable.EaseChatMessageListLayout_ease_chat_item_avatar_size, 0);
@@ -144,20 +152,20 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 //            }else {
 //                borderColor = a.getColor(R.styleable.EaseChatMessageListLayout_ease_chat_item_avatar_border_color, Color.TRANSPARENT);
 //            }
-            chatSetHelper.setAvatarDefaultSrc(avatarDefaultDrawable);
+            chatSetHelper.setAvatarDefaultSrc(context, avatarDefaultDrawable);
 //            chatSetHelper.setAvatarSize(avatarSize);
-            chatSetHelper.setShapeType(shapeType);
+            chatSetHelper.setShapeType(context, shapeType);
 //            chatSetHelper.setAvatarRadius(avatarRadius);
 //            chatSetHelper.setBorderWidth(borderWidth);
 //            chatSetHelper.setBorderColor(borderColor);
 
-            chatSetHelper.setReceiverBgDrawable(a.getDrawable(R.styleable.EaseChatMessageListLayout_ease_chat_item_receiver_background));
-            chatSetHelper.setSenderBgDrawable(a.getDrawable(R.styleable.EaseChatMessageListLayout_ease_chat_item_sender_background));
+            chatSetHelper.setReceiverBgDrawable(context, a.getDrawable(R.styleable.EaseChatMessageListLayout_ease_chat_item_receiver_background));
+            chatSetHelper.setSenderBgDrawable(context, a.getDrawable(R.styleable.EaseChatMessageListLayout_ease_chat_item_sender_background));
 
             //chatSetHelper.setShowAvatar(a.getBoolean(R.styleable.EaseChatMessageListLayout_ease_chat_item_show_avatar, true));
-            chatSetHelper.setShowNickname(a.getBoolean(R.styleable.EaseChatMessageListLayout_ease_chat_item_show_nickname, false));
+            chatSetHelper.setShowNickname(context, a.getBoolean(R.styleable.EaseChatMessageListLayout_ease_chat_item_show_nickname, false));
 
-            chatSetHelper.setItemShowType(a.getInteger(R.styleable.EaseChatMessageListLayout_ease_chat_item_show_type, 0));
+            chatSetHelper.setItemShowType(context, a.getInteger(R.styleable.EaseChatMessageListLayout_ease_chat_item_show_type, 0));
 
             a.recycle();
         }
@@ -184,22 +192,26 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     @Override
     protected void onDetachedFromWindow() {
+        EaseChatItemStyleHelper.getInstance().clear(getContext());
         super.onDetachedFromWindow();
         if(conversation != null) {
             conversation.markAllMessagesAsRead();
         }
-        EaseChatItemStyleHelper.getInstance().clear();
     }
 
-    public void init(LoadDataType loadDataType, String username, int chatType) {
+    public void init(LoadDataType loadDataType, String username, EaseChatType chatType) {
         this.username = username;
         this.loadDataType = loadDataType;
         this.conType = EaseUtils.getConversationType(chatType);
-        conversation = ChatClient.getInstance().chatManager().getConversation(username, conType, true);
+        conversation = ChatClient.getInstance().chatManager().getConversation(username, conType, true, this.loadDataType == LoadDataType.THREAD);
         presenter.setupWithConversation(conversation);
+        // If it is thread conversation, should not use refresh animator
+        if(this.loadDataType == LoadDataType.THREAD) {
+            srlRefresh.setEnabled(false);
+        }
     }
 
-    public void init(String username, int chatType) {
+    public void init(String username, EaseChatType chatType) {
         init(LoadDataType.LOCAL, username, chatType);
     }
 
@@ -227,13 +239,15 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     private void loadData() {
         if(!isSingleChat()) {
-            chatSetHelper.setShowNickname(true);
+            chatSetHelper.setShowNickname(getContext(), true);
         }
         conversation.markAllMessagesAsRead();
         if(loadDataType == LoadDataType.ROAM) {
             presenter.loadServerMessages(pageSize);
         }else if(loadDataType == LoadDataType.HISTORY) {
             presenter.loadMoreLocalHistoryMessages(msgId, pageSize, Conversation.SearchDirection.DOWN);
+        }else if(loadDataType == LoadDataType.THREAD) {
+            presenter.loadServerMessages(pageSize, Conversation.SearchDirection.DOWN);
         }else {
             presenter.loadLocalMessages(pageSize);
         }
@@ -262,12 +276,30 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
     }
 
+    public void onRefreshData() {
+        if(loadDataType != LoadDataType.THREAD) {
+            loadMorePreviousData();
+        }
+    }
+
     public void loadMoreHistoryData() {
         String msgId = getListLastMessageId();
         if(loadDataType == LoadDataType.HISTORY) {
             loadMoreStatus = LoadMoreStatus.HAS_MORE;
             presenter.loadMoreLocalHistoryMessages(msgId, pageSize, Conversation.SearchDirection.DOWN);
         }
+    }
+
+    public void loadMoreData() {
+        if(loadDataType == LoadDataType.HISTORY) {
+            loadMoreHistoryData();
+        }else if(loadDataType == LoadDataType.THREAD) {
+            loadMoreThreadMessages();
+        }
+    }
+
+    public void loadMoreThreadMessages() {
+        presenter.loadMoreServerMessages(messageCursor, pageSize, Conversation.SearchDirection.DOWN);
     }
 
     private String getListFirstMessageId() {
@@ -291,11 +323,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     public boolean isChatRoomCon() {
-        return conType == Conversation.ConversationType.ChatRoom;
+        return conType == Conversation.ConversationType.ChatRoom && loadDataType != LoadDataType.THREAD;
     }
 
     public boolean isGroupChat() {
-        return conType == Conversation.ConversationType.GroupChat;
+        return conType == Conversation.ConversationType.GroupChat && loadDataType != LoadDataType.THREAD;
     }
 
     private boolean isSingleChat() {
@@ -306,7 +338,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         srlRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadMorePreviousData();
+                onRefreshData();
             }
         });
         rvList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -319,11 +351,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                             messageTouchListener.onReachBottom();
                         }
                     }
-                   if(loadDataType == LoadDataType.HISTORY
-                           && loadMoreStatus == LoadMoreStatus.HAS_MORE
+                   if(loadMoreStatus == LoadMoreStatus.HAS_MORE
                            && layoutManager.findLastVisibleItemPosition() != 0
                            && layoutManager.findLastVisibleItemPosition() == layoutManager.getItemCount() -1) {
-                       loadMoreHistoryData();
+                       loadMoreData();
                    }
                 }else {
                     //if recyclerView not idle should hide keyboard
@@ -399,6 +430,22 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                 if(messageListItemClickListener != null) {
                     messageListItemClickListener.onUserAvatarLongClick(username);
                 }
+            }
+
+            @Override
+            public boolean onThreadClick(String messageId, String threadId) {
+                if(messageListItemClickListener != null) {
+                    return messageListItemClickListener.onThreadClick(messageId, threadId);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onThreadLongClick(View v, String messageId, String threadId) {
+                if(messageListItemClickListener != null) {
+                    return messageListItemClickListener.onThreadLongClick(v, messageId, threadId);
+                }
+                return false;
             }
 
             @Override
@@ -544,15 +591,35 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     @Override
-    public void loadServerMsgSuccess(List<ChatMessage> data) {
-        presenter.refreshToLatest();
+    public void loadServerMsgSuccess(List<ChatMessage> data, String cursor) {
+        messageCursor = cursor;
+        if(loadDataType == LoadDataType.THREAD) {
+            if(data.size() >= pageSize || !TextUtils.isEmpty(cursor)) {
+                loadMoreStatus = LoadMoreStatus.HAS_MORE;
+            }else {
+                loadMoreStatus = LoadMoreStatus.NO_MORE_DATA;
+            }
+            presenter.refreshCurrentConversation();
+        }else {
+            presenter.refreshToLatest();
+        }
     }
 
     @Override
-    public void loadMoreServerMsgSuccess(List<ChatMessage> data) {
+    public void loadMoreServerMsgSuccess(List<ChatMessage> data, String cursor) {
+        messageCursor = cursor;
         finishRefresh();
         presenter.refreshCurrentConversation();
-        post(()-> smoothSeekToPosition(data.size() - 1));
+        if(loadDataType == LoadDataType.THREAD) {
+            if(data.size() >= pageSize || !TextUtils.isEmpty(cursor)) {
+                loadMoreStatus = LoadMoreStatus.HAS_MORE;
+            }else {
+                loadMoreStatus = LoadMoreStatus.NO_MORE_DATA;
+            }
+            //post(()-> smoothSeekToPosition(messageAdapter.getData().size() - data.size()));
+        }else {
+            post(()-> smoothSeekToPosition(data.size() - 1));
+        }
     }
 
     @Override
@@ -564,6 +631,21 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     @Override
+    public void insertMessageToLast(ChatMessage message) {
+        messageAdapter.addData(message);
+        seekToPosition(messageAdapter.getData().size() - 1);
+    }
+
+    @Override
+    public void reachedLatestThreadMessage() {
+        this.isReachedLatestThreadMessage = true;
+    }
+
+    public boolean isReachedLatestThreadMessage() {
+        return isReachedLatestThreadMessage;
+    }
+
+    @Override
     public void canUseDefaultRefresh(boolean canUseRefresh) {
         this.canUseRefresh = canUseRefresh;
         srlRefresh.setEnabled(canUseRefresh);
@@ -571,7 +653,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     @Override
     public void refreshMessages() {
-        presenter.refreshCurrentConversation();
+        try {
+            presenter.refreshCurrentConversation();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -584,6 +670,20 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         int position = messageAdapter.getData().lastIndexOf(message);
         if(position != -1) {
             runOnUi(()-> messageAdapter.notifyItemChanged(position));
+        }
+    }
+
+    @Override
+    public void refreshMessage(String messageId) {
+        if(TextUtils.isEmpty(messageId)) {
+            return;
+        }
+        ChatMessage message = ChatClient.getInstance().chatManager().getMessage(messageId);
+        if(message != null) {
+            int position = messageAdapter.getData().lastIndexOf(message);
+            if(position != -1) {
+                runOnUi(()-> messageAdapter.notifyItemChanged(position));
+            }
         }
     }
 
@@ -613,31 +713,31 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     @Override
     public void showNickname(boolean showNickname) {
-        chatSetHelper.setShowNickname(showNickname);
+        chatSetHelper.setShowNickname(getContext(), showNickname);
         notifyDataSetChanged();
     }
 
     @Override
     public void setItemSenderBackground(Drawable bgDrawable) {
-        chatSetHelper.setSenderBgDrawable(bgDrawable);
+        chatSetHelper.setSenderBgDrawable(getContext(), bgDrawable);
         notifyDataSetChanged();
     }
 
     @Override
     public void setItemReceiverBackground(Drawable bgDrawable) {
-        chatSetHelper.setReceiverBgDrawable(bgDrawable);
+        chatSetHelper.setReceiverBgDrawable(getContext(), bgDrawable);
         notifyDataSetChanged();
     }
 
     @Override
     public void setItemTextSize(int textSize) {
-        chatSetHelper.setTextSize(textSize);
+        chatSetHelper.setTextSize(getContext(), textSize);
         notifyDataSetChanged();
     }
 
     @Override
     public void setItemTextColor(int textColor) {
-        chatSetHelper.setTextColor(textColor);
+        chatSetHelper.setTextColor(getContext(), textColor);
         notifyDataSetChanged();
     }
 
@@ -649,45 +749,45 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     @Override
     public void setTimeTextSize(int textSize) {
-        chatSetHelper.setTimeTextSize(textSize);
+        chatSetHelper.setTimeTextSize(getContext(), textSize);
         notifyDataSetChanged();
     }
 
     @Override
     public void setTimeTextColor(int textColor) {
-        chatSetHelper.setTimeTextColor(textColor);
+        chatSetHelper.setTimeTextColor(getContext(), textColor);
         notifyDataSetChanged();
     }
 
     @Override
     public void setTimeBackground(Drawable bgDrawable) {
-        chatSetHelper.setTimeBgDrawable(bgDrawable);
+        chatSetHelper.setTimeBgDrawable(getContext(), bgDrawable);
         notifyDataSetChanged();
     }
 
     @Override
     public void setItemShowType(ShowType type) {
         if(!isSingleChat()) {
-            chatSetHelper.setItemShowType(type.ordinal());
+            chatSetHelper.setItemShowType(getContext(), type.ordinal());
             notifyDataSetChanged();
         }
     }
 
     @Override
     public void hideChatReceiveAvatar(boolean hide) {
-        chatSetHelper.setHideReceiveAvatar(hide);
+        chatSetHelper.setHideReceiveAvatar(getContext(), hide);
         notifyDataSetChanged();
     }
 
     @Override
     public void hideChatSendAvatar(boolean hide) {
-        chatSetHelper.setHideSendAvatar(hide);
+        chatSetHelper.setHideSendAvatar(getContext(), hide);
         notifyDataSetChanged();
     }
 
     @Override
     public void setAvatarDefaultSrc(Drawable src) {
-        chatSetHelper.setAvatarDefaultSrc(src);
+        chatSetHelper.setAvatarDefaultSrc(getContext(), src);
         notifyDataSetChanged();
     }
 
@@ -699,7 +799,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     @Override
     public void setAvatarShapeType(int shapeType) {
-        chatSetHelper.setShapeType(shapeType);
+        chatSetHelper.setShapeType(getContext(), shapeType);
         notifyDataSetChanged();
     }
 
@@ -859,6 +959,16 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         EaseThreadManager.getInstance().runOnMainThread(runnable);
     }
 
+    /**
+     * Set current conversation's send message
+     * @param message
+     */
+    public void setSendOrReceiveMessage(ChatMessage message) {
+        if(presenter != null) {
+            presenter.setSendOrReceiveMessage(message);
+        }
+    }
+
     public interface OnMessageTouchListener {
         /**
          * touch event
@@ -892,7 +1002,22 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
      * Roam is to enable message roaming, and History is to search for local messages
      */
     public enum LoadDataType {
-        LOCAL, ROAM, HISTORY
+        /**
+         * Get message from local DB
+         */
+        LOCAL,
+        /**
+         * Get message from chat server
+         */
+        ROAM,
+        /**
+         * Get thread message from server and show the oldest message first
+         */
+        THREAD,
+        /**
+         * Get historical messages through messageId, which can be loaded up or down for messages except thread messages
+         */
+        HISTORY
     }
 
     public enum LoadMoreStatus {

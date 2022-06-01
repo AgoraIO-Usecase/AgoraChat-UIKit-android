@@ -21,9 +21,13 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
+import java.util.List;
 
+import io.agora.ChatThreadChangeListener;
+import io.agora.MultiDeviceListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
+import io.agora.chat.ChatThreadEvent;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.activities.EaseImageGridActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
@@ -31,6 +35,8 @@ import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.chat.interfaces.OnChatExtendMenuItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatInputChangeListener;
+import io.agora.chat.uikit.chat.interfaces.OnChatLayoutFinishInflateListener;
+import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
@@ -43,6 +49,8 @@ import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
+import io.agora.chat.uikit.menu.EaseChatType;
+import io.agora.chat.uikit.menu.EasePopupWindow;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 import io.agora.chat.uikit.utils.EaseCompat;
@@ -55,7 +63,9 @@ import io.agora.util.FileHelper;
 import io.agora.util.PathUtil;
 import io.agora.util.VersionUtils;
 
-public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutListener, OnMenuChangeListener, OnAddMsgAttrsBeforeSendEvent, OnChatRecordTouchListener, OnReactionMessageListener {
+public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutListener, OnMenuChangeListener,
+        OnAddMsgAttrsBeforeSendEvent, OnChatRecordTouchListener, OnReactionMessageListener,
+        MultiDeviceListener, ChatThreadChangeListener {
     protected static final int REQUEST_CODE_MAP = 1;
     protected static final int REQUEST_CODE_CAMERA = 2;
     protected static final int REQUEST_CODE_LOCAL = 3;
@@ -66,10 +76,11 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     public EaseChatLayout chatLayout;
     public EaseTitleBar titleBar;
     public String conversationId;
-    public int chatType;
+    public EaseChatType chatType;
     public String historyMsgId;
     public boolean isFromServer;
     public boolean isMessageInit;
+    public boolean isThread;
 
     protected File cameraFile;
     private EaseTitleBar.OnBackPressListener backPressListener;
@@ -80,6 +91,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     private OnPeerTypingListener otherTypingListener;
     private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
     private OnChatRecordTouchListener recordTouchListener;
+    private OnChatLayoutFinishInflateListener finishInflateListener;
     private OnReactionMessageListener reactionMessageListener;
     private EaseMessageAdapter messageAdapter;
     private boolean sendOriginalImage;
@@ -107,9 +119,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         Bundle bundle = getArguments();
         if(bundle != null) {
             conversationId = bundle.getString(EaseConstant.EXTRA_CONVERSATION_ID);
-            chatType = bundle.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
+            chatType = EaseChatType.from(bundle.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseChatType.SINGLE_CHAT.getChatType()));
             historyMsgId = bundle.getString(EaseConstant.HISTORY_MSG_ID);
             isFromServer = bundle.getBoolean(EaseConstant.EXTRA_IS_FROM_SERVER, false);
+            isThread = bundle.getBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, false);
         }
     }
 
@@ -129,6 +142,12 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                 String title = bundle.getString(Constant.KEY_SET_TITLE, "");
                 if(!TextUtils.isEmpty(title)) {
                     titleBar.setTitle(title);
+                }
+
+                String subTitle = bundle.getString(Constant.KEY_SET_SUB_TITLE, "");
+                if(!TextUtils.isEmpty(subTitle)) {
+                    titleBar.setSubTitle(subTitle);
+                    titleBar.getSubTitle().setVisibility(View.VISIBLE);
                 }
 
                 boolean canBack = bundle.getBoolean(Constant.KEY_ENABLE_BACK, false);
@@ -199,6 +218,11 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             }
         }
         setCustomExtendMenu();
+        // Provide views after finishing inflate
+        if(finishInflateListener != null) {
+            finishInflateListener.onTitleBarFinishInflate(titleBar);
+            finishInflateListener.onChatListFinishInflate(chatLayout);
+        }
     }
 
     public void initListener() {
@@ -207,21 +231,38 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         chatLayout.setOnAddMsgAttrsBeforeSendEvent(sendMsgEvent != null ? sendMsgEvent : this);
         chatLayout.setOnChatRecordTouchListener(recordTouchListener != null ? recordTouchListener : this);
         chatLayout.setOnReactionListener(reactionMessageListener != null ? reactionMessageListener : this);
+        ChatClient.getInstance().addMultiDeviceListener(this);
+        ChatClient.getInstance().chatThreadManager().addChatThreadChangeListener(this);
     }
 
     public void initData() {
+        initChatLayout();
+        loadData();
+        isMessageInit = true;
+    }
+
+    public void initChatLayout() {
         if(!TextUtils.isEmpty(historyMsgId)) {
             chatLayout.init(EaseChatMessageListLayout.LoadDataType.HISTORY, conversationId, chatType);
+        }else {
+            if(isThread) {
+                chatLayout.init(EaseChatMessageListLayout.LoadDataType.THREAD, conversationId, chatType);
+            }else {
+                if(isFromServer) {
+                    chatLayout.init(EaseChatMessageListLayout.LoadDataType.ROAM, conversationId, chatType);
+                }else {
+                    chatLayout.init(conversationId, chatType);
+                }
+            }
+        }
+    }
+
+    public void loadData() {
+        if(!TextUtils.isEmpty(historyMsgId)) {
             chatLayout.loadData(historyMsgId);
         }else {
-            if(isFromServer) {
-                chatLayout.init(EaseChatMessageListLayout.LoadDataType.ROAM, conversationId, chatType);
-            }else {
-                chatLayout.init(conversationId, chatType);
-            }
             chatLayout.loadDefaultData();
         }
-        isMessageInit = true;
     }
 
     /**
@@ -245,6 +286,12 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         if(isMessageInit) {
             chatLayout.getChatMessageListLayout().refreshMessages();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ChatClient.getInstance().chatThreadManager().removeChatThreadChangeListener(this);
     }
 
     private void setHeaderBackPressListener(EaseTitleBar.OnBackPressListener listener) {
@@ -283,6 +330,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         this.reactionMessageListener = reactionMessageListener;
     }
 
+    private void setOnChatLayoutFinishInflateListener(OnChatLayoutFinishInflateListener inflateListener) {
+        this.finishInflateListener = inflateListener;
+    }
+
     private void setCustomAdapter(EaseMessageAdapter adapter) {
         this.messageAdapter = adapter;
     }
@@ -315,6 +366,22 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         if(chatItemClickListener != null) {
             chatItemClickListener.onUserAvatarLongClick(username);
         }
+    }
+
+    @Override
+    public boolean onThreadClick(String messageId, String threadId) {
+        if(chatItemClickListener != null) {
+            return chatItemClickListener.onThreadClick(messageId, threadId);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onThreadLongClick(View v, String messageId, String threadId) {
+        if(chatItemClickListener != null) {
+            return chatItemClickListener.onThreadLongClick(v, messageId, threadId);
+        }
+        return false;
     }
 
     @Override
@@ -483,6 +550,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     protected void onActivityResultForLocalVideos(@Nullable Intent data) {
         if (data != null) {
             int duration = data.getIntExtra("dur", 0);
+            if(duration == -1) {
+                duration = 0;
+            }
+            duration = (int) Math.round(duration * 1.0 / 1000);
             String videoPath = data.getStringExtra("path");
             String uriString = data.getStringExtra("uri");
             if (!TextUtils.isEmpty(videoPath)) {
@@ -500,7 +571,15 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     @Override
     public void onPreMenu(EasePopupWindowHelper helper, ChatMessage message) {
-
+        boolean isThreadNotify = message.getBooleanAttribute(EaseConstant.EASE_THREAD_NOTIFICATION_TYPE, false);
+        if(isThreadNotify) {
+            helper.findItemVisible(R.id.action_chat_copy, false);
+            helper.findItemVisible(R.id.action_chat_reply, false);
+            helper.findItemVisible(R.id.action_chat_recall, false);
+            helper.findItemVisible(R.id.action_chat_delete, true);
+            helper.showHeaderView(false);
+        }
+        helper.findItem(R.id.action_chat_recall).setTitleColor(ContextCompat.getColor(mContext, R.color.ease_message_unsend_menu_txt));
     }
 
     @Override
@@ -544,8 +623,53 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     }
 
+    @Override
+    public void onContactEvent(int event, String target, String ext) {
+
+    }
+
+    @Override
+    public void onGroupEvent(int event, String target, List<String> usernames) {
+        if(event == GROUP_DESTROY || event == GROUP_LEAVE) {
+            if(TextUtils.equals(target, conversationId)) {
+                mContext.finish();
+            }
+        }
+    }
+
+    @Override
+    public void onThreadEvent(int event, String target, List<String> usernames) {
+
+    }
+
+    @Override
+    public void onChatThreadCreated(ChatThreadEvent event) {
+        if(isMessageInit) {
+            chatLayout.getChatMessageListLayout().refreshToLatest();
+        }
+    }
+
+    @Override
+    public void onChatThreadUpdated(ChatThreadEvent event) {
+        if(isMessageInit) {
+            chatLayout.getChatMessageListLayout().refreshMessage(event.getMessageId());
+        }
+    }
+
+    @Override
+    public void onChatThreadDestroyed(ChatThreadEvent event) {
+        if(isMessageInit) {
+            chatLayout.getChatMessageListLayout().refreshMessage(event.getMessageId());
+        }
+    }
+
+    @Override
+    public void onChatThreadUserRemoved(ChatThreadEvent event) {
+
+    }
+
     public static class Builder {
-        private final Bundle bundle;
+        protected final Bundle bundle;
         private EaseTitleBar.OnBackPressListener backPressListener;
         private EaseMessageAdapter adapter;
         private OnChatExtendMenuItemClickListener extendMenuItemClickListener;
@@ -556,29 +680,30 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         private OnAddMsgAttrsBeforeSendEvent sendMsgEvent;
         private OnChatRecordTouchListener recordTouchListener;
         private OnReactionMessageListener reactionMessageListener;
-        private EaseChatFragment customFragment;
+        private OnChatLayoutFinishInflateListener finishInflateListener;
+        protected EaseChatFragment customFragment;
 
         /**
          * Constructor
          * @param conversationId Agora Chat ID
-         * @param chatType       1: single chat; 2: group chat; 3: chat room
+         * @param chatType       See {@link EaseChatType}
          */
-        public Builder(String conversationId, int chatType) {
+        public Builder(String conversationId, EaseChatType chatType) {
             this.bundle = new Bundle();
             bundle.putString(EaseConstant.EXTRA_CONVERSATION_ID, conversationId);
-            bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType);
+            bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType.getChatType());
         }
 
         /**
          * Constructor
          * @param conversationId Agora Chat ID
-         * @param chatType       1: single chat; 2: group chat; 3: chat room
+         * @param chatType       See {@link EaseChatType}
          * @param historyMsgId   Message ID
          */
-        public Builder(String conversationId, int chatType, String historyMsgId) {
+        public Builder(String conversationId, EaseChatType chatType, String historyMsgId) {
             this.bundle = new Bundle();
             bundle.putString(EaseConstant.EXTRA_CONVERSATION_ID, conversationId);
-            bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType);
+            bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType.getChatType());
             bundle.putString(EaseConstant.HISTORY_MSG_ID, historyMsgId);
         }
 
@@ -599,6 +724,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
          */
         public Builder setHeaderTitle(String title) {
             this.bundle.putString(Constant.KEY_SET_TITLE, title);
+            return this;
+        }
+
+        /**
+         * Set titleBar's sub title
+         * @param subTitle
+         * @return
+         */
+        public Builder setHeaderSubTitle(String subTitle) {
+            this.bundle.putString(Constant.KEY_SET_SUB_TITLE, subTitle);
             return this;
         }
 
@@ -784,6 +919,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
 
         /**
+         * Set layout inflated listener
+         * @param finishInflateListener
+         * @return
+         */
+        public Builder setOnChatLayoutFinishInflateListener(OnChatLayoutFinishInflateListener finishInflateListener) {
+            this.finishInflateListener = finishInflateListener;
+            return this;
+        }
+
+        /**
          * Whether to hide receiver's avatar
          * @param hide
          * @return
@@ -855,6 +1000,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
 
         /**
+         * Set whether to use original file to send image message
+         * @param isThread
+         * @return
+         */
+        public Builder setThreadMessage(boolean isThread) {
+            this.bundle.putBoolean(Constant.KEY_THREAD_MESSAGE_FLAG, isThread);
+            return this;
+        }
+
+        /**
          * Set chat list's empty layout if you want replace the default
          * @param emptyLayout
          * @return
@@ -896,6 +1051,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             fragment.setOnPeerTypingListener(this.peerTypingListener);
             fragment.setOnAddMsgAttrsBeforeSendEvent(this.sendMsgEvent);
             fragment.setOnChatRecordTouchListener(this.recordTouchListener);
+            fragment.setOnChatLayoutFinishInflateListener(this.finishInflateListener);
             fragment.setCustomAdapter(this.adapter);
             fragment.setOnReactionMessageListener(this.reactionMessageListener);
             return fragment;
@@ -905,6 +1061,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     private static class Constant {
         public static final String KEY_USE_TITLE = "key_use_title";
         public static final String KEY_SET_TITLE = "key_set_title";
+        public static final String KEY_SET_SUB_TITLE = "key_set_sub_title";
         public static final String KEY_EMPTY_LAYOUT = "key_empty_layout";
         public static final String KEY_ENABLE_BACK = "key_enable_back";
         public static final String KEY_MSG_TIME_COLOR = "key_msg_time_color";
@@ -921,6 +1078,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         public static final String KEY_CHAT_MENU_INPUT_HINT = "key_chat_menu_input_hint";
         public static final String KEY_TURN_ON_TYPING_MONITOR = "key_turn_on_typing_monitor";
         public static final String KEY_SEND_ORIGINAL_IMAGE_MESSAGE = "key_send_original_image_message";
+        public static final String KEY_THREAD_MESSAGE_FLAG = "key_thread_message_flag";
     }
 }
 

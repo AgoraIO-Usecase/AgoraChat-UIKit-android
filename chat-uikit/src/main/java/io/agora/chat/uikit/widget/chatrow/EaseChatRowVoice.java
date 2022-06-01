@@ -64,6 +64,11 @@ public class EaseChatRowVoice extends EaseChatRowFile {
         }
 
         if (message.direct() == ChatMessage.Direct.RECEIVE) {
+            FileMessageBody.EMDownloadStatus downloadStatus = voiceBody.downloadStatus();
+            if(downloadStatus == FileMessageBody.EMDownloadStatus.PENDING &&
+                    ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
+                ChatClient.getInstance().chatManager().downloadAttachment(message);
+            }
             if(readStatusView != null) {
                 if (message.isListened()) {
                     // hide the unread icon

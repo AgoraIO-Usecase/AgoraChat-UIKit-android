@@ -45,16 +45,34 @@ public interface MessageListItemClickListener {
 	void onUserAvatarLongClick(String username);
 
 	/**
+	 * Click thread region
+	 * @param messageId
+	 * @param threadId
+	 */
+	default boolean onThreadClick(String messageId, String threadId) {
+		return false;
+	}
+
+	/**
+	 * Long click thread region
+	 * @param messageId
+	 * @param threadId
+	 */
+	default boolean onThreadLongClick(View v, String messageId, String threadId) {
+		return false;
+	}
+
+	/**
 	 * message is create status
 	 * @param message
 	 */
-	void onMessageCreate(ChatMessage message);
+	default void onMessageCreate(ChatMessage message) {}
 
 	/**
 	 * message send success
 	 * @param message
 	 */
-	void onMessageSuccess(ChatMessage message);
+	default void onMessageSuccess(ChatMessage message) {}
 
 	/**
 	 * message send fail
@@ -62,14 +80,14 @@ public interface MessageListItemClickListener {
 	 * @param code
 	 * @param error
 	 */
-	void onMessageError(ChatMessage message, int code, String error);
+	default void onMessageError(ChatMessage message, int code, String error) {}
 
 	/**
 	 * message in sending progress
 	 * @param message
 	 * @param progress
 	 */
-	void onMessageInProgress(ChatMessage message, int progress);
+	default void onMessageInProgress(ChatMessage message, int progress) {}
 
 	/**
 	 * remove reaction

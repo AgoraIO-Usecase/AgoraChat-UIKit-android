@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingTop="13dp">
@@ -17,49 +17,68 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/ease_margin_chat_activity">
+        android:layout_marginTop="@dimen/ease_margin_chat_activity" >
 
         <io.agora.chat.uikit.widget.EaseImageView
             android:id="@+id/iv_userhead"
-            style="@style/ease_row_sent_iv_userhead_style"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            style="@style/ease_row_sent_iv_userhead_style"/>
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bubble"
-            android:layout_width="130dp"
-            android:layout_height="145dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/ease_margin_chat_activity"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/iv_userhead"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_goneMarginEnd="@dimen/ease_chat_avatar_margin">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_goneMarginEnd="@dimen/ease_chat_avatar_margin"
+            android:background="@drawable/ease_send_message_et_bg">
 
             <io.agora.chat.uikit.widget.EaseImageView
                 android:id="@+id/chatting_content_iv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitCenter"
+                android:layout_width="130dp"
+                android:layout_height="145dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/thread_region"
+                app:layout_constraintHorizontal_bias="0"
+                app:ease_shape_type="rectangle"
                 app:ease_radius="@dimen/ease_chat_image_corner_radius"
-                app:ease_shape_type="rectangle" />
+                android:scaleType="fitCenter" />
+
+            <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion
+                android:id="@+id/thread_region"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                style="@style/bubble_inner_start_bottom_end_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chatting_content_iv"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <RelativeLayout
                 android:id="@+id/chatting_video_data_area"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="@id/chatting_content_iv"
+                app:layout_constraintEnd_toEndOf="@id/chatting_content_iv"
+                app:layout_constraintTop_toTopOf="@id/chatting_content_iv"
+                app:layout_constraintBottom_toBottomOf="@id/chatting_content_iv">
 
                 <TextView
                     android:id="@+id/chatting_size_iv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="7dp"
-                    android:background="@drawable/ease_msg_video_length_bg"
-                    android:textColor="@android:color/white"
                     android:textSize="12sp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/ease_msg_video_length_bg"
+                    android:layout_marginBottom="7dp"
                     android:visibility="gone" />
 
                 <TextView
@@ -68,92 +87,97 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="7dp"
-                    android:background="@drawable/ease_msg_video_length_bg"
                     android:gravity="end"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginEnd="8dp"
                     android:textColor="@android:color/white"
+                    android:background="@drawable/ease_msg_video_length_bg"
                     android:textSize="12sp" />
             </RelativeLayout>
 
             <ImageView
                 android:id="@+id/chatting_status_btn"
+                android:clickable="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@drawable/ease_video_play_btn_small_nor"
-                android:clickable="false" />
-        </RelativeLayout>
+                app:layout_constraintStart_toStartOf="@id/chatting_content_iv"
+                app:layout_constraintEnd_toEndOf="@id/chatting_content_iv"
+                app:layout_constraintTop_toTopOf="@id/chatting_content_iv"
+                app:layout_constraintBottom_toBottomOf="@id/chatting_content_iv"
+                android:background="@drawable/ease_video_play_btn_small_nor" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <io.agora.chat.uikit.chat.widget.EaseChatReactionView
             android:id="@+id/tv_subReactionContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-8dp"
             android:lineSpacingExtra="2dp"
             android:textColor="#000000"
             android:textSize="15sp"
             app:ease_chat_item_sender="true"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/bubble"
-            app:layout_constraintTop_toTopOf="@id/bubble" />
+            app:layout_constraintBottom_toTopOf="@id/bubble"
+            android:layout_marginBottom="-8dp" />
 
         <LinearLayout
             android:id="@+id/ll_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="@id/bubble"
             app:layout_constraintBottom_toBottomOf="@id/bubble"
             app:layout_constraintLeft_toLeftOf="@id/bubble"
             app:layout_constraintRight_toRightOf="@id/bubble"
-            app:layout_constraintTop_toTopOf="@id/bubble">
+            android:gravity="center"
+            android:orientation="vertical" >
 
             <ProgressBar
                 android:id="@+id/progress_bar"
                 style="?android:attr/progressBarStyle"
+                android:indeterminateDrawable="@drawable/ease_chat_loading_progress_bar"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:indeterminateDrawable="@drawable/ease_chat_loading_progress_bar"
                 android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/percentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:minWidth="40dp"
+                android:gravity="center"
+                tools:text="100%"
                 android:textColor="@android:color/black"
                 android:visibility="invisible"
-                tools:ignore="HardcodedText"
-                tools:text="100%" />
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/msg_status"
-            style="@style/ease_row_sent_iv_fail_style"
+            app:layout_constraintEnd_toStartOf="@id/bubble"
             app:layout_constraintBottom_toBottomOf="@id/bubble"
-            app:layout_constraintEnd_toStartOf="@id/bubble" />
+            style="@style/ease_row_sent_iv_fail_style"/>
 
         <TextView
             android:id="@+id/tv_ack"
             style="@style/chat_text_send_status_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ease_msg_status_read"
-            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@id/bubble"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/bubble" />
+            android:drawableEnd="@drawable/ease_msg_status_read"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/tv_delivered"
             style="@style/chat_text_send_status_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ease_msg_status_received"
-            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@id/bubble"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/bubble" />
+            android:drawableEnd="@drawable/ease_msg_status_received"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/tv_userid"
@@ -161,11 +185,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/ease_chat_nick_margin_left"
-            android:textColor="@color/ease_msg_name_color"
             android:textSize="@dimen/ease_chat_nick_text_size"
-            android:visibility="gone"
+            android:textColor="@color/ease_msg_name_color"
             app:layout_constraintBottom_toTopOf="@id/bubble"
-            app:layout_constraintRight_toRightOf="@id/bubble" />
+            app:layout_constraintRight_toRightOf="@id/bubble"
+            android:visibility="gone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

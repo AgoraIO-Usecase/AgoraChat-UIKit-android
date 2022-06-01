@@ -31,4 +31,25 @@ public interface OnMessageItemClickListener {
      * @param username
      */
     void onUserAvatarLongClick(String username);
+
+    /**
+     * Click on thread region
+     * @param messageId
+     * @param threadId
+     * @return
+     */
+    default boolean onThreadClick(String messageId, String threadId) {
+        return false;
+    }
+
+    /**
+     * Long press on thread region
+     * @param v
+     * @param messageId
+     * @param threadId
+     * @return
+     */
+    default boolean onThreadLongClick(View v, String messageId, String threadId) {
+        return false;
+    }
 }

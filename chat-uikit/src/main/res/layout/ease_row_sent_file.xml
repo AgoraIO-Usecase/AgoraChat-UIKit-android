@@ -27,7 +27,7 @@
             android:visibility="visible"
             style="@style/ease_row_sent_iv_userhead_style"/>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bubble"
             android:layout_width="@dimen/ease_msg_file_bubble_default_width"
             android:layout_height="wrap_content"
@@ -39,64 +39,73 @@
             app:layout_constraintEnd_toStartOf="@id/iv_userhead"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_goneMarginEnd="@dimen/ease_chat_avatar_margin"
-            android:gravity="center_vertical"
-            android:background="@drawable/ease_chat_bubble_send_file_bg" >
+            android:background="@drawable/ease_chat_bubble_send_file_bg">
+
+            <TextView
+                android:id="@+id/tv_file_name"
+                app:layout_constraintStart_toEndOf="@id/iv_file_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tv_file_size"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                style="@style/ease_msg_text_file_name"
+                android:paddingEnd="8dp"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constrainedWidth="true"
+                tools:text="Document.docx"/>
+
+            <TextView
+                android:id="@+id/tv_file_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/tv_file_name"
+                app:layout_constraintEnd_toStartOf="@id/tv_file_state"
+                app:layout_constraintTop_toBottomOf="@id/tv_file_name"
+                app:layout_constraintBottom_toTopOf="@id/thread_region"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintHorizontal_bias="0"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="#ffadadad"
+                android:textSize="12sp"
+                tools:text="9.8MB"/>
+
+            <TextView
+                android:id="@+id/tv_file_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/tv_file_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_file_size"
+                tools:text="@string/ease_not_download"
+                android:textColor="#ffb6b6b6"
+                android:paddingRight="8dp"
+                android:textSize="12sp"/>
 
             <ImageView
                 android:id="@+id/iv_file_icon"
                 android:layout_width="@dimen/ease_chat_file_icon_size"
                 android:layout_height="@dimen/ease_chat_file_icon_size"
-                android:layout_marginLeft="@dimen/ease_chat_file_icon_margin"
+                android:layout_marginStart="@dimen/ease_chat_file_icon_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/thread_region"
+                android:layout_marginEnd="@dimen/ease_chat_file_icon_margin"
                 android:src="@drawable/ease_chat_item_file" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical" >
+            <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion
+                android:id="@+id/thread_region"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                style="@style/bubble_inner_start_bottom_end_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_file_size"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <TextView
-                    android:id="@+id/tv_file_name"
-                    android:paddingRight="8dp"
-                    tools:text="Document.docx"
-                    style="@style/ease_msg_text_file_name" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp" >
-
-                    <TextView
-                        android:id="@+id/tv_file_size"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="#ffadadad"
-                        android:textSize="12sp"
-                        tools:text="9.8MB"
-                        android:layout_alignParentBottom="true"/>
-
-                    <TextView
-                        android:id="@+id/tv_file_state"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_gravity="center_vertical"
-                        tools:text="@string/ease_not_download"
-                        android:textColor="#ffb6b6b6"
-                        android:paddingRight="8dp"
-                        android:textSize="12sp" />
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <io.agora.chat.uikit.chat.widget.EaseChatReactionView
             android:id="@+id/tv_subReactionContent"
@@ -106,9 +115,10 @@
             android:textColor="#000000"
             android:textSize="15sp"
             app:ease_chat_item_sender="true"
-            android:layout_marginTop="-8dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/bubble"
-            app:layout_constraintTop_toTopOf="@id/bubble" />
+            app:layout_constraintBottom_toTopOf="@id/bubble"
+            android:layout_marginBottom="-8dp" />
 
         <ImageView
             android:id="@+id/msg_status"
@@ -171,10 +181,11 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/ease_chat_nick_margin_left"
             android:textSize="@dimen/ease_chat_nick_text_size"
+            android:text="som"
             android:textColor="@color/ease_msg_name_color"
-            app:layout_constraintBottom_toTopOf="@id/bubble"
+            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
             app:layout_constraintRight_toRightOf="@id/bubble"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

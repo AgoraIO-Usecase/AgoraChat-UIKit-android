@@ -69,6 +69,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
     public void onBindViewHolder(@NonNull EaseBaseRecyclerViewAdapter.ViewHolder<T> holder, final int position) {
         holder.setAdapter(this);
         if(isEmptyViewType(position)) {
+            holder.setEmptyData();
             return;
         }
         if(mData == null || mData.isEmpty()) {
@@ -160,7 +161,7 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
      * @param parent
      * @return
      */
-    private ViewHolder<T> getEmptyViewHolder(ViewGroup parent) {
+    protected ViewHolder<T> getEmptyViewHolder(ViewGroup parent) {
         View emptyView = getEmptyView(parent);
         if(this.emptyView != null) {
             emptyView = this.emptyView;
@@ -369,6 +370,11 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
             super(itemView);
             initView(itemView);
         }
+
+        /**
+         * Set data when viewType is VIEW_TYPE_EMPTY
+         */
+        public void setEmptyData(){}
 
         /**
          * Initialize the views

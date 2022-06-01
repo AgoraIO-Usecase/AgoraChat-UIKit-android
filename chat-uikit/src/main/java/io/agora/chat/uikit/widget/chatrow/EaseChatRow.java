@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +16,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+
 import java.util.Date;
 
 import io.agora.CallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
+import io.agora.chat.ChatThreadInfo;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.adapter.EaseBaseAdapter;
@@ -28,11 +33,13 @@ import io.agora.chat.uikit.chat.model.EaseChatSetStyle;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.chat.widget.EaseChatReactionView;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
 import io.agora.chat.uikit.options.EaseReactionOptions;
 import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.utils.EaseUserUtils;
+import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseImageView;
 import io.agora.util.EMLog;
 
@@ -109,7 +116,7 @@ public abstract class EaseChatRow extends LinearLayout {
 
     protected MessageListItemClickListener itemClickListener;
     private EaseChatRowActionCallback itemActionCallback;
-
+    private EaseChatRowThreadRegion threadRegion;
     protected EaseChatReactionView reactionContentView;
 
     public EaseChatRow(Context context, boolean isSender) {
@@ -142,10 +149,10 @@ public abstract class EaseChatRow extends LinearLayout {
     private void initView() {
         showSenderType = isSender;
         EaseChatItemStyleHelper helper = getItemStyleHelper();
-        if(helper != null && helper.getStyle() != null) {
-            if(helper.getStyle().getItemShowType() == 1) {
+        if(helper != null && helper.getStyle(getContext()) != null) {
+            if(helper.getStyle(getContext()).getItemShowType() == 1) {
                 showSenderType = false;
-            }else if(helper.getStyle().getItemShowType() == 2) {
+            }else if(helper.getStyle(getContext()).getItemShowType() == 2) {
                 showSenderType = true;
             }
         }
@@ -160,6 +167,7 @@ public abstract class EaseChatRow extends LinearLayout {
         ackedView = (TextView) findViewById(R.id.tv_ack);
         deliveredView = (TextView) findViewById(R.id.tv_delivered);
         reactionContentView = findViewById(R.id.tv_subReactionContent);
+        threadRegion = (EaseChatRowThreadRegion) findViewById(R.id.thread_region);
 
         setLayoutStyle();
 
@@ -170,7 +178,7 @@ public abstract class EaseChatRow extends LinearLayout {
     protected void setLayoutStyle() {
         EaseChatItemStyleHelper helper = getItemStyleHelper();
         if(helper != null) {
-            EaseChatSetStyle itemStyle = helper.getStyle();
+            EaseChatSetStyle itemStyle = helper.getStyle(getContext());
             if(bubbleLayout != null) {
                 try {
                     if (isSender()) {
@@ -283,6 +291,26 @@ public abstract class EaseChatRow extends LinearLayout {
                 }
             }
         }
+        if(threadRegion != null) {
+            setThreadRegion();
+        }
+    }
+
+    public void setThreadRegion() {
+        if(shouldShowThreadRegion()) {
+            threadRegion.setVisibility(VISIBLE);
+            threadRegion.setThreadInfo(message.getThreadOverview());
+        }else {
+            threadRegion.setVisibility(GONE);
+        }
+    }
+
+    /**
+     * If need to show thread region
+     * @return
+     */
+    public boolean shouldShowThreadRegion() {
+        return message != null && message.getThreadOverview() != null;
     }
 
     /**
@@ -291,7 +319,7 @@ public abstract class EaseChatRow extends LinearLayout {
     private void setItemStyle() {
         EaseChatItemStyleHelper helper = getItemStyleHelper();
         if(helper != null) {
-            EaseChatSetStyle itemStyle = helper.getStyle();
+            EaseChatSetStyle itemStyle = helper.getStyle(getContext());
             if(userAvatarView != null) {
                 setAvatarOptions(itemStyle);
             }
@@ -370,6 +398,47 @@ public abstract class EaseChatRow extends LinearLayout {
     }
 
     /**
+     * Set chat item include image which contains thread region
+     * @param imageView
+     */
+    public void setImageIncludeThread(ImageView imageView) {
+        if(shouldShowThreadRegion()) {
+            if(isSender()) {
+                Drawable senderBgDrawable = EaseChatItemStyleHelper.getSenderBgDrawable(getContext());
+                if(senderBgDrawable != null) {
+                    bubbleLayout.setBackground(senderBgDrawable.getConstantState().newDrawable());
+                }else {
+                    bubbleLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ease_send_message_et_bg));
+                }
+            }else {
+                Drawable receiverBgDrawable = EaseChatItemStyleHelper.getReceiverBgDrawable(getContext());
+                if(receiverBgDrawable != null) {
+                    bubbleLayout.setBackground(receiverBgDrawable.getConstantState().newDrawable());
+                }else {
+                    bubbleLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ease_chat_bubble_receive_bg));
+                }
+            }
+            int[] marginArray = getContext().getResources().getIntArray(R.array.ease_chat_image_margin_include_thread);
+            if(marginArray != null && marginArray.length == 4) {
+                int leftMargin = Math.max(marginArray[0], 0);
+                int topMargin = Math.max(marginArray[1], 0);
+                int rightMargin = Math.max(marginArray[2], 0);
+                int bottomMargin = Math.max(marginArray[3], 0);
+                ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+                if(layoutParams instanceof ConstraintLayout.LayoutParams) {
+                    ((ConstraintLayout.LayoutParams) layoutParams).leftMargin = (int) EaseUtils.dip2px(getContext(),
+                            leftMargin);
+                    ((ConstraintLayout.LayoutParams) layoutParams).topMargin = (int) EaseUtils.dip2px(getContext(),
+                            topMargin);
+                    ((ConstraintLayout.LayoutParams) layoutParams).rightMargin = (int) EaseUtils.dip2px(getContext(),
+                            rightMargin);
+                    ((ConstraintLayout.LayoutParams) layoutParams).bottomMargin = (int) EaseUtils.dip2px(getContext(),
+                            bottomMargin);
+                }
+            }
+        }
+    }
+    /**
      *
      * @return
      */
@@ -391,7 +460,7 @@ public abstract class EaseChatRow extends LinearLayout {
     protected void setAvatarAndNick() {
         if (isSender()) {
             EaseUserUtils.setUserAvatar(context, ChatClient.getInstance().getCurrentUser(), userAvatarView);
-            if(EaseChatItemStyleHelper.getInstance().getStyle().getItemShowType() != EaseChatMessageListLayout.ShowType.LEFT_RIGHT.ordinal()) {
+            if(EaseChatItemStyleHelper.getInstance().getStyle(getContext()).getItemShowType() != EaseChatMessageListLayout.ShowType.LEFT_RIGHT.ordinal()) {
                 EaseUserUtils.setUserNick(message.getFrom(), usernickView);
             }
         } else {
@@ -517,6 +586,30 @@ public abstract class EaseChatRow extends LinearLayout {
                     }
                     return false;
                 }
+            });
+        }
+        if(threadRegion != null) {
+            threadRegion.setOnClickListener(v -> {
+                ChatThreadInfo info = message.getThreadOverview();
+                if(info != null && !TextUtils.isEmpty(info.getChatThreadId())) {
+                    if (itemClickListener != null && itemClickListener.onThreadClick(message.getMsgId(), info.getChatThreadId())){
+                        return;
+                    }
+                    EaseActivityProviderHelper.startToChatThreadActivity(context, info.getChatThreadId(), message.getMsgId(), info.getParentId());
+                }else {
+                    EMLog.e(TAG, "message's thread info is null");
+                }
+            });
+            threadRegion.setOnLongClickListener(v -> {
+                ChatThreadInfo info = message.getThreadOverview();
+                if(info != null && !TextUtils.isEmpty(info.getChatThreadId())) {
+                    if (itemClickListener != null) {
+                        return itemClickListener.onThreadLongClick(v, message.getMsgId(), info.getChatThreadId());
+                    }
+                }else {
+                    EMLog.e(TAG, "message's thread info is null");
+                }
+                return false;
             });
         }
     }

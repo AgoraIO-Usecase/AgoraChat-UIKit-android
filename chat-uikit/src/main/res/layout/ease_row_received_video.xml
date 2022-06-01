@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingTop="13dp">
@@ -16,13 +16,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/ease_margin_chat_activity">
+        android:layout_marginTop="@dimen/ease_margin_chat_activity" >
 
         <io.agora.chat.uikit.widget.EaseImageView
             android:id="@+id/iv_userhead"
-            style="@style/ease_row_receive_iv_userhead_style"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            style="@style/ease_row_receive_iv_userhead_style"/>
 
         <TextView
             android:id="@+id/tv_userid"
@@ -31,45 +31,62 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/ease_chat_nick_margin_left"
             android:textSize="@dimen/ease_chat_nick_text_size"
-            android:visibility="gone"
-            android:layout_marginBottom="6dp"
-            app:layout_constraintBottom_toTopOf="@id/bubble"
-            app:layout_constraintStart_toStartOf="@id/bubble" />
+            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
+            app:layout_constraintStart_toStartOf="@id/bubble"
+            android:visibility="gone" />
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bubble"
-            android:layout_width="130dp"
-            android:layout_height="145dp"
-            android:layout_marginStart="@dimen/ease_margin_chat_activity"
-            android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/iv_userhead"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/ease_margin_chat_activity">
 
             <io.agora.chat.uikit.widget.EaseImageView
                 android:id="@+id/chatting_content_iv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitCenter"
+                android:layout_width="130dp"
+                android:layout_height="145dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/thread_region"
+                app:layout_constraintHorizontal_bias="0"
+                app:ease_shape_type="rectangle"
                 app:ease_radius="@dimen/ease_chat_image_corner_radius"
-                app:ease_shape_type="rectangle" />
+                android:scaleType="fitCenter" />
+
+            <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion
+                android:id="@+id/thread_region"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                style="@style/bubble_inner_start_bottom_end_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chatting_content_iv"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <RelativeLayout
                 android:id="@+id/chatting_video_data_area"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="@id/chatting_content_iv"
+                app:layout_constraintEnd_toEndOf="@id/chatting_content_iv"
+                app:layout_constraintTop_toTopOf="@id/chatting_content_iv"
+                app:layout_constraintBottom_toBottomOf="@id/chatting_content_iv">
 
                 <TextView
                     android:id="@+id/chatting_size_iv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="7dp"
-                    android:background="@drawable/ease_msg_video_length_bg"
-                    android:textColor="@android:color/white"
                     android:textSize="12sp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/ease_msg_video_length_bg"
+                    android:layout_marginBottom="7dp"
                     android:visibility="gone" />
 
                 <TextView
@@ -78,35 +95,41 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="7dp"
-                    android:background="@drawable/ease_msg_video_length_bg"
                     android:gravity="end"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginEnd="8dp"
                     android:textColor="@android:color/white"
+                    android:background="@drawable/ease_msg_video_length_bg"
                     android:textSize="12sp" />
 
             </RelativeLayout>
 
 
-            <ImageView
-                android:id="@+id/chatting_status_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@drawable/ease_video_play_btn_small_nor"
-                android:clickable="false" />
-        </RelativeLayout>
+             <ImageView
+                 android:clickable="false"
+                 android:id="@+id/chatting_status_btn"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 app:layout_constraintStart_toStartOf="@id/chatting_content_iv"
+                 app:layout_constraintEnd_toEndOf="@id/chatting_content_iv"
+                 app:layout_constraintTop_toTopOf="@id/chatting_content_iv"
+                 app:layout_constraintBottom_toBottomOf="@id/chatting_content_iv"
+                 android:background="@drawable/ease_video_play_btn_small_nor" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <io.agora.chat.uikit.chat.widget.EaseChatReactionView
             android:id="@+id/tv_subReactionContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-9dp"
             android:textColor="#000000"
             android:textSize="15sp"
             app:ease_chat_item_sender="false"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/bubble"
-            app:layout_constraintTop_toTopOf="@id/bubble" />
+            app:layout_constraintBottom_toTopOf="@id/bubble"
+            android:layout_marginBottom="-8dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

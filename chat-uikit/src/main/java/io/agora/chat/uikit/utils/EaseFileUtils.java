@@ -2,16 +2,21 @@ package io.agora.chat.uikit.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
 
 import io.agora.chat.uikit.manager.EasePreferenceManager;
 import io.agora.util.EMLog;
 import io.agora.util.FileHelper;
+import io.agora.util.PathUtil;
 
 public class EaseFileUtils {
     private static final String TAG = EaseFileUtils.class.getSimpleName();
@@ -212,6 +217,41 @@ public class EaseFileUtils {
             return null;
         }
         return uri;
+    }
+
+    public static String getThumbPath(Context context, Uri videoUri) {
+        if(!EaseFileUtils.isFileExistByUri(context, videoUri)) {
+            return "";
+        }
+        String filePath = EaseFileUtils.getFilePath(context, videoUri);
+        File file = new File(PathUtil.getInstance().getVideoPath(), "thvideo" + System.currentTimeMillis()+".jpeg");
+        boolean createSuccess = true;
+        if(!TextUtils.isEmpty(filePath) && new File(filePath).exists()) {
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+                Bitmap ThumbBitmap = ThumbnailUtils.createVideoThumbnail(filePath, 3);
+                ThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                EMLog.e(TAG, e.getMessage());
+                createSuccess = false;
+            }
+        }else {
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+                MediaMetadataRetriever media = new MediaMetadataRetriever();
+                media.setDataSource(context, videoUri);
+                Bitmap frameAtTime = media.getFrameAtTime();
+                frameAtTime.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                EMLog.e(TAG, e.getMessage());
+                createSuccess = false;
+            }
+        }
+        return createSuccess ? file.getAbsolutePath() : "";
     }
 }
 

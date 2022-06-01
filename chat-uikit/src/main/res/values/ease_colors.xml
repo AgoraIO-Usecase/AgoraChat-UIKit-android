@@ -19,6 +19,7 @@
 
     <color name="ease_toolbar_color_title">@color/black</color>
     <color name="ease_toolbar_color_title_right">@color/black</color>
+    <color name="ease_toolbar_color_sub_title">#ff999999</color>
 
     <color name="ease_conversation_color_item_name">#0D0D0D</color>
     <color name="ease_conversation_color_item_mention">#005FFF</color>
@@ -43,5 +44,15 @@
     <color name="ease_btn_gray_pressed">#666667</color>
     <color name="ease_dialog_chat_extend_cancel">#037BFD</color>
     <color name="ease_message_unsend_menu_txt">#FF14CC</color>
+
+    <color name="ease_chat_thread_region_name_color">@color/black</color>
+    <color name="ease_chat_thread_region_msg_count_color">#154DFE</color>
+    <color name="ease_chat_thread_region_sender_name_color">@color/black</color>
+    <color name="ease_chat_thread_region_msg_user_color">#000000</color>
+    <color name="ease_chat_thread_region_msg_content_color">#4D4D4D</color>
+    <color name="ease_chat_thread_region_no_message_color">#999999</color>
+    <color name="ease_chat_thread_region_time_color">#999999</color>
+
+    <color name="ease_chat_parent_region_owner_color">#4D4D4D</color>
 
 </resources>

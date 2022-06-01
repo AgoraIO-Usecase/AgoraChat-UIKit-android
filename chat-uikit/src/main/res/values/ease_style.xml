@@ -113,8 +113,26 @@
         <item name="android:windowEnterAnimation">@anim/dialog_from_bottom_anim_in</item>
         <!-- <item name="android:windowExitAnimation">@anim/dialog_from_bottom_anim_out</item>-->
     </style>
+
     <style name="message_menu_popup_window_anim_style">
         <item name="android:windowEnterAnimation">@anim/message_menu_popupwindow_show_anim</item>
-    <item name="android:windowExitAnimation">@anim/message_menu_popupwindow_hidden_anim</item>
+        <item name="android:windowExitAnimation">@anim/message_menu_popupwindow_hidden_anim</item>
     </style>
+
+    <style name="bubble_inner_start_top_end_margin">
+        <item name="android:layout_marginStart">@dimen/ease_chat_bubble_margin_12</item>
+        <item name="android:layout_marginEnd">@dimen/ease_chat_bubble_margin_12</item>
+        <item name="android:layout_marginTop">@dimen/ease_chat_bubble_margin_12</item>
+    </style>
+
+    <style name="bubble_inner_start_bottom_end_margin">
+        <item name="android:layout_marginStart">@dimen/ease_chat_bubble_margin_12</item>
+        <item name="android:layout_marginEnd">@dimen/ease_chat_bubble_margin_12</item>
+        <item name="android:layout_marginBottom">@dimen/ease_chat_bubble_margin_12</item>
+    </style>
+
+    <style name="Dialog.Light" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">#005FFF</item>
+    </style>
+
 </resources>

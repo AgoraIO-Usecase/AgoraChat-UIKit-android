@@ -2,6 +2,7 @@
 <resources>
     <string name="ease_location_recv">[%1$s location]</string>
     <string name="ease_location_prefix">[My location]</string>
+    <string name="ease_location">[Location]</string>
     <string name="ease_picture">[Image]</string>
     <string name="ease_video">[Video]</string>
     <string name="ease_file">[File]</string>
@@ -12,10 +13,12 @@
     <string name="ease_list_no_data_text">No data</string>
     <string name="ease_all_members">All members</string>
 
+    <string name="ease_action_reply">Reply</string>
     <string name="ease_action_copy">Copy</string>
     <string name="ease_action_forward">Forward</string>
     <string name="ease_action_recall">Recall</string>
     <string name="ease_action_delete">Delete</string>
+    <string name="ease_action_unsent">Unsent</string>
 
     <string name="ease_conversation_menu_make_read">Make read</string>
     <string name="ease_conversation_menu_make_top">Make top</string>
@@ -29,8 +32,8 @@
     <string name="ease_chat_were_mentioned">[@Mentioning me]</string>
     <string name="ease_chat_were_not_send_msg">[Draft]</string>
 
-    <string name="ease_msg_recall_by_self">You recalled a message</string>
-    <string name="ease_msg_recall_by_user">%1$s recalled a message</string>
+    <string name="ease_msg_recall_by_self">You unsent a message</string>
+    <string name="ease_msg_recall_by_user">%1$s unsent a message</string>
 
     <string name="ease_not_download">Not download:</string>
     <string name="ease_text_ack_msg">Read</string>
@@ -70,6 +73,7 @@
     <string name="ease_prompt">Note</string>
     <string name="ease_cancel">Cancel</string>
     <string name="ease_ok">OK</string>
+    <string name="ease_loading">Loading&#8230;</string>
 
     <string name="ease_is_down_please_wait">Downloading video, please wait.</string>
     <string name="ease_image_expired">Image expired</string>
@@ -94,4 +98,19 @@
     <string name="ease_number_ninety_nine_more">99+</string>
     <string name="ease_number_point_ninety_nine_more">&#183;&#183;&#183; 99+</string>
     <string name="ease_number_more">&#183;&#183;&#183; %1$d</string>
+
+    <string name="ease_thread_create_mentions">Send a message to start a thread in this Group Chat.</string>
+    <string name="ease_thread_create_title">New Thread</string>
+    <string name="ease_thread_create_input_hint">Thread Name</string>
+    <string name="ease_thread_create_parent_msg_from_parent">Original message from Group Chat.</string>
+    <string name="ease_thread_started_by_user">Started by %1$s</string>
+    <string name="ease_thread_list_admin_title">All Threads</string>
+    <string name="ease_thread_list_member_title">Joined Threads</string>
+    <string name="ease_thread_list_sub_title"># %1$s</string>
+
+    <string name="ease_start_a_thread">Started a Thread:</string>
+    <string name="ease_join_the_thread">Join the thread</string>
+
+    <string name="ease_thread_region_no_message">No Messages.</string>
+    <string name="ease_no_parent_message">Sorry, unable to load Original message.</string>
 </resources>

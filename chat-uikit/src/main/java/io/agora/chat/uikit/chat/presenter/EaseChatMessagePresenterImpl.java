@@ -3,6 +3,7 @@ package io.agora.chat.uikit.chat.presenter;
 import android.text.TextUtils;
 
 
+import java.util.Iterator;
 import java.util.List;
 
 import io.agora.ValueCallBack;
@@ -39,12 +40,17 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
 
     @Override
     public void loadLocalMessages(int pageSize) {
+        loadLocalMessages(pageSize, Conversation.SearchDirection.UP);
+    }
+
+    @Override
+    public void loadLocalMessages(int pageSize, Conversation.SearchDirection direction) {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");
         }
         List<ChatMessage> messages = null;
         try {
-            messages = conversation.loadMoreMsgFromDB(null, pageSize);
+            messages = conversation.loadMoreMsgFromDB(null, pageSize, direction);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,6 +69,11 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
 
     @Override
     public void loadMoreLocalMessages(String msgId, int pageSize) {
+        loadMoreLocalMessages(msgId, pageSize, Conversation.SearchDirection.UP);
+    }
+
+    @Override
+    public void loadMoreLocalMessages(String msgId, int pageSize, Conversation.SearchDirection direction) {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");
         }
@@ -71,7 +82,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         }
         List<ChatMessage> moreMsgs = null;
         try {
-            moreMsgs = conversation.loadMoreMsgFromDB(msgId, pageSize);
+            moreMsgs = conversation.loadMoreMsgFromDB(msgId, pageSize, direction);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,18 +124,26 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
 
     @Override
     public void loadServerMessages(int pageSize) {
+        loadServerMessages(pageSize, Conversation.SearchDirection.UP);
+    }
+
+    @Override
+    public void loadServerMessages(int pageSize, Conversation.SearchDirection direction) {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");
         }
         ChatClient.getInstance().chatManager().asyncFetchHistoryMessage(conversation.conversationId(),
-                conversation.getType(), pageSize, "",
+                conversation.getType(), pageSize, "", direction,
                 new ValueCallBack<CursorResult<ChatMessage>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
-                        conversation.loadMoreMsgFromDB("", pageSize);
+                        conversation.loadMoreMsgFromDB("", pageSize, direction);
+                        if(conversation.isThread()) {
+                            checkIfReachFirstSendMessage(value);
+                        }
                         runOnUI(() -> {
                             if(isActive()) {
-                                mView.loadServerMsgSuccess(value.getData());
+                                mView.loadServerMsgSuccess(value.getData(), value.getCursor());
                             }
                         });
                     }
@@ -141,8 +160,46 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                 });
     }
 
+    private void checkIfReachFirstSendMessage(CursorResult<ChatMessage> cursorResult) {
+        if(cursorResult == null || isReachFirstFlagMessage) {
+            return;
+        }
+        // if not more data, make isReachFirstFlagMessage to ture
+        if(TextUtils.isEmpty(cursorResult.getCursor())) {
+            isReachFirstFlagMessage = true;
+            isReachFirstFlagMessage();
+            return;
+        }
+        List<ChatMessage> data = cursorResult.getData();
+        if(data == null || data.isEmpty() || reachFlagMessage == null) {
+            return;
+        }
+        for (ChatMessage message : data) {
+            String msgId = message.getMsgId();
+            String firstSendMessageMsgId = reachFlagMessage.getMsgId();
+            if(TextUtils.equals(msgId, firstSendMessageMsgId)) {
+                isReachFirstFlagMessage = true;
+                isReachFirstFlagMessage();
+                break;
+            }
+        }
+    }
+
+    private void isReachFirstFlagMessage() {
+        runOnUI(() -> {
+            if(isActive()) {
+                mView.reachedLatestThreadMessage();
+            }
+        });
+    }
+
     @Override
     public void loadMoreServerMessages(String msgId, int pageSize) {
+        loadMoreServerMessages(msgId, pageSize, Conversation.SearchDirection.UP);
+    }
+
+    @Override
+    public void loadMoreServerMessages(String msgId, int pageSize, Conversation.SearchDirection direction) {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");
         }
@@ -150,14 +207,17 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
             throw new IllegalArgumentException("please check if set correct msg id");
         }
         ChatClient.getInstance().chatManager().asyncFetchHistoryMessage(conversation.conversationId(),
-                conversation.getType(), pageSize, msgId,
+                conversation.getType(), pageSize, msgId, direction,
                 new ValueCallBack<CursorResult<ChatMessage>>() {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
-                        conversation.loadMoreMsgFromDB(msgId, pageSize);
+                        conversation.loadMoreMsgFromDB(msgId, pageSize, direction);
+                        if(conversation.isThread()) {
+                            checkIfReachFirstSendMessage(value);
+                        }
                         runOnUI(() -> {
                             if(isActive()) {
-                                mView.loadMoreServerMsgSuccess(value.getData());
+                                mView.loadMoreServerMsgSuccess(value.getData(), value.getCursor());
                             }
                         });
                     }
@@ -181,8 +241,30 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         }
         conversation.markAllMessagesAsRead();
         List<ChatMessage> allMessages = conversation.getAllMessages();
+        if(conversation.isThread() && reachFlagMessage != null && !isReachFirstFlagMessage) {
+            removeNotReachedMessages(allMessages);
+        }
         if(isActive()) {
             runOnUI(()->mView.refreshCurrentConSuccess(allMessages, false));
+        }
+    }
+
+    /**
+     * Delete messages with timestamps after the first sent message
+     * @param allMessages
+     */
+    private void removeNotReachedMessages(List<ChatMessage> allMessages) {
+        if(reachFlagMessage == null) {
+            return;
+        }
+        long firstSendMsgTime  = reachFlagMessage.getMsgTime();
+        Iterator<ChatMessage> iterator = allMessages.iterator();
+        while (iterator.hasNext()) {
+            long msgTime = iterator.next().getMsgTime();
+
+            if(msgTime >= firstSendMsgTime) {
+                iterator.remove();
+            }
         }
     }
 
@@ -193,6 +275,9 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         }
         conversation.markAllMessagesAsRead();
         List<ChatMessage> allMessages = conversation.getAllMessages();
+        if(conversation.isThread() && !isReachFirstFlagMessage) {
+            removeNotReachedMessages(allMessages);
+        }
         if(isActive()) {
             runOnUI(()->mView.refreshCurrentConSuccess(allMessages, true));
         }
