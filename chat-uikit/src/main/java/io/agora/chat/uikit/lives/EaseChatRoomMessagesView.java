@@ -520,7 +520,6 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
 
     private class MessageViewHolder extends EaseBaseRecyclerViewAdapter.ViewHolder<ChatMessage> {
         private final Context context;
-        private View itemBg;
 
         private EaseImageView avatar;
 
@@ -531,7 +530,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
 
         View textMessageLayout;
         private TextView txtMessageNickname;
-        private TextView txtMessageNicknameRole;
+        private ImageView txtMessageNicknameRole;
         private TextView txtMessageContent;
 
         public MessageViewHolder(@NonNull View itemView, Context context) {
@@ -541,7 +540,6 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
 
         @Override
         public void initView(View itemView) {
-            itemBg = findViewById(R.id.item_layout);
             avatar = findViewById(R.id.iv_avatar);
 
             joinLayout = findViewById(R.id.join_layout);
@@ -555,7 +553,8 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
             txtMessageContent = findViewById(R.id.txt_message_content);
 
             if (null != mMessageStyleHelper.getMessageItemBubblesBackground()) {
-                itemBg.setBackground(mMessageStyleHelper.getMessageItemBubblesBackground());
+                joinLayout.setBackground(mMessageStyleHelper.getMessageItemBubblesBackground());
+                textMessageLayout.setBackground(mMessageStyleHelper.getMessageItemBubblesBackground());
             }
 
             if (-1 != mMessageStyleHelper.getMessageAvatarShapeType()) {
@@ -635,7 +634,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
 
             int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
             joinText.measure(spec, spec);
-            final int joinTextWidth = joinText.getMeasuredWidth() ;
+            final int joinTextWidth = joinText.getMeasuredWidth();
 
             joinNickname.post(new Runnable() {
                 @Override
@@ -644,7 +643,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
                             joinTextWidth - joinText.getPaddingLeft() - joinText.getPaddingRight() -
                             joinIcon.getWidth() - joinIcon.getPaddingLeft() - joinIcon.getPaddingRight() -
                             avatar.getWidth() - avatar.getPaddingLeft() - avatar.getPaddingRight() -
-                            (int) EaseUtils.dip2px(mContext, 15));
+                            (int) EaseUtils.dip2px(mContext, 20));
                 }
             });
         }
@@ -666,12 +665,10 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
 
             if (mChatRoom.getOwner().equals(id)) {
                 txtMessageNicknameRole.setVisibility(View.VISIBLE);
-                txtMessageNicknameRole.setText(context.getResources().getString(R.string.ease_live_role_type_streamer));
-                txtMessageNicknameRole.setBackgroundResource(R.drawable.ease_live_streamer_bg);
+                txtMessageNicknameRole.setImageResource(R.drawable.live_streamer);
             } else if (mChatRoom.getAdminList().contains(id)) {
                 txtMessageNicknameRole.setVisibility(View.VISIBLE);
-                txtMessageNicknameRole.setText(context.getResources().getString(R.string.ease_live_role_type_moderator));
-                txtMessageNicknameRole.setBackgroundResource(R.drawable.ease_live_moderator_bg);
+                txtMessageNicknameRole.setImageResource(R.drawable.live_moderator);
             } else {
                 txtMessageNicknameRole.setVisibility(View.GONE);
             }
