@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -14,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -70,6 +73,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
     private ChatRoom mChatRoom;
     private Conversation mConversation;
     private int mTxtNicknameHeight = 0;
+    private boolean mShowKeyboard;
 
 
     public EaseChatRoomMessagesView(Context context) {
@@ -141,9 +145,6 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
 
             mMessageStyleHelper.setMessageAvatarShapeType(ta.getInteger(R.styleable.EaseChatRoomMessagesView_ease_live_message_avatar_shape_type, -1));
 
-            mMessageStyleHelper.setNicknameMaxEms(ta.getInteger(R.styleable.EaseChatRoomMessagesView_ease_live_message_nick_name_max_ems, 0));
-            mMessageStyleHelper.setNicknameEllipsize(ta.getInteger(R.styleable.EaseChatRoomMessagesView_ease_live_message_nick_name_ellipsize, -1));
-
             ta.recycle();
         }
 
@@ -180,6 +181,9 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
                     LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                     if (null != layoutManager && layoutManager.findLastVisibleItemPosition() == recyclerView.getLayoutManager().getItemCount() - 1) {
                         mMessageStopRefresh = false;
+                        if (View.VISIBLE == mUnreadMessageView.getVisibility()) {
+                            mUnreadMessageView.setVisibility(GONE);
+                        }
                     }
                 }
 
@@ -196,6 +200,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
                 if (null != mMessageViewListener) {
                     mMessageViewListener.onChatRoomMessageItemClickListener(mAdapter.getItem(position));
                 }
+                enableInputViewShow(false);
             }
         });
 
@@ -213,7 +218,6 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
         RelativeLayout.LayoutParams tipParams = (RelativeLayout.LayoutParams) mMessageInputTip.getLayoutParams();
         tipParams.setMarginEnd((int) mMessageStyleHelper.getInputEditMarginEnd());
         mMessageInputTip.setLayoutParams(tipParams);
-        mMessageInputTip.setText(mContext.getResources().getString(R.string.ease_live_message_input_tip));
         mMessageInputTip.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,6 +225,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
             }
         });
 
+        mMessageInputEt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(150)});
         mMessageInputEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -252,7 +257,24 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
                 return false;
             }
         });
+        mMessageInputEt.getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (VISIBLE == mMessageInputEt.getVisibility()) {
+                    Rect r = new Rect();
+                    mMessageInputEt.getWindowVisibleDisplayFrame(r);
+                    int height = mMessageInputEt.getContext().getResources().getDisplayMetrics().heightPixels;
+                    if (r.bottom != height) {
+                        mShowKeyboard = true;
+                    } else {
+                        if (mShowKeyboard) {
+                            enableInputViewShow(false);
+                        }
+                    }
+                }
 
+            }
+        });
 
         int navigationBarHeight = getNavigationBarHeight(mContext);
         if (0 == navigationBarHeight) {
@@ -275,6 +297,15 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
         mConversation = ChatClient.getInstance().chatManager().getConversation(mChatroomId, Conversation.ConversationType.ChatRoom, true);
         refresh();
     }
+
+    /**
+     * update chat room info
+     */
+    public void updateChatRoomInfo() {
+        mChatRoom = ChatClient.getInstance().chatroomManager().getChatRoom(mChatroomId);
+        refresh();
+    }
+
 
     @Override
     public void setVisibility(int visibility) {
@@ -458,6 +489,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
     }
 
     private void hideInputMethod() {
+        mShowKeyboard = false;
         InputMethodManager inputManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(mMessageInputEt.getWindowToken(), 0);
     }
@@ -496,6 +528,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
                 username = message.getFrom();
             }
             if (username.equals(mChatroomId)) {
+
                 refresh();
             }
         }
@@ -576,31 +609,6 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
                 joinNickname.setTextColor(mMessageStyleHelper.getMessageNicknameColor());
                 txtMessageNickname.setTextColor(mMessageStyleHelper.getMessageNicknameColor());
             }
-
-            if (0 != mMessageStyleHelper.getNicknameMaxEms()) {
-                joinNickname.setMaxEms(mMessageStyleHelper.getNicknameMaxEms());
-                txtMessageNickname.setMaxEms(mMessageStyleHelper.getNicknameMaxEms());
-            }
-
-            if (-1 != mMessageStyleHelper.getNicknameEllipsize()) {
-                TextUtils.TruncateAt truncateAt = TextUtils.TruncateAt.END;
-                switch (mMessageStyleHelper.getNicknameEllipsize()) {
-                    case 0:
-                        truncateAt = TextUtils.TruncateAt.START;
-                        break;
-                    case 1:
-                        truncateAt = TextUtils.TruncateAt.MIDDLE;
-                        break;
-                    case 2:
-                        truncateAt = TextUtils.TruncateAt.END;
-                        break;
-                    case 3:
-                        truncateAt = TextUtils.TruncateAt.MARQUEE;
-                        break;
-                }
-                joinNickname.setEllipsize(truncateAt);
-                txtMessageNickname.setEllipsize(truncateAt);
-            }
         }
 
         @Override
@@ -636,14 +644,23 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
             joinText.measure(spec, spec);
             final int joinTextWidth = joinText.getMeasuredWidth();
 
-            joinNickname.post(new Runnable() {
+            spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+            joinIcon.measure(spec, spec);
+            final int joinIconWidth = joinIcon.getMeasuredWidth();
+
+            joinLayout.post(new Runnable() {
                 @Override
                 public void run() {
                     joinNickname.setMaxWidth(mMessageListView.getWidth() - mMessageListView.getPaddingLeft() - mMessageListView.getPaddingRight() -
+                            ((LayoutParams) mMessageListView.getLayoutParams()).leftMargin - ((LayoutParams) mMessageListView.getLayoutParams()).rightMargin -
                             joinTextWidth - joinText.getPaddingLeft() - joinText.getPaddingRight() -
-                            joinIcon.getWidth() - joinIcon.getPaddingLeft() - joinIcon.getPaddingRight() -
+                            ((LayoutParams) joinText.getLayoutParams()).leftMargin - ((LayoutParams) joinText.getLayoutParams()).rightMargin -
+                            joinIconWidth - joinIcon.getPaddingLeft() - joinIcon.getPaddingRight() -
+                            ((LayoutParams) joinIcon.getLayoutParams()).leftMargin - ((LayoutParams) joinIcon.getLayoutParams()).rightMargin -
                             avatar.getWidth() - avatar.getPaddingLeft() - avatar.getPaddingRight() -
-                            (int) EaseUtils.dip2px(mContext, 20));
+                            ((LayoutParams) avatar.getLayoutParams()).leftMargin - ((LayoutParams) avatar.getLayoutParams()).rightMargin -
+                            ((LayoutParams) joinNickname.getLayoutParams()).leftMargin - ((LayoutParams) joinNickname.getLayoutParams()).rightMargin
+                    );
                 }
             });
         }
@@ -678,15 +695,20 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
             final int txtMessageNicknameRoleWidth = View.VISIBLE == txtMessageNicknameRole.getVisibility() ?
                     txtMessageNicknameRole.getMeasuredWidth() : 0;
 
-            txtMessageNickname.post(new Runnable() {
+            textMessageLayout.post(new Runnable() {
                 @Override
                 public void run() {
-                    txtMessageNickname.setMaxWidth(
-                            mMessageListView.getMeasuredWidth() - mMessageListView.getPaddingLeft() - mMessageListView.getPaddingRight() -
-                                    txtMessageNicknameRoleWidth - txtMessageNicknameRole.getPaddingLeft() - txtMessageNicknameRole.getPaddingRight() -
-                                    avatar.getMeasuredWidth() - avatar.getPaddingLeft() - avatar.getPaddingRight() -
-                                    (int) EaseUtils.dip2px(mContext, 15)
-                    );
+                    int nicknameMaxWidth = mMessageListView.getMeasuredWidth() - mMessageListView.getPaddingLeft() - mMessageListView.getPaddingRight() -
+                            ((LayoutParams) mMessageListView.getLayoutParams()).leftMargin - ((LayoutParams) mMessageListView.getLayoutParams()).rightMargin -
+                            avatar.getMeasuredWidth() - avatar.getPaddingLeft() - avatar.getPaddingRight() -
+                            ((LayoutParams) avatar.getLayoutParams()).leftMargin - ((LayoutParams) avatar.getLayoutParams()).rightMargin -
+                            ((LayoutParams) txtMessageNickname.getLayoutParams()).leftMargin - ((LayoutParams) txtMessageNickname.getLayoutParams()).rightMargin;
+                    if (View.VISIBLE == txtMessageNicknameRole.getVisibility()) {
+                        nicknameMaxWidth = nicknameMaxWidth -
+                                txtMessageNicknameRoleWidth - txtMessageNicknameRole.getPaddingLeft() - txtMessageNicknameRole.getPaddingRight() -
+                                ((LayoutParams) txtMessageNicknameRole.getLayoutParams()).leftMargin - ((LayoutParams) txtMessageNicknameRole.getLayoutParams()).rightMargin;
+                    }
+                    txtMessageNickname.setMaxWidth(nicknameMaxWidth);
                 }
             });
 

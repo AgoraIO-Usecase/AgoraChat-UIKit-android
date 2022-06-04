@@ -19,8 +19,6 @@ public class EaseLiveMessageStyleHelper {
     private boolean messageShowNickname;
     private boolean messageShowAvatar;
     private int messageAvatarShapeType;
-    private int nicknameMaxEms;
-    private int nicknameEllipsize;
 
     private EaseLiveMessageStyleHelper() {
         inputEditMarginBottom = 0;
@@ -35,8 +33,6 @@ public class EaseLiveMessageStyleHelper {
         messageShowNickname = true;
         messageShowAvatar = true;
         messageAvatarShapeType = -1;
-        nicknameMaxEms = 0;
-        nicknameEllipsize = -1;
     }
 
     public static EaseLiveMessageStyleHelper getInstance() {
@@ -146,22 +142,6 @@ public class EaseLiveMessageStyleHelper {
         this.messageAvatarShapeType = messageAvatarShapeType;
     }
 
-    public int getNicknameMaxEms() {
-        return nicknameMaxEms;
-    }
-
-    public void setNicknameMaxEms(int nicknameMaxEms) {
-        this.nicknameMaxEms = nicknameMaxEms;
-    }
-
-    public int getNicknameEllipsize() {
-        return nicknameEllipsize;
-    }
-
-    public void setNicknameEllipsize(int nicknameEllipsize) {
-        this.nicknameEllipsize = nicknameEllipsize;
-    }
-
     @NonNull
     @Override
     public String toString() {
@@ -178,8 +158,6 @@ public class EaseLiveMessageStyleHelper {
                 ", messageShowNickname=" + messageShowNickname +
                 ", messageShowAvatar=" + messageShowAvatar +
                 ", messageAvatarShapeType=" + messageAvatarShapeType +
-                ", nicknameMaxEms=" + nicknameMaxEms +
-                ", nicknameEllipsize=" + nicknameEllipsize +
                 '}';
     }
 }

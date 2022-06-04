@@ -40,7 +40,6 @@
         android:minHeight="30dp"
         android:paddingStart="9dp"
         android:paddingEnd="9dp"
-        android:text="@string/ease_live_message_input_tip"
         android:textColor="#99FFFFFF"
         android:textSize="15sp" />
 
@@ -61,7 +60,6 @@
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/ease_live_message_input_bg_shape"
-            android:hint="@string/ease_live_message_input_tip"
             android:imeOptions="actionSend"
             android:inputType="text"
             android:maxLines="3"

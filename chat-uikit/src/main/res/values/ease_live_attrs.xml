@@ -10,19 +10,12 @@
         <attr name="ease_live_message_item_bubbles_background" format="reference|color" />
         <attr name="ease_live_message_nickname_text_color" format="reference|color" />
         <attr name="ease_live_message_nickname_text_size" format="dimension" />
-        <attr name="ease_live_message_show_nickname" format="boolean"/>
-        <attr name="ease_live_message_show_avatar" format="boolean"/>
+        <attr name="ease_live_message_show_nickname" format="boolean" />
+        <attr name="ease_live_message_show_avatar" format="boolean" />
         <attr name="ease_live_message_avatar_shape_type" format="enum">
             <enum name="none" value="0" />
             <enum name="round" value="1" />
             <enum name="rectangle" value="2" />
-        </attr>
-        <attr name="ease_live_message_nick_name_max_ems" format="integer" />
-        <attr name="ease_live_message_nick_name_ellipsize" format="enum">
-            <enum name="start" value="0" />
-            <enum name="middle" value="1" />
-            <enum name="end" value="2" />
-            <enum name="marquee" value="3" />
         </attr>
     </declare-styleable>
 </resources>
