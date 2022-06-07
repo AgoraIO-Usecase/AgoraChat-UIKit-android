@@ -6,9 +6,10 @@ import io.agora.chat.ChatMessage;
 public interface OnRecallMessageResultListener {
     /**
      * Recall successful
-     * @param message
+     * @param originalMessage The message was unsent
+     * @param notification  The notification message
      */
-    void recallSuccess(ChatMessage message);
+    void recallSuccess(ChatMessage originalMessage, ChatMessage notification);
 
     /**
      * Recall failed

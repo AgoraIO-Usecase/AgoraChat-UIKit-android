@@ -1,9 +1,12 @@
 package io.agora.chat.uikit.utils;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -53,20 +56,40 @@ public class EaseUserUtils {
      * @param username
      */
     public static void setUserAvatar(Context context, String username, ImageView imageView){
+    	setUserAvatar(context, username, null, null, imageView);
+    }
+
+    /**
+     * set user avatar
+     * @param username
+     */
+    public static void setUserAvatar(Context context, String username, Drawable placeholder, Drawable errorDrawable, ImageView imageView){
+        if(placeholder == null) {
+            placeholder = ContextCompat.getDrawable(context, R.drawable.ease_default_avatar);
+        }
+        if(errorDrawable == null) {
+            errorDrawable = ContextCompat.getDrawable(context, R.drawable.ease_default_avatar);
+        }
     	EaseUser user = getUserInfo(username);
         if(user != null && user.getAvatar() != null){
             try {
                 int avatarResId = Integer.parseInt(user.getAvatar());
-                Glide.with(context).load(avatarResId).into(imageView);
+                Glide.with(context)
+                        .load(avatarResId)
+                        .placeholder(placeholder)
+                        .error(errorDrawable)
+                        .into(imageView);
             } catch (Exception e) {
                 //use default avatar
                 Glide.with(context).load(user.getAvatar())
-                        .apply(RequestOptions.placeholderOf(R.drawable.ease_default_avatar)
+                        .apply(RequestOptions
+                                .placeholderOf(placeholder)
+                                .error(errorDrawable)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL))
                         .into(imageView);
             }
         }else{
-            Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
+            Glide.with(context).load(placeholder).into(imageView);
         }
     }
 

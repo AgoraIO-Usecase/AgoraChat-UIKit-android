@@ -38,6 +38,7 @@ import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.constants.EaseConstant;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 import io.agora.util.EMLog;
@@ -224,19 +225,34 @@ public class EaseUtils {
     }
 
     /**
+     * change the chat type to EMConversationType
+     * @param chatType
+     * @return
+     */
+    public static Conversation.ConversationType getConversationType(EaseChatType chatType) {
+        if (chatType == EaseChatType.SINGLE_CHAT) {
+            return Conversation.ConversationType.Chat;
+        } else if (chatType == EaseChatType.GROUP_CHAT) {
+            return Conversation.ConversationType.GroupChat;
+        } else {
+            return Conversation.ConversationType.ChatRoom;
+        }
+    }
+
+    /**
      * get chat type by conversation type
      * @param conversation
      * @return
      */
-    public static int getChatType(Conversation conversation) {
+    public static EaseChatType getChatType(Conversation conversation) {
         if(conversation.isGroup()) {
             if(conversation.getType() == Conversation.ConversationType.ChatRoom) {
-                return EaseConstant.CHATTYPE_CHATROOM;
+                return EaseChatType.CHATROOM;
             }else {
-                return EaseConstant.CHATTYPE_GROUP;
+                return EaseChatType.GROUP_CHAT;
             }
         }else {
-            return EaseConstant.CHATTYPE_SINGLE;
+            return EaseChatType.SINGLE_CHAT;
         }
     }
 
@@ -394,4 +410,16 @@ public class EaseUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
+    /**
+     * Used to handle message unread
+     * @param count
+     * @return
+     */
+    public static String handleBigNum(int count) {
+        if(count <= 99) {
+            return String.valueOf(count);
+        }else {
+            return "99+";
+        }
+    }
 }

@@ -69,4 +69,9 @@ public interface EaseConstant {
     String DEFAULT_SYSTEM_MESSAGE_TYPE = "em_system_type";
 
     String USER_CARD_EVENT = "userCard";
+
+    String EASE_THREAD_NOTIFICATION_TYPE = "em_thread_notification_type";
+    String EASE_THREAD_PARENT_MSG_ID = "em_thread_parent_msg_id";
+
+    String FLAG_REACH_LATEST_THREAD_MESSAGE = "flag_reach_latest_thread_message";
 }

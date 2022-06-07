@@ -9,12 +9,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import io.agora.util.TimeInfo;
 
 public class EaseDateUtils {
 
 	private static final long INTERVAL_IN_MILLISECONDS = 30 * 1000;
+	private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
 	public static String getTimestampString(Context context, Date messageDate) {
 	    String format = null;
@@ -280,5 +282,192 @@ public class EaseDateUtils {
 	 */
 	public static boolean is24HourFormat(Context context) {
 		return android.text.format.DateFormat.is24HourFormat(context);
+	}
+
+	public static String getTimestampSimpleString(Context context, long msgTimestamp) {
+		String language = Locale.getDefault().getLanguage();
+		boolean isZh = language.startsWith("zh");
+		StringBuilder builder = new StringBuilder();
+		if(isWithinOneMinute(msgTimestamp)) {
+			if(isZh){
+				return "刚刚";
+			}else {
+				return "just";
+			}
+		}
+		if(isWithinOneHour(msgTimestamp)) {
+			int minute = getMinuteDifWithinSameHour(msgTimestamp);
+			if(isZh){
+				return builder.append(minute).append(" 分钟前").toString();
+			}else {
+				return builder.append(minute).append("m ago").toString();
+			}
+		}
+		if(isWithin24Hour(msgTimestamp)) {
+			int hour = getHourDifWithin24Hour(msgTimestamp);
+			if(isZh) {
+				return builder.append(hour).append(" 小时前").toString();
+			}else {
+				return builder.append(hour).append("h ago").toString();
+			}
+		}
+		if(isSameWeek(msgTimestamp)) {
+			int day = getDayDifWithinSameWeek(msgTimestamp);
+			if(isZh) {
+				return builder.append(day).append(" 天前").toString();
+			}else {
+				return builder.append(day).append("d ago").toString();
+			}
+		}
+		if(isSameMonth(msgTimestamp)) {
+			int week = getWeekDifWithinSameMonth(msgTimestamp);
+			if(isZh) {
+				return builder.append(week).append(" 周前").toString();
+			}else {
+				return builder.append(week).append("wk ago").toString();
+			}
+		}
+		if(isSameYear(msgTimestamp)) {
+			int month = getMonthDifWithinSameYear(msgTimestamp);
+			if(isZh) {
+				return builder.append(month).append(" 月前").toString();
+			}else {
+				return builder.append(month).append("mo ago").toString();
+			}
+		}
+		int yearDif = getYearDif(msgTimestamp);
+		if(isZh) {
+			return builder.append(yearDif).append(" 年前").toString();
+		}else {
+			return builder.append(yearDif).append("yr ago").toString();
+		}
+	}
+
+	private static boolean isWithinOneMinute(long msgTimestamp) {
+		Calendar calendar = Calendar.getInstance(UTC);
+		long current = calendar.getTime().getTime();
+		return current > msgTimestamp && current - msgTimestamp < 60 * 1000;
+	}
+
+	private static boolean isWithinOneHour(long msgTimestamp) {
+		Calendar calendar = Calendar.getInstance(UTC);
+		long current = calendar.getTime().getTime();
+		return current > msgTimestamp && current - msgTimestamp < 60 * 60 * 1000;
+	}
+
+	private static boolean isWithin24Hour(long msgTimestamp) {
+		Calendar calendar = Calendar.getInstance(UTC);
+		long current = calendar.getTime().getTime();
+		return current > msgTimestamp && current - msgTimestamp < 24 * 60 * 60 * 1000;
+	}
+
+	private static boolean isSameWeek(long msgTimestamp) {
+		return getWeekDifWithinSameMonth(msgTimestamp) == 0;
+	}
+
+	private static boolean isSameMonth(long msgTimestamp) {
+		return getMonthDifWithinSameYear(msgTimestamp) == 0;
+	}
+
+	private static boolean isSameYear(long msgTimestamp) {
+		return getYearDif(msgTimestamp) == 0;
+	}
+
+	/**
+	 * The result may be negative number, you should consider this situation。
+	 * @param msgTimestamp
+	 * @return
+	 */
+	private static int getMinuteDifWithinSameHour(long msgTimestamp) {
+		if(!isWithinOneHour(msgTimestamp)) {
+		    return -1;
+		}
+		Calendar calendar = Calendar.getInstance(UTC);
+		return (int) (Math.ceil((calendar.getTime().getTime() - msgTimestamp)*1.0f/(60 * 1000)));
+	}
+
+	/**
+	 * If not within 24 hour, return -1.
+	 * @param msgTimestamp
+	 * @return
+	 */
+	private static int getHourDifWithin24Hour(long msgTimestamp) {
+		if(!isWithin24Hour(msgTimestamp)) {
+		    return -1;
+		}
+		Calendar calendar = Calendar.getInstance(UTC);
+		return (int) (Math.ceil((calendar.getTime().getTime() - msgTimestamp)*1.0f/(60 * 60 * 1000)));
+	}
+
+	/**
+	 * If not in the same week of year, return -1.
+	 * @param msgTimestamp
+	 * @return
+	 */
+	private static int getDayDifWithinSameWeek(long msgTimestamp) {
+		Calendar calendar = Calendar.getInstance(UTC);
+		int curYear = calendar.get(Calendar.YEAR);
+		int curWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+		int curDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+		calendar.setTime(new Date(msgTimestamp));
+		int year = calendar.get(Calendar.YEAR);
+		int week = calendar.get(Calendar.WEEK_OF_YEAR);
+		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+		if(curYear != year || curWeek != week) {
+			return -1;
+		}
+		return curDayOfWeek - dayOfWeek;
+	}
+
+	/**
+	 * If not in the same month, return -1.
+	 * @param msgTimestamp
+	 * @return
+	 */
+	private static int getWeekDifWithinSameMonth(long msgTimestamp) {
+		Calendar calendar = Calendar.getInstance(UTC);
+		int curYear = calendar.get(Calendar.YEAR);
+		int curMonth = calendar.get(Calendar.MONTH);
+		int curWeekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+
+		calendar.setTime(new Date(msgTimestamp));
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int weekOfMonth = calendar.get(Calendar.WEEK_OF_MONTH);
+
+		if(curYear != year || curMonth != month) {
+			return -1;
+		}
+		return curWeekOfMonth - weekOfMonth;
+	}
+
+	/**
+	 * If not in the same year, return -1.
+	 * @param msgTimestamp
+	 * @return
+	 */
+	private static int getMonthDifWithinSameYear(long msgTimestamp) {
+		Calendar calendar = Calendar.getInstance(UTC);
+		int curYear = calendar.get(Calendar.YEAR);
+		int curMonth = calendar.get(Calendar.MONTH);
+
+		calendar.setTime(new Date(msgTimestamp));
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+
+		if(curYear != year) {
+			return -1;
+		}
+		return curMonth - month;
+	}
+
+	private static int getYearDif(long msgTimestamp) {
+		Calendar calendar = Calendar.getInstance(UTC);
+		int curYear = calendar.get(Calendar.YEAR);
+
+		calendar.setTime(new Date(msgTimestamp));
+		int year = calendar.get(Calendar.YEAR);
+		return curYear - year;
 	}
 }

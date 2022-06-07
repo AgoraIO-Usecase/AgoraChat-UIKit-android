@@ -27,6 +27,12 @@ public interface IRecyclerViewHandle {
     void refreshMessage(ChatMessage message);
 
     /**
+     * Refresh single message by id.
+     * @param messageId
+     */
+    void refreshMessage(String messageId);
+
+    /**
      * Delete single message
      * @param message
      */

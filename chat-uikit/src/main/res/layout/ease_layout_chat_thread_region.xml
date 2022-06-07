@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="228dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/ease_thread_region_bubble">
+
+    <ImageView
+        android:id="@+id/iv_thread_icon"
+        android:layout_width="@dimen/ease_chat_thread_region_icon_size"
+        android:layout_height="@dimen/ease_chat_thread_region_icon_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_thread_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/iv_user_icon"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        app:layout_constraintVertical_bias="0"
+        android:layout_marginStart="@dimen/ease_chat_thread_region_icon_margin_left"
+        android:src="@drawable/ease_thread_icon_small"/>
+
+    <TextView
+        android:id="@+id/tv_thread_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/iv_thread_icon"
+        app:layout_constraintEnd_toStartOf="@id/tv_thread_msg_count"
+        app:layout_constraintTop_toTopOf="@id/iv_thread_icon"
+        app:layout_constraintBottom_toBottomOf="@id/iv_thread_icon"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginStart="4dp"
+        android:textSize="@dimen/ease_chat_thread_region_name_text_size"
+        tools:text="Thread name"
+        android:textColor="@color/ease_chat_thread_region_name_color"/>
+
+    <TextView
+        android:id="@+id/tv_thread_msg_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/tv_thread_name"
+        app:layout_constraintEnd_toStartOf="@id/iv_thread_right_icon"
+        app:layout_constraintTop_toTopOf="@id/iv_thread_icon"
+        app:layout_constraintBottom_toBottomOf="@id/iv_thread_icon"
+        android:layout_marginStart="5dp"
+        android:textSize="@dimen/ease_chat_thread_region_msg_count_text_size"
+        tools:text="+99"
+        android:textColor="@color/ease_chat_thread_region_msg_count_color"/>
+
+    <ImageView
+        android:id="@+id/iv_thread_right_icon"
+        android:layout_width="@dimen/ease_chat_thread_region_go_icon_size"
+        android:layout_height="@dimen/ease_chat_thread_region_go_icon_size"
+        app:layout_constraintStart_toEndOf="@id/tv_thread_msg_count"
+        app:layout_constraintTop_toTopOf="@id/iv_thread_icon"
+        app:layout_constraintBottom_toBottomOf="@id/iv_thread_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="5dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ease_go_blue"/>
+
+    <io.agora.chat.uikit.widget.EaseImageView
+        android:id="@+id/iv_user_icon"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintStart_toStartOf="@id/iv_thread_icon"
+        app:layout_constraintEnd_toStartOf="@id/tv_msg_username"
+        app:layout_constraintTop_toBottomOf="@id/iv_thread_icon"
+        app:layout_constraintBottom_toTopOf="@id/tv_msg_content"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:src="@drawable/ease_default_avatar"/>
+
+    <TextView
+        android:id="@+id/tv_msg_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/iv_user_icon"
+        app:layout_constraintEnd_toStartOf="@id/tv_msg_time"
+        app:layout_constraintTop_toTopOf="@id/iv_user_icon"
+        app:layout_constraintBottom_toBottomOf="@id/iv_user_icon"
+        app:layout_constrainedWidth="true"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginStart="5dp"
+        android:textSize="@dimen/ease_chat_thread_region_sender_text_size"
+        tools:text="Paula Credo."
+        android:textColor="@color/ease_chat_thread_region_msg_user_color"/>
+
+    <TextView
+        android:id="@+id/tv_msg_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/tv_msg_username"
+        app:layout_constraintBottom_toBottomOf="@id/tv_msg_username"
+        app:layout_constraintEnd_toEndOf="@id/iv_thread_right_icon"
+        android:layout_marginStart="5dp"
+        android:textSize="@dimen/ease_chat_thread_region_time_text_size"
+        tools:text="13h ago"
+        android:textColor="@color/ease_chat_thread_region_time_color"/>
+
+    <TextView
+        android:id="@+id/tv_msg_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@id/tv_msg_username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_user_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_bias="0"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="@dimen/ease_chat_thread_region_sender_text_size"
+        tools:text="Paula Credo."
+        android:textColor="@color/ease_chat_thread_region_msg_content_color"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="iv_user_icon,tv_msg_username,tv_msg_time,tv_msg_content"/>
+
+    <TextView
+        android:id="@+id/tv_no_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@id/iv_thread_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_thread_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_bias="0"
+        android:visibility="gone"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="@dimen/ease_chat_thread_region_sender_text_size"
+        android:text="@string/ease_thread_region_no_message"
+        android:textColor="@color/ease_chat_thread_region_no_message_color"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,7 @@ import io.agora.chat.uikit.adapter.EaseBaseRecyclerViewAdapter;
 import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
 import io.agora.chat.uikit.conversation.model.EaseConversationSetStyle;
 import io.agora.chat.uikit.utils.EaseUserUtils;
+import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseImageView;
 
 public class EaseBaseConversationViewHolder extends EaseBaseRecyclerViewAdapter.ViewHolder<EaseConversationInfo> {
@@ -177,11 +178,7 @@ public class EaseBaseConversationViewHolder extends EaseBaseRecyclerViewAdapter.
     }
 
     public String handleBigNum(int unreadMsgCount) {
-        if(unreadMsgCount <= 99) {
-            return String.valueOf(unreadMsgCount);
-        }else {
-            return "99+";
-        }
+        return EaseUtils.handleBigNum(unreadMsgCount);
     }
 
     public void showUnreadRight(boolean isRight) {

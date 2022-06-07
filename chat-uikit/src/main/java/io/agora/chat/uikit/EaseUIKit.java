@@ -13,9 +13,12 @@ import io.agora.chat.uikit.interfaces.OnEaseChatConnectionListener;
 import io.agora.chat.uikit.manager.EaseChatPresenter;
 import io.agora.chat.uikit.manager.EaseNotifier;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
+import io.agora.chat.uikit.provider.EaseActivityProvider;
 import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
+import io.agora.chat.uikit.options.EaseReactionOptions;
 import io.agora.chat.uikit.provider.EaseEmojiconInfoProvider;
 import io.agora.chat.uikit.provider.EaseFileIconProvider;
+import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
 import io.agora.chat.uikit.provider.EaseSettingsProvider;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 
@@ -45,6 +48,10 @@ public class EaseUIKit {
      */
     private EaseFileIconProvider fileIconProvider;
     /**
+     * Activity provider
+     */
+    private EaseActivityProvider activitiesProvider;
+    /**
      * the notifier
      */
     private EaseNotifier notifier = null;
@@ -65,6 +72,11 @@ public class EaseUIKit {
      */
     private boolean sendOriginalImage;
     private OnEaseChatConnectionListener chatConnectionListener;
+
+    /**
+     * Whether to  show reaction view
+     */
+    private EaseReactionOptions reactionOptions;
 
     private EaseUIKit() {}
 
@@ -327,5 +339,36 @@ public class EaseUIKit {
                 return false;
             }
         };
+    }
+
+    /**
+     * Set to reaction options
+     *
+     * @param reactionOptions
+     */
+    public void setReactionOptions(EaseReactionOptions reactionOptions) {
+        this.reactionOptions = reactionOptions;
+    }
+
+    public EaseReactionOptions getReactionOptions() {
+        return reactionOptions;
+    }
+
+    /**
+     * get file icon provider
+     * @return
+     */
+    public EaseActivityProvider getActivitiesProvider() {
+        return activitiesProvider;
+    }
+
+    /**
+     * set file icon provider
+     * @param provider
+     * @return
+     */
+    public EaseUIKit setActivityProvider(EaseActivityProvider provider) {
+        this.activitiesProvider = provider;
+        return this;
     }
 }

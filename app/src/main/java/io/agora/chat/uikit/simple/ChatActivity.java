@@ -9,14 +9,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import io.agora.chat.uikit.chat.EaseChatFragment;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 
 public class ChatActivity extends AppCompatActivity {
 
-    public static void actionStart(Context context, String conversationID, int chatType) {
+    public static void actionStart(Context context, String conversationID, EaseChatType chatType) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra("conversationID", conversationID);
-        intent.putExtra("chatType", chatType);
+        intent.putExtra("chatType", chatType.getChatType());
         context.startActivity(intent);
     }
 
@@ -26,11 +27,11 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         String conversationID = getIntent().getStringExtra("conversationID");
-        int chatType = getIntent().getIntExtra("chatType", 1);
+        int chatType = getIntent().getIntExtra("chatType", EaseChatType.SINGLE_CHAT.getChatType());
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fl_fragment,
-                        new EaseChatFragment.Builder(conversationID, chatType)
+                        new EaseChatFragment.Builder(conversationID, EaseChatType.from(chatType))
                                 .useHeader(true)
                                 .setHeaderTitle(conversationID)
                                 .enableHeaderPressBack(true)

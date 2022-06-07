@@ -17,6 +17,7 @@ import java.util.List;
 
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
+import io.agora.chat.MessageReactionChange;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.conversation.adapter.EaseConversationListAdapter;
@@ -253,6 +254,10 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
         public void onMessageChanged(ChatMessage message, Object change) {
             refreshList();
         }
+
+        @Override
+        public void onReactionChanged(List<MessageReactionChange> list) {
+        }
     };
 
     private EaseChatRoomListener chatRoomListener = new EaseChatRoomListener() {
@@ -278,6 +283,11 @@ public class EaseConversationListFragment extends EaseBaseFragment implements On
     };
 
     private EaseMultiDeviceListener multiDeviceListener = new EaseMultiDeviceListener() {
+        @Override
+        public void onThreadEvent(int event, String target, List<String> usernames) {
+
+        }
+
         @Override
         protected void onContactAllow(String target, String ext) {
             refreshList();

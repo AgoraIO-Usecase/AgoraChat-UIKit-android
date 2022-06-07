@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- ids for long click of chat -->
+    <!--reply-->
+    <item name="action_chat_reply" type="id"/>
     <!--copy-->
     <item name="action_chat_copy" type="id"/>
     <!--delete-->
     <item name="action_chat_delete" type="id"/>
     <!--recall-->
     <item name="action_chat_recall" type="id"/>
+    <!--unsent-->
+    <item name="action_chat_unsent" type="id"/>
     <!--long click-->
     <item name="action_chat_long_click" type="id"/>
 

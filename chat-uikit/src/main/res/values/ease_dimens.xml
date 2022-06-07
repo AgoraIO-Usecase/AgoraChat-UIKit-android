@@ -3,6 +3,7 @@
     <dimen name="ease_toolbar_title_size">18sp</dimen>
     <dimen name="ease_toolbar_title_right_size">16sp</dimen>
     <dimen name="ease_common_title_bar_height">44dp</dimen>
+    <dimen name="ease_toolbar_sub_title_size">12sp</dimen>
 
     <dimen name="ease_margin_chat_activity">10dp</dimen>
     <dimen name="ease_chat_avatar_margin">15dp</dimen>
@@ -32,4 +33,18 @@
     <dimen name="ease_chat_text_min_height">22dp</dimen>
     <dimen name="ease_chat_avatar_size">28dp</dimen>
     <dimen name="ease_size_normal">14sp</dimen>
+
+    <dimen name="ease_chat_thread_region_icon_margin_left">2dp</dimen>
+    <dimen name="ease_chat_thread_region_icon_size">20dp</dimen>
+    <dimen name="ease_chat_thread_region_go_icon_size">16dp</dimen>
+    <dimen name="ease_chat_thread_region_avatar_size">14dp</dimen>
+    <dimen name="ease_chat_thread_region_name_text_size">14sp</dimen>
+    <dimen name="ease_chat_thread_region_msg_count_text_size">14sp</dimen>
+    <dimen name="ease_chat_thread_region_sender_text_size">12sp</dimen>
+    <dimen name="ease_chat_thread_region_msg_text_size">12sp</dimen>
+    <dimen name="ease_chat_thread_region_time_text_size">12sp</dimen>
+
+    <dimen name="ease_no_parent_message_text_size">16sp</dimen>
+
+    <dimen name="ease_chat_bubble_margin_12">12dp</dimen>
 </resources>
