@@ -13,6 +13,7 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThreadEvent;
 import io.agora.chat.Conversation;
 import io.agora.chat.GroupReadAck;
+import io.agora.chat.MessageReactionChange;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
@@ -170,5 +171,9 @@ public class EaseChatPresenter implements MessageListener, ChatThreadChangeListe
         msg.addBody(new TextMessageBody(builder.toString()));
         msg.setStatus(ChatMessage.Status.SUCCESS);
         ChatClient.getInstance().chatManager().saveMessage(msg);
+    }
+
+    @Override
+    public void onReactionChanged(List<MessageReactionChange> list) {
     }
 }
