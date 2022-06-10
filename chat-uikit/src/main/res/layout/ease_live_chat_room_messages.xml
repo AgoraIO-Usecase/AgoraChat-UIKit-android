@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/unread_message_view"
-        android:layout_marginStart="15dp"
         android:layout_marginBottom="5dp" />
 
     <TextView
@@ -23,25 +22,29 @@
         android:layout_marginStart="15dp"
         android:background="@drawable/ease_live_unread_message_bg"
         android:drawableEnd="@drawable/ease_live_unread_message_icon"
-        android:padding="5dp"
+        android:drawablePadding="4dp"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="7dp"
+        android:paddingBottom="5dp"
         android:textColor="@color/white"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:visibility="invisible" />
 
     <TextView
         android:id="@+id/message_input_tip"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/bottom_view"
-        android:layout_marginStart="15dp"
+        android:layout_height="32dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/ease_live_message_input_tip_bg_shape"
         android:gravity="center_vertical"
-        android:minHeight="30dp"
-        android:paddingStart="9dp"
-        android:paddingEnd="9dp"
-        android:textColor="#99FFFFFF"
-        android:textSize="15sp" />
+        android:paddingStart="13dp"
+        android:paddingEnd="13dp"
+        android:textColor="#BDFFFFFF"
+        android:textSize="14sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/message_input_layout"
@@ -64,21 +67,16 @@
             android:inputType="text"
             android:maxLines="3"
             android:minHeight="35dp"
-            android:paddingStart="9dp"
-            android:paddingEnd="9dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
             android:textColor="#323232"
             android:textColorHint="#999999"
+            android:textCursorDrawable="@drawable/ease_live_input_cursor_bg"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <View
-        android:id="@+id/bottom_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

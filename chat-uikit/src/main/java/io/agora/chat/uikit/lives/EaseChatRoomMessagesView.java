@@ -98,7 +98,6 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
         mMessageListView = findViewById(R.id.room_message_list);
         mMessageInputEt = findViewById(R.id.message_input_et);
         mMessageInputLayout = findViewById(R.id.message_input_layout);
-        View bottomView = findViewById(R.id.bottom_view);
         mViewLayout = findViewById(R.id.view_layout);
         mMessageInputTip = findViewById(R.id.message_input_tip);
         mUnreadMessageView = findViewById(R.id.unread_message_view);
@@ -217,6 +216,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
 
         RelativeLayout.LayoutParams tipParams = (RelativeLayout.LayoutParams) mMessageInputTip.getLayoutParams();
         tipParams.setMarginEnd((int) mMessageStyleHelper.getInputEditMarginEnd());
+        tipParams.bottomMargin = (int) mMessageStyleHelper.getInputEditMarginBottom();
         mMessageInputTip.setLayoutParams(tipParams);
         mMessageInputTip.setOnClickListener(new OnClickListener() {
             @Override
@@ -264,7 +264,7 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
                     Rect r = new Rect();
                     mMessageInputEt.getWindowVisibleDisplayFrame(r);
                     int height = mMessageInputEt.getContext().getResources().getDisplayMetrics().heightPixels;
-                    if (r.bottom != height) {
+                    if (height - r.bottom > 100) {
                         mShowKeyboard = true;
                     } else {
                         if (mShowKeyboard) {
@@ -275,15 +275,6 @@ public class EaseChatRoomMessagesView extends RelativeLayout implements MessageL
 
             }
         });
-
-        int navigationBarHeight = getNavigationBarHeight(mContext);
-        if (0 == navigationBarHeight) {
-            navigationBarHeight = getNavBarHeight(mContext);
-        }
-        navigationBarHeight += (int) mMessageStyleHelper.getInputEditMarginBottom();
-        RelativeLayout.LayoutParams bottomViewParams = (RelativeLayout.LayoutParams) bottomView.getLayoutParams();
-        bottomViewParams.height = navigationBarHeight;
-        bottomView.setLayoutParams(bottomViewParams);
     }
 
     /**
