@@ -6,7 +6,7 @@ public interface EaseEmojiconMenuListener{
          * on emojicon clicked
          * @param emojicon
          */
-        void onExpressionClicked(Object emojicon);
+        default void onExpressionClicked(Object emojicon){}
         /**
          * on delete image clicked
          */
@@ -16,4 +16,6 @@ public interface EaseEmojiconMenuListener{
          * On send icon clicked
          */
         default void onSendIconClicked() {}
+
+        default void onTabBarItemClick(int index){}
 }

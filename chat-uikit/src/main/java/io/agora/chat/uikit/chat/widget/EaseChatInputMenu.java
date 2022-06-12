@@ -41,6 +41,8 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
     private IChatEmojiconMenu emojiconMenu;
     private IChatExtendMenu extendMenu;
     private ChatInputMenuListener menuListener;
+    private onTabChangedListener tabListener;
+    private onMenuStatusListener statusListener;
 
     public EaseChatInputMenu(Context context) {
         this(context, null);
@@ -97,14 +99,20 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
     public void hideExtendContainer() {
         primaryMenu.showNormalStatus();
         extendMenuContainer.setVisibility(GONE);
+
     }
 
     @Override
     public void showEmojiconMenu(boolean show) {
         if(show) {
+            emojiconMenu.showBottomLayout();
             showEmojiconMenu();
+            emojiconMenu.reSetSelected();
         }else {
-           extendMenuContainer.setVisibility(GONE);
+            extendMenuContainer.setVisibility(GONE);
+            emojiconMenu.hideBottomLayout();
+            if (statusListener != null)
+            statusListener.onEmojiconMenuChanged(false);
         }
     }
 
@@ -112,11 +120,16 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
     public void showExtendMenu(boolean show) {
         if(show) {
             showExtendMenu();
+            emojiconMenu.showBottomLayout();
+            if (statusListener != null){
+                statusListener.onExtendMenuChanged(true);
+            }
         }else {
             extendMenuContainer.setVisibility(GONE);
             if(primaryMenu != null) {
                 primaryMenu.hideExtendStatus();
             }
+
         }
     }
 
@@ -131,6 +144,23 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
     public void setChatInputMenuListener(ChatInputMenuListener listener) {
         this.menuListener = listener;
     }
+
+    public void setTabChangedListener(onTabChangedListener listener){
+        this.tabListener = listener;
+    }
+
+   public interface onTabChangedListener {
+        void onTabChanged(int index);
+   }
+
+   public void setMenuStatus(onMenuStatusListener menuStatus){
+       this.statusListener = menuStatus;
+   }
+
+   public interface onMenuStatusListener {
+       void onEmojiconMenuChanged(boolean isShow);
+       void onExtendMenuChanged(boolean isShow);
+   }
 
     @Override
     public IChatPrimaryMenu getPrimaryMenu() {
@@ -181,6 +211,7 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
             extendMenuContainer.setVisibility(VISIBLE);
             extendMenuContainer.removeAllViews();
             extendMenuContainer.addView((View) extendMenu);
+            emojiconMenu.showBottomLayout();
             extendMenu.setEaseChatExtendMenuItemClickListener(this);
         }
         if(extendMenu instanceof Dialog) {
@@ -206,6 +237,7 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
         }
         if(extendMenu instanceof Fragment && getContext() instanceof AppCompatActivity) {
             extendMenuContainer.setVisibility(VISIBLE);
+            emojiconMenu.showBottomLayout();
             FragmentManager manager = ((AppCompatActivity) getContext()).getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.extend_menu_container, (Fragment) extendMenu).commitAllowingStateLoss();
             extendMenu.setEaseChatExtendMenuItemClickListener(this);
@@ -219,12 +251,14 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
         }
         if(emojiconMenu instanceof View) {
             extendMenuContainer.setVisibility(VISIBLE);
+            emojiconMenu.showBottomLayout();
             extendMenuContainer.removeAllViews();
             extendMenuContainer.addView((View) emojiconMenu);
             emojiconMenu.setEmojiconMenuListener(this);
         }
         if(emojiconMenu instanceof Fragment && getContext() instanceof AppCompatActivity) {
             extendMenuContainer.setVisibility(VISIBLE);
+            emojiconMenu.showBottomLayout();
             FragmentManager manager = ((AppCompatActivity) getContext()).getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.extend_menu_container, (Fragment) emojiconMenu).commitAllowingStateLoss();
             emojiconMenu.setEmojiconMenuListener(this);
@@ -337,6 +371,11 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
         if(menuListener != null) {
             menuListener.onChatExtendMenuItemClick(itemId, view);
         }
+    }
+
+    @Override
+    public void onTabBarItemClick(int index) {
+        tabListener.onTabChanged(index);
     }
 }
 

@@ -22,6 +22,7 @@ public class EaseEmojiconScrollTabBar extends RelativeLayout{
     private Context context;
     private HorizontalScrollView scrollView;
     private LinearLayout tabContainer;
+    private LinearLayout tabLayout;
     
     private List<ImageView> tabList = new ArrayList<ImageView>();
     private EaseScrollTabBarItemClickListener itemClickListener;
@@ -45,6 +46,11 @@ public class EaseEmojiconScrollTabBar extends RelativeLayout{
         
         scrollView = (HorizontalScrollView) findViewById(R.id.scroll_view);
         tabContainer = (LinearLayout) findViewById(R.id.tab_container);
+        tabLayout = (LinearLayout) findViewById(R.id.tab_container_layout);
+    }
+
+    public void reset(){
+        selectedTo(0);
     }
     
     /**
@@ -53,20 +59,38 @@ public class EaseEmojiconScrollTabBar extends RelativeLayout{
      */
     public void addTab(int icon){
         View tabView = View.inflate(context, R.layout.ease_scroll_tab_item, null);
+
         ImageView imageView = (ImageView) tabView.findViewById(R.id.iv_icon);
+        LinearLayout.LayoutParams tabParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        tabParams.weight = 1;
+        tabView.setLayoutParams(tabParams);
+
         imageView.setImageResource(icon);
-        int tabWidth = 60;
+        int tabWidth = 0;
         LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, tabWidth), LayoutParams.MATCH_PARENT);
+        imgParams.weight = 1;
         imageView.setLayoutParams(imgParams);
-        tabContainer.addView(tabView);
+
         tabList.add(imageView);
+        tabContainer.addView(tabView);
+
+        if (tabList.size() == 1){
+            tabContainer.setVisibility(GONE);
+            tabLayout.setVisibility(GONE);
+        }else {
+            tabContainer.setVisibility(VISIBLE);
+            tabLayout.setVisibility(VISIBLE);
+        }
+
+
         final int position = tabList.size() -1;
         imageView.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 if(itemClickListener != null){
                     itemClickListener.onItemClick(position);
+                    selectedTo(position);
                 }
             }
         });
@@ -85,9 +109,11 @@ public class EaseEmojiconScrollTabBar extends RelativeLayout{
         scrollTo(position);
         for (int i = 0; i < tabList.size(); i++) {
             if (position == i) {
-                tabList.get(i).setBackgroundColor(getResources().getColor(R.color.ease_emojicon_tab_selected));
+                tabList.get(i).setBackground(getResources().getDrawable(R.drawable.shape_emoji_bg));
+                tabList.get(i).setSelected(true);
             } else {
                 tabList.get(i).setBackgroundColor(getResources().getColor(R.color.ease_emojicon_tab_nomal));
+                tabList.get(i).setSelected(false);
             }
         }
     }

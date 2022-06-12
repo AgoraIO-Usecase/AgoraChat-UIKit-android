@@ -338,6 +338,8 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         this.messageAdapter = adapter;
     }
 
+
+
     @Override
     public boolean onBubbleClick(ChatMessage message) {
         if(chatItemClickListener != null) {
@@ -382,6 +384,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             return chatItemClickListener.onThreadLongClick(v, messageId, threadId);
         }
         return false;
+    }
+
+    @Override
+    public void onTouchItemOutside() {
+
+    }
+
+    @Override
+    public void onViewDragging() {
+
     }
 
     @Override

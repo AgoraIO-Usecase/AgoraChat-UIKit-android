@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.chat.presenter;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 
 import java.util.Iterator;
@@ -152,6 +153,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     public void onError(int error, String errorMsg) {
                         runOnUI(() -> {
                             if(isActive()) {
+                                Log.e("loadServerMessages","onError");
                                 mView.loadMsgFail(error, errorMsg);
                                 loadLocalMessages(pageSize);
                             }
@@ -226,6 +228,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     public void onError(int error, String errorMsg) {
                         runOnUI(() -> {
                             if(isActive()) {
+                                Log.e("loadMoreServerMessages","onError");
                                 mView.loadMsgFail(error, errorMsg);
                                 loadMoreLocalMessages(msgId, pageSize);
                             }

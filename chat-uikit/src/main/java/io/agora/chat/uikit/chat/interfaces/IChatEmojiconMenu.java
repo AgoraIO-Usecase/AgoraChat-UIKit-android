@@ -36,4 +36,12 @@ public interface IChatEmojiconMenu {
      * @param listener
      */
     void setEmojiconMenuListener(EaseEmojiconMenuListener listener);
+
+    void addTabItem(int icon);
+
+    void reSetSelected();
+
+    void hideBottomLayout();
+
+    void showBottomLayout();
 }

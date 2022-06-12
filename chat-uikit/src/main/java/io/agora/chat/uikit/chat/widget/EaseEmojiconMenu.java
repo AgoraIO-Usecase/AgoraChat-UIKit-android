@@ -35,6 +35,7 @@ public class EaseEmojiconMenu extends LinearLayout implements IChatEmojiconMenu 
     private EaseEmojiconMenuListener listener;
     private static final int defaultColumns = 7;
     private static final int defaultBigColumns = 4;
+    private LinearLayout bottomLayout;
 
     public EaseEmojiconMenu(Context context) {
         this(context, null);
@@ -50,7 +51,7 @@ public class EaseEmojiconMenu extends LinearLayout implements IChatEmojiconMenu 
         pagerView = (EaseEmojiconPagerView) findViewById(R.id.pager_view);
         indicatorView = (EaseEmojiconIndicatorView) findViewById(R.id.indicator_view);
         tabBar = (EaseEmojiconScrollTabBar) findViewById(R.id.tab_bar);
-
+        bottomLayout = (LinearLayout)findViewById(R.id.bottom_layout);
         initAttrs(context, attrs);
     }
 
@@ -68,7 +69,7 @@ public class EaseEmojiconMenu extends LinearLayout implements IChatEmojiconMenu 
     public void init(List<EaseEmojiconGroupEntity> groupEntities){
         if(groupEntities == null || groupEntities.size() == 0){
             groupEntities = new ArrayList<>();
-            groupEntities.add(new EaseEmojiconGroupEntity(R.drawable.ee_1,  Arrays.asList(EaseDefaultEmojiconDatas.getData())));
+            groupEntities.add(new EaseEmojiconGroupEntity(R.drawable.ease_emoji_selector,  Arrays.asList(EaseDefaultEmojiconDatas.getData())));
         }
         for(EaseEmojiconGroupEntity groupEntity : groupEntities){
             emojiconGroupList.add(groupEntity);
@@ -83,8 +84,21 @@ public class EaseEmojiconMenu extends LinearLayout implements IChatEmojiconMenu 
             @Override
             public void onItemClick(int position) {
                 pagerView.setGroupPostion(position);
+                if (listener != null){
+                    listener.onTabBarItemClick(position);
+                }
             }
         });
+    }
+
+    @Override
+    public void hideBottomLayout() {
+        bottomLayout.setVisibility(GONE);
+    }
+
+    @Override
+    public void showBottomLayout() {
+        bottomLayout.setVisibility(VISIBLE);
     }
 
     /**
@@ -110,6 +124,21 @@ public class EaseEmojiconMenu extends LinearLayout implements IChatEmojiconMenu 
         }
 
     }
+
+    /**
+     * reset tabItem
+     */
+    public void reSetSelected(){
+        tabBar.selectedTo(0);
+    }
+    /**
+     * add tabItem
+     * @param icon
+     */
+    public void addTabItem(int icon){
+        tabBar.addTab(icon);
+    }
+
 
     /**
      * remove emojicon group
