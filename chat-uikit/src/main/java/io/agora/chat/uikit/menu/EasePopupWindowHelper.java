@@ -263,7 +263,8 @@ public class EasePopupWindowHelper {
 
         ViewGroup.LayoutParams params = mPopupView.getLayoutParams();
         params.width = (int) EaseUtils.getScreenInfo(context)[0];
-        params.height = 800;
+        float[] screenInfo = EaseUtils.getScreenInfo(context);
+        params.height = (int) (screenInfo[1]/3);
 
         mPopupView.post(()->{
             pRealHeight = mPopupView.getMeasuredHeight();

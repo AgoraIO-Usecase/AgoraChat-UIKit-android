@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import io.agora.util.EMLog;
 import io.agora.util.TimeInfo;
 
 public class EaseDateUtils {
@@ -76,14 +77,13 @@ public class EaseDateUtils {
 	}
 
 	private static boolean isWithinThisWeek(Date date){
-		//先把Date类型的对象转换Calendar类型的对象
 		Calendar todayCal = Calendar.getInstance();
 		Calendar dateCal = Calendar.getInstance();
 
 		todayCal.setTime(new Date());
 		dateCal.setTime(date);
 
-		//比较当前日期在年份中的周数是否相同
+		//Compare whether the current date has the same number of weeks in the year
 		if (todayCal.get(Calendar.WEEK_OF_YEAR) == dateCal.get(Calendar.WEEK_OF_YEAR)) {
 			return true;
 		} else {
@@ -102,7 +102,7 @@ public class EaseDateUtils {
 		switch (calendar.get(Calendar.DAY_OF_WEEK)) {
 
 			case Calendar.SUNDAY:
-				Log.i("EaseDateUtils", "今天是周日");
+				EMLog.d("EaseDateUtils", "Today is Sunday");
 				if(isZh){
 					week = "星期日 ";
 				}else {
@@ -110,7 +110,7 @@ public class EaseDateUtils {
 				}
 				break;
 			case Calendar.MONDAY:
-				Log.i("EaseDateUtils", "今天是周一");
+				EMLog.d("EaseDateUtils", "Today is Monday");
 				if(isZh){
 					week = "星期一 ";
 				}else {
@@ -118,7 +118,7 @@ public class EaseDateUtils {
 				}
 				break;
 			case Calendar.TUESDAY:
-				Log.i("EaseDateUtils", "今天是周二");
+				EMLog.d("EaseDateUtils", "Today is Tuesday");
 				if(isZh){
 					week = "星期二 ";
 				}else {
@@ -126,7 +126,7 @@ public class EaseDateUtils {
 				}
 				break;
 			case Calendar.WEDNESDAY:
-				Log.i("EaseDateUtils", "今天是周三");
+				EMLog.d("EaseDateUtils", "Today is Wednesday");
 				if(isZh){
 					week = "星期三 ";
 				}else {
@@ -134,7 +134,7 @@ public class EaseDateUtils {
 				}
 				break;
 			case Calendar.THURSDAY:
-				Log.i("EaseDateUtils", "今天是周四");
+				EMLog.d("EaseDateUtils", "Today is Thursday");
 				if(isZh){
 					week = "星期四";
 				}else {
@@ -142,7 +142,7 @@ public class EaseDateUtils {
 				}
 				break;
 			case Calendar.FRIDAY:
-				Log.i("EaseDateUtils", "今天是周五");
+				EMLog.d("EaseDateUtils", "Today is Friday");
 				if(isZh){
 					week = "星期五 ";
 				}else {
@@ -150,7 +150,7 @@ public class EaseDateUtils {
 				}
 				break;
 			case Calendar.SATURDAY:
-				Log.i("EaseDateUtils", "今天是周六");
+				EMLog.d("EaseDateUtils", "Today is Saturday");
 				if(isZh){
 					week = "星期六 ";
 				}else {
@@ -188,8 +188,8 @@ public class EaseDateUtils {
 		long days = diff / (1000 * 60 * 60 * 24);
 		long hours = (diff-days*(1000 * 60 * 60 * 24))/(1000* 60 * 60);
 		long minutes = (diff-days*(1000 * 60 * 60 * 24)-hours*(1000* 60 * 60))/(1000* 60);
-		long second = (diff/1000-days * 24* 60 * 60 -hours * 60 * 60-minutes * 60);//秒
-		Log.e("getPresenceTime", " "+days+"天"+hours+"小时"+minutes+"分"+second+"秒");
+		long second = (diff/1000-days * 24* 60 * 60 -hours * 60 * 60-minutes * 60);
+
 		if (days > 0 ){
 			return isZh? days + "天前" : days + "day ago";
 		}

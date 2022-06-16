@@ -132,7 +132,7 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
                 toChatUsername = value.getChatThreadId();
                 if(isActive()) {
                     runOnUI(()->mView.onCreateThreadSuccess(value, message));
-                    EMLog.e("createChatThread","onSuccess");
+                    EMLog.d("createChatThread","onSuccess");
                 }
             }
 
