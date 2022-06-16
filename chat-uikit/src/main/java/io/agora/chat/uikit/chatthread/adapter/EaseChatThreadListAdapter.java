@@ -56,7 +56,7 @@ public class EaseChatThreadListAdapter extends EaseBaseRecyclerViewAdapter<ChatT
                 message = conversation.getLastMessage();
             }
 
-            if(message != null && message.isThread()) {
+            if(message != null && message.isChatThreadMessage()) {
                 binding.groupUser.setVisibility(View.VISIBLE);
                 binding.tvNoMsg.setVisibility(View.GONE);
                 EaseUser userInfo = EaseUserUtils.getUserInfo(message.getFrom());

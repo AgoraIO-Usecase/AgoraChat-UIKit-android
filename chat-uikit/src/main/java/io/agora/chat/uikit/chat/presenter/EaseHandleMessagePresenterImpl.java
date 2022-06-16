@@ -132,7 +132,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             message.setChatType(ChatMessage.ChatType.ChatRoom);
         }
         // Should add thread label if it is a thread conversation
-        message.setIsThread(isThread);
+        message.setIsChatThreadMessage(isThread);
         message.setMessageStatusCallback(new CallBack() {
             @Override
             public void onSuccess() {
@@ -202,7 +202,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             msgNotification.setLocalTime(message.getMsgTime());
             msgNotification.setAttribute(EaseConstant.MESSAGE_TYPE_RECALL, true);
             msgNotification.setStatus(ChatMessage.Status.SUCCESS);
-            msgNotification.setIsThread(message.isThread());
+            msgNotification.setIsChatThreadMessage(message.isChatThreadMessage());
             ChatClient.getInstance().chatManager().recallMessage(message);
             ChatClient.getInstance().chatManager().saveMessage(msgNotification);
             if(isActive()) {

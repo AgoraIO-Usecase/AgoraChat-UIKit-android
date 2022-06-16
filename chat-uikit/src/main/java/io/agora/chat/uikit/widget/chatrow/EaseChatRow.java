@@ -24,7 +24,7 @@ import java.util.Date;
 import io.agora.CallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
-import io.agora.chat.ChatThreadInfo;
+import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.adapter.EaseBaseAdapter;
@@ -299,7 +299,7 @@ public abstract class EaseChatRow extends LinearLayout {
     public void setThreadRegion() {
         if(shouldShowThreadRegion()) {
             threadRegion.setVisibility(VISIBLE);
-            threadRegion.setThreadInfo(message.getThreadOverview());
+            threadRegion.setThreadInfo(message.getChatThread());
         }else {
             threadRegion.setVisibility(GONE);
         }
@@ -310,7 +310,7 @@ public abstract class EaseChatRow extends LinearLayout {
      * @return
      */
     public boolean shouldShowThreadRegion() {
-        return message != null && message.getThreadOverview() != null;
+        return message != null && message.getChatThread() != null;
     }
 
     /**
@@ -590,7 +590,7 @@ public abstract class EaseChatRow extends LinearLayout {
         }
         if(threadRegion != null) {
             threadRegion.setOnClickListener(v -> {
-                ChatThreadInfo info = message.getThreadOverview();
+                ChatThread info = message.getChatThread();
                 if(info != null && !TextUtils.isEmpty(info.getChatThreadId())) {
                     if (itemClickListener != null && itemClickListener.onThreadClick(message.getMsgId(), info.getChatThreadId())){
                         return;
@@ -601,7 +601,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 }
             });
             threadRegion.setOnLongClickListener(v -> {
-                ChatThreadInfo info = message.getThreadOverview();
+                ChatThread info = message.getChatThread();
                 if(info != null && !TextUtils.isEmpty(info.getChatThreadId())) {
                     if (itemClickListener != null) {
                         return itemClickListener.onThreadLongClick(v, message.getMsgId(), info.getChatThreadId());

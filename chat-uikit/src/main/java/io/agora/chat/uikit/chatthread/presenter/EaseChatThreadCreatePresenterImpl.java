@@ -162,7 +162,7 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
             message.setChatType(ChatMessage.ChatType.ChatRoom);
         }
         // Add thread label for message
-        message.setIsThread(true);
+        message.setIsChatThreadMessage(true);
         message.setMessageStatusCallback(new CallBack() {
             @Override
             public void onSuccess() {
