@@ -132,6 +132,7 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
                 toChatUsername = value.getChatThreadId();
                 if(isActive()) {
                     runOnUI(()->mView.onCreateThreadSuccess(value, message));
+                    EMLog.d("createChatThread","onSuccess");
                 }
             }
 
@@ -139,6 +140,7 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
             public void onError(int error, String errorMsg) {
                 if(isActive()) {
                     runOnUI(()->mView.onCreateThreadFail(error, errorMsg));
+                    EMLog.e("createChatThread","onError: " + error + "  " + errorMsg);
                 }
             }
         });
