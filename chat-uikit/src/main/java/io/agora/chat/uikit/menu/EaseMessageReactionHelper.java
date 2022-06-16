@@ -80,7 +80,6 @@ public class EaseMessageReactionHelper {
 
     private LoadMoreStatus mLoadMoreStatus;
 
-
     public EaseMessageReactionHelper() {
         if (mPopupWindow != null) {
             mPopupWindow.dismiss();
@@ -129,6 +128,7 @@ public class EaseMessageReactionHelper {
                 mReactionAdapter.setCurrentEntity(mCurrentEaseReactionEntity);
                 mCurrentEaseReactionBegin = "0";
                 mCurrentEaseReactionEntity.getUserList().clear();
+                mUserAdapter.setData(mCurrentEaseReactionEntity.getUserList());
                 asyncReactionUserList();
             }
         });
@@ -286,6 +286,7 @@ public class EaseMessageReactionHelper {
         if (TextUtils.isEmpty(mMsgId) || TextUtils.isEmpty(mCurrentEaseReactionEntity.getEmojicon().getIdentityCode())) {
             return;
         }
+
         ChatClient.getInstance().chatManager().asyncGetReactionDetail(mMsgId, mCurrentEaseReactionEntity.getEmojicon().getIdentityCode(),
                 mCurrentEaseReactionBegin, USER_LIST_PAGE_SIZE, new ValueCallBack<CursorResult<MessageReaction>>() {
                     @Override
@@ -295,9 +296,11 @@ public class EaseMessageReactionHelper {
                             public void run() {
                                 if (null != messageReactionCursorResult && null != mCurrentEaseReactionEntity) {
                                     try {
-                                        mCurrentEaseReactionBegin = messageReactionCursorResult.getCursor();
                                         List<String> userList = mCurrentEaseReactionEntity.getUserList();
-                                        if (null != messageReactionCursorResult.getData() && messageReactionCursorResult.getData().size() >= 1) {
+                                        if (null != messageReactionCursorResult.getData() && messageReactionCursorResult.getData().size() >= 1 &&
+                                                mCurrentEaseReactionEntity.getEmojicon().getIdentityCode().equals(messageReactionCursorResult.getData().get(0).getReaction())) {
+                                            mCurrentEaseReactionBegin = messageReactionCursorResult.getCursor();
+                                            userList.removeAll(messageReactionCursorResult.getData().get(0).getUserList());
                                             userList.addAll(messageReactionCursorResult.getData().get(0).getUserList());
                                             if (!TextUtils.isEmpty(mCurrentEaseReactionBegin) && mCurrentEaseReactionEntity.getCount() > userList.size()) {
                                                 mLoadMoreStatus = LoadMoreStatus.HAS_MORE;
@@ -524,7 +527,5 @@ public class EaseMessageReactionHelper {
     public interface ReactionItemDelete {
         void onReactionDelete();
     }
-
-
 }
 
