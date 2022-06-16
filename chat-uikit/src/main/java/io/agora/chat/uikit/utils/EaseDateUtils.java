@@ -2,6 +2,7 @@ package io.agora.chat.uikit.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import io.agora.util.EMLog;
 import io.agora.util.TimeInfo;
 
 public class EaseDateUtils {
@@ -47,7 +49,11 @@ public class EaseDateUtils {
 					return "Yesterday " + new SimpleDateFormat("hh:mm aa",Locale.ENGLISH).format(messageDate);
 				}
             }
-        } else {
+        }
+        else if (isWithinThisWeek(messageDate)){
+			return printDayOfWeek(context,isZh,messageDate);
+		}
+        else {
             if(isZh){
             	if(is24HourFormat(context)) {
 					format = "M月d日 HH:mm";
@@ -69,6 +75,136 @@ public class EaseDateUtils {
             return new SimpleDateFormat(format,Locale.ENGLISH).format(messageDate);
         }
 	}
+
+	private static boolean isWithinThisWeek(Date date){
+		Calendar todayCal = Calendar.getInstance();
+		Calendar dateCal = Calendar.getInstance();
+
+		todayCal.setTime(new Date());
+		dateCal.setTime(date);
+
+		//Compare whether the current date has the same number of weeks in the year
+		if (todayCal.get(Calendar.WEEK_OF_YEAR) == dateCal.get(Calendar.WEEK_OF_YEAR)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private static String printDayOfWeek(Context context ,boolean isZh,Date messageDate) {
+		String format = "";
+		String week = "";
+		long messageTime = messageDate.getTime();
+		Date date = new Date(messageTime);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		format = check24Hour(context,isZh);
+		switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+
+			case Calendar.SUNDAY:
+				EMLog.d("EaseDateUtils", "Today is Sunday");
+				if(isZh){
+					week = "星期日 ";
+				}else {
+					week = "Sun ";
+				}
+				break;
+			case Calendar.MONDAY:
+				EMLog.d("EaseDateUtils", "Today is Monday");
+				if(isZh){
+					week = "星期一 ";
+				}else {
+					week = "Mon ";
+				}
+				break;
+			case Calendar.TUESDAY:
+				EMLog.d("EaseDateUtils", "Today is Tuesday");
+				if(isZh){
+					week = "星期二 ";
+				}else {
+					week = "Tue ";
+				}
+				break;
+			case Calendar.WEDNESDAY:
+				EMLog.d("EaseDateUtils", "Today is Wednesday");
+				if(isZh){
+					week = "星期三 ";
+				}else {
+					week = "Wed ";
+				}
+				break;
+			case Calendar.THURSDAY:
+				EMLog.d("EaseDateUtils", "Today is Thursday");
+				if(isZh){
+					week = "星期四";
+				}else {
+					week = "Thu ";
+				}
+				break;
+			case Calendar.FRIDAY:
+				EMLog.d("EaseDateUtils", "Today is Friday");
+				if(isZh){
+					week = "星期五 ";
+				}else {
+					week = "Fri ";
+				}
+				break;
+			case Calendar.SATURDAY:
+				EMLog.d("EaseDateUtils", "Today is Saturday");
+				if(isZh){
+					week = "星期六 ";
+				}else {
+					week = "Sat";
+				}
+				break;
+			default:
+
+				break;
+		}
+		return week + new SimpleDateFormat(format,isZh? Locale.CHINESE : Locale.ENGLISH).format(messageDate);
+	}
+
+	private static String check24Hour(Context context,boolean isZh){
+		String format = "";
+		if(is24HourFormat(context)) {
+			format = "HH:mm";
+		}else {
+			if(isZh) {
+				format = "aa hh:mm";
+			} else {
+				format = "hh:mm aa";
+			}
+		}
+		return format;
+	}
+
+	public static String getPresenceTimestampString(long time){
+		String language = Locale.getDefault().getLanguage();
+		boolean isZh = language.startsWith("zh");
+		Date date1 = new Date(time*1000);
+		Date date2 = new Date(System.currentTimeMillis());
+
+		long diff = date2.getTime() - date1.getTime();
+		long days = diff / (1000 * 60 * 60 * 24);
+		long hours = (diff-days*(1000 * 60 * 60 * 24))/(1000* 60 * 60);
+		long minutes = (diff-days*(1000 * 60 * 60 * 24)-hours*(1000* 60 * 60))/(1000* 60);
+		long second = (diff/1000-days * 24* 60 * 60 -hours * 60 * 60-minutes * 60);
+
+		if (days > 0 ){
+			return isZh? days + "天前" : days + "day ago";
+		}
+		if (hours > 0 ){
+			return isZh? hours + "小时前" : hours + "h ago";
+		}
+		if (minutes > 0){
+			return isZh? minutes + "分前" : minutes + "m ago";
+		}
+//		if (second > 0){
+//			return isZh? second + "秒前" : second + "s ago";
+//		}
+		return "";
+	}
+
 
 	public static boolean isCloseEnough(long time1, long time2) {
 		// long time1 = date1.getTime();

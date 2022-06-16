@@ -39,7 +39,7 @@ import io.agora.chat.uikit.utils.EaseUtils;
 public class EasePopupWindowHelper {
     private static final int SPAN_COUNT = 5;
     private static float screenBgAlpha = 0.3f;
-    private static float popupWindowBgAlpha = 0.8f;
+    private static float popupWindowBgAlpha = 0.95f;
     private EasePopupWindow pMenu;
     private List<MenuItemBean> menuItems = new ArrayList<>();
     private Map<Integer, MenuItemBean> menuItemMap = new HashMap<>();
@@ -263,7 +263,8 @@ public class EasePopupWindowHelper {
 
         ViewGroup.LayoutParams params = mPopupView.getLayoutParams();
         params.width = (int) EaseUtils.getScreenInfo(context)[0];
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        float[] screenInfo = EaseUtils.getScreenInfo(context);
+        params.height = (int) (screenInfo[1]/3);
 
         mPopupView.post(()->{
             pRealHeight = mPopupView.getMeasuredHeight();
