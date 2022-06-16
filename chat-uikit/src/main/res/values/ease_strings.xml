@@ -21,8 +21,8 @@
     <string name="ease_action_unsent">Unsent</string>
 
     <string name="ease_conversation_menu_make_read">Make read</string>
-    <string name="ease_conversation_menu_make_top">Make top</string>
-    <string name="ease_conversation_menu_cancel_top">Cancel top</string>
+    <string name="ease_conversation_menu_make_top">Sticky on Top</string>
+    <string name="ease_conversation_menu_cancel_top">Unsticky</string>
     <string name="ease_conversation_menu_delete">Delete</string>
 
     <string name="ease_conversation_delete_item_fail">Delete failed!</string>
