@@ -70,6 +70,20 @@ public class EaseSmileUtils {
 	public static final String ee_33 = "[(F)]";
 	public static final String ee_34 = "[(W)]";
 	public static final String ee_35 = "[(D)]";
+	public static final String ee_36 = "[(E)]";
+	public static final String ee_37 = "[(T)]";
+	public static final String ee_38 = "[(G)]";
+	public static final String ee_39 = "[(Y)]";
+	public static final String ee_40 = "[(I)]";
+	public static final String ee_41 = "[(J)]";
+	public static final String ee_42 = "[(K)]";
+	public static final String ee_43 = "[(L)]";
+	public static final String ee_44 = "[(M)]";
+	public static final String ee_45 = "[(N)]";
+	public static final String ee_46 = "[(O)]";
+	public static final String ee_47 = "[(P)]";
+	public static final String ee_48 = "[(U)]";
+	public static final String ee_49 = "[(Z)]";
 	
 	private static final Factory spannableFactory = Factory
 	        .getInstance();
