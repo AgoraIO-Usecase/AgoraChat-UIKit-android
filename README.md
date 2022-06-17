@@ -825,3 +825,118 @@ EaseUIKit.getInstance().setFileIconProvider(new EaseFileIconProvider() {
     }
 });
 ```
+### 直播聊天室
+#### 聊天显示页面
+EaseChatRoomMessagesView为直播聊天室消息显示页面，支持发送文本消息，支持接收文本消息和成员加入的本地消息，开发者可以通过布局文件xml设置相关自定义属性。EaseChatRoomMessagesView提供的xml属性：
+
+| 属性值                                         | 说明                 |
+| ----------------------------------------------| -------------------- |
+| ease_live_input_edit_margin_bottom            | 消息输入提示框距离底部距离 |
+| ease_live_input_edit_margin_end               | 消息提示输入框距离结尾距离 |
+| ease_live_message_list_margin_end             | 消息列表距离结尾距离 |
+| ease_live_message_list_background             | 消息列表背景 |
+| ease_live_message_item_text_color             | 消息内容文字颜色 |
+| ease_live_message_item_text_size              | 消息内容文字大小 |
+| ease_live_message_item_bubbles_background     | 消息列表每条信息的背景 |
+| ease_live_message_nickname_text_color         | 昵称文字颜色 |
+| ease_live_message_nickname_text_size          | 昵称问题大小 |
+| ease_live_message_show_nickname               | 是否显示昵称，默认显示 |
+| ease_live_message_show_avatar                 | 是否显示头像，默认显示 |
+| ease_live_message_avatar_shape_type           | 头像圆角类型，默认圆角显示 |
+
+EaseChatRoomMessagesView提供的方法：
+
+| 方法                                           | 说明                 |
+| ----------------------------------------------| -------------------- |
+| init                                          | 初始化聊天室信息 |
+| updateChatRoomInfo                            | 更新聊天室信息 |
+| setVisibility                                 | 设置是否显示该页面 |
+| getVisibility                                 | 获取页面显示状态值 |
+| getInputView                                  | 获取发送消息输入框 |
+| getMessageListView                            | 获取消息列表 |
+| getInputTipView                               | 获取消息输入提示框 |
+| enableInputView                               | 是否使能消息输入框 |
+| setMessageViewListener                        | 设置View回调监听 |
+| setMessageStopRefresh                         | 设置消息列表是否停止刷新 |
+| refresh                                       | 刷新消息列表 |
+| setInputEditMarginBottom                      | 设置消息输入提示框距离底部距离 |
+| setInputEditMarginEnd                         | 设置消息输入提示框距离结尾距离 |
+| setMessageListMarginEnd                       | 设置消息列表距离尾部距离 |
+
+EaseChatRoomMessagesView.MessageViewListener回调监听提供方法：
+
+| 方法                                           | 说明                 |
+| ----------------------------------------------| -------------------- |
+| onSendTextMessageSuccess                      | 文本消息发送成功 |
+| onSendTextMessageError                        | 文本消息发送失败 |
+| onChatRoomMessageItemClickListener            | 消息列表item点击回调 |
+| onHiderBottomBar                              | 是否需要隐藏底部栏 |
+
+#### 聊天室消息发送和接收
+EaseLiveMessageHelper为直播聊天室消息管理工具类，主要提供聊天室消息发送、接收等实现。EaseLiveMessageHelper提供的方法：
+
+| 方法                                           | 说明                 |
+| ----------------------------------------------| -------------------- |
+| init                                          | 初始化聊天室信息 |
+| addLiveMessageListener                        | 增加聊天室消息监听 |
+| removeLiveMessageListener                     | 移除聊天室消息监听 |
+| sendTxtMsg                                    | 发送文本消息 |
+| sendGiftMsg                                   | 发送礼物消息 |
+| sendCustomMsg                                 | 发送定制消息 |
+| getMsgGiftId                                  | 获取礼物消息的礼物ID |
+| getMsgGiftNum                                 | 获取礼物消息的礼物数量 |
+| isGiftMsg                                     | 判断是否礼物消息 |
+| getCustomEvent                                | 获取定制消息事件 |
+| getCustomMsgParams                            | 获取定制消息参数 |
+| getCustomMsgType                              | 获取定制消息类型 |
+
+##### 在聊天室加载后，进行初始化，设置房间信息。
+
+```Java
+EaseLiveMessageHelper.getInstance().init(chatroomId);
+```
+
+##### 增加和移除聊天室消息监听
+
+```Java
+EaseLiveMessageHelper.getInstance().addLiveMessageListener(new OnLiveMessageListener() {
+    @Override
+    public void onGiftMessageReceived(ChatMessage message) {
+
+    }
+});
+EaseLiveMessageHelper.getInstance().removeLiveMessageListener(this);
+```
+
+##### 发送聊天室消息可以调用如下方法
+
+```Java
+public void sendTxtMsg(String content, OnSendLiveMessageCallBack callBack);                                                       //文本消息
+
+public void sendGiftMsg(String chatRoomId, String giftId, int num, OnSendLiveMessageCallBack callBack);                           //礼物消息
+
+public void sendCustomMsg(String chatRoomId, String event, Map<String, String> params, final OnSendLiveMessageCallBack callBack); //自定义消息
+```
+
+##### 解析消息相关参数
+
+（1）如果发送的自定义参数与UIKit中相同，可以直接调用如下方法，获得所传的数据
+
+```Java
+//获取礼物消息中礼物的id
+public String getMsgGiftId(ChatMessage msg);
+//获取礼物消息中礼物的数量
+public int getMsgGiftNum(ChatMessage msg);
+```
+
+（2）如果自定义消息参数与UIKit中不同，可以调用如下方法，获取消息中的 获取消息中的参数参数
+
+```Java
+public Map<String, String> getCustomMsgParams(ChatMessage message);
+```
+
+#####  判断自定义消息类型的方法
+
+```Java
+public boolean isGiftMsg(ChatMessage msg);    //礼物消息判断
+```
