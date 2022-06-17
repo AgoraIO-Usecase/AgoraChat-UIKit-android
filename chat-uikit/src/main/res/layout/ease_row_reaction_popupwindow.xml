@@ -3,16 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/reaction_layout"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent">
+    android:layout_height="28dp">
 
     <ImageView
         android:id="@+id/iv_emojicon"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginBottom="3dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="4dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -24,12 +22,13 @@
         android:id="@+id/tv_count"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="12dp"
+        android:gravity="center_vertical"
         android:textColor="@color/black"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginEnd="10dp" />
+        app:layout_goneMarginEnd="12dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

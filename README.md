@@ -48,7 +48,7 @@ dependencies {
 ```java
 implementation project(':uikit')
 ```
-// TODO 是否应该将 防止代码混淆 、 权限 以及一些 AndroidManifest.xml 的修改，添加一个链接到 SDK 的初始化 ？？
+
 #### 防止代码混淆
 在 app/proguard-rules.pro 文件中添加如下行，防止代码混淆：
 ```java
@@ -97,11 +97,12 @@ public class DemoApplication extends Application {
 
 }
 ```
-注意：如果您选择在 AndroidManifest.xml设置 appKey ，可以不在 Agora Chat SDK 的 ChatOptions 中配置，即如下：
+注意：
+- 如果您选择在 AndroidManifest.xml设置 appKey ，可以不在 Agora Chat SDK 的 ChatOptions 中配置，即如下：
 ```xml
 <meta-data android:name="EASEMOB_APPKEY"  android:value="Your AppKey" />
 ```
-
+- 如果两个地方都配置了，优先采用 ChatOptions 中的 appKey 配置。
 ## 快速搭建
 ### 快速创建聊天页面
 Agora Chat UIKit 提供了 EaseChatFragment ，添加到 Activity 中并传递相应的参数即可使用。
@@ -114,10 +115,10 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(arg0);
         setContentView(R.layout.activity_chat);
         // conversationID: Agora Chat ID: 1v1 is peer's userID, group chat is groupID, chat room is chatRoomID
-        // 1: single chat; 2: group chat; 3: chat room
+        // chatType can be EaseChatType#SINGLE_CHAT, EaseChatType#GROUP_CHAT, EaseChatType#CHATROOM
         getSupportFragmentManager().beginTransaction()
                                    .replace(R.id.fl_fragment, 
-                                            new EaseChatFragment.Builder(conversationID, 1)
+                                            new EaseChatFragment.Builder(conversationID, chatType)
                                                                 .build())
                                    .commit();
     }
@@ -149,6 +150,119 @@ public class ConversationListActivity extends AppCompatActivity {
 运行后，如下图：
 
 ![avatar](./images/ConversationList.jpg)
+
+### 快速创建子区聊天页面
+Agora Chat UIKit 提供了 EaseChatThreadActivity , 传递相应的参数启动 Activity 即可。
+示例如下：
+```java
+Intent intent = new Intent(context, EaseChatThreadActivity.class);
+// 子区所属父消息 ID。
+intent.putExtra("parentMsgId", parentMsgId);
+// 子区 ID。
+intent.putExtra("conversationId", conversationId);
+// 子区所属群组 ID。
+intent.putExtra("parentId", parentId);
+context.startActivity(intent);
+
+// 或者调用如下方法
+EaseChatThreadActivity.actionStart(context, conversationId, parentMsgId, parentId);
+```
+
+同时 Agora Chat UIKit 提供了 EaseChatThreadFragment ，开发者可以继承或者使用 EaseChatThreadFragment#Builder设置自定义的选项，并添加到 Activity 中并传递相应的参数即可使用。
+示例如下：
+```java
+public class ChatThreadActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle arg0) {
+        super.onCreate(arg0);
+        setContentView(R.layout.activity_chat_thread);
+        // parentMsgId: message thread's parent message ID
+        // conversationID: Agora Chat ID: 1v1 is peer's userID, group chat is groupID, chat room is chatRoomID
+        // parentId: group ID to which message thread belongs
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.fl_fragment, 
+                                            new EaseChatThreadFragment.Builder(parentMsgId, conversationID, parentId)
+                                                                      .build())
+                                   .commit();
+    }
+}
+```
+运行后，如下图：
+
+![avatar](./images/Chat.jpg)
+
+### 快速创建子区页面
+Agora Chat UIKit 提供了 EaseChatThreadCreateActivity , 传递相应的参数启动 Activity 即可。
+示例如下：
+```java
+Intent intent = new Intent(context, EaseChatThreadCreateActivity.class);
+// 子区所属父消息 ID。
+intent.putExtra("parentMsgId", parentMsgId);
+// 子区所属群组 ID。
+intent.putExtra("parentId", parentId);
+context.startActivity(intent);
+
+// 或者调用如下方法
+EaseChatThreadCreateActivity.actionStart(context, parentId, parentMsgId);
+```
+
+同时 Agora Chat UIKit 提供了 EaseChatThreadCreateFragment ，开发者可以继承或者使用 EaseChatThreadCreateFragment#Builder设置自定义的选项，并添加到 Activity 中并传递相应的参数即可使用。
+示例如下：
+```java
+public class ChatThreadCreateActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle arg0) {
+        super.onCreate(arg0);
+        setContentView(R.layout.activity_chat_thread);
+        // parentId: group ID to which message thread belongs
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.fl_fragment, 
+                                            new EaseChatThreadCreateFragment.Builder(parentId, parentMsgId)
+                                                                            .build())
+                                   .commit();
+    }
+}
+```
+运行后，如下图：
+
+![avatar](./images/Chat.jpg)
+
+### 快速创建子区列表页面
+Agora Chat UIKit 提供了 EaseChatThreadListActivity , 传递相应的参数启动 Activity 即可。
+示例如下：
+```java
+Intent intent = new Intent(context, EaseChatThreadListActivity.class);
+// 子区所属群组 ID。
+intent.putExtra("parentId", parentId);
+context.startActivity(intent);
+
+// 或者调用如下方法
+EaseChatThreadListActivity.actionStart(context, parentId);
+```
+
+同时 Agora Chat UIKit 提供了 EaseChatThreadListFragment ，开发者可以继承或者使用 EaseChatThreadListFragment#Builder设置自定义的选项，并添加到 Activity 中并传递相应的参数即可使用。
+示例如下：
+```java
+public class ChatThreadListActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle arg0) {
+        super.onCreate(arg0);
+        setContentView(R.layout.activity_chat_thread);
+        // parentId: group ID to which message thread belongs
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.fl_fragment, 
+                                            new EaseChatThreadListFragment.Builder(parentId)
+                                                                          .build())
+                                   .commit();
+    }
+}
+```
+运行后，如下图：
+
+![avatar](./images/Chat.jpg)
 
 ## 高级定制
 ### 聊天页面相关
