@@ -19,6 +19,7 @@
     <string name="ease_action_recall">Recall</string>
     <string name="ease_action_delete">Delete</string>
     <string name="ease_action_unsent">Unsend</string>
+    <string name="ease_action_report">Report</string>
 
     <string name="ease_conversation_menu_make_read">Make read</string>
     <string name="ease_conversation_menu_make_top">Sticky on Top</string>
