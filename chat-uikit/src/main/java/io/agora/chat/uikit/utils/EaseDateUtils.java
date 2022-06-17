@@ -199,9 +199,9 @@ public class EaseDateUtils {
 		if (minutes > 0){
 			return isZh? minutes + "分前" : minutes + "m ago";
 		}
-//		if (second > 0){
-//			return isZh? second + "秒前" : second + "s ago";
-//		}
+		if (second > 0){
+			return isZh? second + "秒前" : second + "s ago";
+		}
 		return "";
 	}
 
