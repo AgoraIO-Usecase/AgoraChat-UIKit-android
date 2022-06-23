@@ -9,8 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:id="@+id/tab_bar"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
         android:background="@color/ease_emojicon_tab_nomal"
-        android:paddingBottom="5dp"
         android:visibility="gone"/>
 
     <LinearLayout
