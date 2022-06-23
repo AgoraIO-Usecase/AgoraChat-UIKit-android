@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import io.agora.chat.uikit.utils.HanziToPinyin;
+import io.agora.util.EMLog;
 
 
 public class EaseUser implements Serializable {
@@ -238,10 +239,10 @@ public class EaseUser implements Serializable {
             if(Character.isDigit(char0)) {
                 return defaultLetter;
             }
-            ArrayList<HanziToPinyin.Token> l = HanziToPinyin.getInstance().get(name.substring(0, 1));
-            if(l != null && !l.isEmpty() && l.get(0).target.length() > 0) {
-                HanziToPinyin.Token token = l.get(0);
-                String letter = token.target.substring(0, 1).toUpperCase();
+            String pinyin = HanziToPinyin.getPinyin(name);
+            EMLog.e("pinyin", "letter: "+pinyin);
+            if(!TextUtils.isEmpty(pinyin)) {
+                String letter = pinyin.substring(0, 1).toUpperCase();
                 char c = letter.charAt(0);
                 if(c < 'A' || c > 'Z') {
                     return defaultLetter;

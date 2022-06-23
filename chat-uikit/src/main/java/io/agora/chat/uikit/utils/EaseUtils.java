@@ -42,7 +42,6 @@ import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 import io.agora.util.EMLog;
-import io.agora.util.HanziToPinyin;
 
 public class EaseUtils {
 	private static final String TAG = "CommonUtils";
@@ -173,7 +172,7 @@ public class EaseUtils {
     public static void setUserInitialLetter(EaseUser user) {
         final String DefaultLetter = "#";
         String letter = DefaultLetter;
-        
+
         final class GetInitialLetter {
             String getLetter(String name) {
                 if (TextUtils.isEmpty(name)) {
@@ -183,13 +182,11 @@ public class EaseUtils {
                 if (Character.isDigit(char0)) {
                     return DefaultLetter;
                 }
-                ArrayList<HanziToPinyin.Token> l = HanziToPinyin.getInstance().get(name.substring(0, 1));
-                if (l != null && l.size() > 0 && l.get(0).target.length() > 0)
-                {
-                    HanziToPinyin.Token token = l.get(0);
-                    String letter = token.target.substring(0, 1).toUpperCase();
+                String pinyin = HanziToPinyin.getPinyin(name);
+                if(!TextUtils.isEmpty(pinyin)) {
+                    String letter = pinyin.substring(0, 1).toUpperCase();
                     char c = letter.charAt(0);
-                    if (c < 'A' || c > 'Z') {
+                    if(c < 'A' || c > 'Z') {
                         return DefaultLetter;
                     }
                     return letter;
@@ -197,12 +194,12 @@ public class EaseUtils {
                 return DefaultLetter;
             }
         }
-        
+
         if ( !TextUtils.isEmpty(user.getNickname()) ) {
             letter = new GetInitialLetter().getLetter(user.getNickname());
             user.setInitialLetter(letter);
             return;
-        } 
+        }
         if (letter.equals(DefaultLetter) && !TextUtils.isEmpty(user.getUsername())) {
             letter = new GetInitialLetter().getLetter(user.getUsername());
         }
@@ -355,10 +352,9 @@ public class EaseUtils {
             if(Character.isDigit(char0)) {
                 return defaultLetter;
             }
-            ArrayList<HanziToPinyin.Token> l = HanziToPinyin.getInstance().get(name.substring(0, 1));
-            if(l != null && !l.isEmpty() && l.get(0).target.length() > 0) {
-                HanziToPinyin.Token token = l.get(0);
-                String letter = token.target.substring(0, 1).toUpperCase();
+            String pinyin = HanziToPinyin.getPinyin(name);
+            if(!TextUtils.isEmpty(pinyin)) {
+                String letter = pinyin.substring(0, 1).toUpperCase();
                 char c = letter.charAt(0);
                 if(c < 'A' || c > 'Z') {
                     return defaultLetter;

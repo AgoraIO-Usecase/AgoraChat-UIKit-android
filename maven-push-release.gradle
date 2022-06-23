@@ -108,6 +108,7 @@ uploadArchives {
                     developer {
                         name 'agorabuilder'
                         email 'wangzhi@agora.io'
+                        organization 'https://github.com/AgoraIO'
                         url 'https://www.agora.io/cn'
                     }
                 }
