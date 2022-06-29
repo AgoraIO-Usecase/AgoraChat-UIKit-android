@@ -26,6 +26,7 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.interfaces.EaseChatPrimaryMenuListener;
 import io.agora.chat.uikit.chat.interfaces.IChatPrimaryMenu;
 import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
+import io.agora.util.EMLog;
 
 
 public class EaseChatPrimaryMenu extends RelativeLayout implements IChatPrimaryMenu, View.OnClickListener, EaseInputEditText.OnEditTextChangeListener, TextWatcher {
@@ -383,7 +384,7 @@ public class EaseChatPrimaryMenu extends RelativeLayout implements IChatPrimaryM
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        Log.e("TAG", this.getClass().getSimpleName() + " onTextChanged s:"+s);
+        EMLog.i("TAG", this.getClass().getSimpleName() + " onTextChanged s:"+s);
         showSendButton(s);
         if(listener != null) {
             listener.onTyping(s, start, before, count);
@@ -392,7 +393,7 @@ public class EaseChatPrimaryMenu extends RelativeLayout implements IChatPrimaryM
 
     @Override
     public void afterTextChanged(Editable s) {
-        Log.e("TAG", this.getClass().getSimpleName() + " afterTextChanged s:"+s);
+        EMLog.i("TAG", this.getClass().getSimpleName() + " afterTextChanged s:"+s);
     }
 }
 

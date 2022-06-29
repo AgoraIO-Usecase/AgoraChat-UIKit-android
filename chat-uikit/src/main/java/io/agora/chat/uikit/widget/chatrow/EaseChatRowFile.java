@@ -74,13 +74,13 @@ public class EaseChatRowFile extends EaseChatRow {
                 fileStateView.setText("");
             }
         }
-        if (message.direct() == ChatMessage.Direct.RECEIVE) {
-            if (EaseFileUtils.isFileExistByUri(context, filePath)) {
-                fileStateView.setText(R.string.ease_have_downloaded);
-            } else {
-                fileStateView.setText(R.string.ease_did_not_download);
-            }
-        }
+//        if (message.direct() == ChatMessage.Direct.RECEIVE) {
+//            if (EaseFileUtils.isFileExistByUri(context, filePath)) {
+//                fileStateView.setText(R.string.ease_have_downloaded);
+//            } else {
+//                fileStateView.setText(R.string.ease_did_not_download);
+//            }
+//        }
 	}
 
     @Override

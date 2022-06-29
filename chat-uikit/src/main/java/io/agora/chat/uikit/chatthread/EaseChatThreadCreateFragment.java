@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -143,6 +144,11 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
             String inputHint = bundle.getString(Constant.KEY_THREAD_INPUT_HINT, "");
             if(!TextUtils.isEmpty(inputHint)) {
                 binding.etInputName.setHint(inputHint);
+            }else {
+                binding.etInputName.requestFocus();
+                binding.etInputName.setFocusableInTouchMode(true);
+                InputMethodManager inputManager = (InputMethodManager)binding.etInputName.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.showSoftInput(binding.etInputName, 0);
             }
             if(this.parentMsgViewProvider != null) {
                 View parentMsgView = this.parentMsgViewProvider.parentMsgView(ChatClient.getInstance().chatManager().getMessage(messageId));
@@ -186,6 +192,7 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
 
         view.setMessage(ChatClient.getInstance().chatManager().getMessage(messageId));
     }
+
 
     public void initListener() {
         binding.layoutMenu.setChatInputMenuListener(this);
