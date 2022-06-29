@@ -370,7 +370,7 @@ public class EaseImageUtils extends ImageUtils {
 				.addListener(new RequestListener<Drawable>() {
 					@Override
 					public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-						EMLog.e("onGlideLoadFailed", e.getMessage() + " isFirstResource: " + isFirstResource);
+						EMLog.d("onGlideLoadFailed", e.getMessage() + " isFirstResource: " + isFirstResource);
 						return false;
 					}
 
@@ -379,7 +379,7 @@ public class EaseImageUtils extends ImageUtils {
 						int width = resource.getIntrinsicWidth();//获取图片高度
 						int height = resource.getIntrinsicHeight();//获取图片宽度
 						checkImageSize(context,width,height,imageView);
-						Log.e("onResourceReady" , "width: " + width + " height: " + height);
+						EMLog.d("onResourceReady" , "width: " + width + " height: " + height);
 						return false;
 					}
 				})
@@ -396,7 +396,7 @@ public class EaseImageUtils extends ImageUtils {
 		if(radio == 0) {
 			radio = 1;
 		}
-		Log.e("checkImageSize" , "  mRadio: " + mRadio + " radio: " + radio);
+		EMLog.d("checkImageSize" , "  mRadio: " + mRadio + " radio: " + radio);
 		ViewGroup.LayoutParams params = imageView.getLayoutParams();
 		if(mRadio / radio < 0.1f) {
 			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -407,16 +407,16 @@ public class EaseImageUtils extends ImageUtils {
 			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			params.width = maxHeight / 2;
 			params.height = maxHeight;
-			Log.e("checkImageSize" , " mRadio / radio > 4 " + "  width: " + params.width + " height: " + params.height);
+			EMLog.d("checkImageSize" , " mRadio / radio > 4 " + "  width: " + params.width + " height: " + params.height);
 		}else {
 			if(radio < mRadio) {
 				params.height = maxHeight;
 				params.width = (int) (maxHeight * radio);
-				Log.e("checkImageSize" , " radio < mRadio " + "  width: " + params.width + " height: " + params.height);
+				EMLog.d("checkImageSize" , " radio < mRadio " + "  width: " + params.width + " height: " + params.height);
 			}else {
 				params.width = maxWidth;
 				params.height = (int) (maxWidth / radio);
-				Log.e("checkImageSize" , " radio > mRadio > 4 " + "  width: " + params.width + " height: " + params.height);
+				EMLog.d("checkImageSize" , " radio > mRadio > 4 " + "  width: " + params.width + " height: " + params.height);
 			}
 		}
 	}
