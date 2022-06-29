@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 
 import io.agora.chat.ChatMessage;
-import io.agora.chat.ChatThreadInfo;
+import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.models.EaseUser;
@@ -42,7 +42,7 @@ public class EaseChatRowThreadRegion extends FrameLayout implements View.OnClick
     private TextView tvMsgContent;
     private Group group_msg;
     private TextView tv_no_msg;
-    private ChatThreadInfo info;
+    private ChatThread info;
 
     private OnClickListener listener;
 
@@ -132,13 +132,13 @@ public class EaseChatRowThreadRegion extends FrameLayout implements View.OnClick
         }
     }
 
-    public void setThreadInfo(ChatThreadInfo info) {
+    public void setThreadInfo(ChatThread info) {
         this.info = info;
         setThreadRegion(info);
         requestLayout();
     }
 
-    private void setThreadRegion(ChatThreadInfo info) {
+    private void setThreadRegion(ChatThread info) {
         if(info == null) {
             setVisibility(GONE);
             return;

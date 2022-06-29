@@ -9,24 +9,37 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:id="@+id/tab_bar"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:background="@color/ease_emojicon_tab_nomal"
         android:visibility="gone"/>
 
-    <View
+    <LinearLayout
+        android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#CFCFCF"
-        android:visibility="gone"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <io.agora.chat.uikit.widget.emojicon.EaseEmojiconPagerView
-        android:layout_width="match_parent"
-        android:layout_height="255dp"
-        android:id="@+id/pager_view" />
-    
-    <io.agora.chat.uikit.widget.emojicon.EaseEmojiconIndicatorView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/indicator_view"
-        android:layout_marginBottom="2dp"
-        android:visibility="gone"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#CFCFCF"
+            android:visibility="gone"/>
+
+        <io.agora.chat.uikit.widget.emojicon.EaseEmojiconPagerView
+            android:layout_width="match_parent"
+            android:layout_height="255dp"
+            android:id="@+id/pager_view" />
+
+        <io.agora.chat.uikit.widget.emojicon.EaseEmojiconIndicatorView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/indicator_view"
+            android:layout_marginBottom="2dp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
 
 </LinearLayout>

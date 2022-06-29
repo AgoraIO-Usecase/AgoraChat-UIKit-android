@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+	android:id="@+id/icon_layout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+	android:background="@color/ease_emojicon_tab_nomal"
     android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/iv_icon"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+		android:layout_weight="1"
+		android:layout_gravity="center"
         />
-    <View 
-	    android:layout_width="0.5dp"
-	    android:layout_height="match_parent"
-	    android:background="#CDCDCD"
-	    />
 </LinearLayout>

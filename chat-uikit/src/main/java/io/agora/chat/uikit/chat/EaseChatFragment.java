@@ -338,6 +338,8 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         this.messageAdapter = adapter;
     }
 
+
+
     @Override
     public boolean onBubbleClick(ChatMessage message) {
         if(chatItemClickListener != null) {
@@ -382,6 +384,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             return chatItemClickListener.onThreadLongClick(v, messageId, threadId);
         }
         return false;
+    }
+
+    @Override
+    public void onTouchItemOutside() {
+
+    }
+
+    @Override
+    public void onViewDragging() {
+
     }
 
     @Override
@@ -638,7 +650,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     }
 
     @Override
-    public void onThreadEvent(int event, String target, List<String> usernames) {
+    public void onChatThreadEvent(int event, String target, List<String> usernames) {
 
     }
 
@@ -652,14 +664,14 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     @Override
     public void onChatThreadUpdated(ChatThreadEvent event) {
         if(isMessageInit) {
-            chatLayout.getChatMessageListLayout().refreshMessage(event.getMessageId());
+            chatLayout.getChatMessageListLayout().refreshMessage(event.getChatThread().getMessageId());
         }
     }
 
     @Override
     public void onChatThreadDestroyed(ChatThreadEvent event) {
         if(isMessageInit) {
-            chatLayout.getChatMessageListLayout().refreshMessage(event.getMessageId());
+            chatLayout.getChatMessageListLayout().refreshMessage(event.getChatThread().getMessageId());
         }
     }
 

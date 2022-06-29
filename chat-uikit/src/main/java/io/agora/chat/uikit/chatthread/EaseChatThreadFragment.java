@@ -101,11 +101,9 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         super.onPreMenu(helper, message);
         // Chat Thread is load from server, not need to delete from local
         helper.findItemVisible(R.id.action_chat_delete, false);
-        // Chat Thread can not to add reaction at moment
-        helper.showHeaderView(false);
         // Chat Thread can not reply again
         helper.findItemVisible(R.id.action_chat_reply, false);
-        if(!message.isThread() || message.direct() == ChatMessage.Direct.RECEIVE) {
+        if(!message.isChatThreadMessage() || message.direct() == ChatMessage.Direct.RECEIVE) {
             helper.findItemVisible(R.id.action_chat_recall, false);
         }
     }
@@ -119,8 +117,8 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
     }
 
     @Override
-    public void onThreadEvent(int event, String target, List<String> usernames) {
-        super.onThreadEvent(event, target, usernames);
+    public void onChatThreadEvent(int event, String target, List<String> usernames) {
+        super.onChatThreadEvent(event, target, usernames);
         if((event == THREAD_DESTROY || event == THREAD_LEAVE) && TextUtils.equals(target, conversationId)) {
             mContext.finish();
         }
@@ -169,14 +167,14 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
 
     @Override
     public void onChatThreadUpdated(ChatThreadEvent event) {
-        if(TextUtils.equals(event.getChatThreadId(), conversationId)) {
+        if(TextUtils.equals(event.getChatThread().getChatThreadId(), conversationId)) {
             runOnUiThread(()->{
                 chatLayout.getChatMessageListLayout().refreshMessages();
                 if(headerAdapter != null) {
-                    headerAdapter.updateThreadName(event.getChatThreadName());
+                    headerAdapter.updateThreadName(event.getChatThread().getChatThreadName());
                 }
                 if(mContext != null && !mContext.isFinishing() && titleBar != null) {
-                    titleBar.setTitle(event.getChatThreadName());
+                    titleBar.setTitle(event.getChatThread().getChatThreadName());
                 }
             });
         }
@@ -184,12 +182,12 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
 
     @Override
     public void onChatThreadDestroyed(ChatThreadEvent event) {
-        exitThreadChat(event.getChatThreadId());
+        exitThreadChat(event.getChatThread().getChatThreadId());
     }
 
     @Override
     public void onChatThreadUserRemoved(ChatThreadEvent event) {
-        exitThreadChat(event.getChatThreadId());
+        exitThreadChat(event.getChatThread().getChatThreadId());
     }
 
     private void exitThreadChat(String threadId) {
@@ -321,7 +319,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
             return threadRole;
         }
         if(thread != null) {
-            if(TextUtils.equals(thread.getCreator(), ChatClient.getInstance().getCurrentUser())) {
+            if(TextUtils.equals(thread.getOwner(), ChatClient.getInstance().getCurrentUser())) {
                 threadRole = EaseChatThreadRole.CREATOR;
             }
         }

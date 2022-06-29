@@ -132,6 +132,7 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
                 toChatUsername = value.getChatThreadId();
                 if(isActive()) {
                     runOnUI(()->mView.onCreateThreadSuccess(value, message));
+                    EMLog.d("createChatThread","onSuccess");
                 }
             }
 
@@ -139,6 +140,7 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
             public void onError(int error, String errorMsg) {
                 if(isActive()) {
                     runOnUI(()->mView.onCreateThreadFail(error, errorMsg));
+                    EMLog.e("createChatThread","onError: " + error + "  " + errorMsg);
                 }
             }
         });
@@ -162,7 +164,7 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
             message.setChatType(ChatMessage.ChatType.ChatRoom);
         }
         // Add thread label for message
-        message.setIsThread(true);
+        message.setIsChatThreadMessage(true);
         message.setMessageStatusCallback(new CallBack() {
             @Override
             public void onSuccess() {

@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.chat.presenter;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 
 import java.util.Iterator;
@@ -138,7 +139,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
                         conversation.loadMoreMsgFromDB("", pageSize, direction);
-                        if(conversation.isThread()) {
+                        if(conversation.isChatThread()) {
                             checkIfReachFirstSendMessage(value);
                         }
                         runOnUI(() -> {
@@ -152,6 +153,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     public void onError(int error, String errorMsg) {
                         runOnUI(() -> {
                             if(isActive()) {
+                                Log.e("loadServerMessages","onError");
                                 mView.loadMsgFail(error, errorMsg);
                                 loadLocalMessages(pageSize);
                             }
@@ -212,7 +214,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     @Override
                     public void onSuccess(CursorResult<ChatMessage> value) {
                         conversation.loadMoreMsgFromDB(msgId, pageSize, direction);
-                        if(conversation.isThread()) {
+                        if(conversation.isChatThread()) {
                             checkIfReachFirstSendMessage(value);
                         }
                         runOnUI(() -> {
@@ -226,6 +228,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                     public void onError(int error, String errorMsg) {
                         runOnUI(() -> {
                             if(isActive()) {
+                                Log.e("loadMoreServerMessages","onError");
                                 mView.loadMsgFail(error, errorMsg);
                                 loadMoreLocalMessages(msgId, pageSize);
                             }
@@ -241,7 +244,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         }
         conversation.markAllMessagesAsRead();
         List<ChatMessage> allMessages = conversation.getAllMessages();
-        if(conversation.isThread() && reachFlagMessage != null && !isReachFirstFlagMessage) {
+        if(conversation.isChatThread() && reachFlagMessage != null && !isReachFirstFlagMessage) {
             removeNotReachedMessages(allMessages);
         }
         if(isActive()) {
@@ -275,7 +278,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         }
         conversation.markAllMessagesAsRead();
         List<ChatMessage> allMessages = conversation.getAllMessages();
-        if(conversation.isThread() && !isReachFirstFlagMessage) {
+        if(conversation.isChatThread() && !isReachFirstFlagMessage) {
             removeNotReachedMessages(allMessages);
         }
         if(isActive()) {

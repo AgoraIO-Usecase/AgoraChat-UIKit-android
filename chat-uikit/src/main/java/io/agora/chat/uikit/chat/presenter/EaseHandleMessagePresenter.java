@@ -136,5 +136,11 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
      * @param reaction
      */
     public abstract void removeReaction(ChatMessage message, String reaction);
+
+    /**
+     * Send emoji message
+     * @param emoji
+     */
+    public abstract void sendEmojiMessage(ChatMessage emoji);
 }
 

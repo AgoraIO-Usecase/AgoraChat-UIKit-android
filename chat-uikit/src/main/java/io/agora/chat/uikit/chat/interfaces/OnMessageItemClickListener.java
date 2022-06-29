@@ -52,4 +52,14 @@ public interface OnMessageItemClickListener {
     default boolean onThreadLongClick(View v, String messageId, String threadId) {
         return false;
     }
+
+    /**
+     * touch event
+     */
+    void onTouchItemOutside();
+
+    /**
+     * slide event
+     */
+    void onViewDragging();
 }

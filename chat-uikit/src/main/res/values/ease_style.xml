@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Toolbar.PopupTheme" parent="ThemeOverlay.AppCompat.Light">
+    <style name="Toolbar.PopupTheme" parent="ThemeOverlay.MaterialComponents.Light">
         <item name="android:textColor">@color/black</item>
         <item name="overlapAnchor">false</item>
     </style>

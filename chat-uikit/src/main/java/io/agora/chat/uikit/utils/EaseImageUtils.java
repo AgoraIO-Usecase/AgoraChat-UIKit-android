@@ -1,10 +1,10 @@
 /**
  * Copyright (C) 2016 Hyphenate Inc. All rights reserved.
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,17 +15,29 @@ package io.agora.chat.uikit.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
@@ -176,7 +188,23 @@ public class EaseImageUtils extends ImageUtils {
         int width = ((ImageMessageBody) body).getWidth();
         int height = ((ImageMessageBody) body).getHeight();
         Uri imageUri = ((ImageMessageBody) body).getLocalUri();
-        EaseFileUtils.takePersistableUriPermission(context, imageUri);
+
+		String type = message.getStringAttribute("emoji_type","");
+		String httpUrl = message.getStringAttribute("emoji_url","");
+
+		imageView.setImageResource(R.drawable.ease_default_image);
+
+		if (type.equals("gif")){
+			EaseImageUtils.showGif(context,imageView, httpUrl);
+			return imageView.getLayoutParams();
+		}
+
+		if (message.ext().containsKey("emoji_type") && message.ext().containsKey("emoji_url")){
+			showSticker(context,imageView,httpUrl);
+			return imageView.getLayoutParams();
+		}
+
+		EaseFileUtils.takePersistableUriPermission(context, imageUri);
         EMLog.e("tag", "current show small view big file: uri:" + imageUri + " exist: " + EaseFileUtils.isFileExistByUri(context, imageUri));
         if (!EaseFileUtils.isFileExistByUri(context, imageUri)) {
             imageUri = ((ImageMessageBody) body).thumbnailLocalUri();
@@ -305,5 +333,92 @@ public class EaseImageUtils extends ImageUtils {
         );
 
     }
+
+
+	public static void showGif(Context context, ImageView imageView,String httpUrl){
+		Glide.with(context)
+				.asGif()
+				.load(httpUrl)
+				.apply(new RequestOptions()
+						.error(R.drawable.ease_default_image))
+				.diskCacheStrategy(DiskCacheStrategy.ALL)
+				.addListener(new RequestListener<GifDrawable>() {
+					@Override
+					public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
+						EMLog.e("onGlideLoadFailed", e.getMessage() + " isFirstResource: " + isFirstResource);
+						return false;
+					}
+
+					@Override
+					public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+						int width = resource.getIntrinsicWidth();//获取图片高度
+						int height = resource.getIntrinsicHeight();//获取图片宽度
+						checkImageSize(context,width,height,imageView);
+						Log.e("onResourceReady" , "width: " + width + " height: " + height);
+						return false;
+					}
+				})
+				.into(imageView);
+	}
+
+	public static void showSticker(Context context,ImageView imageView,String httpUrl){
+		Glide.with(context)
+				.load(httpUrl)
+				.apply(new RequestOptions()
+				.error(R.drawable.ease_default_image))
+				.diskCacheStrategy(DiskCacheStrategy.ALL)
+				.addListener(new RequestListener<Drawable>() {
+					@Override
+					public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+						EMLog.e("onGlideLoadFailed", e.getMessage() + " isFirstResource: " + isFirstResource);
+						return false;
+					}
+
+					@Override
+					public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+						int width = resource.getIntrinsicWidth();//获取图片高度
+						int height = resource.getIntrinsicHeight();//获取图片宽度
+						checkImageSize(context,width,height,imageView);
+						Log.e("onResourceReady" , "width: " + width + " height: " + height);
+						return false;
+					}
+				})
+				.into(imageView);
+	}
+
+	public static void checkImageSize(Context context,int width, int height,ImageView imageView){
+		int[] maxSize = getImageMaxSize(context);
+		int maxWidth = maxSize[0];
+		int maxHeight = maxSize[1];
+		float mRadio = maxWidth * 1.0f / maxHeight;
+		imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+		float radio  = width * 1.0f / (height == 0 ? 1 : height);
+		if(radio == 0) {
+			radio = 1;
+		}
+		Log.e("checkImageSize" , "  mRadio: " + mRadio + " radio: " + radio);
+		ViewGroup.LayoutParams params = imageView.getLayoutParams();
+		if(mRadio / radio < 0.1f) {
+			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			params.width = maxWidth;
+			params.height = maxWidth / 2;
+			Log.e("checkImageSize" , " mRadio / radio < 0.1f " + "  width: " + params.width + " height: " + params.height);
+		}else if(mRadio / radio > 4) {
+			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			params.width = maxHeight / 2;
+			params.height = maxHeight;
+			Log.e("checkImageSize" , " mRadio / radio > 4 " + "  width: " + params.width + " height: " + params.height);
+		}else {
+			if(radio < mRadio) {
+				params.height = maxHeight;
+				params.width = (int) (maxHeight * radio);
+				Log.e("checkImageSize" , " radio < mRadio " + "  width: " + params.width + " height: " + params.height);
+			}else {
+				params.width = maxWidth;
+				params.height = (int) (maxWidth / radio);
+				Log.e("checkImageSize" , " radio > mRadio > 4 " + "  width: " + params.width + " height: " + params.height);
+			}
+		}
+	}
 
 }

@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -314,7 +315,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         if(EaseConfigsManager.enableSendChannelAck()) {
             Conversation conversation = ChatClient.getInstance().chatManager().getConversation(conversationId);
             // Not send channel ack when the conversation is thread
-            if(conversation == null || conversation.getUnreadMsgCount() <= 0 || conversation.isThread()) {
+            if(conversation == null || conversation.getUnreadMsgCount() <= 0 || conversation.isChatThread()) {
                 return;
             }
             try {
@@ -759,7 +760,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onPresenterMessageSuccess(ChatMessage message) {
         EMLog.i(TAG, "send message onPresenterMessageSuccess");
-        if(message.isThread() && messageListLayout != null && messageListLayout.isReachedLatestThreadMessage()) {
+        if(message.isChatThreadMessage() && messageListLayout != null && messageListLayout.isReachedLatestThreadMessage()) {
             message.setAttribute(EaseConstant.FLAG_REACH_LATEST_THREAD_MESSAGE, true);
         }
         if(listener != null) {
@@ -785,6 +786,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     public void onTouchItemOutside(View v, int position) {
         inputMenu.hideSoftKeyboard();
         inputMenu.showExtendMenu(false);
+        if (listener != null)
+        listener.onTouchItemOutside();
     }
 
     @Override
@@ -796,6 +799,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         inputMenu.setBackgroundResource(R.drawable.ease_chat_input_bg);
         inputMenu.hideSoftKeyboard();
         inputMenu.showExtendMenu(false);
+        if (listener != null)
+        listener.onViewDragging();
     }
 
     @Override
@@ -882,7 +887,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onMessageSuccess(ChatMessage message) {
         EMLog.i(TAG, "send message onMessageSuccess");
-        if(message.isThread() && messageListLayout != null && messageListLayout.isReachedLatestThreadMessage()) {
+        if(message.isChatThreadMessage() && messageListLayout != null && messageListLayout.isReachedLatestThreadMessage()) {
             message.setAttribute(EaseConstant.FLAG_REACH_LATEST_THREAD_MESSAGE, true);
         }
         if(listener != null) {
@@ -1119,7 +1124,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 menuHelper.findItemVisible(R.id.action_chat_recall, true);
                 break;
         }
-        if(message.getChatType() == ChatMessage.ChatType.GroupChat && message.getThreadOverview() == null) {
+        if(message.getChatType() == ChatMessage.ChatType.GroupChat && message.getChatThread() == null) {
             menuHelper.findItemVisible(R.id.action_chat_reply, true);
         }
 
@@ -1173,6 +1178,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         public void onMemberExited(String roomId, String roomName, String participant) {
 
         }
+    }
+
+
+    public void sendEmojiMessage(ChatMessage emoji) {
+        presenter.sendEmojiMessage(emoji);
     }
 
     /**

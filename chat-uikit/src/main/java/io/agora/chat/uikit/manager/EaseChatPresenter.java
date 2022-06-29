@@ -13,6 +13,7 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThreadEvent;
 import io.agora.chat.Conversation;
 import io.agora.chat.GroupReadAck;
+import io.agora.chat.MessageReactionChange;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
@@ -116,9 +117,9 @@ public class EaseChatPresenter implements MessageListener, ChatThreadChangeListe
 
     @Override
     public void onChatThreadDestroyed(ChatThreadEvent event) {
-        Conversation conversation = ChatClient.getInstance().chatManager().getConversation(event.getParentId());
+        Conversation conversation = ChatClient.getInstance().chatManager().getConversation(event.getChatThread().getParentId());
         if(conversation != null) {
-            conversation.removeMessage(event.getChatThreadId());
+            conversation.removeMessage(event.getChatThread().getChatThreadId());
         }
     }
 
@@ -138,7 +139,7 @@ public class EaseChatPresenter implements MessageListener, ChatThreadChangeListe
     }
 
     @Override
-    public void onThreadEvent(int event, String target, List<String> usernames) {
+    public void onChatThreadEvent(int event, String target, List<String> usernames) {
         if(event == THREAD_DESTROY || event == THREAD_LEAVE) {
             ChatMessage message = ChatClient.getInstance().chatManager().getMessage(target);
             if(message != null) {
@@ -153,22 +154,26 @@ public class EaseChatPresenter implements MessageListener, ChatThreadChangeListe
     private void createThreadCreatedMsg(ChatThreadEvent event) {
         ChatMessage msg = ChatMessage.createReceiveMessage(ChatMessage.Type.TXT);
         msg.setChatType(ChatMessage.ChatType.GroupChat);
-        msg.setFrom(event.getOperatorId());
-        msg.setTo(event.getParentId());
+        msg.setFrom(event.getFrom());
+        msg.setTo(event.getChatThread().getParentId());
         // 将thread id设置消息id，方便后面移除
-        msg.setMsgId(event.getChatThreadId());
+        msg.setMsgId(event.getChatThread().getChatThreadId());
         msg.setAttribute(EaseConstant.EASE_THREAD_NOTIFICATION_TYPE, true);
-        msg.setAttribute(EaseConstant.EASE_THREAD_PARENT_MSG_ID, event.getMessageId());
+        msg.setAttribute(EaseConstant.EASE_THREAD_PARENT_MSG_ID, event.getChatThread().getMessageId());
         StringBuilder builder = new StringBuilder();
-        EaseUser userInfo = EaseUserUtils.getUserInfo(event.getOperatorId());
-        builder.append(userInfo != null ? userInfo.getNickname() : event.getOperatorId());
+        EaseUser userInfo = EaseUserUtils.getUserInfo(event.getFrom());
+        builder.append(userInfo != null ? userInfo.getNickname() : event.getFrom());
         builder.append(" ");
         builder.append(context.getResources().getString(R.string.ease_start_a_thread));
-        builder.append(event.getChatThreadName());
+        builder.append(event.getChatThread().getChatThreadName());
         builder.append("\n");
         builder.append(context.getResources().getString(R.string.ease_join_the_thread));
         msg.addBody(new TextMessageBody(builder.toString()));
         msg.setStatus(ChatMessage.Status.SUCCESS);
         ChatClient.getInstance().chatManager().saveMessage(msg);
+    }
+
+    @Override
+    public void onReactionChanged(List<MessageReactionChange> list) {
     }
 }
