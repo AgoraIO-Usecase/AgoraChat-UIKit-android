@@ -1181,10 +1181,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
 
-    public void sendEmojiMessage(ChatMessage emoji) {
-        presenter.sendEmojiMessage(emoji);
-    }
-
     /**
      * group listener
      */
