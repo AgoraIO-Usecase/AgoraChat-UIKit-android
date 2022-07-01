@@ -63,6 +63,7 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:textSize="16sp"
+        android:textStyle="bold"
         android:textColor="@color/ease_conversation_color_item_name"
         app:layout_constraintHorizontal_chainStyle="packed"
         tools:text="Group Chat"/>

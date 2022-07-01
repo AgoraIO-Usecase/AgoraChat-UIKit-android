@@ -4,6 +4,11 @@
     <declare-styleable name="EaseTitleBar">
         <!-- title -->
         <attr name="titleBarTitle" format="reference|string"/>
+        <attr name="titleBarTitleTextStyle" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="bold" value="1"/>
+            <enum name="italic" value="2"/>
+        </attr>
         <attr name="titleBarSubTitle" format="reference|string"/>
         <attr name="titleBarLeftImage" format="reference"/>
         <attr name="titleBarRightImage" format="reference"/>
