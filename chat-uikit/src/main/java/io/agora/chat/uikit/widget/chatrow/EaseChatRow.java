@@ -253,6 +253,7 @@ public abstract class EaseChatRow extends LinearLayout {
 
         setUpBaseView();
         onSetUpView();
+        onSetUpReactionView();
         //setLayoutStyle();
         setClickListener();
     }
