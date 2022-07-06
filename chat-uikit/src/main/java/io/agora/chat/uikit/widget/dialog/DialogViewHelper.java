@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference;
 class DialogViewHelper {
     private final Context mContext;
     private final View mContentView;
-    private SparseArray<WeakReference<View>> views = new SparseArray<>();//使用若引用，防止内存泄露
+    private SparseArray<WeakReference<View>> views = new SparseArray<>();//Use WeakReference to prevent memory leaks
 
 
     public DialogViewHelper(Context mContext) {
@@ -68,7 +68,7 @@ class DialogViewHelper {
         TextView view = getViewById(viewId);
         if (view != null) {
             view.setText(text);
-            //设置超链接可点击
+            //set link is clickable
             view.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
