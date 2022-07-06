@@ -20,7 +20,7 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         if(ChatClient.getInstance().getOptions().getAutoLogin() && ChatClient.getInstance().isLoggedInBefore()) {
-            MainActivity.actionStart(SignInActivity.this);
+            MainActivity.actionStart(SignInActivity.this, "");
             finish();
         }else {
             binding.btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -28,16 +28,17 @@ public class SignInActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     String username = binding.etUsername.getText().toString().trim();
                     String trim = binding.etPassword.getText().toString().trim();
+                    String toChatName = binding.etToChatUsername.getText().toString().trim();
                     ChatClient.getInstance().login(username, trim, new CallBack() {
                         @Override
                         public void onSuccess() {
-                            MainActivity.actionStart(SignInActivity.this);
+                            MainActivity.actionStart(SignInActivity.this, toChatName);
                             finish();
                         }
 
                         @Override
                         public void onError(int i, String s) {
-                            Toast.makeText(SignInActivity.this, "error: "+i+" error message: "+s, Toast.LENGTH_SHORT).show();
+                            runOnUiThread(()->Toast.makeText(SignInActivity.this, "error: "+i+" error message: "+s, Toast.LENGTH_SHORT).show());
                         }
 
                         @Override

@@ -4,6 +4,7 @@ import android.app.Application;
 
 import io.agora.chat.ChatOptions;
 import io.agora.chat.uikit.EaseUIKit;
+import io.agora.chat.uikit.options.EaseReactionOptions;
 
 public class DemoApplication extends Application {
     @Override
@@ -23,5 +24,9 @@ public class DemoApplication extends Application {
         ChatOptions options = new ChatOptions();
         options.setAppKey("Your appkey");
         EaseUIKit.getInstance().init(this, options);
+
+        EaseReactionOptions easeReactionOptions = new EaseReactionOptions();
+        easeReactionOptions.setOpen(true);
+        EaseUIKit.getInstance().setReactionOptions(easeReactionOptions);
     }
 }
