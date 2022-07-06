@@ -55,6 +55,7 @@
                     android:layout_weight="1"
                     android:maxLines="1"
                     android:maxLength="64"
+                    android:theme="@style/ease_editText_Underline"
                     android:hint="@string/ease_thread_create_input_hint"/>
 
             </LinearLayout>

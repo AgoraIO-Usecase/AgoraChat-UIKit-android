@@ -3,7 +3,7 @@ package io.agora.chat.uikit.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
@@ -117,6 +116,10 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
                 String title = ta.getString(R.styleable.EaseTitleBar_titleBarTitle);
                 titleView.setText(title);
             }
+
+            int titleTextStylePosition = ta.getInteger(R.styleable.EaseTitleBar_titleBarTitleTextStyle, -1);
+            setTitleTextStyle(titleTextStylePosition);
+
             int subTitleId = ta.getResourceId(R.styleable.EaseTitleBar_titleBarSubTitle, -1);
             if(subTitleId != -1) {
                 subTitleView.setText(subTitleId);
@@ -209,6 +212,20 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
             ViewGroup.LayoutParams params = ivIcon.getLayoutParams();
             params.height = (int) size;
             params.width = (int) size;
+        }
+    }
+
+    private void setTitleTextStyle(int textStylePosition){
+        switch (textStylePosition){
+            case 0:
+                titleView.setTypeface(null, Typeface.NORMAL);
+                break;
+            case 1:
+                titleView.setTypeface(null, Typeface.BOLD);
+                break;
+            case 2:
+                titleView.setTypeface(null, Typeface.ITALIC);
+                break;
         }
     }
 
