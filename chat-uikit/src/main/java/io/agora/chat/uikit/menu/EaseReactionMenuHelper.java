@@ -192,6 +192,7 @@ public class EaseReactionMenuHelper {
                     }
                     if (isAdded) {
                         layout.setBackgroundResource(R.drawable.ease_bg_message_menu_reaction_popupwindow);
+                        layout.getBackground().setAlpha(95);
                     } else {
                         layout.setBackgroundColor(Color.TRANSPARENT);
                     }
@@ -212,6 +213,11 @@ public class EaseReactionMenuHelper {
                                    RecyclerView parent, @NonNull RecyclerView.State state) {
             outRect.bottom = space;
             outRect.top = space;
+            if (parent.getChildAdapterPosition(view) %(REACTION_SPAN_COUNT+1) == 0) {
+                outRect.left = space;
+            } else {
+                outRect.left = 0;
+            }
         }
     }
 }
