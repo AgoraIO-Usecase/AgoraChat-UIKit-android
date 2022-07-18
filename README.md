@@ -151,119 +151,6 @@ public class ConversationListActivity extends AppCompatActivity {
 
 ![avatar](./images/ConversationList.jpg)
 
-### 快速创建子区聊天页面
-Agora Chat UIKit 提供了 EaseChatThreadActivity , 传递相应的参数启动 Activity 即可。
-示例如下：
-```java
-Intent intent = new Intent(context, EaseChatThreadActivity.class);
-// 子区所属父消息 ID。
-intent.putExtra("parentMsgId", parentMsgId);
-// 子区 ID。
-intent.putExtra("conversationId", conversationId);
-// 子区所属群组 ID。
-intent.putExtra("parentId", parentId);
-context.startActivity(intent);
-
-// 或者调用如下方法
-EaseChatThreadActivity.actionStart(context, conversationId, parentMsgId, parentId);
-```
-
-同时 Agora Chat UIKit 提供了 EaseChatThreadFragment ，开发者可以继承或者使用 EaseChatThreadFragment#Builder设置自定义的选项，并添加到 Activity 中并传递相应的参数即可使用。
-示例如下：
-```java
-public class ChatThreadActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
-        setContentView(R.layout.activity_chat_thread);
-        // parentMsgId: message thread's parent message ID
-        // conversationID: Agora Chat ID: 1v1 is peer's userID, group chat is groupID, chat room is chatRoomID
-        // parentId: group ID to which message thread belongs
-        getSupportFragmentManager().beginTransaction()
-                                   .replace(R.id.fl_fragment, 
-                                            new EaseChatThreadFragment.Builder(parentMsgId, conversationID, parentId)
-                                                                      .build())
-                                   .commit();
-    }
-}
-```
-运行后，如下图：
-
-![avatar](./images/Chat.jpg)
-
-### 快速创建子区页面
-Agora Chat UIKit 提供了 EaseChatThreadCreateActivity , 传递相应的参数启动 Activity 即可。
-示例如下：
-```java
-Intent intent = new Intent(context, EaseChatThreadCreateActivity.class);
-// 子区所属父消息 ID。
-intent.putExtra("parentMsgId", parentMsgId);
-// 子区所属群组 ID。
-intent.putExtra("parentId", parentId);
-context.startActivity(intent);
-
-// 或者调用如下方法
-EaseChatThreadCreateActivity.actionStart(context, parentId, parentMsgId);
-```
-
-同时 Agora Chat UIKit 提供了 EaseChatThreadCreateFragment ，开发者可以继承或者使用 EaseChatThreadCreateFragment#Builder设置自定义的选项，并添加到 Activity 中并传递相应的参数即可使用。
-示例如下：
-```java
-public class ChatThreadCreateActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
-        setContentView(R.layout.activity_chat_thread);
-        // parentId: group ID to which message thread belongs
-        getSupportFragmentManager().beginTransaction()
-                                   .replace(R.id.fl_fragment, 
-                                            new EaseChatThreadCreateFragment.Builder(parentId, parentMsgId)
-                                                                            .build())
-                                   .commit();
-    }
-}
-```
-运行后，如下图：
-
-![avatar](./images/Chat.jpg)
-
-### 快速创建子区列表页面
-Agora Chat UIKit 提供了 EaseChatThreadListActivity , 传递相应的参数启动 Activity 即可。
-示例如下：
-```java
-Intent intent = new Intent(context, EaseChatThreadListActivity.class);
-// 子区所属群组 ID。
-intent.putExtra("parentId", parentId);
-context.startActivity(intent);
-
-// 或者调用如下方法
-EaseChatThreadListActivity.actionStart(context, parentId);
-```
-
-同时 Agora Chat UIKit 提供了 EaseChatThreadListFragment ，开发者可以继承或者使用 EaseChatThreadListFragment#Builder设置自定义的选项，并添加到 Activity 中并传递相应的参数即可使用。
-示例如下：
-```java
-public class ChatThreadListActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
-        setContentView(R.layout.activity_chat_thread);
-        // parentId: group ID to which message thread belongs
-        getSupportFragmentManager().beginTransaction()
-                                   .replace(R.id.fl_fragment, 
-                                            new EaseChatThreadListFragment.Builder(parentId)
-                                                                          .build())
-                                   .commit();
-    }
-}
-```
-运行后，如下图：
-
-![avatar](./images/Chat.jpg)
-
 ## 高级定制
 ### 聊天页面相关
 
@@ -274,8 +161,8 @@ public class ChatThreadListActivity extends AppCompatActivity {
 EaseChatFragment 提供了 Builder 构建方式，方便开发者进行一些自定义设置，目前提供的设置项如下：
 ```java
 // conversationID: Agora Chat ID: 1v1 is peer's userID, group chat is groupID, chat room is chatRoomID
-// 1: single chat; 2: group chat; 3: chat room
-new EaseChatFragment.Builder(conversationID, SINGLE_CHAT)
+// easeChatType: SINGLE_CHAT, GROUP_CHAT, CHATROOM
+new EaseChatFragment.Builder(conversationID, easeChatType)
         .useHeader(true)
         .setHeaderTitle("title")
         .enableHeaderPressBack(true)
@@ -308,7 +195,7 @@ new EaseChatFragment.Builder(conversationID, SINGLE_CHAT)
 EaseChatFragment#Builder 提供的方法解释：
 | 方法                                    | 说明                                                 |
 | -------------------------------------- | ---------------------------------------------------- |
-| useHeader()                            | 是否使用默认的标题栏（EaseTitileBar），默认为 False        |
+| useHeader()                            | 是否使用默认的标题栏（EaseTitleBar），默认为 False        |
 | setHeaderTitle()                       | 设置标题栏的标题                                        |
 | enableHeaderPressBack()                | 设置是否支持显示返回按钮，默认为 False                     |
 | setHeaderBackPressListener(）           | 设置点击标题栏返回按钮的监听事件                          |
@@ -610,7 +497,7 @@ new EaseConversationListFragment.Builder()
 EaseConversationListFragment#Builder 提供的方法解释：
 | 方法                                    | 说明                                                             |
 | -------------------------------------- | ---------------------------------------------------------------- |
-| useHeader()                            | 是否使用默认的标题栏（EaseTitileBar），默认为不使用        |
+| useHeader()                            | 是否使用默认的标题栏（EaseTitleBar），默认为不使用        |
 | setHeaderTitle()                       | 设置标题栏的标题                                        |
 | enableHeaderPressBack()                | 设置是否支持显示返回按钮，默认为不显示返回按钮               |
 | setHeaderBackPressListener(）          | 设置点击标题栏返回按钮的监听器                          |
@@ -623,7 +510,7 @@ EaseConversationListFragment#Builder 提供的方法解释：
 | setCustomAdapter(）                    | 设置自定义的适配器，默认为 EaseConversationListAdapter |
 | setCustomFragment(）                   | 设置自定义聊天Fragment，需要继承自 EaseConversationListFragment |
 
-#### 添加自定义消息布局
+#### 添加自定义会话布局
 开发者可以继承 EaseConversationListAdapter 实现自己的 CustomConversationListAdapter ，然后将 CustomConversationListAdapter 设置到 EaseConversationListFragment#Builder#setCustomAdapter 中。
 
 （1）创建自定义适配器 CustomConversationListAdapter ，继承自 EaseConversationListAdapter ，重写 getViewHolder 和 getItemNotEmptyViewType 方法。
@@ -695,6 +582,133 @@ EaseConversationListLayout 提供的方法解释：
 | clearMenu()                            | 清除长按菜单项 |
 | addItemMenu()                          | 添加长按菜单项 |
 | findItemVisible()                      | 设置指定菜单项是否可见 |
+
+### 子区消息页面相关
+Chat UIKit 提供了 EaseChatThreadActivity，EaseChatThreadCreateActivity 和 EaseChatThreadListActivity 三个页面，并已经在 Chat UIKit 中的 AndroidManifest.xml 中进行注册。
+开发者可以通过继承的方式增加的自己的逻辑，通过以下方式可以替换 UIKit 中默认的 Activity：
+```java
+EaseUIKit.getInstance()
+        .setActivityProvider(new EaseActivityProvider() {
+            @Override
+            public Class getActivity(String activityName) {
+                if(TextUtils.equals(activityName, EaseChatThreadActivity.class.getSimpleName())) {
+                    return ChatThreadActivity.class;
+                }else if(TextUtils.equals(activityName, EaseChatThreadCreateActivity.class.getSimpleName())) {
+                    return ChatThreadCreateActivity.class;
+                }
+                return null;
+            }
+        });
+```
+目前仅支持 EaseChatThreadActivity 和 EaseChatThreadCreateActivity的替换。
+
+#### 子区聊天页面
+Agora Chat UIKit 提供了 EaseChatThreadFragment ，开发者可以继承或者使用 EaseChatThreadFragment#Builder设置自定义的选项，并添加到 Activity 中并传递相应的参数即可使用。
+示例如下：
+```java
+public class ChatThreadActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle arg0) {
+        super.onCreate(arg0);
+        setContentView(R.layout.activity_chat_thread);
+        // parentMsgId: message thread's parent message ID
+        // conversationID: Agora Chat ID: 1v1 is peer's userID, group chat is groupID, chat room is chatRoomID
+        // parentId: group ID to which message thread belongs
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.fl_fragment, 
+                                            new EaseChatThreadFragment.Builder(parentMsgId, conversationID, parentId)
+                                                                      .build())
+                                   .commit();
+    }
+}
+```
+`开发者可以通过 EaseChatThreadFragment.Builder 自定义设置`
+EaseChatThreadFragment 继承自 EaseChatFragment,  EaseChatThreadFragment 提供了 Builder 构建方式，方便开发者进行一些自定义设置，目前提供的设置项如下：
+```java
+// parentMsgId: parent message ID, which is the message create the chat thread
+// conversationID: Agora Chat ID: 1v1 is peer's userID, group chat is groupID, chat room is chatRoomID
+// parentId: group ID to which is the chat thread belongs
+new EaseChatThreadFragment.Builder(parentMsgId, conversationID, parentId)
+        .hideHeader(false)
+        .setThreadParentMsgViewProvider(threadParentMsgView)
+        .setThreadPresenter(chatThreadPresenter)
+        .setHeaderBackPressListener(onBackPressListener)
+        .setOnJoinThreadResultListener(onJoinThreadResultListener)
+        .setOnThreadRoleResultCallback(onThreadRoleResultCallback)
+        .build();
+```
+EaseChatFragment#Builder 提供的方法解释：
+| 方法                                    | 说明                                                 |
+| -------------------------------------- | ---------------------------------------------------- |
+| hideHeader()                           | 是否隐藏子区聊天页面的头布局，默认为 False        |
+| setThreadParentMsgViewProvider()       | 设置父消息布局提供者，可设置自定义父消息布局                 |
+| setThreadPresenter()                   | UIKit 中提供了默认的数据实现 EaseChatThreadPresenterImpl，开发者可以继承 EaseChatThreadPresenter 添加自己的数据逻辑   |
+| setOnJoinThreadResultListener(）        | 设置加入 Chat Thread 的结果监听                         |
+| setOnThreadRoleResultCallback(）       | 设置 Chat Thread中角色的结果回调                         |
+
+
+#### 子区创建页面
+Agora Chat UIKit 提供了 EaseChatThreadCreateFragment ，开发者可以继承或者使用 EaseChatThreadCreateFragment#Builder设置自定义的选项，并添加到 Activity 中并传递相应的参数即可使用。
+示例如下：
+```java
+public class ChatThreadCreateActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle arg0) {
+        super.onCreate(arg0);
+        setContentView(R.layout.activity_chat_thread);
+        // parentId: group ID to which message thread belongs
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.fl_fragment, 
+                                            new EaseChatThreadCreateFragment.Builder(parentId, parentMsgId)
+                                                                            .build())
+                                   .commit();
+    }
+}
+```
+`开发者可以通过 EaseChatThreadCreateFragment.Builder 自定义设置`
+EaseChatThreadCreateFragment 提供了 Builder 构建方式，方便开发者进行一些自定义设置，目前提供的设置项如下：
+```java
+new EaseChatThreadCreateFragment.Builder()
+        .useHeader(true)
+        .setHeaderTitle("title")
+        .enableHeaderPressBack(true)
+        .setHeaderBackPressListener(onBackPressListener)
+        .setThreadMention("mention")
+        .setThreadInputHint("chatTheadHint")
+        .sendMessageByOriginalImage(true)
+        .setThreadParentMsgViewProvider(threadParentMsgView)
+        .setOnChatExtendMenuItemClickListener(onChatExtendMenuItemClickListener)
+        .setOnMessageItemClickListener(onMessageItemClickListener)
+        .setOnMessageSendCallBack(onMessageSendCallBack)
+        .setOnAddMsgAttrsBeforeSendEvent(onAddMsgAttrsBeforeSendEvent)
+        .setOnChatRecordTouchListener(onChatRecordTouchListener)
+        .setOnThreadCreatedResultListener(onThreadCreatedResultListener)
+        .setCustomPresenter(chatThreadCreatePresenter)
+        .setCustomFragment(myConversationListFragment)
+        .build();
+```
+
+EaseConversationListFragment#Builder 提供的方法解释：
+| 方法                                    | 说明                                                             |
+| -------------------------------------- | ---------------------------------------------------------------- |
+| useHeader()                            | 是否使用默认的标题栏（EaseTitleBar），默认为不使用        |
+| setHeaderTitle()                       | 设置标题栏的标题                                        |
+| enableHeaderPressBack()                | 设置是否支持显示返回按钮，默认为不显示返回按钮               |
+| setHeaderBackPressListener(）          | 设置点击标题栏返回按钮的监听器                          |
+| setThreadMention(）                    | 设置消息输入框下的提示信息 |
+| setThreadInputHint(）                  | 设置消息输入框的提示信息 |
+| sendMessageByOriginalImage(）          | 设置是否发送原图，默认是 false |
+| setThreadParentMsgViewProvider(）      | 设置父消息布局提供者，可设置自定义父消息布局 |
+| setOnChatExtendMenuItemClickListener() | 设置扩展功能的条目点击事件监听                            |
+| setOnMessageItemClickListener()        | 设置消息条目的点击事件监听，包括气泡区域及头像的点击及长按事件  |
+| setOnMessageSendCallBack()             | 设置发送消息的结果回调监听                                |
+| setOnAddMsgAttrsBeforeSendEvent()      | 设置发送消息前添加消息扩展属性的回调                        |
+| setOnChatRecordTouchListener()         | 设置录音按钮的触摸事件回调                                |
+| setOnThreadCreatedResultListener()     | 设置子区创建结果监听                                |
+| setCustomPresenter()                   | 设置自定义的创建子区逻辑，需要继承 EaseChatThreadCreatePresenter，UIKit 提供了默认的 EaseChatThreadCreatePresenterImpl |
+| setCustomFragment(）                   | 设置自定义聊天Fragment，需要继承自 EaseConversationListFragment |
 
 ### 设置默认标题栏
 EaseChatFragment 和 EaseConversationListFragment 均提供了默认的标题栏（EaseTitleBar），开发者可以通过获取标题栏的实例进行更多的自定义设置。
