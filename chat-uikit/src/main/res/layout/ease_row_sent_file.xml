@@ -43,7 +43,7 @@
 
             <TextView
                 android:id="@+id/tv_file_name"
-                app:layout_constraintStart_toEndOf="@id/iv_file_icon"
+                app:layout_constraintStart_toEndOf="@id/iv_file_icon_layout"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/tv_file_size"
@@ -68,7 +68,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:textColor="#ffadadad"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 tools:text="9.8MB"/>
 
             <TextView
@@ -81,18 +81,29 @@
                 tools:text="@string/ease_not_download"
                 android:textColor="#ffb6b6b6"
                 android:paddingRight="8dp"
-                android:textSize="12sp"/>
+                android:textSize="14sp"/>
 
-            <ImageView
-                android:id="@+id/iv_file_icon"
-                android:layout_width="@dimen/ease_chat_file_icon_size"
-                android:layout_height="@dimen/ease_chat_file_icon_size"
-                android:layout_marginStart="@dimen/ease_chat_file_icon_margin"
+
+            <RelativeLayout
+                android:id="@+id/iv_file_icon_layout"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/thread_region"
-                android:layout_marginEnd="@dimen/ease_chat_file_icon_margin"
-                android:src="@drawable/ease_chat_item_file" />
+                android:background="@drawable/ease_chatfile_row_bg"
+                android:gravity="center"
+                android:layout_marginEnd="12dp">
+
+                <ImageView
+                    android:id="@+id/iv_file_icon"
+                    android:layout_width="@dimen/ease_chat_file_icon_size"
+                    android:layout_height="@dimen/ease_chat_file_icon_size"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </RelativeLayout>
 
             <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion
                 android:id="@+id/thread_region"
