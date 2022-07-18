@@ -28,7 +28,7 @@
     <color name="ease_btn_blue_normal">#1e90ff</color>
     <color name="ease_btn_blue_pressed">#0066FF</color>
     <color name="ease_chat_receive_bg_color">@color/color_chat_receive</color>
-    <color name="ease_chat_send_bg_start_color">#B128DD</color>
+    <color name="ease_chat_send_bg_start_color">#9728EF</color>
     <color name="ease_chat_send_bg_end_color">#234AFC</color>
     <color name="ease_msg_send_message_color">@color/white</color>
     <color name="ease_msg_name_color">#999999</color>
@@ -54,5 +54,6 @@
     <color name="ease_chat_thread_region_time_color">#999999</color>
 
     <color name="ease_chat_parent_region_owner_color">#4D4D4D</color>
+    <color name="ease_edit_line_color">#E6E6E6</color>
 
 </resources>
