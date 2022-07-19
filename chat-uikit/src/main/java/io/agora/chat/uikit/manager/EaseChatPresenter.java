@@ -156,7 +156,7 @@ public class EaseChatPresenter implements MessageListener, ChatThreadChangeListe
         msg.setChatType(ChatMessage.ChatType.GroupChat);
         msg.setFrom(event.getFrom());
         msg.setTo(event.getChatThread().getParentId());
-        // 将thread id设置消息id，方便后面移除
+        // Set the thread id to the message id for easy removal later
         msg.setMsgId(event.getChatThread().getChatThreadId());
         msg.setAttribute(EaseConstant.EASE_THREAD_NOTIFICATION_TYPE, true);
         msg.setAttribute(EaseConstant.EASE_THREAD_PARENT_MSG_ID, event.getChatThread().getMessageId());

@@ -333,9 +333,8 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
             messageSendCallBack.onSuccess(message);
         }
         if(resultListener == null  || !resultListener.onThreadCreatedSuccess(messageId, message.conversationId())) {
-            EaseActivityProviderHelper.startToChatThreadActivity(mContext, message.conversationId(), messageId, parentId);
+            startToChatThreadActivity(message);
         }
-        mContext.finish();
     }
 
     @Override
@@ -345,6 +344,8 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
         }
         if(resultListener != null ) {
             resultListener.onThreadCreatedFail(code, error);
+        }else {
+            startToChatThreadActivity(message);
         }
     }
 
@@ -369,6 +370,11 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
         if(resultListener != null ) {
             resultListener.onThreadCreatedFail(errorCode, message);
         }
+    }
+
+    public void startToChatThreadActivity(ChatMessage message){
+        EaseActivityProviderHelper.startToChatThreadActivity(mContext, message.conversationId(), messageId, parentId);
+        mContext.finish();
     }
 
     /**
