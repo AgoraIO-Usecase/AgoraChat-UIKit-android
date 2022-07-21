@@ -255,7 +255,7 @@ public class EaseUtils {
 
     /**
      * \~chinese
-     * 判断是否是免打扰的消息,如果是app中应该不要给用户提示新消息
+     * Determine whether it is a do not disturb message, if it is in the app, it should not prompt the user for a new message
      * @param message
      * return
      *
