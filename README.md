@@ -215,8 +215,7 @@ The methods in EaseChatFragment#Builder.
 | getHistoryMessageFromServerOrLocal(）   | Sets whether to get history messages from server or local.<br/> - True: Yes. <br/> - False: No.                       |
 | setOnChatExtendMenuItemClickListener() | Sets the item click event listening of the extended function                            |
 | setOnChatInputChangeListener()         | Sets the listner of text changes in the menu.                                |
-| setOnMessageItemClickListener()        | Sets the click event listner of message entries, including the click and long press events of bubble areas and avatars.
-|
+| setOnMessageItemClickListener()        | Sets the click event listner of message entries, including the click and long press events of bubble areas and avatars. |
 | setOnMessageSendCallBack()             | Sets the result callback listener of sending messages.                              |
 | setOnAddMsgAttrsBeforeSendEvent()      | Sets the callback to add the message extension property before sending the message.              |
 | setOnChatRecordTouchListener()         | Sets the touch event callback of the recording button.                               |
