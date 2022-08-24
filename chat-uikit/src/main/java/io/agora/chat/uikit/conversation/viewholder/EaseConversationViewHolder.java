@@ -3,6 +3,7 @@ package io.agora.chat.uikit.conversation.viewholder;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -46,6 +47,12 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
         mentioned.setVisibility(View.GONE);
         int defaultAvatar = 0;
         String showName = null;
+        Log.e("holder: ",((Conversation) bean.getInfo()).conversationId()+ "  -  " + bean.isMute());
+        if (bean.isMute()){
+            msgMute.setVisibility(View.VISIBLE);
+        }else {
+            msgMute.setVisibility(View.GONE);
+        }
         if(item.getType() == Conversation.ConversationType.GroupChat) {
             if(EaseAtMessageHelper.get().hasAtMeMsg(username)) {
                 mentioned.setText(R.string.ease_chat_were_mentioned);

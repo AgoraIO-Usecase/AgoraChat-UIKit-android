@@ -76,8 +76,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:textColor="#ffadadad"
-                android:textSize="12sp"
+                android:textColor="#666666"
+                android:textSize="14sp"
                 tools:text="9.8MB"/>
 
             <TextView
@@ -110,8 +110,7 @@
                     android:layout_width="@dimen/ease_chat_file_icon_size"
                     android:layout_height="@dimen/ease_chat_file_icon_size"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                 />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </RelativeLayout>
 

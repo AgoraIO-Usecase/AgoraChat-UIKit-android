@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.conversation.presenter;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,9 +9,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import io.agora.ValueCallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.Conversation;
 import io.agora.chat.PushManager;
+import io.agora.chat.SilentModeResult;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
 import io.agora.chat.uikit.manager.EaseNotificationMsgManager;
@@ -19,12 +22,17 @@ import io.agora.exceptions.ChatException;
 
 public class EaseConversationPresenterImpl extends EaseConversationPresenter {
 
+    private final List<Conversation> list = new ArrayList<>();
+    private final List<String> keyList = new ArrayList<>();
     /**
      * Note：The default setting extField values for the timestamp in the conversation, is the conversation placed at the top
      * If you have different logic, implement it yourself and call {@link #sortData(List)}
      */
     @Override
     public void loadData(boolean fetchConfig) {
+        Log.e("holder: ","presenter load: " + fetchConfig);
+        list.clear();
+        keyList.clear();
         // get all conversations
         runOnIO(()-> {
             Map<String, Conversation> conversations = ChatClient.getInstance().chatManager().getAllConversations();
@@ -47,6 +55,7 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
                         }
                         info = new EaseConversationInfo();
                         info.setInfo(conversation);
+                        list.add(conversation);
                         String extField = conversation.getExtField();
                         long lastMsgTime=conversation.getLastMessage().getMsgTime();
                         if(!TextUtils.isEmpty(extField) && EaseUtils.isTimestamp(extField)) {
@@ -73,6 +82,32 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
                 // Should update from server first.
                 if(fetchConfig) {
                     pushManager.getPushConfigsFromServer();
+                    if (list.size() > 0){
+                        pushManager.getSilentModeForConversations(list, new ValueCallBack<Map<String, SilentModeResult>>() {
+                            @Override
+                            public void onSuccess(Map<String, SilentModeResult> value) {
+                                for (Map.Entry<String, SilentModeResult> resultEntry : value.entrySet()) {
+                                    keyList.add(resultEntry.getKey());
+                                }
+                            }
+
+                            @Override
+                            public void onError(int error, String errorMsg) {
+                                    Log.e("pushManager","code: " + error + " - " + errorMsg);
+                            }
+                        });
+                        if (keyList.size() > 0){
+                            for (EaseConversationInfo info : infos){
+                                info.setMute(false);
+                                Object item = info.getInfo();
+                                if (item instanceof Conversation){
+                                    if ( keyList.contains(((Conversation) item).conversationId())){
+                                        info.setMute(true);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 List<String> noPushGroups = pushManager.getNoPushGroups();
                 List<String> noPushUsers = pushManager.getNoPushUsers();

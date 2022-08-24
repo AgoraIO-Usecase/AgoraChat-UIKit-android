@@ -1,7 +1,6 @@
 package io.agora.chat.uikit.models;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 import io.agora.chat.uikit.R;
 
@@ -88,10 +87,10 @@ public class EaseMessageMenuData {
         return REACTION_MORE;
     }
 
-    private static final Map<String, EaseEmojicon> REACTION_DATA_MAP = createReactionDataMap();
+    private static final LinkedHashMap<String, EaseEmojicon> REACTION_DATA_MAP = createReactionDataMap();
 
-    private static Map<String, EaseEmojicon> createReactionDataMap() {
-        Map<String, EaseEmojicon> emojiconsMap = new HashMap<>(REACTION_ICONS.length);
+    private static LinkedHashMap<String, EaseEmojicon> createReactionDataMap() {
+        LinkedHashMap<String, EaseEmojicon> emojiconsMap = new LinkedHashMap<>(REACTION_ICONS.length);
         EaseEmojicon emojicon;
         String id;
         for (int i = 0; i < REACTION_ICONS.length; i++) {
@@ -103,7 +102,7 @@ public class EaseMessageMenuData {
         return emojiconsMap;
     }
 
-    public static Map<String, EaseEmojicon> getReactionDataMap() {
+    public static LinkedHashMap<String, EaseEmojicon> getReactionDataMap() {
         return REACTION_DATA_MAP;
     }
 
