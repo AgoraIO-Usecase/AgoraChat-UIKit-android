@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,7 +86,7 @@ public class EaseReactionMenuHelper {
             return;
         }
         mReactionItems.clear();
-        Map<String, EaseEmojicon> reactionMap = EaseMessageMenuData.getReactionDataMap();
+        LinkedHashMap<String, EaseEmojicon> reactionMap = EaseMessageMenuData.getReactionDataMap();
         int count = 1;
         ReactionItemBean item;
         for (String id : EaseMessageMenuData.REACTION_FREQUENTLY_ICONS_IDS) {
@@ -140,7 +141,7 @@ public class EaseReactionMenuHelper {
     }
 
     private void initAllReactionData() {
-        Map<String, EaseEmojicon> reactionMap = EaseMessageMenuData.getReactionDataMap();
+        LinkedHashMap<String, EaseEmojicon> reactionMap = EaseMessageMenuData.getReactionDataMap();
         ReactionItemBean item;
         for (Map.Entry<String, EaseEmojicon> entry : reactionMap.entrySet()) {
             item = new ReactionItemBean();
