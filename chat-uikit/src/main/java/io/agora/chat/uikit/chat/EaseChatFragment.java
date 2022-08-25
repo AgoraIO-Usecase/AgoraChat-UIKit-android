@@ -171,11 +171,11 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             }
             int leftBubbleBg = bundle.getInt(Constant.KEY_MSG_LEFT_BUBBLE, -1);
             if(leftBubbleBg != -1) {
-                chatLayout.getChatMessageListLayout().setItemSenderBackground(ContextCompat.getDrawable(mContext, leftBubbleBg));
+                chatLayout.getChatMessageListLayout().setItemReceiverBackground(ContextCompat.getDrawable(mContext, leftBubbleBg));
             }
             int rightBubbleBg = bundle.getInt(Constant.KEY_MSG_RIGHT_BUBBLE, -1);
             if(rightBubbleBg != -1) {
-                chatLayout.getChatMessageListLayout().setItemReceiverBackground(ContextCompat.getDrawable(mContext, rightBubbleBg));
+                chatLayout.getChatMessageListLayout().setItemSenderBackground(ContextCompat.getDrawable(mContext, rightBubbleBg));
             }
             boolean showNickname = bundle.getBoolean(Constant.KEY_SHOW_NICKNAME, false);
             chatLayout.getChatMessageListLayout().showNickname(showNickname);
