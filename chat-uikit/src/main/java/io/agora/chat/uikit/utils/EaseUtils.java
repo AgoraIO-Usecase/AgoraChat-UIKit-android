@@ -141,7 +141,7 @@ public class EaseUtils {
             EMLog.e(TAG, "error, unknow type");
             return "";
         }
-        Log.e("TAG", "message text = "+digest);
+//        EMLog.e("TAG", "message text = "+digest);
         return digest;
     }
     

@@ -92,14 +92,14 @@ public class EasePreferenceManager {
     }
 
 
-    public void setMuteMap(Map<String, Boolean> data){
-        Map<String, Boolean> muteMap = getMuteMap();
+    public void setMuteMap(Map<String, Long> data){
+        Map<String, Long> muteMap = getMuteMap();
         muteMap.putAll(data);
         JSONArray mJsonArray = new JSONArray();
-        Iterator<Map.Entry<String, Boolean>> iterator = muteMap.entrySet().iterator();
+        Iterator<Map.Entry<String, Long>> iterator = muteMap.entrySet().iterator();
         JSONObject object = new JSONObject();
         while (iterator.hasNext()) {
-            Map.Entry<String, Boolean> entry = iterator.next();
+            Map.Entry<String, Long> entry = iterator.next();
             try {
                 object.put(entry.getKey(), entry.getValue());
             } catch (JSONException e) {
@@ -110,8 +110,8 @@ public class EasePreferenceManager {
         editor.commit();
     }
 
-    public Map<String,Boolean> getMuteMap(){
-        Map<String, Boolean> mute = new HashMap<>();
+    public Map<String,Long> getMuteMap(){
+        Map<String, Long> mute = new HashMap<>();
         String result = mSharedPreferences.getString(MUTE_DATA_KEY, "");
         try {
             JSONArray array = new JSONArray(result);
@@ -121,7 +121,7 @@ public class EasePreferenceManager {
                 if (names != null) {
                     for (int j = 0; j < names.length(); j++) {
                         String name = names.getString(j);
-                        Boolean value = itemObject.getBoolean(name);
+                        Long value = itemObject.getLong(name);
                         mute.put(name, value);
                     }
                 }
@@ -133,8 +133,8 @@ public class EasePreferenceManager {
     }
 
     public void removeMute(String key){
-        Map<String,Boolean> map = getMuteMap();
-        map.put(key,false);
+        Map<String,Long> map = getMuteMap();
+        map.put(key,0L);
         setMuteMap(map);
     }
 }

@@ -27,8 +27,8 @@
 
     <ImageView
         android:id="@+id/iv_delete"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/ease_chat_item_menu_delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
