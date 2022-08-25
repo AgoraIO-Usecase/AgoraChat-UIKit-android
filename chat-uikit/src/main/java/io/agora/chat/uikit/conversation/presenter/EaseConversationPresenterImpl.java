@@ -115,22 +115,6 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
 
                     }
                 }
-//                List<String> noPushGroups = pushManager.getNoPushGroups();
-//                List<String> noPushUsers = pushManager.getNoPushUsers();
-//                if((noPushGroups == null || noPushGroups.size() <= 0) && (noPushUsers == null || noPushUsers.size() <= 0)) {
-//                    return;
-//                }
-//                for (EaseConversationInfo info : infos){
-//                    info.setMute(false);
-//                    Object item = info.getInfo();
-//                    if(item instanceof Conversation) {
-//                        if((noPushGroups != null && noPushGroups.contains(((Conversation) item).conversationId()))
-//                                || (noPushUsers != null && noPushUsers.contains(((Conversation) item).conversationId())) ) {
-//                            info.setMute(true);
-//                        }
-//                    }
-//                }
-
             } catch (ChatException e) {
                 e.printStackTrace();
             }
