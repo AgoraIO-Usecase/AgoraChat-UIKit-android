@@ -668,6 +668,14 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mContext != null && mContext.isFinishing()) {
+            ChatClient.getInstance().chatManager().removeMessageListener(chatLayout);
+        }
+    }
+
     public static class Builder {
         protected final Bundle bundle;
         private EaseTitleBar.OnBackPressListener backPressListener;
