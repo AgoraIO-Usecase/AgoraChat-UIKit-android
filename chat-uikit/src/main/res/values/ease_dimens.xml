@@ -16,7 +16,7 @@
     <dimen name="ease_chat_nick_margin_left">12dp</dimen>
     <dimen name="ease_chat_nick_text_size">13sp</dimen>
 
-    <dimen name="ease_chat_file_icon_size">44dp</dimen>
+    <dimen name="ease_chat_file_icon_size">50dp</dimen>
     <dimen name="ease_chat_file_icon_margin">8dp</dimen>
     <dimen name="ease_chat_file_bubble_min_height">70dp</dimen>
 

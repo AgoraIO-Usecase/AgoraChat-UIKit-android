@@ -3,6 +3,7 @@ package io.agora.chat.uikit.conversation.viewholder;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -24,9 +25,7 @@ import io.agora.chat.uikit.conversation.model.EaseConversationSetStyle;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.manager.EasePreferenceManager;
 import io.agora.chat.uikit.models.EaseGroupInfo;
-import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
-import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
 import io.agora.chat.uikit.utils.EaseUserUtils;
@@ -46,6 +45,12 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
         mentioned.setVisibility(View.GONE);
         int defaultAvatar = 0;
         String showName = null;
+        Log.e("holder: ",((Conversation) bean.getInfo()).conversationId()+ "  -  " + bean.isMute());
+        if (bean.isMute()){
+            msgMute.setVisibility(View.VISIBLE);
+        }else {
+            msgMute.setVisibility(View.GONE);
+        }
         if(item.getType() == Conversation.ConversationType.GroupChat) {
             if(EaseAtMessageHelper.get().hasAtMeMsg(username)) {
                 mentioned.setText(R.string.ease_chat_were_mentioned);
