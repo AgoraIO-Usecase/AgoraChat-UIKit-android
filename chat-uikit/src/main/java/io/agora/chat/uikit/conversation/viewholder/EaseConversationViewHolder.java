@@ -107,6 +107,7 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
         // add judgement for conversation type
         if(item.getType() == Conversation.ConversationType.Chat) {
             EaseUserUtils.setUserAvatar(context, username, ContextCompat.getDrawable(context, defaultAvatar), this.avatar.getDrawable(), this.avatar);
+            EaseUserUtils.setUserNick(username, this.name);
         }
         if(!setModel.isHideUnreadDot()) {
             showUnreadNum(item.getUnreadMsgCount());
