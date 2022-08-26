@@ -134,7 +134,19 @@ public class EasePreferenceManager {
 
     public void removeMute(String key){
         Map<String,Long> map = getMuteMap();
-        map.put(key,0L);
-        setMuteMap(map);
+        map.remove(key);
+        JSONArray mJsonArray = new JSONArray();
+        Iterator<Map.Entry<String, Long>> iterator = map.entrySet().iterator();
+        JSONObject object = new JSONObject();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Long> entry = iterator.next();
+            try {
+                object.put(entry.getKey(), entry.getValue());
+            } catch (JSONException e) {
+            }
+        }
+        mJsonArray.put(object);
+        editor.putString(MUTE_DATA_KEY, mJsonArray.toString());
+        editor.commit();
     }
 }
