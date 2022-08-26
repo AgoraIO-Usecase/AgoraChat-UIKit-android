@@ -659,7 +659,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     @Override
     public void onChatThreadDestroyed(ChatThreadEvent event) {
         if(isMessageInit) {
-            chatLayout.getChatMessageListLayout().refreshMessage(event.getChatThread().getMessageId());
+            chatLayout.getChatMessageListLayout().refreshMessages();
         }
     }
 
