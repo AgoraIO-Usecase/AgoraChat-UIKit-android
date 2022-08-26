@@ -3,7 +3,6 @@ package io.agora.chat.uikit.conversation.viewholder;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -30,6 +29,7 @@ import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
+import io.agora.util.EMLog;
 
 public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
     public EaseConversationViewHolder(@NonNull View itemView, EaseConversationSetStyle style) {
@@ -45,7 +45,7 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
         mentioned.setVisibility(View.GONE);
         int defaultAvatar = 0;
         String showName = null;
-        Log.e("holder: ",((Conversation) bean.getInfo()).conversationId()+ "  -  " + bean.isMute());
+        EMLog.e("holder: ",((Conversation) bean.getInfo()).conversationId()+ "  -  " + bean.isMute());
         if (bean.isMute()){
             msgMute.setVisibility(View.VISIBLE);
         }else {

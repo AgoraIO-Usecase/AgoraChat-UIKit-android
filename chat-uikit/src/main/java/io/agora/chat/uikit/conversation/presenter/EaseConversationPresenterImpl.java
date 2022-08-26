@@ -1,7 +1,6 @@
 package io.agora.chat.uikit.conversation.presenter;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +20,7 @@ import io.agora.chat.uikit.manager.EaseNotificationMsgManager;
 import io.agora.chat.uikit.manager.EasePreferenceManager;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.exceptions.ChatException;
+import io.agora.util.EMLog;
 
 public class EaseConversationPresenterImpl extends EaseConversationPresenter {
 
@@ -31,7 +31,7 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
      */
     @Override
     public void loadData(boolean fetchConfig) {
-        Log.e("holder: ","presenter load: " + fetchConfig);
+        EMLog.e("holder: ","presenter load: " + fetchConfig);
         // get all conversations
         runOnIO(()-> {
             Map<String, Conversation> conversations = ChatClient.getInstance().chatManager().getAllConversations();
@@ -46,7 +46,7 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
             List<EaseConversationInfo> infos = new ArrayList<>();
             synchronized (this) {
                 EaseConversationInfo info = null;
-                Map<String,Boolean> mute =  EasePreferenceManager.getInstance().getMuteMap();
+                Map<String,Long> mute =  EasePreferenceManager.getInstance().getMuteMap();
                 for (Conversation conversation : conversations.values()) {
                     if(conversation.getAllMessages().size() != 0) {
                         // Remove notification conversation
@@ -57,10 +57,11 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
                         info.setInfo(conversation);
                         list.add(conversation);
                         if (mute.size() > 0){
-                            for (Map.Entry<String, Boolean> entry : mute.entrySet()) {
+                            for (Map.Entry<String, Long> entry : mute.entrySet()) {
                                 if (conversation.conversationId().equals(entry.getKey())){
-                                    Log.e("holder: ","pre id: " + conversation.conversationId() + " value: " + entry.getValue());
-                                    info.setMute(entry.getValue());
+                                    EMLog.e("holder: ","pre id: " + conversation.conversationId() + " value: " + entry.getValue() + " currentTime: "+System.currentTimeMillis()
+                                    + "  "+ ((System.currentTimeMillis() - entry.getValue()) < 0));
+                                    info.setMute((System.currentTimeMillis() - entry.getValue()) < 0);
                                 }
                             }
                         }
@@ -94,9 +95,9 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
                         pushManager.getSilentModeForConversations(list, new ValueCallBack<Map<String, SilentModeResult>>() {
                             @Override
                             public void onSuccess(Map<String, SilentModeResult> value) {
-                                Map<String,Boolean> mute = new HashMap<>();
+                                Map<String,Long> mute = new HashMap<>();
                                 for (Map.Entry<String, SilentModeResult> resultEntry : value.entrySet()) {
-                                    mute.put(resultEntry.getKey(),true);
+                                    mute.put(resultEntry.getKey(), resultEntry.getValue().getExpireTimestamp());
                                 }
                                 if (mute.size() > 0){
                                     EasePreferenceManager.getInstance().setMuteMap(mute);
@@ -108,28 +109,12 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
 
                             @Override
                             public void onError(int error, String errorMsg) {
-                                    Log.e("pushManager","code: " + error + " - " + errorMsg);
+                                    EMLog.e("pushManager","code: " + error + " - " + errorMsg);
                             }
                         });
 
                     }
                 }
-//                List<String> noPushGroups = pushManager.getNoPushGroups();
-//                List<String> noPushUsers = pushManager.getNoPushUsers();
-//                if((noPushGroups == null || noPushGroups.size() <= 0) && (noPushUsers == null || noPushUsers.size() <= 0)) {
-//                    return;
-//                }
-//                for (EaseConversationInfo info : infos){
-//                    info.setMute(false);
-//                    Object item = info.getInfo();
-//                    if(item instanceof Conversation) {
-//                        if((noPushGroups != null && noPushGroups.contains(((Conversation) item).conversationId()))
-//                                || (noPushUsers != null && noPushUsers.contains(((Conversation) item).conversationId())) ) {
-//                            info.setMute(true);
-//                        }
-//                    }
-//                }
-
             } catch (ChatException e) {
                 e.printStackTrace();
             }
