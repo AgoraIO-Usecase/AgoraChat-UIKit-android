@@ -200,13 +200,18 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             ((AppCompatActivity) getContext()).getLifecycle().addObserver((LifecycleEventObserver) (source, event) -> {
                 EMLog.e(TAG, "event: "+event.name());
                 if(event == Lifecycle.Event.ON_PAUSE && ((AppCompatActivity) getContext()).isFinishing()) {
-                    EaseChatItemStyleHelper.getInstance().clear(getContext());
                     if(conversation != null) {
                         conversation.markAllMessagesAsRead();
                     }
                 }
             });
         }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EaseChatItemStyleHelper.getInstance().clear(getContext());
     }
 
     public void init(LoadDataType loadDataType, String username, EaseChatType chatType) {

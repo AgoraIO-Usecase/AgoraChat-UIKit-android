@@ -323,7 +323,7 @@ public abstract class EaseChatRow extends LinearLayout {
             if(userAvatarView != null) {
                 setAvatarOptions(itemStyle);
             }
-            if(usernickView != null) {
+            if(usernickView != null && itemStyle != null) {
                 //If displayed on the same side, the nickname needs to be displayed
                 if(itemStyle.getItemShowType() == 1 || itemStyle.getItemShowType() == 2) {
                     usernickView.setVisibility(VISIBLE);
@@ -334,7 +334,7 @@ public abstract class EaseChatRow extends LinearLayout {
             }
             if(bubbleLayout != null) {
                 if(message.getType() == ChatMessage.Type.TXT) {
-                    if(itemStyle.getItemMinHeight() != 0) {
+                    if(itemStyle != null && itemStyle.getItemMinHeight() != 0) {
                         bubbleLayout.setMinimumHeight(itemStyle.getItemMinHeight());
                     }
                 }
@@ -351,6 +351,9 @@ public abstract class EaseChatRow extends LinearLayout {
      * @param itemStyle
      */
     protected void setAvatarOptions(EaseChatSetStyle itemStyle) {
+        if(itemStyle == null) {
+            return;
+        }
         if (itemStyle.isShowAvatar()) {
             userAvatarView.setVisibility(View.VISIBLE);
             if(userAvatarView instanceof EaseImageView) {
