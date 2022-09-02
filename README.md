@@ -885,7 +885,7 @@ EaseSettingsProvider provides the following methods:：
 | -------------------------------------- | -------------------- |
 | isMsgNotifyAllowed()                   | Whether to send local message notifications. By default, local message notifications are not sent. |
 | isMsgSoundAllowed()                    | Whether to make a sound when receiving a message. By default, no sound is made when a message is received. |
-| isMsgVibrateAllowed()                  | Whether to vibrate when receiving a message. By default, Yes.|
+| isMsgVibrateAllowed()                  | Whether to vibrate when receiving a message. By default, Yes. You need to add the vibration permission before you enable vibration.|
 | isSpeakerOpened()                      | Whether to enable the speaker. By default, the speaker is disabled.|
 
 #### Set the avatar and nickname for a group
