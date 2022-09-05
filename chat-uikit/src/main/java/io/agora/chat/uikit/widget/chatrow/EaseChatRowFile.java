@@ -62,25 +62,26 @@ public class EaseChatRowFile extends EaseChatRow {
 	@Override
 	protected void onSetUpView() {
 	    fileMessageBody = (NormalFileMessageBody) message.getBody();
-        Uri filePath = fileMessageBody.getLocalUri();
+//        Uri filePath = fileMessageBody.getLocalUri();
+        fileStateView.setVisibility(GONE);
         fileNameView.setText(fileMessageBody.getFileName());
         fileSizeView.setText(TextFormater.getDataSize(fileMessageBody.getFileSize()));
         setFileIcon(fileMessageBody.getFileName());
-        if (message.direct() == ChatMessage.Direct.SEND){
-            if (EaseFileUtils.isFileExistByUri(context, filePath)
-                    && message.status() == ChatMessage.Status.SUCCESS) {
-                fileStateView.setText(R.string.ease_have_uploaded);
-            }else {
-                fileStateView.setText("");
-            }
-        }
-        if (message.direct() == ChatMessage.Direct.RECEIVE) {
-            if (EaseFileUtils.isFileExistByUri(context, filePath)) {
-                fileStateView.setText(R.string.ease_have_downloaded);
-            } else {
-                fileStateView.setText(R.string.ease_did_not_download);
-            }
-        }
+//        if (message.direct() == ChatMessage.Direct.SEND){
+//            if (EaseFileUtils.isFileExistByUri(context, filePath)
+//                    && message.status() == ChatMessage.Status.SUCCESS) {
+//                fileStateView.setText(R.string.ease_have_uploaded);
+//            }else {
+//                fileStateView.setText("");
+//            }
+//        }
+//        if (message.direct() == ChatMessage.Direct.RECEIVE) {
+//            if (EaseFileUtils.isFileExistByUri(context, filePath)) {
+//                fileStateView.setText(R.string.ease_have_downloaded);
+//            } else {
+//                fileStateView.setText(R.string.ease_did_not_download);
+//            }
+//        }
 	}
 
     @Override

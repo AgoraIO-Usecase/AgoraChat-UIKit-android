@@ -897,7 +897,7 @@ EaseSettingsProvider 提供了如下方法：
 | -------------------------------------- | -------------------- |
 | isMsgNotifyAllowed()                   | 是否允许消息进行本地通知，默认不进行本地通知 |
 | isMsgSoundAllowed()                    | 是否收到消息时播放声音，默认不播放声音 |
-| isMsgVibrateAllowed()                  | 是否收到消息时振动，默认不开启振动 |
+| isMsgVibrateAllowed()                  | 是否收到消息时振动，默认不开启振动。开启振动前，需添加振动权限。|
 | isSpeakerOpened()                      | 是否开启外放声音，默认不开启外放声音 |
 
 #### 设置群组的头像和昵称

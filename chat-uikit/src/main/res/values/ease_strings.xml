@@ -18,7 +18,7 @@
     <string name="ease_action_forward">Forward</string>
     <string name="ease_action_recall">Recall</string>
     <string name="ease_action_delete">Delete</string>
-    <string name="ease_action_unsent">Unsent</string>
+    <string name="ease_action_unsent">Unsend</string>
 
     <string name="ease_conversation_menu_make_read">Make read</string>
     <string name="ease_conversation_menu_make_top">Sticky on Top</string>
@@ -113,4 +113,7 @@
 
     <string name="ease_thread_region_no_message">No Messages.</string>
     <string name="ease_no_parent_message">Sorry, unable to load Original message.</string>
+    <string name="group_change_owner">%1$s becomes the new Group Owner</string>
+    <string name="group_change_name">You named Group %1$s</string>
+
 </resources>

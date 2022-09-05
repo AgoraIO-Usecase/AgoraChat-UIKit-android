@@ -171,11 +171,11 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             }
             int leftBubbleBg = bundle.getInt(Constant.KEY_MSG_LEFT_BUBBLE, -1);
             if(leftBubbleBg != -1) {
-                chatLayout.getChatMessageListLayout().setItemSenderBackground(ContextCompat.getDrawable(mContext, leftBubbleBg));
+                chatLayout.getChatMessageListLayout().setItemReceiverBackground(ContextCompat.getDrawable(mContext, leftBubbleBg));
             }
             int rightBubbleBg = bundle.getInt(Constant.KEY_MSG_RIGHT_BUBBLE, -1);
             if(rightBubbleBg != -1) {
-                chatLayout.getChatMessageListLayout().setItemReceiverBackground(ContextCompat.getDrawable(mContext, leftBubbleBg));
+                chatLayout.getChatMessageListLayout().setItemSenderBackground(ContextCompat.getDrawable(mContext, rightBubbleBg));
             }
             boolean showNickname = bundle.getBoolean(Constant.KEY_SHOW_NICKNAME, false);
             chatLayout.getChatMessageListLayout().showNickname(showNickname);
@@ -659,13 +659,21 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     @Override
     public void onChatThreadDestroyed(ChatThreadEvent event) {
         if(isMessageInit) {
-            chatLayout.getChatMessageListLayout().refreshMessage(event.getChatThread().getMessageId());
+            chatLayout.getChatMessageListLayout().refreshMessages();
         }
     }
 
     @Override
     public void onChatThreadUserRemoved(ChatThreadEvent event) {
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mContext != null && mContext.isFinishing()) {
+            ChatClient.getInstance().chatManager().removeMessageListener(chatLayout);
+        }
     }
 
     public static class Builder {

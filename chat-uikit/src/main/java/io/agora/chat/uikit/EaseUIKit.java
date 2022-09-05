@@ -1,8 +1,15 @@
 package io.agora.chat.uikit;
 
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+
+import java.lang.reflect.Method;
 
 import io.agora.ConnectionListener;
 import io.agora.Error;
@@ -109,15 +116,34 @@ public class EaseUIKit {
         return this;
     }
 
-    public boolean isMainProcess(Context context) {
-        int pid = android.os.Process.myPid();
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo appProcess : activityManager.getRunningAppProcesses()) {
-            if (appProcess.pid == pid) {
-                return context.getApplicationInfo().packageName.equals(appProcess.processName);
-            }
+    public boolean isMainProcess(@NonNull Context context) {
+        String processName;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            processName = getProcessNameByApplication();
+        }else {
+            processName = getProcessNameByReflection();
         }
-        return false;
+        return context.getApplicationInfo().packageName.equals(processName);
+    }
+
+    private String getProcessNameByReflection() {
+        String processName = null;
+        try {
+            final Method declaredMethod = Class.forName("android.app.ActivityThread", false, Application.class.getClassLoader())
+                    .getDeclaredMethod("currentProcessName", (Class<?>[]) new Class[0]);
+            declaredMethod.setAccessible(true);
+            final Object invoke = declaredMethod.invoke(null, new Object[0]);
+            if (invoke instanceof String) {
+                processName = (String) invoke;
+            }
+        } catch (Throwable e) {
+        }
+        return processName;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    private String getProcessNameByApplication() {
+        return Application.getProcessName();
     }
 
     public boolean init(Context context, ChatOptions options) {

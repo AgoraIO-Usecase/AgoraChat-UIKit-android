@@ -192,9 +192,9 @@ public class EaseCompat {
         /* get uri */
         Uri uri = getUriForFile(context, file);
         //To solve the local video file can not open the problem
-        if(isVideoFile(context, filename)) {
-            uri = Uri.parse(file.getAbsolutePath());
-        }
+//        if(isVideoFile(context, filename)) {
+//            uri = Uri.parse(file.getAbsolutePath());
+//        }
         openFile(context, uri, filename, mimeType);
     }
 

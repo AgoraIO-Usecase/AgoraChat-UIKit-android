@@ -88,7 +88,7 @@ uploadArchives {
                 //println "current groupId:$group"
                 //groupId group
                 //artifactId archivesBaseName
-                description 'Agora SDK'
+                description 'Agora SDK UIKit'
                 url 'http://maven.apache.org'
 
                 scm {
@@ -107,7 +107,7 @@ uploadArchives {
                 developers {
                     developer {
                         name 'agorabuilder'
-                        email 'wangzhi@agora.io'
+                        email 'zhaoliang@agora.io'
                         organization 'https://github.com/AgoraIO'
                         url 'https://www.agora.io/cn'
                     }

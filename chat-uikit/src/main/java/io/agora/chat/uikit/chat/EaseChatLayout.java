@@ -1142,7 +1142,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         EMLog.i(TAG, "onReactionChanged");
         for (MessageReactionChange reactionChange : list) {
             if (conversationId.equals(reactionChange.getConversionID())) {
-                refreshMessage(ChatClient.getInstance().chatManager().getMessage(reactionChange.getMessageId()));
+                EaseThreadManager.getInstance().runOnMainThread(()-> refreshMessage(ChatClient.getInstance().chatManager().getMessage(reactionChange.getMessageId())));
             }
         }
     }

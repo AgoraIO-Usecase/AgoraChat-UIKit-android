@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
 import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,6 +43,7 @@ import io.agora.chat.uikit.manager.EaseThreadManager;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.utils.EaseUtils;
+import io.agora.util.EMLog;
 
 
 public class EaseChatMessageListLayout extends RelativeLayout implements IChatMessageListView, IRecyclerViewHandle
@@ -191,12 +194,24 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        EaseChatItemStyleHelper.getInstance().clear(getContext());
-        super.onDetachedFromWindow();
-        if(conversation != null) {
-            conversation.markAllMessagesAsRead();
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        if(getContext() != null && getContext() instanceof AppCompatActivity) {
+            ((AppCompatActivity) getContext()).getLifecycle().addObserver((LifecycleEventObserver) (source, event) -> {
+                EMLog.e(TAG, "event: "+event.name());
+                if(event == Lifecycle.Event.ON_PAUSE && ((AppCompatActivity) getContext()).isFinishing()) {
+                    if(conversation != null) {
+                        conversation.markAllMessagesAsRead();
+                    }
+                }
+            });
         }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EaseChatItemStyleHelper.getInstance().clear(getContext());
     }
 
     public void init(LoadDataType loadDataType, String username, EaseChatType chatType) {

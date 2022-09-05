@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,7 +86,7 @@ public class EaseReactionMenuHelper {
             return;
         }
         mReactionItems.clear();
-        Map<String, EaseEmojicon> reactionMap = EaseMessageMenuData.getReactionDataMap();
+        LinkedHashMap<String, EaseEmojicon> reactionMap = EaseMessageMenuData.getReactionDataMap();
         int count = 1;
         ReactionItemBean item;
         for (String id : EaseMessageMenuData.REACTION_FREQUENTLY_ICONS_IDS) {
@@ -140,7 +141,7 @@ public class EaseReactionMenuHelper {
     }
 
     private void initAllReactionData() {
-        Map<String, EaseEmojicon> reactionMap = EaseMessageMenuData.getReactionDataMap();
+        LinkedHashMap<String, EaseEmojicon> reactionMap = EaseMessageMenuData.getReactionDataMap();
         ReactionItemBean item;
         for (Map.Entry<String, EaseEmojicon> entry : reactionMap.entrySet()) {
             item = new ReactionItemBean();
@@ -192,6 +193,7 @@ public class EaseReactionMenuHelper {
                     }
                     if (isAdded) {
                         layout.setBackgroundResource(R.drawable.ease_bg_message_menu_reaction_popupwindow);
+                        layout.getBackground().setAlpha(95);
                     } else {
                         layout.setBackgroundColor(Color.TRANSPARENT);
                     }
@@ -212,6 +214,11 @@ public class EaseReactionMenuHelper {
                                    RecyclerView parent, @NonNull RecyclerView.State state) {
             outRect.bottom = space;
             outRect.top = space;
+            if (parent.getChildAdapterPosition(view) %(REACTION_SPAN_COUNT+1) == 0) {
+                outRect.left = space;
+            } else {
+                outRect.left = 0;
+            }
         }
     }
 }

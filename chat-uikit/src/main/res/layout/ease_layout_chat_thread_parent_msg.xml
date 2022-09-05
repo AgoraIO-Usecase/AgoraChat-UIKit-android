@@ -13,7 +13,7 @@
         android:layout_height="28dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="11dp"
+        android:layout_marginStart="12dp"
         android:scaleType="fitXY"
         app:ease_shape_type="round"
         android:src="@drawable/ease_default_avatar" />
@@ -56,7 +56,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="16dp"
         android:textColor="@color/ease_msg_name_color"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:gravity="end"
         tools:text="09:51"/>
 
@@ -114,6 +114,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/black"
+            android:textStyle="bold"
             android:textSize="16sp"
             tools:text="Agora Chat" />
 
@@ -281,22 +282,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@id/tv_file_size"
-                app:layout_constraintEnd_toStartOf="@id/iv_file_icon"
+                app:layout_constraintEnd_toStartOf="@id/iv_file_icon_layout"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_file_size"
                 tools:text="@string/ease_not_download"
                 android:textColor="#ffb6b6b6"
                 android:paddingRight="8dp"
                 android:textSize="12sp"/>
 
-            <ImageView
-                android:id="@+id/iv_file_icon"
-                android:layout_width="@dimen/ease_chat_file_icon_size"
-                android:layout_height="@dimen/ease_chat_file_icon_size"
+
+            <RelativeLayout
+                android:id="@+id/iv_file_icon_layout"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginStart="@dimen/ease_chat_file_icon_margin"
-                android:src="@drawable/ease_chat_item_file" />
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:background="@drawable/ease_chatfile_row_bg" >
+
+                <ImageView
+                    android:id="@+id/iv_file_icon"
+                    android:layout_width="@dimen/ease_chat_file_icon_size"
+                    android:layout_height="@dimen/ease_chat_file_icon_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+            </RelativeLayout>
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
