@@ -38,10 +38,10 @@ import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.constants.EaseConstant;
+import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 import io.agora.util.EMLog;
-import io.agora.util.HanziToPinyin;
 
 public class EaseUtils {
 	private static final String TAG = "CommonUtils";
@@ -141,7 +141,7 @@ public class EaseUtils {
             EMLog.e(TAG, "error, unknow type");
             return "";
         }
-        Log.e("TAG", "message text = "+digest);
+//        EMLog.e("TAG", "message text = "+digest);
         return digest;
     }
     
@@ -172,7 +172,7 @@ public class EaseUtils {
     public static void setUserInitialLetter(EaseUser user) {
         final String DefaultLetter = "#";
         String letter = DefaultLetter;
-        
+
         final class GetInitialLetter {
             String getLetter(String name) {
                 if (TextUtils.isEmpty(name)) {
@@ -182,13 +182,11 @@ public class EaseUtils {
                 if (Character.isDigit(char0)) {
                     return DefaultLetter;
                 }
-                ArrayList<HanziToPinyin.Token> l = HanziToPinyin.getInstance().get(name.substring(0, 1));
-                if (l != null && l.size() > 0 && l.get(0).target.length() > 0)
-                {
-                    HanziToPinyin.Token token = l.get(0);
-                    String letter = token.target.substring(0, 1).toUpperCase();
+                String pinyin = HanziToPinyin.getPinyin(name);
+                if(!TextUtils.isEmpty(pinyin)) {
+                    String letter = pinyin.substring(0, 1).toUpperCase();
                     char c = letter.charAt(0);
-                    if (c < 'A' || c > 'Z') {
+                    if(c < 'A' || c > 'Z') {
                         return DefaultLetter;
                     }
                     return letter;
@@ -196,12 +194,12 @@ public class EaseUtils {
                 return DefaultLetter;
             }
         }
-        
+
         if ( !TextUtils.isEmpty(user.getNickname()) ) {
             letter = new GetInitialLetter().getLetter(user.getNickname());
             user.setInitialLetter(letter);
             return;
-        } 
+        }
         if (letter.equals(DefaultLetter) && !TextUtils.isEmpty(user.getUsername())) {
             letter = new GetInitialLetter().getLetter(user.getUsername());
         }
@@ -224,25 +222,40 @@ public class EaseUtils {
     }
 
     /**
+     * change the chat type to EMConversationType
+     * @param chatType
+     * @return
+     */
+    public static Conversation.ConversationType getConversationType(EaseChatType chatType) {
+        if (chatType == EaseChatType.SINGLE_CHAT) {
+            return Conversation.ConversationType.Chat;
+        } else if (chatType == EaseChatType.GROUP_CHAT) {
+            return Conversation.ConversationType.GroupChat;
+        } else {
+            return Conversation.ConversationType.ChatRoom;
+        }
+    }
+
+    /**
      * get chat type by conversation type
      * @param conversation
      * @return
      */
-    public static int getChatType(Conversation conversation) {
+    public static EaseChatType getChatType(Conversation conversation) {
         if(conversation.isGroup()) {
             if(conversation.getType() == Conversation.ConversationType.ChatRoom) {
-                return EaseConstant.CHATTYPE_CHATROOM;
+                return EaseChatType.CHATROOM;
             }else {
-                return EaseConstant.CHATTYPE_GROUP;
+                return EaseChatType.GROUP_CHAT;
             }
         }else {
-            return EaseConstant.CHATTYPE_SINGLE;
+            return EaseChatType.SINGLE_CHAT;
         }
     }
 
     /**
      * \~chinese
-     * 判断是否是免打扰的消息,如果是app中应该不要给用户提示新消息
+     * Determine whether it is a do not disturb message, if it is in the app, it should not prompt the user for a new message
      * @param message
      * return
      *
@@ -339,10 +352,9 @@ public class EaseUtils {
             if(Character.isDigit(char0)) {
                 return defaultLetter;
             }
-            ArrayList<HanziToPinyin.Token> l = HanziToPinyin.getInstance().get(name.substring(0, 1));
-            if(l != null && !l.isEmpty() && l.get(0).target.length() > 0) {
-                HanziToPinyin.Token token = l.get(0);
-                String letter = token.target.substring(0, 1).toUpperCase();
+            String pinyin = HanziToPinyin.getPinyin(name);
+            if(!TextUtils.isEmpty(pinyin)) {
+                String letter = pinyin.substring(0, 1).toUpperCase();
                 char c = letter.charAt(0);
                 if(c < 'A' || c > 'Z') {
                     return defaultLetter;
@@ -394,4 +406,16 @@ public class EaseUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
+    /**
+     * Used to handle message unread
+     * @param count
+     * @return
+     */
+    public static String handleBigNum(int count) {
+        if(count <= 99) {
+            return String.valueOf(count);
+        }else {
+            return "99+";
+        }
+    }
 }

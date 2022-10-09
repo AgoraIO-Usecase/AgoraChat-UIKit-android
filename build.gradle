@@ -43,4 +43,22 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+ext{
+    if(!project.hasProperty('isAarRelease')){
+        isAarRelease = false;
+    }
+    if(!project.hasProperty('isLite')){
+        isLite = false;
+    }
+    if(!project.hasProperty('sdkVersion')){
+        sdkVersion = '3.2.3'
+    }
+    if(!project.hasProperty('isTravis')) {
+        isTravis = false
+    }
+    if(!project.hasProperty('stagingRepositoryId')){
+        stagingRepositoryId = 'iohyphenate-1000'
+    }
+}
+
 apply plugin: 'io.codearte.nexus-staging'

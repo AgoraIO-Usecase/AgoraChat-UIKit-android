@@ -1,8 +1,15 @@
 package io.agora.chat.uikit;
 
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+
+import java.lang.reflect.Method;
 
 import io.agora.ConnectionListener;
 import io.agora.Error;
@@ -13,9 +20,12 @@ import io.agora.chat.uikit.interfaces.OnEaseChatConnectionListener;
 import io.agora.chat.uikit.manager.EaseChatPresenter;
 import io.agora.chat.uikit.manager.EaseNotifier;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
+import io.agora.chat.uikit.provider.EaseActivityProvider;
 import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
+import io.agora.chat.uikit.options.EaseReactionOptions;
 import io.agora.chat.uikit.provider.EaseEmojiconInfoProvider;
 import io.agora.chat.uikit.provider.EaseFileIconProvider;
+import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
 import io.agora.chat.uikit.provider.EaseSettingsProvider;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 
@@ -45,6 +55,10 @@ public class EaseUIKit {
      */
     private EaseFileIconProvider fileIconProvider;
     /**
+     * Activity provider
+     */
+    private EaseActivityProvider activitiesProvider;
+    /**
      * the notifier
      */
     private EaseNotifier notifier = null;
@@ -65,6 +79,11 @@ public class EaseUIKit {
      */
     private boolean sendOriginalImage;
     private OnEaseChatConnectionListener chatConnectionListener;
+
+    /**
+     * Whether to  show reaction view
+     */
+    private EaseReactionOptions reactionOptions;
 
     private EaseUIKit() {}
 
@@ -97,15 +116,34 @@ public class EaseUIKit {
         return this;
     }
 
-    public boolean isMainProcess(Context context) {
-        int pid = android.os.Process.myPid();
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo appProcess : activityManager.getRunningAppProcesses()) {
-            if (appProcess.pid == pid) {
-                return context.getApplicationInfo().packageName.equals(appProcess.processName);
-            }
+    public boolean isMainProcess(@NonNull Context context) {
+        String processName;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            processName = getProcessNameByApplication();
+        }else {
+            processName = getProcessNameByReflection();
         }
-        return false;
+        return context.getApplicationInfo().packageName.equals(processName);
+    }
+
+    private String getProcessNameByReflection() {
+        String processName = null;
+        try {
+            final Method declaredMethod = Class.forName("android.app.ActivityThread", false, Application.class.getClassLoader())
+                    .getDeclaredMethod("currentProcessName", (Class<?>[]) new Class[0]);
+            declaredMethod.setAccessible(true);
+            final Object invoke = declaredMethod.invoke(null, new Object[0]);
+            if (invoke instanceof String) {
+                processName = (String) invoke;
+            }
+        } catch (Throwable e) {
+        }
+        return processName;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    private String getProcessNameByApplication() {
+        return Application.getProcessName();
     }
 
     public boolean init(Context context, ChatOptions options) {
@@ -327,5 +365,36 @@ public class EaseUIKit {
                 return false;
             }
         };
+    }
+
+    /**
+     * Set to reaction options
+     *
+     * @param reactionOptions
+     */
+    public void setReactionOptions(EaseReactionOptions reactionOptions) {
+        this.reactionOptions = reactionOptions;
+    }
+
+    public EaseReactionOptions getReactionOptions() {
+        return reactionOptions;
+    }
+
+    /**
+     * get file icon provider
+     * @return
+     */
+    public EaseActivityProvider getActivitiesProvider() {
+        return activitiesProvider;
+    }
+
+    /**
+     * set file icon provider
+     * @param provider
+     * @return
+     */
+    public EaseUIKit setActivityProvider(EaseActivityProvider provider) {
+        this.activitiesProvider = provider;
+        return this;
     }
 }

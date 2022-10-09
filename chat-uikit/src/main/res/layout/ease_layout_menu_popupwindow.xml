@@ -1,25 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/ease_menu_popupwindow_layer_bg">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/tv_title"
+    <FrameLayout
+        android:id="@+id/top_view"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/popup_view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/popup_view"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:visibility="gone"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:layout_marginBottom="10dp"
-        tools:text="title"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/ease_bg_message_menu_popupwindow">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_menu_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <FrameLayout
+            android:id="@+id/expand_icon"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_title"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone">
 
-</LinearLayout>
+            <View
+                android:layout_width="35dp"
+                android:layout_height="5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ease_bg_expand_icon_popupwindow" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/expand_icon"
+            app:layout_constraintBottom_toTopOf="@id/rl_top"
+            app:layout_goneMarginBottom="10dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            tools:text="title"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_top"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_goneMarginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rl_top"
+            app:layout_constraintBottom_toTopOf="@id/rv_menu_list"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_menu_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rl_top"
+            app:layout_constraintBottom_toTopOf="@id/fl_bottom"/>
+
+        <FrameLayout
+            android:id="@+id/fl_bottom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_menu_list"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

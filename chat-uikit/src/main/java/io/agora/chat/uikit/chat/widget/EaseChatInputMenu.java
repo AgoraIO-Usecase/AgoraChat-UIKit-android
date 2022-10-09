@@ -257,7 +257,7 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
 
     @Override
     public void onToggleVoiceBtnClicked() {
-        Log.e("TAG", "onToggleVoiceBtnClicked");
+        EMLog.i("TAG", "onToggleVoiceBtnClicked");
         showExtendMenu(false);
     }
 

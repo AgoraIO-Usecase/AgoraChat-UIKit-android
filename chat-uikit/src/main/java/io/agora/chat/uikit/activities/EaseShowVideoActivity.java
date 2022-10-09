@@ -68,6 +68,11 @@ public class EaseShowVideoActivity extends EaseBaseActivity {
 		}
 	}
 
+	@Override
+	public void setActivityTheme() {
+
+	}
+
 	private void showLocalVideo(Uri videoUri) {
 		EaseShowLocalVideoActivity.actionStart(this, videoUri.toString());
 		finish();
@@ -107,7 +112,7 @@ public class EaseShowVideoActivity extends EaseBaseActivity {
 
 			@Override
 			public void onError(final int error, String msg) {
-				Log.e("###", "offline file transfer error:" + msg);
+				EMLog.e("###", "offline file transfer error:" + msg);
 				Uri localFilePath = ((VideoMessageBody) message.getBody()).getLocalUri();
 				String filePath = EaseFileUtils.getFilePath(EaseShowVideoActivity.this, localFilePath);
 				if(TextUtils.isEmpty(filePath)) {

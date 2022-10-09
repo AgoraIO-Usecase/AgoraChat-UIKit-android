@@ -117,17 +117,16 @@
                 android:src="@drawable/ease_chatting_setmode_keyboard_btn"
                 android:visibility="invisible" />
 
-        </RelativeLayout>
+            <CheckBox
+                android:id="@+id/btn_more"
+                android:layout_toRightOf="@id/iv_face_checked"
+                android:layout_width="@dimen/ease_chat_primary_menu_more_icon_size"
+                android:layout_height="@dimen/ease_chat_primary_menu_more_icon_size"
+                android:button="@null"
+                android:visibility="visible"
+                android:background="@drawable/ease_type_select_btn" />
 
-        <CheckBox
-            android:id="@+id/btn_more"
-            android:layout_width="@dimen/ease_chat_primary_menu_more_icon_size"
-            android:layout_height="@dimen/ease_chat_primary_menu_more_icon_size"
-            android:layout_marginRight="@dimen/ease_chat_primary_margin_right"
-            android:button="@null"
-            android:visibility="visible"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/ease_type_select_btn" />
+        </RelativeLayout>
 
         <FrameLayout
             android:layout_width="wrap_content"

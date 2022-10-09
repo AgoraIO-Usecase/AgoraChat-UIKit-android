@@ -4,9 +4,8 @@ import android.view.ViewGroup;
 
 import io.agora.chat.ChatMessage;
 import io.agora.chat.uikit.adapter.EaseBaseRecyclerViewAdapter;
-import io.agora.chat.uikit.chat.viewholder.EaseChatType;
+import io.agora.chat.uikit.chat.viewholder.EaseMessageViewType;
 import io.agora.chat.uikit.chat.viewholder.EaseChatViewHolderFactory;
-import io.agora.chat.uikit.conversation.viewholder.EaseConversationViewHolderFactory;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 
 public class EaseMessageAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage> {
@@ -25,7 +24,7 @@ public class EaseMessageAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage>
 
     @Override
     public ViewHolder<ChatMessage> getViewHolder(ViewGroup parent, int viewType) {
-        return EaseChatViewHolderFactory.createViewHolder(parent, EaseChatType.from(viewType), listener);
+        return EaseChatViewHolderFactory.createViewHolder(parent, EaseMessageViewType.from(viewType), listener);
     }
     
     public void setListItemClickListener(MessageListItemClickListener listener) {

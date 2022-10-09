@@ -2,16 +2,23 @@ package io.agora.chat.uikit.widget.chatrow;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ImageMessageBody;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.chat.model.EaseChatItemStyleHelper;
 import io.agora.chat.uikit.utils.EaseImageUtils;
+import io.agora.chat.uikit.utils.EaseUtils;
 
 
 /**
@@ -95,5 +102,6 @@ public class EaseChatRowImage extends EaseChatRowFile {
     @SuppressLint("StaticFieldLeak")
     private void showImageView(final ChatMessage message) {
         EaseImageUtils.showImage(context, imageView, message);
+        setImageIncludeThread(imageView);
     }
 }

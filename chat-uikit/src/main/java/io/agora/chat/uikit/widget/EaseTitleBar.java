@@ -3,7 +3,7 @@ package io.agora.chat.uikit.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
@@ -26,6 +25,7 @@ import androidx.core.content.ContextCompat;
 
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.utils.EaseUtils;
+import io.agora.chat.uikit.utils.StatusBarCompat;
 
 
 /**
@@ -40,6 +40,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     protected RelativeLayout rightLayout;
     protected ImageView rightImage;
     protected TextView titleView;
+    protected TextView subTitleView;
     protected RelativeLayout titleLayout;
     private TextView titleMenu;
     private OnBackPressListener mBackPressListener;
@@ -47,13 +48,15 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     private int mArrowColorId;
     private int mArrowColor;
     private int mTitleTextColor;
+    private int mRightTextColor;
+    private int mSubTitleTextColor;
     private int mWidth;
     private int mHeight;
     private boolean mDisplayHomeAsUpEnabled;
     private ConstraintLayout clTitle;
     private EaseImageView ivIcon;
+    private ImageView msgUnreadIcon;
     private OnIconClickListener iconClickListener;
-    private EasePresenceView presenceView;
 
     public EaseTitleBar(Context context) {
         this(context, null);
@@ -92,11 +95,12 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         rightLayout = (RelativeLayout) findViewById(R.id.right_layout);
         rightImage = (ImageView) findViewById(R.id.right_image);
         titleView = (TextView) findViewById(R.id.title);
+        subTitleView = (TextView) findViewById(R.id.sub_title);
         titleLayout = (RelativeLayout) findViewById(R.id.root);
         titleMenu = findViewById(R.id.right_menu);
         clTitle = findViewById(R.id.cl_title);
         ivIcon = findViewById(R.id.iv_icon);
-        presenceView = findViewById(R.id.presence_view);
+        msgUnreadIcon = findViewById(R.id.msg_unread_icon);
         parseStyle(context, attrs);
 
         initToolbar();
@@ -111,6 +115,17 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
             }else {
                 String title = ta.getString(R.styleable.EaseTitleBar_titleBarTitle);
                 titleView.setText(title);
+            }
+
+            int titleTextStylePosition = ta.getInteger(R.styleable.EaseTitleBar_titleBarTitleTextStyle, -1);
+            setTitleTextStyle(titleTextStylePosition);
+
+            int subTitleId = ta.getResourceId(R.styleable.EaseTitleBar_titleBarSubTitle, -1);
+            if(subTitleId != -1) {
+                subTitleView.setText(subTitleId);
+            }else {
+                String subTitle = ta.getString(R.styleable.EaseTitleBar_titleBarSubTitle);
+                subTitleView.setText(subTitle);
             }
 
             Drawable leftDrawable = ta.getDrawable(R.styleable.EaseTitleBar_titleBarLeftImage);
@@ -138,6 +153,14 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
                 titleMenu.setText(rightTitle);
             }
 
+            int rightTextColor = ta.getResourceId(R.styleable.EaseTitleBar_titleBarRightTextColor, -1);
+            if(rightTextColor != -1) {
+                mRightTextColor = ContextCompat.getColor(getContext(), rightTextColor);
+            }else {
+                mRightTextColor = ta.getColor(R.styleable.EaseTitleBar_titleBarRightTextColor, ContextCompat.getColor(getContext(), R.color.ease_toolbar_color_title));
+            }
+            titleMenu.setTextColor(mRightTextColor);
+
             boolean rightVisible = ta.getBoolean(R.styleable.EaseTitleBar_titleBarRightVisible, false);
             rightLayout.setVisibility(rightVisible ? VISIBLE : GONE);
 
@@ -156,6 +179,22 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
                 mTitleTextColor = ta.getColor(R.styleable.EaseTitleBar_titleBarTitleTextColor, ContextCompat.getColor(getContext(), R.color.ease_toolbar_color_title));
             }
             titleView.setTextColor(mTitleTextColor);
+
+            float subTitleTextSize = ta.getDimension(R.styleable.EaseTitleBar_titleBarSubTitleTextSize, (int) sp2px(getContext(), 12));
+            subTitleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, subTitleTextSize);
+
+            int subTitleTextColor = ta.getResourceId(R.styleable.EaseTitleBar_titleBarSubTitleTextColor, -1);
+            if(subTitleTextColor != -1) {
+                mSubTitleTextColor = ContextCompat.getColor(getContext(), subTitleTextColor);
+            }else {
+                mSubTitleTextColor = ta.getColor(R.styleable.EaseTitleBar_titleBarSubTitleTextColor, ContextCompat.getColor(getContext(), R.color.ease_toolbar_color_sub_title));
+            }
+            subTitleView.setTextColor(mSubTitleTextColor);
+            boolean subTitleVisible = ta.getBoolean(R.styleable.EaseTitleBar_titleBarSubTitleVisible, false);
+            subTitleView.setVisibility(subTitleVisible ? VISIBLE : GONE);
+
+            boolean unreadIconVisible = ta.getBoolean(R.styleable.EaseTitleBar_titleBarUnreadIconVisible, false);
+            msgUnreadIcon.setVisibility(unreadIconVisible ? VISIBLE : GONE);
 
             int arrowSrcResourceId = ta.getResourceId(R.styleable.EaseTitleBar_titleBarIcon, -1);
             if(arrowSrcResourceId != -1) {
@@ -176,22 +215,43 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
         }
     }
 
+    private void setTitleTextStyle(int textStylePosition){
+        switch (textStylePosition){
+            case 0:
+                titleView.setTypeface(null, Typeface.NORMAL);
+                break;
+            case 1:
+                titleView.setTypeface(null, Typeface.BOLD);
+                break;
+            case 2:
+                titleView.setTypeface(null, Typeface.ITALIC);
+                break;
+        }
+    }
+
     private void setTitlePosition(int titlePosition) {
         ViewGroup.LayoutParams params = clTitle.getLayoutParams();
         if(params instanceof LayoutParams) {
             if(titlePosition == 0) { //Middle
                 ((LayoutParams) params).addRule(RelativeLayout.CENTER_IN_PARENT);
+                ((LayoutParams) params).removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                ((LayoutParams) params).removeRule(RelativeLayout.CENTER_VERTICAL);
+                ((LayoutParams) params).removeRule(RelativeLayout.RIGHT_OF);
             }else if(titlePosition == 1) { //Left
                 ((LayoutParams) params).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 ((LayoutParams) params).addRule(RelativeLayout.CENTER_VERTICAL);
                 ((LayoutParams) params).addRule(RelativeLayout.RIGHT_OF, leftLayout.getId());
             }else { //Right
+                ((LayoutParams) params).removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                ((LayoutParams) params).removeRule(RelativeLayout.CENTER_VERTICAL);
+                ((LayoutParams) params).removeRule(RelativeLayout.RIGHT_OF);
                 ((LayoutParams) params).addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 ((LayoutParams) params).addRule(RelativeLayout.CENTER_VERTICAL);
                 ((LayoutParams) params).addRule(LEFT_OF, rightLayout.getId());
                 ((LayoutParams) params).setMargins(0, 0, (int) dip2px(getContext(), 60), 0);
             }
         }
+        clTitle.setLayoutParams(params);
     }
 
     private void initToolbar() {
@@ -221,26 +281,10 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
                         }
                     });
                     if(mArrowColorId != -1) {
-                        setToolbarCustomColor(mArrowColorId);
+                        StatusBarCompat.setToolbarCustomColor(getContext(), mArrowColorId);
                     }else {
-                        setToolbarCustomColorDefault(mArrowColor);
+                        StatusBarCompat.setToolbarCustomColorDefault(getContext(), mArrowColor);
                     }
-                }
-            }
-        }
-    }
-
-    public void setToolbarCustomColor(@ColorRes int colorId) {
-        setToolbarCustomColorDefault(ContextCompat.getColor(getContext(), colorId));
-    }
-
-    public void setToolbarCustomColorDefault(@ColorInt int colorId) {
-        Drawable leftArrow = ContextCompat.getDrawable(getContext(), R.drawable.abc_ic_ab_back_material);
-        if(leftArrow != null) {
-            leftArrow.setColorFilter(colorId, PorterDuff.Mode.SRC_ATOP);
-            if(getContext() instanceof AppCompatActivity) {
-                if(((AppCompatActivity)getContext()).getSupportActionBar() != null) {
-                    ((AppCompatActivity)getContext()).getSupportActionBar().setHomeAsUpIndicator(leftArrow);
                 }
             }
         }
@@ -325,13 +369,33 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     public TextView getTitle() {
         return titleView;
     }
+
     public void setTitleSize(float sp){
         titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP,sp);
     }
-    
+
+    public TextView getSubTitle() {
+        return subTitleView;
+    }
+
+    public void setSubTitle(String title){
+        subTitleView.setText(title);
+        if(!TextUtils.isEmpty(title)) {
+            subTitleView.setVisibility(VISIBLE);
+        }
+    }
+
+    public void setSubTitleSize(float sp){
+        subTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP,sp);
+    }
+
     public void setDisplayHomeAsUpEnabled(boolean displayHomeAsUpEnabled) {
         this.mDisplayHomeAsUpEnabled = displayHomeAsUpEnabled;
         initToolbar();
+    }
+
+    public void setUnreadIconVisible(boolean visible) {
+        msgUnreadIcon.setVisibility(visible ? VISIBLE : GONE);
     }
     
     public void setBackgroundColor(int color){
@@ -360,6 +424,10 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
 
     public EaseImageView getIcon() {
         return ivIcon;
+    }
+
+    public ImageView getMsgUnreadIcon() {
+        return msgUnreadIcon;
     }
 
     @Override
@@ -445,10 +513,6 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
      */
     public static float sp2px(Context context, float value) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value, context.getResources().getDisplayMetrics());
-    }
-
-    public EasePresenceView getPresenceView() {
-        return presenceView;
     }
 
     public <T> T getView(int viewId){

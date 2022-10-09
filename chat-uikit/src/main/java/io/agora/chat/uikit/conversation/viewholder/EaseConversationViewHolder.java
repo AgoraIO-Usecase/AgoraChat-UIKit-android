@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 
@@ -23,12 +24,12 @@ import io.agora.chat.uikit.conversation.model.EaseConversationSetStyle;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.manager.EasePreferenceManager;
 import io.agora.chat.uikit.models.EaseGroupInfo;
-import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
-import io.agora.chat.uikit.provider.EaseUserProfileProvider;
 import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
+import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
+import io.agora.util.EMLog;
 
 public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
     public EaseConversationViewHolder(@NonNull View itemView, EaseConversationSetStyle style) {
@@ -44,6 +45,12 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
         mentioned.setVisibility(View.GONE);
         int defaultAvatar = 0;
         String showName = null;
+        EMLog.e("holder: ",((Conversation) bean.getInfo()).conversationId()+ "  -  " + bean.isMute());
+        if (bean.isMute()){
+            msgMute.setVisibility(View.VISIBLE);
+        }else {
+            msgMute.setVisibility(View.GONE);
+        }
         if(item.getType() == Conversation.ConversationType.GroupChat) {
             if(EaseAtMessageHelper.get().hasAtMeMsg(username)) {
                 mentioned.setText(R.string.ease_chat_were_mentioned);
@@ -104,35 +111,8 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
 
         // add judgement for conversation type
         if(item.getType() == Conversation.ConversationType.Chat) {
-            EaseUserProfileProvider userProvider = EaseUIKit.getInstance().getUserProvider();
-            if(userProvider != null) {
-                EaseUser user = userProvider.getUser(username);
-                if(user != null) {
-                    if(!TextUtils.isEmpty(user.getNickname())) {
-                        this.name.setText(user.getNickname());
-                    }
-                    if(!TextUtils.isEmpty(user.getAvatar())) {
-                        Drawable drawable = this.avatar.getDrawable();
-
-                        try {
-                            //Compatible with local images
-                            Integer intAvatar = Integer.valueOf(user.getAvatar());
-                            Glide.with(mContext)
-                                    .load(intAvatar)
-                                    .placeholder(defaultAvatar)
-                                    .error(drawable)
-                                    .into(this.avatar);
-                        } catch (NumberFormatException e) {
-                            e.printStackTrace();
-                            Glide.with(mContext)
-                                    .load(user.getAvatar())
-                                    .placeholder(defaultAvatar)
-                                    .error(drawable)
-                                    .into(this.avatar);
-                        }
-                    }
-                }
-            }
+            EaseUserUtils.setUserAvatar(context, username, ContextCompat.getDrawable(context, defaultAvatar), this.avatar.getDrawable(), this.avatar);
+            EaseUserUtils.setUserNick(username, this.name);
         }
         if(!setModel.isHideUnreadDot()) {
             showUnreadNum(item.getUnreadMsgCount());

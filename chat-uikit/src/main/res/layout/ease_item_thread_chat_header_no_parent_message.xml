@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/iv_thread_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ease_thread_icon_large"
+        android:layout_marginStart="16dp"/>
+
+    <TextView
+        android:id="@+id/tv_thread_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toEndOf="@id/iv_thread_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_thread_icon"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="iv_thread_icon,tv_thread_name"/>
+
+    <TextView
+        android:id="@+id/tv_create_owner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier_name"
+        android:layout_marginTop="12dp"
+        tools:text="Started by Allen"
+        android:textSize="14sp"
+        android:textColor="@color/ease_chat_parent_region_owner_color"/>
+
+    <TextView
+        android:id="@+id/tv_no_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@id/iv_thread_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_create_owner"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_bias="0"
+        android:visibility="visible"
+        android:layout_marginEnd="8dp"
+        android:paddingBottom="15dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="@dimen/ease_no_parent_message_text_size"
+        android:text="@string/ease_no_parent_message"
+        android:textStyle="italic"
+        android:textColor="@color/ease_chat_thread_region_no_message_color"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

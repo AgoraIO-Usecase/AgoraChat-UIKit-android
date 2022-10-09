@@ -182,12 +182,43 @@ public class EasePopupWindow extends PopupWindow {
         window.setAttributes(layoutParams);
     }
 
+    /**
+     * Popup window item click listener
+     */
     public interface OnPopupWindowItemClickListener {
+        
+        /**
+         * Menu item click
+         * @param item
+         * @return
+         */
         boolean onMenuItemClick(MenuItemBean item);
+
+        /**
+         * Reaction item click
+         * @param item
+         * @param isAdd
+         */
+        default void onReactionItemClick(ReactionItemBean item, boolean isAdd) {}
     }
 
     public interface OnPopupWindowDismissListener {
         void onDismiss(PopupWindow menu);
+    }
+
+    public enum Style {
+        /**
+         * PopupWindow attaches a view
+         */
+        ATTACH_ITEM_VIEW,
+        /**
+         * PopupWindow show the bottom of screen
+         */
+        BOTTOM_SCREEN,
+        /**
+         * PopupWindow show the center of screen
+         */
+        CENTER_SCREEN
     }
 
 }

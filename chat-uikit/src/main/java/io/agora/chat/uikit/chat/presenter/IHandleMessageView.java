@@ -37,9 +37,10 @@ public interface IHandleMessageView extends ILoadDataView {
 
     /**
      * Complete withdrawal message
-     * @param message
+     * @param originalMessage The message was unsent
+     * @param notification  The notification message
      */
-    void recallMessageFinish(ChatMessage message);
+    void recallMessageFinish(ChatMessage originalMessage, ChatMessage notification);
 
     /**
      * Failed to withdraw the message
@@ -68,4 +69,37 @@ public interface IHandleMessageView extends ILoadDataView {
      * @param progress
      */
     void onPresenterMessageInProgress(ChatMessage message, int progress);
+
+    /**
+     * add reaction success
+     *
+     * @param message
+     */
+    void addReactionMessageSuccess(ChatMessage message);
+
+    /**
+     * add reaction fail
+     *
+     * @param message
+     * @param code
+     * @param error
+     */
+    void addReactionMessageFail(ChatMessage message, int code, String error);
+
+    /**
+     * remove reaction success
+     *
+     * @param message
+     */
+    void removeReactionMessageSuccess(ChatMessage message);
+
+    /**
+     * remove reaction fail
+     *
+     * @param message
+     * @param code
+     * @param error
+     */
+    void removeReactionMessageFail(ChatMessage message, int code, String error);
+
 }

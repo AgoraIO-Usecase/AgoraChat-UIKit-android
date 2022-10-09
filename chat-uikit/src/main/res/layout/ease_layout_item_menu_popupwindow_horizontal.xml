@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:minWidth="50dp"
+    android:minHeight="50dp"
+    android:gravity="center|start">
+
+    <ImageView
+        android:id="@+id/iv_action_icon"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="18dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_action_name"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintHorizontal_bias="0"
+        android:visibility="gone"
+        android:scaleType="fitXY"
+        tools:src="@drawable/ease_chat_item_menu_copy"/>
+
+    <TextView
+        android:id="@+id/tv_action_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_action_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="18dp"
+        app:layout_goneMarginStart="18dp"
+        tools:text="copy"
+        android:textColor="@color/black"
+        android:textSize="18sp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

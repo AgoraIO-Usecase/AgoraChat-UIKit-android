@@ -25,13 +25,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             style="@style/ease_row_receive_iv_userhead_style"/>
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="38dp"
             app:layout_constraintStart_toEndOf="@id/iv_userhead"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="1"
             android:layout_marginLeft="@dimen/ease_margin_chat_activity"
             android:layout_marginTop="2dp"
             android:background="@drawable/ease_chat_bubble_receive_bg">
@@ -41,8 +43,13 @@
                 style="@style/chat_text_name_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/iv_voice"
+                app:layout_constraintTop_toTopOf="@id/iv_voice"
+                app:layout_constraintBottom_toBottomOf="@id/iv_voice"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintHorizontal_bias="0"
                 android:gravity="center"
                 android:maxLines="1"
                 tools:text="3&apos;&apos;"
@@ -52,14 +59,40 @@
                 android:id="@+id/iv_voice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/tv_length"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/thread_region"
+                app:layout_goneMarginBottom="8dp"
+                android:layout_marginTop="8dp"
                 android:paddingLeft="5dp"
 	            android:paddingRight="6dp"
-                android:layout_toRightOf="@id/tv_length"
-                android:layout_centerVertical="true"
                 android:src="@drawable/ease_chatfrom_voice_playing" />
 
-        </RelativeLayout>
+            <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion
+                android:id="@+id/thread_region"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                style="@style/bubble_inner_start_bottom_end_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_voice"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <io.agora.chat.uikit.chat.widget.EaseChatReactionView
+            android:id="@+id/tv_subReactionContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            app:ease_chat_item_sender="false"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/bubble"
+            app:layout_constraintBottom_toTopOf="@id/bubble"
+            android:layout_marginBottom="-8dp" />
 
         <ImageView
             android:id="@+id/iv_unread_voice"
@@ -68,7 +101,8 @@
             android:layout_marginLeft="10dp"
             app:layout_constraintStart_toEndOf="@id/bubble"
             app:layout_constraintTop_toTopOf="@id/bubble"
-            android:src="@drawable/ease_chat_voice_unread_icon" />
+            android:src="@drawable/ease_chat_voice_unread_icon"
+            android:visibility="gone"/>
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -78,8 +112,8 @@
             android:layout_marginTop="5dp"
             android:indeterminateDrawable="@drawable/ease_chat_loading_progress_bar"
             app:layout_constraintStart_toEndOf="@id/bubble"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="visible" />
+            app:layout_constraintBottom_toBottomOf="@id/bubble"
+            android:visibility="gone" />
 
          <TextView
             android:id="@+id/tv_userid"
@@ -88,9 +122,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/ease_chat_nick_margin_left"
             android:textSize="@dimen/ease_chat_nick_text_size"
-            app:layout_constraintBottom_toTopOf="@id/bubble"
-            app:layout_constraintStart_toStartOf="@id/bubble"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
+            app:layout_constraintStart_toStartOf="@id/bubble" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

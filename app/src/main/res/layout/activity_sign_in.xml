@@ -23,6 +23,15 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"/>
 
+    <EditText
+        android:id="@+id/et_to_chat_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="toChatUsername"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"/>
+
     <Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"

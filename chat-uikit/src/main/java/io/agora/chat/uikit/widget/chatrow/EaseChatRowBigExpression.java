@@ -1,9 +1,14 @@
 package io.agora.chat.uikit.widget.chatrow;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -11,8 +16,10 @@ import com.bumptech.glide.request.RequestOptions;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.chat.model.EaseChatItemStyleHelper;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.models.EaseEmojicon;
+import io.agora.chat.uikit.utils.EaseUtils;
 
 /**
  * big emoji icons
@@ -62,5 +69,7 @@ public class EaseChatRowBigExpression extends EaseChatRowText {
                 imageView.setImageResource(R.drawable.ease_default_expression);
             }
         }
+
+        setImageIncludeThread(imageView);
     }
 }

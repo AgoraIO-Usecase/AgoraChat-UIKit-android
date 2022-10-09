@@ -4,9 +4,16 @@
     <declare-styleable name="EaseTitleBar">
         <!-- title -->
         <attr name="titleBarTitle" format="reference|string"/>
+        <attr name="titleBarTitleTextStyle" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="bold" value="1"/>
+            <enum name="italic" value="2"/>
+        </attr>
+        <attr name="titleBarSubTitle" format="reference|string"/>
         <attr name="titleBarLeftImage" format="reference"/>
         <attr name="titleBarRightImage" format="reference"/>
         <attr name="titleBarRightTitle" format="reference|string"/>
+        <attr name="titleBarRightTextColor" format="reference|color" />
         <!-- Toolbar home as up indicator's color -->
         <attr name="titleBarArrowColor" format="reference|color"/>
         <!-- Toolbar Overflow Icon -->
@@ -24,10 +31,18 @@
         <attr name="titleBarTitleTextSize" format="dimension"/>
         <!-- Title color -->
         <attr name="titleBarTitleTextColor" format="reference|color"/>
+        <!-- Sub Title size -->
+        <attr name="titleBarSubTitleTextSize" format="dimension"/>
+        <!-- Sub Title color -->
+        <attr name="titleBarSubTitleTextColor" format="reference|color"/>
+        <!-- Sub Title visible -->
+        <attr name="titleBarSubTitleVisible" format="boolean"/>
         <!-- Title icon-->
         <attr name="titleBarIcon" format="reference"/>
         <!-- Title icon size-->
         <attr name="titleBarIconSize" format="reference|dimension"/>
+        <!-- Message unread icon visible -->
+        <attr name="titleBarUnreadIconVisible" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="EaseImageView">
@@ -160,6 +175,20 @@
             <enum name="left" value="1"/>
             <enum name="right" value="2"/>
         </attr>
+    </declare-styleable>
+    <declare-styleable name="EaseChatReactionView">
+        <!-- whether is sender -->
+        <attr name="ease_chat_item_sender" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="EaseChatRowThreadRegion">
+        <attr name="thread_region_label" format="reference"/>
+        <attr name="thread_region_title" format="reference|string"/>
+        <attr name="thread_region_msg_count" format="reference|string"/>
+        <attr name="thread_region_right_icon" format="reference"/>
+        <attr name="thread_region_user_src" format="reference"/>
+        <attr name="thread_region_content" format="reference|string"/>
+        <attr name="thread_region_time" format="reference|string"/>
     </declare-styleable>
 
 </resources>

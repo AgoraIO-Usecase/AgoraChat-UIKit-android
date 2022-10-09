@@ -1,6 +1,6 @@
 package io.agora.chat.uikit.chat.viewholder;
 
-public enum EaseChatType {
+public enum EaseMessageViewType {
     VIEW_TYPE_MESSAGE_TXT_ME(0),
     VIEW_TYPE_MESSAGE_TXT_OTHER(1),
     VIEW_TYPE_MESSAGE_IMAGE_ME(2),
@@ -17,12 +17,17 @@ public enum EaseChatType {
     VIEW_TYPE_MESSAGE_CMD_OTHER(13),
     VIEW_TYPE_MESSAGE_CUSTOM_ME(14),
     VIEW_TYPE_MESSAGE_CUSTOM_OTHER(15),
-    VIEW_TYPE_MESSAGE_UNKNOWN_ME(16),
-    VIEW_TYPE_MESSAGE_UNKNOWN_OTHER(17);
+
+    VIEW_TYPE_MESSAGE_CHAT_THREAD_NOTIFY(20),
+
+    VIEW_TYPE_MESSAGE_UNKNOWN_ME(98),
+    VIEW_TYPE_MESSAGE_UNKNOWN_OTHER(99);
+
+
 
     private int value;
 
-    private EaseChatType(int value) {
+    private EaseMessageViewType(int value) {
         this.value = value;
     }
 
@@ -30,12 +35,12 @@ public enum EaseChatType {
         return this.value;
     }
 
-    public static EaseChatType from(int value) {
-        EaseChatType[] types = values();
+    public static EaseMessageViewType from(int value) {
+        EaseMessageViewType[] types = values();
         int length = types.length;
 
         for(int i = 0; i < length; i++) {
-            EaseChatType type = types[i];
+            EaseMessageViewType type = types[i];
             if (type.value == value) {
                 return type;
             }
