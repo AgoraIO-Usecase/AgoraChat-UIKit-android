@@ -2,6 +2,10 @@
 
 _English | [中文](README.zh.md)_
 
+## Sample project
+
+Agora provides an open-source [AgoraChat-android](https://github.com/AgoraIO-Usecase/AgoraChat-android) sample project on GitHub. You can download the sample to try it out or view the source code.
+
 ## Import Agora Chat UIKit
 
 ### Prerequisites
@@ -48,10 +52,10 @@ android {
 dependencies {
     ...
     // Replace X.Y.Z with the latest version of the Chat UIKit.
-    // For the latest version, go to https://search.maven.org/.
     implementation 'io.agora.rtc:chat-uikit:X.Y.Z'
 }
 ```
+<div class="alert note"><ul><li>For the latest uikit version, go to <a href="https://search.maven.org/search?q=a:chat-uikit">Sonatype</a>.</li></ul></div>
 
 #### Manually download the CODE
 
