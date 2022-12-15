@@ -291,6 +291,8 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     public void onDestroyView() {
         super.onDestroyView();
         ChatClient.getInstance().chatThreadManager().removeChatThreadChangeListener(this);
+        ChatClient.getInstance().removeMultiDeviceListener(this);
+
     }
 
     private void setHeaderBackPressListener(EaseTitleBar.OnBackPressListener listener) {
