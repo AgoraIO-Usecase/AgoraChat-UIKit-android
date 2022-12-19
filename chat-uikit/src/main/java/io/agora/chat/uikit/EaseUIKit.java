@@ -278,6 +278,7 @@ public class EaseUIKit {
         return this;
     }
 
+    @Deprecated
     public EaseUIKit setOnEaseChatConnectionListener(OnEaseChatConnectionListener listener) {
         this.chatConnectionListener = listener;
         return this;

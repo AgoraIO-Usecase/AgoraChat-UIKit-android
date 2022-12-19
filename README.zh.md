@@ -2,6 +2,10 @@
 
 _[English](README.md) | 中文_
 
+## 示例项目
+
+Agora 在 GitHub 上提供了一个开源的 [AgoraChat-android](https://github.com/AgoraIO-Usecase/AgoraChat-android) 示例项目。 您可以下载示例进行试用或查看源代码。
+
 ## 导入 Agora Chat UIKit
 
 ### 开发环境要求
@@ -48,10 +52,10 @@ android {
 dependencies {
     ...
     // 将 X.Y.Z 替换为当前版本号
-    // 在 https://search.maven.org/ 官网查询最新版本号。
     implementation 'io.agora.rtc:chat-uikit:X.Y.Z'
 }
 ```
+<div class="alert note"><ul><li>获取最新版本的 uikit , 请转到 <a href="https://search.maven.org/search?q=a:chat-uikit">Sonatype</a>.</li></ul></div>
 
 #### Module 源码集成
 
@@ -79,7 +83,6 @@ implementation project(':uikit')
  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
  <uses-permission android:name="android.permission.WAKE_LOCK"/>
  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
  <uses-permission android:name="android.permission.CAMERA"/>
  <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
