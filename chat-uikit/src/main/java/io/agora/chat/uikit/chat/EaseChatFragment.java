@@ -36,7 +36,6 @@ import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.chat.interfaces.OnChatExtendMenuItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatInputChangeListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatLayoutFinishInflateListener;
-import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
@@ -50,7 +49,6 @@ import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.menu.EaseChatType;
-import io.agora.chat.uikit.menu.EasePopupWindow;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
 import io.agora.chat.uikit.utils.EaseCompat;
@@ -60,6 +58,7 @@ import io.agora.chat.uikit.widget.EaseTitleBar;
 import io.agora.chat.uikit.widget.dialog.EaseAlertDialog;
 import io.agora.util.EMLog;
 import io.agora.util.FileHelper;
+import io.agora.util.ImageUtils;
 import io.agora.util.PathUtil;
 import io.agora.util.VersionUtils;
 
@@ -292,6 +291,8 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     public void onDestroyView() {
         super.onDestroyView();
         ChatClient.getInstance().chatThreadManager().removeChatThreadChangeListener(this);
+        ChatClient.getInstance().removeMultiDeviceListener(this);
+
     }
 
     private void setHeaderBackPressListener(EaseTitleBar.OnBackPressListener listener) {
@@ -503,7 +504,12 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     protected void onActivityResultForCamera(Intent data) {
         if (cameraFile != null && cameraFile.exists()) {
-            chatLayout.sendImageMessage(Uri.parse(cameraFile.getAbsolutePath()), sendOriginalImage);
+            Uri uri = Uri.parse(cameraFile.getAbsolutePath());
+            //检查图片是否被旋转并调整回来
+            if(sendOriginalImage) {
+                uri= ImageUtils.checkDegreeAndRestoreImage(mContext, uri);
+            }
+            chatLayout.sendImageMessage(uri, sendOriginalImage);
         }
     }
 

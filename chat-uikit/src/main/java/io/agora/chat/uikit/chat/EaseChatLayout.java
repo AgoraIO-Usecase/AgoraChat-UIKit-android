@@ -203,6 +203,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         getChatManager().removeMessageListener(this);
+        getChatManager().removeConversationListener(this);
         if(chatRoomListener != null) {
             ChatClient.getInstance().chatroomManager().removeChatRoomListener(chatRoomListener);
         }
