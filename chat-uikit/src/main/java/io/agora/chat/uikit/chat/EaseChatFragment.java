@@ -282,7 +282,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     @Override
     public void onResume() {
         super.onResume();
-        if(isMessageInit) {
+        if(isMessageInit && TextUtils.isEmpty(historyMsgId)) {
             chatLayout.getChatMessageListLayout().refreshMessages();
         }
     }
@@ -719,6 +719,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             bundle.putString(EaseConstant.EXTRA_CONVERSATION_ID, conversationId);
             bundle.putInt(EaseConstant.EXTRA_CHAT_TYPE, chatType.getChatType());
             bundle.putString(EaseConstant.HISTORY_MSG_ID, historyMsgId);
+        }
+
+        /**
+         * Set history message id.
+         * @param historyMessageId
+         * @return
+         */
+        public Builder setHistoryMessageId(String historyMessageId) {
+            bundle.putString(EaseConstant.HISTORY_MSG_ID, historyMessageId);
+            return this;
         }
 
         /**

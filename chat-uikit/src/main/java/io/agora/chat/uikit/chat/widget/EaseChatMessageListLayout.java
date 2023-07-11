@@ -389,7 +389,9 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                 }
                 if(recyclerViewLastHeight != height) {
                     if(messageAdapter.getData() != null && !messageAdapter.getData().isEmpty()) {
-                        post(()-> smoothSeekToPosition(messageAdapter.getData().size() - 1));
+                        if(loadDataType != LoadDataType.HISTORY) {
+                            post(()-> smoothSeekToPosition(messageAdapter.getData().size() - 1));
+                        }
                     }
                 }
                 recyclerViewLastHeight = height;
