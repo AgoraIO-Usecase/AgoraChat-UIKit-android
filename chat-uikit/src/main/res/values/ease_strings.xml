@@ -6,7 +6,10 @@
     <string name="ease_picture">[Image]</string>
     <string name="ease_video">[Video]</string>
     <string name="ease_file">[File]</string>
+    <string name="ease_voice">[Voice]</string>
+    <string name="ease_emoji">[Emoji]</string>
     <string name="ease_custom">[Custom message]</string>
+    <string name="ease_combine">[Chat history]</string>
     <string name="ease_voice_prefix">[Voice]</string>
     <string name="ease_dynamic_expression">[Animoji]</string>
     <string name="ease_list_no_data_text">No data</string>
@@ -17,6 +20,7 @@
     <string name="ease_action_recall">Recall</string>
     <string name="ease_action_delete">Delete</string>
     <string name="ease_action_unsent">Unsend</string>
+    <string name="ease_action_quote">Quote</string>
     <string name="ease_conversation_menu_make_read">Make read</string>
     <string name="ease_conversation_menu_make_top">Sticky on Top</string>
     <string name="ease_conversation_menu_cancel_top">Unsticky</string>
@@ -100,5 +104,7 @@
     <string name="ease_no_parent_message">Sorry, the original message can\'t be loaded</string>
     <string name="group_change_owner">%1$s becomes the new Group Owner</string>
     <string name="group_change_name">You named Group %1$s</string>
+
+    <string name="ease_error_message_not_exist">Message does not exist.</string>
 
 </resources>

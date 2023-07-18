@@ -43,5 +43,12 @@ public interface IRecyclerViewHandle {
      * @param position
      */
     void moveToPosition(int position);
+
+    /**
+     * Move to the specified message if conversation has.
+     * It is subject to the maximum range of search history messages.
+     * @param message
+     */
+    void moveToTarget(ChatMessage message);
 }
 

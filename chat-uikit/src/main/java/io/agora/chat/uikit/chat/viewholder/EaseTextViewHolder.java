@@ -11,6 +11,7 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
+import io.agora.chat.uikit.widget.chatrow.EaseChatRowText;
 import io.agora.exceptions.ChatException;
 
 
@@ -53,6 +54,7 @@ public class EaseTextViewHolder extends EaseChatRowViewHolder{
             }
         }
 
+        ((EaseChatRowText)getChatRow()).onSetUpQuoteView(message);
         // Send the group-ack cmd type msg if this msg is a ding-type msg.
         EaseDingMessageHelper.get().sendAckMessage(message);
     }

@@ -56,4 +56,7 @@
     <color name="ease_chat_parent_region_owner_color">#4D4D4D</color>
     <color name="ease_edit_line_color">#E6E6E6</color>
 
+    <color name="ease_chat_top_extend_text_color">#808080</color>
+    <color name="ease_chat_bubble_quote_bg_color">#E6E6E6</color>
+
 </resources>

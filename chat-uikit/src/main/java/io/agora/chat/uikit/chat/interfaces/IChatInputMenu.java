@@ -21,6 +21,12 @@ public interface IChatInputMenu {
     void setCustomExtendMenu(IChatExtendMenu menu);
 
     /**
+     * Set custom top extension menu.
+     * @param menu
+     */
+    void setCustomTopExtendMenu(IChatTopExtendMenu menu);
+
+    /**
      * Hide extended area (including emoticons and extended menu)
      */
     void hideExtendContainer();
@@ -36,6 +42,12 @@ public interface IChatInputMenu {
      * @param show
      */
     void showExtendMenu(boolean show);
+
+    /**
+     * Whether to show the top extension menu
+     * @param isShow
+     */
+    void showTopExtendMenu(boolean isShow);
 
     /**
      * Hide soft keyboard
@@ -65,6 +77,12 @@ public interface IChatInputMenu {
      * @return
      */
     IChatExtendMenu getChatExtendMenu();
+
+    /**
+     * Get the top extension menu
+     * @return
+     */
+    IChatTopExtendMenu getChatTopExtendMenu();
 
     /**
      * Click back

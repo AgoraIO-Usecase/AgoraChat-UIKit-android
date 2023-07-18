@@ -15,13 +15,19 @@ package io.agora.chat.uikit.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -304,6 +310,44 @@ public class EaseImageUtils extends ImageUtils {
                 existingAbs[3]
         );
 
+    }
+
+    /**
+     * Convert Drawable to Bitmap.
+     * @param drawable
+     * @return
+     */
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        if(drawable == null) {
+            return null;
+        }
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    /**
+     * Get a drawable with corner radius.
+     * @param context
+     * @param bitmap
+     * @param cornerRadius
+     * @return
+     */
+    public static Drawable getRoundedCornerDrawable(Context context, Bitmap bitmap, float cornerRadius) {
+        if(bitmap == null) {
+            return null;
+        }
+        RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), bitmap);
+        roundedDrawable.setCornerRadius(cornerRadius);
+        roundedDrawable.setAntiAlias(true);
+        return roundedDrawable;
     }
 
 }

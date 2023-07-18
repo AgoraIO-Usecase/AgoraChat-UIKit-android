@@ -191,4 +191,9 @@
         <attr name="thread_region_time" format="reference|string"/>
     </declare-styleable>
 
+    <declare-styleable name="ease_quote_style">
+        <!-- whether is sender -->
+        <attr name="ease_chat_quote_sender" format="boolean" />
+    </declare-styleable>
+
 </resources>

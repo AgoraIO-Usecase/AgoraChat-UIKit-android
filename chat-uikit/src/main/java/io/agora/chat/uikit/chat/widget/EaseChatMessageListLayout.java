@@ -50,6 +50,14 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                                                                         , IChatMessageItemSet, IChatMessageListLayout {
     private static final int DEFAULT_PAGE_SIZE = 10;
     private static final String TAG = EaseChatMessageListLayout.class.getSimpleName();
+    /**
+     * The default search range for searching quoted messages
+     */
+    private static final int QUOTE_DEFAULT_SEARCH_COUNT = 100;
+    /**
+     * The maximum search range for searching quoted messages
+     */
+    private static final int QUOTE_MAX_SEARCH_COUNT = 200;
     private EaseChatMessagePresenter presenter;
     private EaseMessageAdapter messageAdapter;
     private ConcatAdapter baseAdapter;
@@ -90,6 +98,8 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
      * When is thread conversation, whether thread message list has reached the latest message
      */
     private boolean isReachedLatestThreadMessage = false;
+
+    private int retrievalSize = QUOTE_DEFAULT_SEARCH_COUNT;
 
     public EaseChatMessageListLayout(@NonNull Context context) {
         this(context, null);
@@ -588,6 +598,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     @Override
+    public void loadMoreRetrievalsMessagesSuccess(List<ChatMessage> data) {
+        presenter.refreshCurrentConversation();
+    }
+
+    @Override
     public void loadMoreLocalHistoryMsgSuccess(List<ChatMessage> data, Conversation.SearchDirection direction) {
         if(direction == Conversation.SearchDirection.UP) {
             finishRefresh();
@@ -726,6 +741,25 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     @Override
     public void moveToPosition(int position) {
         seekToPosition(position);
+    }
+
+    @Override
+    public void moveToTarget(ChatMessage message) {
+        if(message == null || messageAdapter == null || messageAdapter.getData() == null) {
+            EMLog.e(TAG, "moveToTarget failed by message is null or messageAdapter is null");
+            return;
+        }
+        int position = messageAdapter.getData().indexOf(message);
+        if(position >= 0) {
+            seekToPosition(position);
+        }else {
+            String msgId = getListFirstMessageId();
+            presenter.loadMoreRetrievalsMessages(msgId, retrievalSize);
+            position = messageAdapter.getData().indexOf(message);
+            if(position >= 0) {
+                smoothSeekToPosition(position);
+            }
+        }
     }
 
     @Override

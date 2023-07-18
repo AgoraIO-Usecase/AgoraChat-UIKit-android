@@ -117,6 +117,14 @@ public class EasePopupWindowHelper {
         menuItemMap.clear();
     }
 
+    /**
+     * Get menu size.
+     * @return
+     */
+    public int getLength() {
+        return menuItems.size();
+    }
+
     public void setDefaultMenus() {
         MenuItemBean bean;
         for (int i = 0; i < EaseMessageMenuData.MENU_ITEM_IDS.length; i++) {

@@ -58,10 +58,40 @@ public abstract class EaseBasePresenter implements LifecycleObserver {
     }
 
     public void runOnUI(Runnable runnable) {
-        EaseThreadManager.getInstance().runOnMainThread(runnable);
+        if(EaseThreadManager.getInstance().isMainThread()) {
+            if(isActive()) {
+                runnable.run();
+            }
+        }else {
+            runOnUIThread(()-> {
+                if(isActive()) {
+                    runnable.run();
+                }
+            });
+        }
     }
 
     public void runOnIO(Runnable runnable) {
+        runOnIOThread(()-> {
+            if(isActive()) {
+                runnable.run();
+            }
+        });
+    }
+
+    /**
+     * 切换到UI线程
+     * @param runnable
+     */
+    private void runOnUIThread(Runnable runnable) {
+        EaseThreadManager.getInstance().runOnMainThread(runnable);
+    }
+
+    /**
+     * 切换到子线程
+     * @param runnable
+     */
+    private void runOnIOThread(Runnable runnable) {
         EaseThreadManager.getInstance().runOnIOThread(runnable);
     }
 }

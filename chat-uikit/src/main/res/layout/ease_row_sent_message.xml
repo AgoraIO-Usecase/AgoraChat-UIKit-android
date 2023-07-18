@@ -136,4 +136,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <io.agora.chat.uikit.widget.EaseChatQuoteView
+        android:id="@+id/chat_quote_view"
+        android:layout_marginEnd="@dimen/ease_chat_row_quote_margin_end"
+        android:layout_gravity="end"
+        app:ease_chat_quote_sender="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
 </LinearLayout>
