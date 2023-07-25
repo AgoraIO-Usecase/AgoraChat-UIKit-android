@@ -32,7 +32,7 @@
             android:minHeight="38dp"
             app:layout_constraintStart_toEndOf="@id/iv_userhead"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
             app:layout_constraintVertical_bias="1"
             android:layout_marginLeft="@dimen/ease_margin_chat_activity"
             android:layout_marginTop="2dp"
@@ -91,8 +91,9 @@
             app:ease_chat_item_sender="false"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/bubble"
-            app:layout_constraintBottom_toTopOf="@id/bubble"
-            android:layout_marginBottom="-8dp" />
+            app:layout_constraintTop_toBottomOf="@id/bubble"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="-4dp" />
 
         <ImageView
             android:id="@+id/iv_unread_voice"

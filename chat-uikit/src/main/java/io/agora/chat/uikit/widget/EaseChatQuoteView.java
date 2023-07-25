@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.widget;
 
-import android.annotation.SuppressLint;
+import static io.agora.chat.uikit.widget.DynamicDrawableSpan.ALIGN_TOP;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -8,13 +9,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.graphics.text.LineBreaker;
 import android.net.Uri;
+import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ImageSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -54,7 +57,6 @@ import io.agora.chat.uikit.interfaces.OnQuoteViewClickListener;
 import io.agora.chat.uikit.manager.EaseChatInterfaceManager;
 import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.models.EaseUser;
-import io.agora.chat.uikit.utils.EaseEditTextUtils;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseImageUtils;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
@@ -67,8 +69,8 @@ public class EaseChatQuoteView extends LinearLayout {
     private static final String TAG = EaseChatQuoteView.class.getSimpleName();
     private static final int MAX_IMAGE_SIZE = 36;
     private final Context mContext;
-    private TextView quoteDefaultView;
-    private RelativeLayout quoteDefaultLayout;
+    private final TextView quoteDefaultView;
+    private final RelativeLayout quoteDefaultLayout;
     private ChatMessage message;
     private String quoteSender;
 
@@ -93,92 +95,94 @@ public class EaseChatQuoteView extends LinearLayout {
         this(context, attrs, 0);
     }
 
-    @SuppressLint("CustomViewStyleable")
     public EaseChatQuoteView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ease_quote_style);
-        boolean isSender = typedArray.getBoolean(R.styleable.ease_quote_style_ease_chat_quote_sender, false);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.EaseChatQuoteView);
+        boolean isSender = typedArray.getBoolean(R.styleable.EaseChatQuoteView_ease_chat_quote_sender, false);
         typedArray.recycle();
 
         if (isSender) {
-            LayoutInflater.from(context).inflate(R.layout.ease_row_sent_quote_layout, this);
+            LayoutInflater.from(mContext).inflate(R.layout.ease_row_sent_quote_layout, this);
         } else {
-            LayoutInflater.from(context).inflate(R.layout.ease_row_received_quote_layou, this);
+            LayoutInflater.from(mContext).inflate(R.layout.ease_row_received_quote_layout, this);
         }
 
         quoteDefaultView = findViewById(R.id.tv_default);
         quoteDefaultLayout = findViewById(R.id.subBubble_default_layout);
 
+        setTextBreakStrategy(quoteDefaultView);
+
         initListener();
     }
 
+    private void setTextBreakStrategy(TextView textView) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textView.setBreakStrategy(LineBreaker.BREAK_STRATEGY_BALANCED);
+        }
+    }
+
     private void initListener() {
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IUIKitInterface kitInterface = EaseChatInterfaceManager.getInstance().getInterface(EaseConstant.INTERFACE_QUOTE_MESSAGE_CLICK_TAG);
-                if(kitInterface instanceof OnQuoteViewClickListener && message != null) {
-                    String msgQuote = message.getStringAttribute(EaseConstant.QUOTE_MSG_QUOTE,"");
-                    if (!TextUtils.isEmpty(msgQuote)){
-                        try {
-                            JSONObject jsonObject = new JSONObject(msgQuote);
-                            String quoteMsgID = jsonObject.getString(EaseConstant.QUOTE_MSG_ID);
-                            ChatMessage showMsg = ChatClient.getInstance().chatManager().getMessage(quoteMsgID);
-                            if(showMsg == null) {
-                                ((OnQuoteViewClickListener) kitInterface).onQuoteViewClickError(Error.GENERAL_ERROR, getContext().getString(R.string.ease_error_message_not_exist));
-                                return;
-                            }
-                            ((OnQuoteViewClickListener) kitInterface).onQuoteViewClick(showMsg);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            ((OnQuoteViewClickListener) kitInterface).onQuoteViewClickError(Error.GENERAL_ERROR, e.getMessage());
+        setOnClickListener(v -> {
+            OnQuoteViewClickListener listener = getClickListener();
+            if(listener != null && message != null) {
+                String msgQuote = message.getStringAttribute(EaseConstant.QUOTE_MSG_QUOTE,"");
+                if (!TextUtils.isEmpty(msgQuote)){
+                    try {
+                        JSONObject jsonObject = new JSONObject(msgQuote);
+                        String quoteMsgID = jsonObject.getString(EaseConstant.QUOTE_MSG_ID);
+                        ChatMessage showMsg = ChatClient.getInstance().chatManager().getMessage(quoteMsgID);
+                        if(showMsg == null) {
+                            listener.onQuoteViewClickError(Error.GENERAL_ERROR, mContext.getString(R.string.ease_error_message_not_exist));
+                            return;
                         }
+                        listener.onQuoteViewClick(showMsg);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        listener.onQuoteViewClickError(Error.GENERAL_ERROR, e.getMessage());
                     }
                 }
             }
-
         });
 
-        setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                IUIKitInterface kitInterface = EaseChatInterfaceManager.getInstance().getInterface(EaseConstant.INTERFACE_QUOTE_MESSAGE_CLICK_TAG);
-                if(kitInterface instanceof OnQuoteViewClickListener) {
-                    return ((OnQuoteViewClickListener) kitInterface).onQuoteViewLongClick(v, message);
-                }
-                return false;
+        setOnLongClickListener(v -> {
+            OnQuoteViewClickListener listener = getClickListener();
+            if(listener != null) {
+                return listener.onQuoteViewLongClick(v, message);
             }
+            return false;
         });
     }
 
-    public void updateMessageInfo(ChatMessage message){
+    public void updateMessageInfo(@Nullable ChatMessage message){
         if(message == null || message.getBody() == null) {
             EMLog.e(TAG, "quoteMessage is null or it's body is null.");
             return;
         }
         this.message = message;
         quoteSender = null;
-        JSONObject jsonObject;
+        JSONObject jsonObject = null;
         reSetLayout();
-        if (message.status() == ChatMessage.Status.SUCCESS){
-            try {
-                String msgQuote = message.getStringAttribute(EaseConstant.QUOTE_MSG_QUOTE,"");
-                if (!TextUtils.isEmpty(msgQuote)){
+        String msgQuote = message.getStringAttribute(EaseConstant.QUOTE_MSG_QUOTE,"");
+        try {
+            if (!TextUtils.isEmpty(msgQuote)){
+                try {
                     jsonObject = new JSONObject(msgQuote);
-                }else {
-                    jsonObject = message.getJSONObjectAttribute(EaseConstant.QUOTE_MSG_QUOTE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-                if(jsonObject == null) {
-                    EMLog.e(TAG, "message: "+message.getMsgId() + " is not a quote message.");
-                    return;
-                }
-                setContent(jsonObject);
-                this.setVisibility(VISIBLE);
-            } catch (JSONException | ChatException e) {
-                EMLog.e(TAG, "error message: "+e.getMessage());
+            }else {
+                jsonObject = message.getJSONObjectAttribute(EaseConstant.QUOTE_MSG_QUOTE);
             }
+
+            if(jsonObject == null) {
+                EMLog.e(TAG, "message: "+message.getMsgId() + " is not a quote message.");
+                return;
+            }
+            setContent(jsonObject);
+            this.setVisibility(VISIBLE);
+        } catch (ChatException e) {
+            EMLog.e(TAG, "error message: "+e.getMessage());
         }
     }
 
@@ -211,7 +215,7 @@ public class EaseChatQuoteView extends LinearLayout {
         if(receiveMsgTypes.containsKey(quoteType)) {
             return ChatMessage.Type.valueOf(receiveMsgTypes.get(quoteType));
         }
-        ChatMessage.Type type = null;
+        ChatMessage.Type type;
         try {
             type = ChatMessage.Type.valueOf(quoteType.toUpperCase());
             return type;
@@ -461,7 +465,7 @@ public class EaseChatQuoteView extends LinearLayout {
         Canvas canvas = new Canvas(result);
         canvas.drawBitmap(bitmapBig, new Matrix(), null);
         canvas.drawBitmap(bitmapSmall, (bitmapBig.getWidth() - bitmapSmall.getWidth()) / 2, (bitmapBig.getHeight() - bitmapSmall.getHeight()) / 2, null);
-        drawable = RoundedBitmapDrawableFactory.create(getContext().getResources(), result);
+        drawable = RoundedBitmapDrawableFactory.create(mContext.getResources(), result);
         addDrawable(quoteSender, drawable);
     }
 
@@ -482,14 +486,20 @@ public class EaseChatQuoteView extends LinearLayout {
             if(!isPlaceholder) {
                 int minSize = Math.min(width, height);
                 int maxSize = Math.max(width, height);
-                if(maxSize < minSize * 3 && minSize > EaseUtils.dip2px(getContext(), 6) * 3) {
-                    drawable = EaseImageUtils.getRoundedCornerDrawable(getContext(), EaseImageUtils.drawableToBitmap(drawable), EaseUtils.dip2px(getContext(), 6));
+                if(maxSize < minSize * 3 && minSize > EaseUtils.dip2px(mContext, 6) * 3) {
+                    drawable = EaseImageUtils.getRoundedCornerDrawable(mContext, EaseImageUtils.drawableToBitmap(drawable), EaseUtils.dip2px(mContext, 6));
                 }
             }
             drawable.setBounds(0, 0, width, height);
-            ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_CENTER);
+            Drawable finalDrawable = drawable;
+            DynamicDrawableSpan drawableSpan = new DynamicDrawableSpan(ALIGN_TOP) {
+                @Override
+                public Drawable getDrawable() {
+                    return finalDrawable;
+                }
+            };
             int startIndex = getStartIndex();
-            spannableString.setSpan(imageSpan, startIndex, startIndex + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(drawableSpan, startIndex, startIndex + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         quoteDefaultView.setText(spannableString);
         quoteDefaultLayout.setVisibility(View.VISIBLE);
@@ -505,7 +515,7 @@ public class EaseChatQuoteView extends LinearLayout {
         }
         int width = drawable.getIntrinsicWidth();
         int height = drawable.getIntrinsicHeight();
-        int maxSize = (int) EaseUtils.dip2px(getContext(), MAX_IMAGE_SIZE);
+        int maxSize = (int) EaseUtils.dip2px(mContext, MAX_IMAGE_SIZE);
         int fitWidth = 0;
         int fitHeight = 0;
         if(width >= height) {
@@ -529,5 +539,17 @@ public class EaseChatQuoteView extends LinearLayout {
             return -1;
         }
         return quoteSender.length() + 1;
+    }
+
+    /**
+     * Get target listener by EaseChatInterfaceManager.
+     * @return
+     */
+    private OnQuoteViewClickListener getClickListener() {
+        IUIKitInterface kitInterface = EaseChatInterfaceManager.getInstance().getInterface(EaseConstant.INTERFACE_QUOTE_MESSAGE_CLICK_TAG);
+        if(kitInterface instanceof OnQuoteViewClickListener) {
+            return (OnQuoteViewClickListener) kitInterface;
+        }
+        return null;
     }
 }

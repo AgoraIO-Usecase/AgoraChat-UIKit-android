@@ -9,11 +9,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import androidx.core.content.ContextCompat;
 
-import io.agora.Error;
-import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.R;
@@ -21,6 +18,7 @@ import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
 import io.agora.chat.uikit.widget.EaseChatQuoteView;
+import io.agora.exceptions.ChatException;
 import io.agora.util.EMLog;
 
 
@@ -46,6 +44,7 @@ public class EaseChatRowText extends EaseChatRow {
 	protected void onFindViewById() {
 		contentView = (TextView) findViewById(R.id.tv_chatcontent);
         quoteView = (EaseChatQuoteView)findViewById(R.id.chat_quote_view);
+        bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg : R.drawable.ease_chat_bubble_receive_bg));
 	}
 
     @Override
@@ -67,6 +66,7 @@ public class EaseChatRowText extends EaseChatRow {
             });
             replaceSpan();
         }
+        bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg : R.drawable.ease_chat_bubble_receive_bg));
         quoteView.setVisibility(GONE);
     }
 
@@ -143,6 +143,15 @@ public class EaseChatRowText extends EaseChatRow {
         if (null == message) {
             EMLog.e(TAG, "message is null, don't setup quote view");
             return;
+        }
+        try {
+            if(!TextUtils.isEmpty(message.getStringAttribute(EaseConstant.QUOTE_MSG_QUOTE,""))
+                    || message.getJSONObjectAttribute(EaseConstant.QUOTE_MSG_QUOTE) != null) {
+                bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg_has_top
+                        : R.drawable.ease_chat_bubble_receive_bg_has_top));
+            }
+        } catch (ChatException e) {
+            e.printStackTrace();
         }
         quoteView.updateMessageInfo(message);
     }

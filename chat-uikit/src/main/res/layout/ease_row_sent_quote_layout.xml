@@ -15,8 +15,8 @@
         android:minWidth="30dp"
         android:padding="8dp"
         android:layout_marginTop="2dp"
-        android:background="@drawable/ease_chat_bubble_quote_bg"
-        android:visibility="gone">
+        android:background="@drawable/ease_chat_bubble_quote_send_bg"
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/tv_default"
@@ -27,8 +27,10 @@
             android:layout_marginStart="6dp"
             tools:text="apex:"
             android:maxLines="2"
+            android:ellipsize="end"
             android:layout_centerVertical="true"
-            android:gravity="start" />
+            android:textSize="12sp"
+            android:background="@color/red"/>
 
     </RelativeLayout>
 

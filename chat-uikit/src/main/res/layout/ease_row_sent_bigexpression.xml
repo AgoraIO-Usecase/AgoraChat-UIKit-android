@@ -30,7 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/ease_margin_chat_activity"
             app:layout_constraintEnd_toStartOf="@id/iv_userhead"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
             app:layout_goneMarginEnd="@dimen/ease_chat_avatar_margin">
 
             <ImageView
@@ -90,9 +91,10 @@
             android:textSize="15sp"
             app:ease_chat_item_sender="true"
             android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bubble"
             app:layout_constraintEnd_toEndOf="@id/bubble"
-            app:layout_constraintBottom_toTopOf="@id/bubble"
-            android:layout_marginBottom="-8dp" />
+            android:layout_marginTop="-4dp" />
 
         <ImageView
             android:id="@+id/msg_status"
@@ -116,7 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@id/bubble"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bubble"
             android:drawableEnd="@drawable/ease_msg_status_received"
             android:visibility="invisible" />
 
