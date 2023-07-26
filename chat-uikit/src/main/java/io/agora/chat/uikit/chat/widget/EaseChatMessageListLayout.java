@@ -109,6 +109,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         this(context, attrs, 0);
     }
 
+    public RecyclerView getListView() {
+        return rvList;
+    }
+
     public EaseChatMessageListLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.ease_chat_message_list, this);
@@ -224,6 +228,16 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         EaseChatItemStyleHelper.getInstance().clear(getContext());
     }
 
+    private void setStackFromEnd() {
+        if(layoutManager != null) {
+            layoutManager.setStackFromEnd(isStackFromEnd(loadDataType));
+        }
+    }
+
+    private boolean isStackFromEnd(LoadDataType loadDataType) {
+        return loadDataType != LoadDataType.THREAD && loadDataType != LoadDataType.HISTORY;
+    }
+
     public void init(LoadDataType loadDataType, String username, EaseChatType chatType) {
         this.username = username;
         this.loadDataType = loadDataType;
@@ -234,6 +248,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         if(this.loadDataType == LoadDataType.THREAD) {
             srlRefresh.setEnabled(false);
         }
+        setStackFromEnd();
     }
 
     public void init(String username, EaseChatType chatType) {
@@ -656,10 +671,32 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     @Override
     public void refreshCurrentConSuccess(List<ChatMessage> data, boolean toLatest) {
+        if(data != null) {
+            if(data.size() >= pageSize && data.size() >= DEFAULT_PAGE_SIZE) {
+                setStackFromEnd();
+            }else {
+                if(layoutManager != null) {
+                    layoutManager.setStackFromEnd(false);
+                }
+            }
+        }
         messageAdapter.setData(data);
         if(toLatest) {
             seekToPosition(data.size() - 1);
         }
+    }
+
+    private boolean isFullScreen() {
+        boolean isOverOneScreen = false;
+        int totalHeight = 0;
+        for (int i = 0; i < rvList.getChildCount(); i++) {
+            totalHeight += rvList.getChildAt(i).getHeight();
+            if (rvList.getHeight() < totalHeight) {
+                isOverOneScreen = true;
+                break;
+            }
+        }
+        return isOverOneScreen;
     }
 
     @Override
@@ -917,10 +954,45 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         if(position < 0) {
             position = 0;
         }
-        RecyclerView.LayoutManager manager = rvList.getLayoutManager();
-        if(manager instanceof LinearLayoutManager) {
-            ((LinearLayoutManager) manager).scrollToPositionWithOffset(position, 0);
+        int finalPosition = position;
+        rvList.post(()-> {
+            if(!rvList.canScrollVertically(1)) {
+                return;
+            }
+            RecyclerView.LayoutManager manager = rvList.getLayoutManager();
+            if(manager instanceof LinearLayoutManager) {
+                ((LinearLayoutManager) manager).scrollToPositionWithOffset(finalPosition, 0);
+                checkIfMoveToBottom(finalPosition);
+            }
+        });
+
+    }
+
+    private void checkIfMoveToBottom(int position) {
+        if(!rvList.canScrollVertically(1)) {
+            return;
         }
+        if(!isLastPosition(position) || !isFullScreen()) {
+            return;
+        }
+        rvList.post(()-> {
+            if(rvList == null || layoutManager == null) {
+                return;
+            }
+            int rvPosition = layoutManager.findLastVisibleItemPosition() - layoutManager.findFirstVisibleItemPosition();
+            if(rvList.getChildCount() > rvPosition) {
+                int bottom = rvList.getChildAt(rvPosition).getBottom();
+                int height = rvList.getHeight();
+                layoutManager.scrollToPositionWithOffset(position, height - bottom);
+            }
+        });
+    }
+
+    private boolean isLastPosition(int position) {
+        if(messageAdapter == null || messageAdapter.getData() == null) {
+            return false;
+        }
+        return position == messageAdapter.getData().size() - 1;
     }
 
     private void smoothSeekToPosition(int position) {
@@ -930,11 +1002,18 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         if(position < 0) {
             position = 0;
         }
-        RecyclerView.LayoutManager manager = rvList.getLayoutManager();
-        if(manager instanceof LinearLayoutManager) {
-            ((LinearLayoutManager) manager).scrollToPositionWithOffset(position, 0);
-            //setMoveAnimation(manager, position);
-        }
+        int finalPosition = position;
+        rvList.post(()-> {
+            if(!rvList.canScrollVertically(1)) {
+                return;
+            }
+            RecyclerView.LayoutManager manager = rvList.getLayoutManager();
+            if(manager instanceof LinearLayoutManager) {
+                ((LinearLayoutManager) manager).scrollToPositionWithOffset(finalPosition, 0);
+                checkIfMoveToBottom(finalPosition);
+                //setMoveAnimation(manager, position);
+            }
+        });
     }
 
     private void setMoveAnimation(RecyclerView.LayoutManager manager, int position) {
