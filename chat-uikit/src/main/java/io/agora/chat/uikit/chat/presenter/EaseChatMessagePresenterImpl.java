@@ -89,9 +89,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         if(!isMessageId(msgId)) {
             throw new IllegalArgumentException("please check if set correct msg id");
         }
-        ChatMessage message = conversation.getMessage(msgId, true);
-        List<ChatMessage> messages = conversation.searchMsgFromDB(message.getMsgTime() - 1,
-                                                                pageSize, direction);
+        List<ChatMessage> messages = conversation.loadMoreMsgFromDB(msgId, pageSize, direction);
         if(isActive()) {
             runOnUI(()-> {
                 if(messages == null || messages.isEmpty()) {
