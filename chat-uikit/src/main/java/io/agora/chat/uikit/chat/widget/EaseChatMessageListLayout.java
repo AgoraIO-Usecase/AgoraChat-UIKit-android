@@ -1,6 +1,5 @@
 package io.agora.chat.uikit.chat.widget;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -603,8 +602,9 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     @Override
     public void loadMoreLocalMsgSuccess(List<ChatMessage> data) {
         finishRefresh();
-        presenter.refreshCurrentConversation();
-        post(()->smoothSeekToPosition(data.size() - 1));
+        messageAdapter.addData(0, data, false);
+        messageAdapter.notifyItemRangeInserted(0, data.size());
+        rvList.post(()->smoothSeekToPosition(data.size() - 1));
     }
 
     @Override
@@ -1002,44 +1002,48 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         if(position < 0) {
             position = 0;
         }
-        int finalPosition = position;
-        rvList.post(()-> {
-            if(!rvList.canScrollVertically(1)) {
-                return;
-            }
-            RecyclerView.LayoutManager manager = rvList.getLayoutManager();
-            if(manager instanceof LinearLayoutManager) {
-                ((LinearLayoutManager) manager).scrollToPositionWithOffset(finalPosition, 0);
-                checkIfMoveToBottom(finalPosition);
-                //setMoveAnimation(manager, position);
-            }
-        });
+        if(!rvList.canScrollVertically(1)) {
+            return;
+        }
+        RecyclerView.LayoutManager manager = rvList.getLayoutManager();
+        if(manager instanceof LinearLayoutManager) {
+            setMoveAnimation(manager, position);
+        }
     }
 
     private void setMoveAnimation(RecyclerView.LayoutManager manager, int position) {
-        int prePosition;
-        if(position > 0) {
-            prePosition = position - 1;
-        }else {
-            prePosition = position;
+        setMoveAnimation(manager, position, true);
+    }
+
+    private void setMoveAnimation(RecyclerView.LayoutManager manager, int position, boolean isMoveToTop) {
+        if(!(manager instanceof LinearLayoutManager)) {
+            return;
         }
-        View view = manager.findViewByPosition(0);
-        int height;
-        if(view != null) {
-            height = view.getHeight();
-        }else {
-            height = 200;
-        }
-        ValueAnimator animator = ValueAnimator.ofInt(-height, 0);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (int) animation.getAnimatedValue();
-                ((LinearLayoutManager)manager).scrollToPositionWithOffset(prePosition, value);
+        int moveHeight = isMoveToTop ? -10 : 10;
+        rvList.smoothScrollBy(0, moveHeight, null, 10);
+        rvList.postDelayed(()-> {
+            int itemViewHeight = getViewHeight(position);
+            if(itemViewHeight != -1) {
+                int excessHeight = isMoveToTop ? -itemViewHeight + 10 : itemViewHeight - 10;
+                rvList.smoothScrollBy(0, excessHeight, null, 900);
+            }else {
+                ((LinearLayoutManager)manager).scrollToPositionWithOffset(position, 0);
             }
-        });
-        animator.setDuration(800);
-        animator.start();
+        }, 100);
+    }
+
+    private int getViewHeight(int position) {
+        View view = layoutManager.findViewByPosition(position);
+        int height = -1;
+        if(view != null) {
+            height = view.getMeasuredHeight();
+        }else {
+            RecyclerView.ViewHolder holder = rvList.findViewHolderForAdapterPosition(position);
+            if(holder != null) {
+                height = holder.itemView.getHeight();
+            }
+        }
+        return height;
     }
 
     @Override
