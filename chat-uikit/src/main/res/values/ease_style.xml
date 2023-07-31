@@ -140,4 +140,10 @@
         <item name="colorControlActivated">@color/ease_edit_line_color</item>
     </style>
 
+    <style name="chat_quote_message_text_name_style">
+        <item name="android:textColor">@color/ease_chat_quote_message_sender_text_color</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">start|center_vertical</item>
+    </style>
+
 </resources>

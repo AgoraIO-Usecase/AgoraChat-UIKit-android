@@ -50,5 +50,11 @@ public interface IRecyclerViewHandle {
      * @param message
      */
     void moveToTarget(ChatMessage message);
+
+    /**
+     * Highlight item to attract user.
+     * @param position
+     */
+    void highlightItem(int position);
 }
 

@@ -67,7 +67,7 @@ public class EaseChatRowText extends EaseChatRow {
             replaceSpan();
         }
         bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg : R.drawable.ease_chat_bubble_receive_bg));
-        quoteView.setVisibility(GONE);
+        onSetUpQuoteView(message);
     }
 
     /**
@@ -119,8 +119,6 @@ public class EaseChatRowText extends EaseChatRow {
 
         // Set ack-user list change listener.
         EaseDingMessageHelper.get().setUserUpdateListener(message, userUpdateListener);
-
-        onSetUpQuoteView(message);
     }
 
     @Override
@@ -140,20 +138,11 @@ public class EaseChatRowText extends EaseChatRow {
             return;
         }
         quoteView.setVisibility(GONE);
-        if (null == message) {
-            EMLog.e(TAG, "message is null, don't setup quote view");
-            return;
+        boolean isUpdated = quoteView.updateMessageInfo(message);
+        if(isUpdated) {
+            bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg_has_top
+                    : R.drawable.ease_chat_bubble_receive_bg_has_top));
         }
-        try {
-            if(!TextUtils.isEmpty(message.getStringAttribute(EaseConstant.QUOTE_MSG_QUOTE,""))
-                    || message.getJSONObjectAttribute(EaseConstant.QUOTE_MSG_QUOTE) != null) {
-                bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg_has_top
-                        : R.drawable.ease_chat_bubble_receive_bg_has_top));
-            }
-        } catch (ChatException e) {
-            e.printStackTrace();
-        }
-        quoteView.updateMessageInfo(message);
     }
 
     /**

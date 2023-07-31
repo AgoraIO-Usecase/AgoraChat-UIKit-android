@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.chat.interfaces;
 
 import io.agora.chat.ChatMessage;
+import io.agora.chat.uikit.chat.presenter.EaseChatQuotePresenter;
 
 public interface IChatQuote {
     /**
@@ -13,4 +14,10 @@ public interface IChatQuote {
      * Hide quote view.
      */
     void hideQuoteView();
+
+    /**
+     * Set quote message presenter.
+     * @param presenter
+     */
+    void setPresenter(EaseChatQuotePresenter presenter);
 }

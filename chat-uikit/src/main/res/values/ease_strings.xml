@@ -8,6 +8,7 @@
     <string name="ease_file">[File]</string>
     <string name="ease_voice">[Voice]</string>
     <string name="ease_emoji">[Emoji]</string>
+    <string name="ease_thread">[Thread]</string>
     <string name="ease_custom">[Custom message]</string>
     <string name="ease_combine">[Chat history]</string>
     <string name="ease_voice_prefix">[Voice]</string>
@@ -107,4 +108,6 @@
 
     <string name="ease_error_message_not_exist">Message does not exist.</string>
 
+    <string name="ease_chat_inputmenu_quote_reply_to">Replying to</string>
+    <string name="ease_combine_default">A Chat history</string>
 </resources>

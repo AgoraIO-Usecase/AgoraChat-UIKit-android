@@ -316,7 +316,9 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     }
 
     private void AddQuoteMenu() {
-        chatLayout.addItemMenu(0, R.id.action_chat_quote, chatLayout.getMenuHelper().getLength() * 10, mContext.getString(R.string.ease_action_quote));
+        MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_quote, chatLayout.getMenuHelper().getLength() * 10, mContext.getString(R.string.ease_action_quote));
+        itemBean.setResourceId(R.drawable.ease_chat_item_menu_forward);
+        chatLayout.addItemMenu(itemBean);
     }
 
     @Override
@@ -835,6 +837,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             e.printStackTrace();
         }
         ((EaseChatExtendQuoteView)(chatLayout.getChatInputMenu().getChatTopExtendMenu())).startQuote(message);
+        chatLayout.getChatInputMenu().getPrimaryMenu().showTextStatus();
     }
 
     public static class Builder {

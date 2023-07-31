@@ -15,6 +15,7 @@
         android:layout_height="wrap_content" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_bubble_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/ease_margin_chat_activity" >
@@ -25,9 +26,9 @@
             app:ease_chat_quote_sender="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="@id/bubble"
             app:layout_constraintBottom_toTopOf="@id/bubble"
-            android:layout_marginBottom="2dp"
             android:visibility="gone"/>
 
         <io.agora.chat.uikit.widget.EaseImageView
@@ -42,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/ease_margin_chat_activity"
             app:layout_constraintEnd_toStartOf="@id/iv_userhead"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chat_quote_view"
             app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
             app:layout_goneMarginEnd="@dimen/ease_chat_avatar_margin"
             android:minWidth="30dp"

@@ -1,5 +1,6 @@
 package io.agora.chat.uikit.widget;
 
+import static io.agora.chat.uikit.widget.DynamicDrawableSpan.ALIGN_CENTER;
 import static io.agora.chat.uikit.widget.DynamicDrawableSpan.ALIGN_TOP;
 
 import android.content.Context;
@@ -17,11 +18,10 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,6 +44,7 @@ import java.util.Map;
 import io.agora.Error;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
+import io.agora.chat.EMCombineMessageBody;
 import io.agora.chat.FileMessageBody;
 import io.agora.chat.ImageMessageBody;
 import io.agora.chat.LocationMessageBody;
@@ -70,7 +71,7 @@ public class EaseChatQuoteView extends LinearLayout {
     private static final int MAX_IMAGE_SIZE = 36;
     private final Context mContext;
     private final TextView quoteDefaultView;
-    private final RelativeLayout quoteDefaultLayout;
+    private final ViewGroup quoteDefaultLayout;
     private ChatMessage message;
     private String quoteSender;
 
@@ -117,7 +118,7 @@ public class EaseChatQuoteView extends LinearLayout {
     }
 
     private void setTextBreakStrategy(TextView textView) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             textView.setBreakStrategy(LineBreaker.BREAK_STRATEGY_BALANCED);
         }
     }
@@ -154,10 +155,13 @@ public class EaseChatQuoteView extends LinearLayout {
         });
     }
 
-    public void updateMessageInfo(@Nullable ChatMessage message){
-        if(message == null || message.getBody() == null) {
-            EMLog.e(TAG, "quoteMessage is null or it's body is null.");
-            return;
+    public boolean updateMessageInfo(@Nullable ChatMessage message){
+        if(message == null) {
+            EMLog.e(TAG, getContext().getString(R.string.ease_error_message_not_exist));
+            return false;
+        }
+        if(message.ext() != null && !message.ext().containsKey(EaseConstant.QUOTE_MSG_QUOTE)) {
+            return false;
         }
         this.message = message;
         quoteSender = null;
@@ -174,16 +178,18 @@ public class EaseChatQuoteView extends LinearLayout {
             }else {
                 jsonObject = message.getJSONObjectAttribute(EaseConstant.QUOTE_MSG_QUOTE);
             }
-
-            if(jsonObject == null) {
-                EMLog.e(TAG, "message: "+message.getMsgId() + " is not a quote message.");
-                return;
-            }
-            setContent(jsonObject);
-            this.setVisibility(VISIBLE);
         } catch (ChatException e) {
             EMLog.e(TAG, "error message: "+e.getMessage());
         }
+        if(jsonObject == null) {
+            EMLog.e(TAG, "message: "+message.getMsgId() + " is not a quote message.");
+            return false;
+        }
+        setContent(jsonObject);
+        this.setVisibility(VISIBLE);
+        quoteDefaultView.setVisibility(VISIBLE);
+        quoteDefaultLayout.setVisibility(VISIBLE);
+        return true;
     }
 
     private void setContent(JSONObject jsonObject){
@@ -227,7 +233,6 @@ public class EaseChatQuoteView extends LinearLayout {
 
     private void reSetLayout(){
         this.setVisibility(GONE);
-        quoteDefaultLayout.setVisibility(GONE);
     }
 
     private void isShowType(ChatMessage quoteMessage, String quoteSender, ChatMessage.Type quoteMsgType, String content){
@@ -251,6 +256,9 @@ public class EaseChatQuoteView extends LinearLayout {
             case FILE:
                 fileTypeDisplay(quoteMessage,quoteSender,content);
                 break;
+            case COMBINE:
+                combineTypeDisplay(quoteMessage,quoteSender,content);
+                break;
             default:
                 IUIKitInterface listener = EaseChatInterfaceManager.getInstance().getInterface(EaseConstant.INTERFACE_QUOTE_MESSAGE_TAG);
                 if(listener instanceof IChatQuoteMessageShow) {
@@ -269,15 +277,17 @@ public class EaseChatQuoteView extends LinearLayout {
         if (quoteMessage != null && quoteMessage.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)){
             showBigExpression(quoteMessage, quoteSender);
         }else {
-            Spannable textSpan = EaseSmileUtils.getSmiledText(mContext, quoteSender + ": "+content);
-            quoteDefaultView.setText(textSpan, TextView.BufferType.SPANNABLE);
+            SpannableString spannableString = new SpannableString(EaseSmileUtils.getSmiledText(mContext, quoteSender + ": "+content));
+            quoteDefaultView.setText(spannableString);
+            quoteDefaultView.setEllipsize(TextUtils.TruncateAt.END);
+            quoteDefaultView.setMaxLines(2);
             quoteDefaultLayout.setVisibility(View.VISIBLE);
         }
     }
 
     protected void imageTypeDisplay(ChatMessage quoteMessage,String quoteSender,String content){
         if (quoteMessage == null){
-            addDrawable(quoteSender, ContextCompat.getDrawable(mContext, R.drawable.ease_default_image));
+            addDrawable(quoteSender, ContextCompat.getDrawable(mContext, R.drawable.ease_chat_quote_default_image), true);
         }else {
             showImageView(quoteMessage, quoteSender);
         }
@@ -285,7 +295,7 @@ public class EaseChatQuoteView extends LinearLayout {
 
     protected void videoTypeDisplay(ChatMessage quoteMessage,String quoteSender,String content){
         if (quoteMessage == null){
-            addDrawable(quoteSender, ContextCompat.getDrawable(mContext, R.drawable.ease_default_image));
+            addDrawable(quoteSender, ContextCompat.getDrawable(mContext, R.drawable.ease_chat_quote_default_video));
         }else {
             showVideoThumbView(quoteMessage, quoteSender);
         }
@@ -307,7 +317,7 @@ public class EaseChatQuoteView extends LinearLayout {
         if (locationSb.length() >= startIndex + 2){
             locationSb.setSpan(span, startIndex, startIndex + 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
-        appendDrawable(locationSb, null, true);
+        appendDrawable(locationSb, null, true, true);
     }
 
     protected void voiceTypeDisplay(ChatMessage quoteMessage,String quoteSender,String content){
@@ -326,9 +336,7 @@ public class EaseChatQuoteView extends LinearLayout {
         }
         builder.append(voiceLength);
         SpannableString voiceSpan = new SpannableString(builder.toString());
-        appendDrawable(voiceSpan, quoteMessage == null ? null:
-                ContextCompat.getDrawable(mContext, TextUtils.equals(quoteSender, ChatClient.getInstance().getCurrentUser())
-                        ? R.drawable.ease_chatfrom_voice_playing : R.drawable.ease_chatto_voice_playing), true);
+        appendDrawable(voiceSpan, ContextCompat.getDrawable(mContext, R.drawable.ease_chatfrom_voice_playing), true, true);
     }
 
     protected void fileTypeDisplay(ChatMessage quoteMessage,String quoteSender,String content){
@@ -345,9 +353,25 @@ public class EaseChatQuoteView extends LinearLayout {
             }
         }
         SpannableString fileSpan = new SpannableString(builder.toString());
-        appendDrawable(fileSpan, ContextCompat.getDrawable(mContext, R.drawable.ease_chat_quote_file), true);
+        appendDrawable(fileSpan, ContextCompat.getDrawable(mContext, R.drawable.ease_chat_quote_file), true, true);
     }
 
+    protected void combineTypeDisplay(ChatMessage quoteMessage,String quoteSender,String content){
+        StringBuilder builder = new StringBuilder();
+        builder.append(quoteSender).append(": ");
+        if(quoteMessage == null) {
+            builder.append(mContext.getString(R.string.ease_combine_default));
+        }else {
+            if (quoteMessage.getBody() instanceof EMCombineMessageBody){
+                EMCombineMessageBody combineMessageBody = (EMCombineMessageBody) quoteMessage.getBody();
+                if (combineMessageBody != null && !TextUtils.isEmpty(combineMessageBody.getTitle())){
+                    builder.append(combineMessageBody.getTitle());
+                }
+            }
+        }
+        SpannableString fileSpan = new SpannableString(builder.toString());
+        appendDrawable(fileSpan, ContextCompat.getDrawable(mContext, R.drawable.ease_chat_quote_combine), true, true);
+    }
 
     /**
      * show video thumbnails
@@ -369,7 +393,7 @@ public class EaseChatQuoteView extends LinearLayout {
         Glide.with(mContext)
                 .load(imageUri == null ? imageUrl : imageUri)
                 .apply(new RequestOptions()
-                        .error(R.drawable.ease_default_image))
+                        .error(R.drawable.ease_chat_quote_default_video))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new CustomTarget<Drawable>() {
                     @Override
@@ -401,7 +425,7 @@ public class EaseChatQuoteView extends LinearLayout {
             Glide.with(mContext)
                     .load(imageUri == null ? imageUrl : imageUri)
                     .apply(new RequestOptions()
-                            .error(R.drawable.ease_default_image))
+                            .error(R.drawable.ease_chat_quote_default_image))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(new CustomTarget<Drawable>() {
                         @Override
@@ -475,10 +499,10 @@ public class EaseChatQuoteView extends LinearLayout {
 
     private void addDrawable(String quoteSender, Drawable drawable, boolean isPlaceholder) {
         SpannableString spannableString = new SpannableString(quoteSender+": ");
-        appendDrawable(spannableString, drawable, isPlaceholder);
+        appendDrawable(spannableString, drawable, isPlaceholder, false);
     }
 
-    private void appendDrawable(SpannableString spannableString, Drawable drawable, boolean isPlaceholder) {
+    private void appendDrawable(SpannableString spannableString, Drawable drawable, boolean isPlaceholder, boolean isCenter) {
         if(drawable != null) {
             int[] fitSize = getFitSize(drawable);
             int width = fitSize[0];
@@ -492,14 +516,14 @@ public class EaseChatQuoteView extends LinearLayout {
             }
             drawable.setBounds(0, 0, width, height);
             Drawable finalDrawable = drawable;
-            DynamicDrawableSpan drawableSpan = new DynamicDrawableSpan(ALIGN_TOP) {
+            DynamicDrawableSpan imageSpan = new DynamicDrawableSpan(isCenter ? ALIGN_CENTER : ALIGN_TOP) {
                 @Override
                 public Drawable getDrawable() {
                     return finalDrawable;
                 }
             };
             int startIndex = getStartIndex();
-            spannableString.setSpan(drawableSpan, startIndex, startIndex + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(imageSpan, startIndex, startIndex + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         quoteDefaultView.setText(spannableString);
         quoteDefaultLayout.setVisibility(View.VISIBLE);

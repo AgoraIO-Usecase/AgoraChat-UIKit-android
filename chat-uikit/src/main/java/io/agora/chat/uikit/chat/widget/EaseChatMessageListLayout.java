@@ -797,6 +797,16 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                 smoothSeekToPosition(position);
             }
         }
+        highlightItem(position);
+    }
+
+    @Override
+    public void highlightItem(int position) {
+        rvList.post(()-> {
+            if(messageAdapter != null) {
+                messageAdapter.highlightItem(position);
+            }
+        });
     }
 
     @Override
@@ -956,7 +966,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
         int finalPosition = position;
         rvList.post(()-> {
-            if(!rvList.canScrollVertically(1)) {
+            if(isLastPosition(finalPosition) && !rvList.canScrollVertically(1)) {
                 return;
             }
             RecyclerView.LayoutManager manager = rvList.getLayoutManager();
@@ -1001,9 +1011,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
         if(position < 0) {
             position = 0;
-        }
-        if(!rvList.canScrollVertically(1)) {
-            return;
         }
         RecyclerView.LayoutManager manager = rvList.getLayoutManager();
         if(manager instanceof LinearLayoutManager) {

@@ -15,6 +15,7 @@
         android:layout_height="wrap_content" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_bubble_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/ease_margin_chat_activity"
@@ -197,7 +198,7 @@
             android:textColor="@color/ease_msg_name_color"
             app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
             app:layout_constraintRight_toRightOf="@id/bubble"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
