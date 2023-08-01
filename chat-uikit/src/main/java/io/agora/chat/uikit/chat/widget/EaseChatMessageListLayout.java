@@ -414,7 +414,9 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                 if(recyclerViewLastHeight != height) {
                     if(messageAdapter.getData() != null && !messageAdapter.getData().isEmpty()) {
                         if(loadDataType != LoadDataType.HISTORY) {
-                            post(()-> smoothSeekToPosition(messageAdapter.getData().size() - 1));
+                            if(rvList.canScrollVertically(1)) {
+                                post(()-> seekToPosition(messageAdapter.getData().size() - 1));
+                            }
                         }
                     }
                 }
@@ -794,7 +796,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             presenter.loadMoreRetrievalsMessages(msgId, retrievalSize);
             position = messageAdapter.getData().indexOf(message);
             if(position >= 0) {
-                smoothSeekToPosition(position);
+                seekToPosition(position);
             }
         }
         highlightItem(position);
@@ -1006,6 +1008,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     private void smoothSeekToPosition(int position) {
+        smoothSeekToPosition(position, true);
+    }
+
+    private void smoothSeekToPosition(int position, boolean isMoveToTop) {
         if(presenter.isDestroy() || rvList == null) {
             return;
         }
@@ -1014,12 +1020,8 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
         RecyclerView.LayoutManager manager = rvList.getLayoutManager();
         if(manager instanceof LinearLayoutManager) {
-            setMoveAnimation(manager, position);
+            setMoveAnimation(manager, position, isMoveToTop);
         }
-    }
-
-    private void setMoveAnimation(RecyclerView.LayoutManager manager, int position) {
-        setMoveAnimation(manager, position, true);
     }
 
     private void setMoveAnimation(RecyclerView.LayoutManager manager, int position, boolean isMoveToTop) {
