@@ -44,7 +44,7 @@ import java.util.Map;
 import io.agora.Error;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
-import io.agora.chat.EMCombineMessageBody;
+import io.agora.chat.CombineMessageBody;
 import io.agora.chat.FileMessageBody;
 import io.agora.chat.ImageMessageBody;
 import io.agora.chat.LocationMessageBody;
@@ -72,8 +72,10 @@ public class EaseChatQuoteView extends LinearLayout {
     private final Context mContext;
     private final TextView quoteDefaultView;
     private final ViewGroup quoteDefaultLayout;
+    private final TextView tvSummary;
     private ChatMessage message;
     private String quoteSender;
+    private boolean isHistory;
 
     private static final Map<String, String> receiveMsgTypes = new HashMap<String, String>() {
         {
@@ -101,20 +103,28 @@ public class EaseChatQuoteView extends LinearLayout {
         this.mContext = context;
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.EaseChatQuoteView);
         boolean isSender = typedArray.getBoolean(R.styleable.EaseChatQuoteView_ease_chat_quote_sender, false);
+        isHistory = typedArray.getBoolean(R.styleable.EaseChatQuoteView_ease_chat_quote_is_history, false);
         typedArray.recycle();
 
-        if (isSender) {
-            LayoutInflater.from(mContext).inflate(R.layout.ease_row_sent_quote_layout, this);
-        } else {
-            LayoutInflater.from(mContext).inflate(R.layout.ease_row_received_quote_layout, this);
+        if(isHistory) {
+            LayoutInflater.from(mContext).inflate(R.layout.ease_chat_row_history_quote_layout, this);
+        }else {
+            if (isSender) {
+                LayoutInflater.from(mContext).inflate(R.layout.ease_row_sent_quote_layout, this);
+            } else {
+                LayoutInflater.from(mContext).inflate(R.layout.ease_row_received_quote_layout, this);
+            }
         }
 
         quoteDefaultView = findViewById(R.id.tv_default);
         quoteDefaultLayout = findViewById(R.id.subBubble_default_layout);
+        tvSummary = findViewById(R.id.tv_summary);
 
         setTextBreakStrategy(quoteDefaultView);
 
-        initListener();
+        if(!isHistory) {
+            initListener();
+        }
     }
 
     private void setTextBreakStrategy(TextView textView) {
@@ -211,7 +221,9 @@ public class EaseChatQuoteView extends LinearLayout {
             }
             this.quoteSender = quoteSenderNick;
             ChatMessage quoteMessage = ChatClient.getInstance().chatManager().getMessage(quoteMsgID);
+
             isShowType(quoteMessage, quoteSenderNick, getQuoteMessageType(quoteType), quoteContent);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -233,6 +245,15 @@ public class EaseChatQuoteView extends LinearLayout {
 
     private void reSetLayout(){
         this.setVisibility(GONE);
+    }
+
+    private void showHistoryType(ChatMessage quoteMessage, String quoteSender, ChatMessage.Type quoteMsgType, String content) {
+        reSetLayout();
+        switch (quoteMsgType) {
+            case TXT :
+
+                break;
+        }
     }
 
     private void isShowType(ChatMessage quoteMessage, String quoteSender, ChatMessage.Type quoteMsgType, String content){
@@ -362,8 +383,8 @@ public class EaseChatQuoteView extends LinearLayout {
         if(quoteMessage == null) {
             builder.append(mContext.getString(R.string.ease_combine_default));
         }else {
-            if (quoteMessage.getBody() instanceof EMCombineMessageBody){
-                EMCombineMessageBody combineMessageBody = (EMCombineMessageBody) quoteMessage.getBody();
+            if (quoteMessage.getBody() instanceof CombineMessageBody){
+                CombineMessageBody combineMessageBody = (CombineMessageBody) quoteMessage.getBody();
                 if (combineMessageBody != null && !TextUtils.isEmpty(combineMessageBody.getTitle())){
                     builder.append(combineMessageBody.getTitle());
                 }

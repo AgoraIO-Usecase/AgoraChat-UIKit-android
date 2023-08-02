@@ -62,4 +62,5 @@
     <color name="ease_chat_quote_message_sender_text_color">#4d4d4d</color>
     <color name="ease_chat_item_bg_dark">#FFE6E6E6</color>
     <color name="ease_chat_extend_quote_message_bg_color">#E6E6E6</color>
+    <color name="ease_chat_row_combine_summary_text_color">#666666</color>
 </resources>

@@ -3,6 +3,8 @@ package io.agora.chat.uikit.chat.presenter;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import java.util.List;
+
 import io.agora.CallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
@@ -174,6 +176,12 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     }
 
     @Override
+    public void sendCombineMessage(List<String> messageList) {
+        ChatMessage message = ChatMessage.createCombinedSendMessage("", "", "", messageList, toChatUsername);
+        sendMessage(message);
+    }
+
+    @Override
     public void resendMessage(ChatMessage message) {
         message.setStatus(ChatMessage.Status.CREATE);
         long currentTimeMillis = System.currentTimeMillis();
@@ -189,6 +197,17 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
         if(isActive()) {
             runOnUI(()->mView.deleteLocalMessageSuccess(message));
         }
+    }
+
+    @Override
+    public void deleteMessages(List<String> messages) {
+        if(messages.isEmpty()) {
+            return;
+        }
+        for (String msgId : messages) {
+            conversation.removeMessage(msgId);
+        }
+        runOnUI(()->mView.deleteLocalMessagesSuccess());
     }
 
     @Override

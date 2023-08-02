@@ -13,6 +13,8 @@
     <item name="action_chat_unsent" type="id"/>
     <!--quote-->
     <item name="action_chat_quote" type="id" />
+    <!--select-->
+    <item name="action_chat_select" type="id" />
     <!--long click-->
     <item name="action_chat_long_click" type="id"/>
 

@@ -20,6 +20,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/ease_margin_chat_activity" >
 
+        <RadioButton
+            android:id="@+id/rb_select"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bubble"
+            app:layout_constraintEnd_toStartOf="@id/bubble"
+            app:layout_constraintHorizontal_bias="0"
+            style="@style/ease_row_radio_select_style"/>
+
         <io.agora.chat.uikit.widget.EaseImageView
             android:id="@+id/iv_userhead"
             app:layout_constraintBottom_toBottomOf="parent"

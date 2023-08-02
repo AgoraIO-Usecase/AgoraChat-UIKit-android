@@ -22,6 +22,7 @@
     <string name="ease_action_delete">Delete</string>
     <string name="ease_action_unsent">Unsend</string>
     <string name="ease_action_quote">Quote</string>
+    <string name="ease_action_select">Select</string>
     <string name="ease_conversation_menu_make_read">Make read</string>
     <string name="ease_conversation_menu_make_top">Sticky on Top</string>
     <string name="ease_conversation_menu_cancel_top">Unsticky</string>

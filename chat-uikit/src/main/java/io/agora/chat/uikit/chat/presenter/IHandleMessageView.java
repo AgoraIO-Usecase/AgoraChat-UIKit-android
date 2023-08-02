@@ -36,6 +36,11 @@ public interface IHandleMessageView extends ILoadDataView {
     void deleteLocalMessageSuccess(ChatMessage message);
 
     /**
+     * Delete local message list successfully.
+     */
+    void deleteLocalMessagesSuccess();
+
+    /**
      * Complete withdrawal message
      * @param originalMessage The message was unsent
      * @param notification  The notification message

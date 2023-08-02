@@ -465,6 +465,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     @Override
+    public void sendCombineMessage(List<String> messageList) {
+        presenter.sendCombineMessage(messageList);
+    }
+
+    @Override
     public void sendFileMessage(Uri fileUri) {
         presenter.sendFileMessage(fileUri);
     }
@@ -482,8 +487,12 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void deleteMessage(ChatMessage message) {
-        messageListLayout.getCurrentConversation().removeMessage(message.getMsgId());
-        messageListLayout.removeMessage(message);
+        presenter.deleteMessage(message);
+    }
+
+    @Override
+    public void deleteMessages(List<String> messages) {
+        presenter.deleteMessages(messages);
     }
 
     @Override
@@ -737,6 +746,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void deleteLocalMessageSuccess(ChatMessage message) {
         messageListLayout.removeMessage(message);
+    }
+
+    @Override
+    public void deleteLocalMessagesSuccess() {
+        messageListLayout.refreshMessages();
     }
 
     @Override

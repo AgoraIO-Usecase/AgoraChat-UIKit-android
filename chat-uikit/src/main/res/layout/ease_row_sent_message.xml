@@ -20,6 +20,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/ease_margin_chat_activity" >
 
+        <RadioButton
+            android:id="@+id/rb_select"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bubble"
+            app:layout_constraintEnd_toStartOf="@id/bubble"
+            app:layout_constraintHorizontal_bias="0"
+            style="@style/ease_row_radio_select_style"/>
+
         <io.agora.chat.uikit.widget.EaseChatQuoteView
             android:id="@+id/chat_quote_view"
             android:layout_gravity="end"
@@ -52,23 +60,14 @@
 
             <TextView
                 android:id="@+id/tv_chatcontent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/bubble_inner_start_top_end_margin"
+                style="@style/ease_chat_row_text_content_style"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/thread_region"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_goneMarginBottom="@dimen/ease_chat_bubble_margin_12"
-                android:visibility="visible"
-                android:autoLink="web"
-                android:gravity="center|left"
-                android:lineSpacingExtra="2dp"
-                android:maxWidth="225.0dip"
-                android:minHeight="@dimen/ease_chat_text_min_height"
                 android:textColor="@color/ease_msg_send_message_color"
-                android:textSize="15sp"
                 tools:text="Hello, Agora Chat!" />
 
             <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion

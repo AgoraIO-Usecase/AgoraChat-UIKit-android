@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
+import java.util.List;
+
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.Conversation;
@@ -96,6 +98,12 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
     public abstract void sendCmdMessage(String action);
 
     /**
+     * Send a combine message.
+     * @param messageList
+     */
+    public abstract void sendCombineMessage(List<String> messageList);
+
+    /**
      * Resend message
      * @param message
      */
@@ -106,6 +114,12 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
      * @param message
      */
     public abstract void deleteMessage(ChatMessage message);
+
+    /**
+     * Delete local message list.
+     * @param messages
+     */
+    public abstract void deleteMessages(List<String> messages);
 
     /**
      * Withdraw message

@@ -32,6 +32,11 @@ public interface IChatInputMenu {
     void hideExtendContainer();
 
     /**
+     * Hide input menu exclude top extend menu.
+     */
+    void hideInputMenu();
+
+    /**
      * Whether to show the emoji menu
      * @param show
      */

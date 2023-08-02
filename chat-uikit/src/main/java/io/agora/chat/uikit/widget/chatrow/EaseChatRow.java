@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 
@@ -34,6 +35,7 @@ import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.chat.widget.EaseChatReactionView;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
+import io.agora.chat.uikit.manager.EaseChatMessageMultiSelectHelper;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.options.EaseAvatarOptions;
 import io.agora.chat.uikit.options.EaseReactionOptions;
@@ -97,6 +99,10 @@ public abstract class EaseChatRow extends LinearLayout {
      * if delivered
      */
     protected TextView deliveredView;
+    /**
+     * Multi selects.
+     */
+    protected RadioButton selectRadio;
     /**
      * if is sender
      */
@@ -168,6 +174,7 @@ public abstract class EaseChatRow extends LinearLayout {
         deliveredView = (TextView) findViewById(R.id.tv_delivered);
         reactionContentView = findViewById(R.id.tv_subReactionContent);
         threadRegion = (EaseChatRowThreadRegion) findViewById(R.id.thread_region);
+        selectRadio = (RadioButton) findViewById(R.id.rb_select);
 
         setLayoutStyle();
 
@@ -293,6 +300,11 @@ public abstract class EaseChatRow extends LinearLayout {
         }
         if(threadRegion != null) {
             setThreadRegion();
+        }
+
+        if(selectRadio != null) {
+            selectRadio.setVisibility(EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle() ? VISIBLE : GONE);
+            selectRadio.setChecked(EaseChatMessageMultiSelectHelper.getInstance().isContainsMessage(message));
         }
     }
 
@@ -613,6 +625,20 @@ public abstract class EaseChatRow extends LinearLayout {
                     EMLog.e(TAG, "message's thread info is null");
                 }
                 return false;
+            });
+        }
+        if(selectRadio != null && EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle()) {
+            setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean checked = selectRadio.isChecked();
+                    selectRadio.setChecked(!checked);
+                    if(!checked) {
+                        EaseChatMessageMultiSelectHelper.getInstance().addChatMessage(message);
+                    }else {
+                        EaseChatMessageMultiSelectHelper.getInstance().removeChatMessage(message);
+                    }
+                }
             });
         }
     }

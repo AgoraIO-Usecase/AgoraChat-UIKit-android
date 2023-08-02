@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
@@ -27,13 +26,11 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.List;
 
-import io.agora.CallBack;
 import io.agora.ChatThreadChangeListener;
 import io.agora.MultiDeviceListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThreadEvent;
-import io.agora.chat.Conversation;
 import io.agora.chat.ImageMessageBody;
 import io.agora.chat.NormalFileMessageBody;
 import io.agora.chat.TextMessageBody;
@@ -44,6 +41,7 @@ import io.agora.chat.uikit.activities.EaseShowNormalFileActivity;
 import io.agora.chat.uikit.activities.EaseShowVideoActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
+import io.agora.chat.uikit.chat.interfaces.IChatTopExtendMenu;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.chat.interfaces.OnChatExtendMenuItemClickListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatInputChangeListener;
@@ -51,6 +49,7 @@ import io.agora.chat.uikit.chat.interfaces.OnChatLayoutFinishInflateListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
+import io.agora.chat.uikit.chat.interfaces.OnMessageSelectResultListener;
 import io.agora.chat.uikit.chat.interfaces.OnMessageSendCallBack;
 import io.agora.chat.uikit.chat.interfaces.OnPeerTypingListener;
 import io.agora.chat.uikit.chat.interfaces.OnReactionMessageListener;
@@ -58,12 +57,13 @@ import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
 import io.agora.chat.uikit.chat.widget.EaseChatExtendMenuDialog;
 import io.agora.chat.uikit.chat.widget.EaseChatExtendQuoteView;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
+import io.agora.chat.uikit.chat.widget.EaseChatMultiSelectView;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.interfaces.OnQuoteViewClickListener;
 import io.agora.chat.uikit.manager.EaseChatInterfaceManager;
+import io.agora.chat.uikit.manager.EaseChatMessageMultiSelectHelper;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
-import io.agora.chat.uikit.manager.EaseThreadManager;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
@@ -108,6 +108,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     private OnChatRecordTouchListener recordTouchListener;
     private OnChatLayoutFinishInflateListener finishInflateListener;
     private OnReactionMessageListener reactionMessageListener;
+    private OnMessageSelectResultListener messageSelectResultListener;
     private EaseMessageAdapter messageAdapter;
     private boolean sendOriginalImage;
     /**
@@ -239,7 +240,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
         setCustomExtendMenu();
         setCustomTopExtendMenu();
-        AddQuoteMenu();
+        AddCustomLongClickMenu();
         // Provide views after finishing inflate
         if(finishInflateListener != null) {
             finishInflateListener.onTitleBarFinishInflate(titleBar);
@@ -307,17 +308,58 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
      * Set custom top extend menu
      */
     public void setCustomTopExtendMenu() {
+        IChatTopExtendMenu chatTopExtendMenu = chatLayout.getChatInputMenu().getChatTopExtendMenu();
+        if(chatTopExtendMenu instanceof EaseChatExtendQuoteView) {
+            chatLayout.getChatInputMenu().getPrimaryMenu().setVisible(View.VISIBLE);
+            return;
+        }
         EaseChatExtendQuoteView quoteView = new EaseChatExtendQuoteView(mContext);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         quoteView.setLayoutParams(params);
         quoteView.showTopExtendMenu(false);
         chatLayout.getChatInputMenu().setCustomTopExtendMenu(quoteView);
         chatLayout.getChatInputMenu().showTopExtendMenu(true);
+        chatLayout.getChatInputMenu().getPrimaryMenu().setVisible(View.VISIBLE);
     }
 
-    private void AddQuoteMenu() {
+    /**
+     * Show multi select view on EaseChatInputMenu.
+     */
+    public void showMultiSelectView() {
+        EaseChatMultiSelectView multiSelectView = new EaseChatMultiSelectView(mContext);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        multiSelectView.setLayoutParams(params);
+        multiSelectView.setOnDismissListener(view -> chatLayout.getChatInputMenu().getPrimaryMenu().setVisible(View.VISIBLE));
+        multiSelectView.setOnSelectClickListener(new EaseChatMultiSelectView.OnSelectClickListener() {
+            @Override
+            public void onMultiDeleteClick(List<String> deleteMsgIdList) {
+                if(messageSelectResultListener != null && messageSelectResultListener.onMessageDelete(deleteMsgIdList)) {
+                    return;
+                }
+                chatLayout.deleteMessages(deleteMsgIdList);
+            }
+
+            @Override
+            public void onMultiReplyClick(List<String> replyMsgIdList) {
+                if(messageSelectResultListener != null && messageSelectResultListener.onMessageReply(replyMsgIdList)) {
+                    return;
+                }
+                EaseChatMessageMultiSelectHelper.getCombineMessageSummary(replyMsgIdList);
+            }
+        });
+        multiSelectView.setupWithAdapter(messageAdapter);
+        chatLayout.getChatInputMenu().setCustomTopExtendMenu(multiSelectView);
+        chatLayout.getChatInputMenu().showTopExtendMenu(true);
+        chatLayout.getChatInputMenu().hideInputMenu();
+    }
+
+    private void AddCustomLongClickMenu() {
         MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_quote, chatLayout.getMenuHelper().getLength() * 10, mContext.getString(R.string.ease_action_quote));
         itemBean.setResourceId(R.drawable.ease_chat_item_menu_forward);
+        chatLayout.addItemMenu(itemBean);
+
+        itemBean = new MenuItemBean(0, R.id.action_chat_select, chatLayout.getMenuHelper().getLength() * 10, mContext.getString(R.string.ease_action_select));
+        itemBean.setResourceId(R.drawable.ease_chat_item_menu_select);
         chatLayout.addItemMenu(itemBean);
     }
 
@@ -436,6 +478,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     private void setOnChatLayoutFinishInflateListener(OnChatLayoutFinishInflateListener inflateListener) {
         this.finishInflateListener = inflateListener;
+    }
+
+    private void setOnMessageSelectResultListener(OnMessageSelectResultListener messageSelectResultListener) {
+        this.messageSelectResultListener = messageSelectResultListener;
     }
 
     private void setCustomAdapter(EaseMessageAdapter adapter) {
@@ -703,10 +749,18 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     @Override
     public boolean onMenuItemClick(MenuItemBean item, ChatMessage message) {
         if(item.getItemId() == R.id.action_chat_quote) {
+            setCustomTopExtendMenu();
             onQuoteMenuItemClick(message);
+            return true;
+        }else if(item.getItemId() == R.id.action_chat_select) {
+            showMultiSelectDialog(message);
             return true;
         }
         return false;
+    }
+
+    protected void showMultiSelectDialog(ChatMessage message) {
+        showMultiSelectView();
     }
 
     @Override
@@ -854,6 +908,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         private OnReactionMessageListener reactionMessageListener;
         private OnChatLayoutFinishInflateListener finishInflateListener;
         protected EaseChatFragment customFragment;
+        private OnMessageSelectResultListener messageSelectResultListener;
 
         /**
          * Constructor
@@ -1111,6 +1166,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
 
         /**
+         * Set message selection result listener.
+         * @param listener
+         * @return
+         */
+        public Builder setOnMessageSelectResultListener(OnMessageSelectResultListener listener) {
+            this.messageSelectResultListener = listener;
+            return this;
+        }
+
+        /**
          * Whether to hide receiver's avatar
          * @param hide
          * @return
@@ -1236,6 +1301,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             fragment.setOnChatLayoutFinishInflateListener(this.finishInflateListener);
             fragment.setCustomAdapter(this.adapter);
             fragment.setOnReactionMessageListener(this.reactionMessageListener);
+            fragment.setOnMessageSelectResultListener(messageSelectResultListener);
             return fragment;
         }
     }

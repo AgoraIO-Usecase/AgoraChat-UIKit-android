@@ -109,6 +109,12 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
     }
 
     @Override
+    public void hideInputMenu() {
+        primaryMenu.setVisible(GONE);
+        extendMenuContainer.setVisibility(GONE);
+    }
+
+    @Override
     public void showEmojiconMenu(boolean show) {
         if(show) {
             showEmojiconMenu();
