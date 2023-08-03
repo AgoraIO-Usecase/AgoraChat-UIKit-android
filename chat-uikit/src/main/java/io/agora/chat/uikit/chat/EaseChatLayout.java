@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import java.util.List;
 
 import io.agora.ConversationListener;
@@ -31,17 +30,17 @@ import io.agora.chat.ChatManager;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.CmdMessageBody;
 import io.agora.chat.Conversation;
+import io.agora.chat.MessageBody;
 import io.agora.chat.MessageReactionChange;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.adapter.EMAChatRoomManagerListener;
-import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.activities.EaseChatThreadCreateActivity;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.IChatLayout;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
+import io.agora.chat.uikit.chat.interfaces.OnModifyMessageListener;
 import io.agora.chat.uikit.chat.interfaces.OnReactionMessageListener;
 import io.agora.chat.uikit.chat.interfaces.OnRecallMessageResultListener;
 import io.agora.chat.uikit.chat.presenter.EaseHandleMessagePresenter;
@@ -68,7 +67,6 @@ import io.agora.chat.uikit.menu.ReactionItemBean;
 import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.models.EaseUser;
-import io.agora.chat.uikit.provider.EaseActivityProvider;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseDialog;
@@ -159,6 +157,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      * Whether to show reaction view
      */
     private boolean mIsShowReactionView = true;
+
+    /**
+     * listener for modify message
+     */
+    private OnModifyMessageListener modifyMessageListener;
 
     public EaseChatLayout(Context context) {
         this(context, null);
@@ -498,6 +501,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void recallMessage(ChatMessage message) {
         presenter.recallMessage(message);
+    }
+
+    @Override
+    public void modifyMessage(String messageId, MessageBody messageBodyModified) {
+        presenter.modifyMessage(messageId,messageBodyModified);
     }
 
     @Override
@@ -1252,6 +1260,27 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         if (null != reactionMessageListener) {
             reactionMessageListener.removeReactionMessageFail(message, code, error);
         }
+    }
+
+    @Override
+    public void onModifyMessageSuccess(ChatMessage messageModified) {
+        refreshMessage(messageModified);
+        if (modifyMessageListener != null) {
+            modifyMessageListener.onModifyMessageSuccess(messageModified);
+        }
+    }
+
+    @Override
+    public void onModifyMessageFailure(String messageId, int code, String error) {
+        EMLog.i(TAG, "onModifyMessageFailure:" + code + ":" + error);
+        if (modifyMessageListener != null) {
+            modifyMessageListener.onModifyMessageFailure(messageId,code,error);
+        }
+    }
+
+    @Override
+    public void setOnEditMessageListener(OnModifyMessageListener listener) {
+        this.modifyMessageListener = listener;
     }
 
 }

@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import java.util.List;
 
 import io.agora.CallBack;
+import io.agora.Error;
+import io.agora.ValueCallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.CmdMessageBody;
@@ -233,6 +235,36 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
                 runOnUI(()->mView.recallMessageFail(e.getErrorCode(), e.getDescription()));
             }
         }
+    }
+
+    @Override
+    public void modifyMessage(String messageId, MessageBody messageBodyModified) {
+        if(TextUtils.isEmpty(messageId)||messageBodyModified==null) {
+            runOnUI(() ->{
+                if(isActive()) {
+                    mView.onModifyMessageFailure(messageId, Error .GENERAL_ERROR,"messageId or messageModified is empty !");
+                }
+            });
+            return;
+        }
+        // modify message
+        ChatClient.getInstance().chatManager().asyncModifyMessage(messageId, messageBodyModified, new ValueCallBack<ChatMessage>() {
+            @Override
+            public void onSuccess(ChatMessage messageModified) {
+                runOnUI(() ->{
+                    if(isActive()) {
+                        mView.onModifyMessageSuccess(messageModified);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int code, String error) {
+                if(isActive()) {
+                    mView.onModifyMessageFailure(messageId, code, error);
+                }
+            }
+        });
     }
 
     private String getThumbPath(Uri videoUri) {

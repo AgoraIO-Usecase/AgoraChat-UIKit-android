@@ -16,11 +16,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.view.menu.MenuAdapter;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -268,11 +266,6 @@ public class EasePopupWindowHelper {
         pMenu.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         pMenu.setAnimationStyle(R.style.message_menu_popup_window_anim_style);
         pMenu.showAtLocation(parent, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-
-        ViewGroup.LayoutParams params = mPopupView.getLayoutParams();
-        params.width = (int) EaseUtils.getScreenInfo(context)[0];
-        float[] screenInfo = EaseUtils.getScreenInfo(context);
-        params.height = (int) (screenInfo[1]/2);
 
         mPopupView.post(()->{
             pRealHeight = mPopupView.getMeasuredHeight();

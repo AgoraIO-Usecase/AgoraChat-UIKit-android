@@ -107,4 +107,18 @@ public interface IHandleMessageView extends ILoadDataView {
      */
     void removeReactionMessageFail(ChatMessage message, int code, String error);
 
+    /**
+     * modify message success
+     * @param messageModified
+     */
+    void onModifyMessageSuccess(ChatMessage messageModified);
+
+    /**
+     * modify message failure
+     * @param messageId
+     * @param code
+     * @param error
+     */
+    void onModifyMessageFailure(String messageId, int code, String error);
+
 }

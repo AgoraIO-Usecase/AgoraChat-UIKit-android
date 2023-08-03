@@ -100,6 +100,10 @@ public abstract class EaseChatRow extends LinearLayout {
      */
     protected TextView deliveredView;
     /**
+     * if edited
+     */
+    protected TextView editView;
+    /**
      * Multi selects.
      */
     protected RadioButton selectRadio;
@@ -175,6 +179,7 @@ public abstract class EaseChatRow extends LinearLayout {
         reactionContentView = findViewById(R.id.tv_subReactionContent);
         threadRegion = (EaseChatRowThreadRegion) findViewById(R.id.thread_region);
         selectRadio = (RadioButton) findViewById(R.id.rb_select);
+        editView = (TextView) findViewById(R.id.tv_edit);
 
         setLayoutStyle();
 
@@ -223,6 +228,9 @@ public abstract class EaseChatRow extends LinearLayout {
                     content.setTextColor(itemStyle.getTextColor());
                 }
             }
+            if(editView!=null) {
+                editView.setVisibility(GONE);
+            }
         }
     }
 
@@ -246,7 +254,7 @@ public abstract class EaseChatRow extends LinearLayout {
     /**
      * set property according message and position
      * the method should be called by child
-     * 
+     *
      * @param message
      * @param position
      */
@@ -305,6 +313,14 @@ public abstract class EaseChatRow extends LinearLayout {
         if(selectRadio != null) {
             selectRadio.setVisibility(EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle() ? VISIBLE : GONE);
             selectRadio.setChecked(EaseChatMessageMultiSelectHelper.getInstance().isContainsMessage(message));
+        }
+
+        if( editView != null) {
+            if (message.getBody().operationCount() > 0) {
+                editView.setVisibility(VISIBLE);
+            } else {
+                editView.setVisibility(GONE);
+            }
         }
     }
 
@@ -534,7 +550,7 @@ public abstract class EaseChatRow extends LinearLayout {
         chatCallback = new EaseChatCallback();
         if(bubbleLayout != null){
             bubbleLayout.setOnClickListener(new OnClickListener() {
-    
+
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null && itemClickListener.onBubbleClick(message)){
@@ -545,9 +561,9 @@ public abstract class EaseChatRow extends LinearLayout {
                     }
                 }
             });
-    
+
             bubbleLayout.setOnLongClickListener(new OnLongClickListener() {
-    
+
                 @Override
                 public boolean onLongClick(View v) {
                     if (itemClickListener != null) {
@@ -575,7 +591,7 @@ public abstract class EaseChatRow extends LinearLayout {
 
         if(userAvatarView != null){
             userAvatarView.setOnClickListener(new OnClickListener() {
-    
+
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null) {
@@ -588,7 +604,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 }
             });
             userAvatarView.setOnLongClickListener(new OnLongClickListener() {
-                
+
                 @Override
                 public boolean onLongClick(View v) {
                     if(itemClickListener != null){
@@ -771,6 +787,10 @@ public abstract class EaseChatRow extends LinearLayout {
         if(deliveredView != null) {
             deliveredView.setVisibility(INVISIBLE);
         }
+
+        if(editView!=null) {
+            editView.setVisibility(GONE);
+        }
         EMLog.e(TAG, "onMessageError");
     }
 
@@ -793,7 +813,7 @@ public abstract class EaseChatRow extends LinearLayout {
 
     /**
      * setup view
-     * 
+     *
      */
     protected abstract void onSetUpView();
 
