@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,6 +42,7 @@ import io.agora.chat.uikit.activities.EaseShowNormalFileActivity;
 import io.agora.chat.uikit.activities.EaseShowVideoActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
+import io.agora.chat.uikit.chat.interfaces.ChatQuoteMessageProvider;
 import io.agora.chat.uikit.chat.interfaces.IChatTopExtendMenu;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.chat.interfaces.OnChatExtendMenuItemClickListener;
@@ -80,7 +82,7 @@ import io.agora.util.VersionUtils;
 
 public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutListener, OnMenuChangeListener,
         OnAddMsgAttrsBeforeSendEvent, OnChatRecordTouchListener, OnReactionMessageListener,
-        MultiDeviceListener, ChatThreadChangeListener, OnQuoteViewClickListener {
+        MultiDeviceListener, ChatThreadChangeListener, OnQuoteViewClickListener, ChatQuoteMessageProvider {
     protected static final int REQUEST_CODE_MAP = 1;
     protected static final int REQUEST_CODE_CAMERA = 2;
     protected static final int REQUEST_CODE_LOCAL = 3;
@@ -256,7 +258,8 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         chatLayout.setOnReactionListener(reactionMessageListener != null ? reactionMessageListener : this);
         ChatClient.getInstance().addMultiDeviceListener(this);
         ChatClient.getInstance().chatThreadManager().addChatThreadChangeListener(this);
-        EaseChatInterfaceManager.getInstance().setInterface(EaseConstant.INTERFACE_QUOTE_MESSAGE_CLICK_TAG, this);
+        EaseChatInterfaceManager.getInstance().setInterface(mContext, OnQuoteViewClickListener.class.getSimpleName(), this);
+        EaseChatInterfaceManager.getInstance().setInterface(mContext, ChatQuoteMessageProvider.class.getSimpleName(), this);
     }
 
     public void initData() {
@@ -376,7 +379,8 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         super.onDestroyView();
         ChatClient.getInstance().chatThreadManager().removeChatThreadChangeListener(this);
         ChatClient.getInstance().removeMultiDeviceListener(this);
-        EaseChatInterfaceManager.getInstance().removeInterface(EaseConstant.INTERFACE_QUOTE_MESSAGE_CLICK_TAG);
+        EaseChatInterfaceManager.getInstance().removeInterface(mContext, OnQuoteViewClickListener.class.getSimpleName());
+        EaseChatInterfaceManager.getInstance().removeInterface(mContext, ChatQuoteMessageProvider.class.getSimpleName());
     }
 
     @Override
@@ -892,6 +896,11 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
         ((EaseChatExtendQuoteView)(chatLayout.getChatInputMenu().getChatTopExtendMenu())).startQuote(message);
         chatLayout.getChatInputMenu().getPrimaryMenu().showTextStatus();
+    }
+
+    @Override
+    public SpannableString provideQuoteContent(ChatMessage quoteMessage, ChatMessage.Type quoteMsgType, String quoteSender, String quoteContent) {
+        return null;
     }
 
     public static class Builder {

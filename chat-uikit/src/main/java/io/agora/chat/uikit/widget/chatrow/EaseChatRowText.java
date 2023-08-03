@@ -44,7 +44,7 @@ public class EaseChatRowText extends EaseChatRow {
 	protected void onFindViewById() {
 		contentView = (TextView) findViewById(R.id.tv_chatcontent);
         quoteView = (EaseChatQuoteView)findViewById(R.id.chat_quote_view);
-        bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg : R.drawable.ease_chat_bubble_receive_bg));
+        resetBackground();
 	}
 
     @Override
@@ -66,7 +66,7 @@ public class EaseChatRowText extends EaseChatRow {
             });
             replaceSpan();
         }
-        bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg : R.drawable.ease_chat_bubble_receive_bg));
+        resetBackground();
         onSetUpQuoteView(message);
     }
 
@@ -140,9 +140,18 @@ public class EaseChatRowText extends EaseChatRow {
         quoteView.setVisibility(GONE);
         boolean isUpdated = quoteView.updateMessageInfo(message);
         if(isUpdated) {
-            bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg_has_top
-                    : R.drawable.ease_chat_bubble_receive_bg_has_top));
+            updateBackground();
         }
+    }
+
+    public void resetBackground() {
+        bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender()
+                ? R.drawable.ease_chat_bubble_send_bg : R.drawable.ease_chat_bubble_receive_bg));
+    }
+
+    public void updateBackground() {
+        bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg_has_top
+                : R.drawable.ease_chat_bubble_receive_bg_has_top));
     }
 
     /**

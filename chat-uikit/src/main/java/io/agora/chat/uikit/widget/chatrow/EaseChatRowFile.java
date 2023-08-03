@@ -63,7 +63,9 @@ public class EaseChatRowFile extends EaseChatRow {
 	protected void onSetUpView() {
 	    fileMessageBody = (NormalFileMessageBody) message.getBody();
 //        Uri filePath = fileMessageBody.getLocalUri();
-        fileStateView.setVisibility(GONE);
+        if(fileStateView != null) {
+            fileStateView.setVisibility(GONE);
+        }
         fileNameView.setText(fileMessageBody.getFileName());
         fileSizeView.setText(TextFormater.getDataSize(fileMessageBody.getFileSize()));
         setFileIcon(fileMessageBody.getFileName());
@@ -87,7 +89,9 @@ public class EaseChatRowFile extends EaseChatRow {
     @Override
     protected void onMessageCreate() {
         super.onMessageCreate();
-        progressBar.setVisibility(View.VISIBLE);
+        if(progressBar != null) {
+            progressBar.setVisibility(VISIBLE);
+        }
         if (percentageView != null)
             percentageView.setVisibility(View.INVISIBLE);
         if (statusView != null)
@@ -97,7 +101,9 @@ public class EaseChatRowFile extends EaseChatRow {
     @Override
     protected void onMessageSuccess() {
         super.onMessageSuccess();
-        progressBar.setVisibility(View.INVISIBLE);
+        if(progressBar != null) {
+            progressBar.setVisibility(INVISIBLE);
+        }
         if (percentageView != null)
             percentageView.setVisibility(View.INVISIBLE);
         if (statusView != null)
@@ -111,7 +117,9 @@ public class EaseChatRowFile extends EaseChatRow {
     @Override
     protected void onMessageError() {
         super.onMessageError();
-        progressBar.setVisibility(View.INVISIBLE);
+        if(progressBar != null) {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
         if (percentageView != null)
             percentageView.setVisibility(View.INVISIBLE);
         if (statusView != null)
@@ -132,7 +140,7 @@ public class EaseChatRowFile extends EaseChatRow {
             statusView.setVisibility(View.INVISIBLE);
     }
 
-    private void setFileIcon(String fileName) {
+    protected void setFileIcon(String fileName) {
         EaseFileIconProvider provider = EaseUIKit.getInstance().getFileIconProvider();
         if(provider != null) {
             Drawable icon = provider.getFileIcon(fileName);

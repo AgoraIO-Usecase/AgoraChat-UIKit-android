@@ -17,10 +17,10 @@ import io.agora.util.EMLog;
 
 public class EaseChatRowVoice extends EaseChatRowFile {
     private static final String TAG = EaseChatRowVoice.class.getSimpleName();
-    private ImageView voiceImageView;
+    protected ImageView voiceImageView;
     private TextView voiceLengthView;
     private ImageView readStatusView;
-    private AnimationDrawable voiceAnimation;
+    protected AnimationDrawable voiceAnimation;
 
     public EaseChatRowVoice(Context context, boolean isSender) {
         super(context, isSender);
@@ -49,7 +49,7 @@ public class EaseChatRowVoice extends EaseChatRowFile {
         int len = voiceBody.getLength();
         int padding = 0;
         if (len > 0) {
-            padding = EaseVoiceLengthUtils.getVoiceLength(getContext(), len);
+            padding = getVoicePadding(len);
             voiceLengthView.setText(voiceBody.getLength() + "\"");
             voiceLengthView.setVisibility(View.VISIBLE);
         } else {
@@ -92,7 +92,9 @@ public class EaseChatRowVoice extends EaseChatRowFile {
             }
         }else {
             // hide the unread icon
-            readStatusView.setVisibility(View.INVISIBLE);
+            if(readStatusView != null) {
+                readStatusView.setVisibility(View.INVISIBLE);
+            }
         }
 
         // To avoid the item is recycled by listview and slide to this item again but the animation is stopped.
@@ -100,6 +102,10 @@ public class EaseChatRowVoice extends EaseChatRowFile {
         if (voicePlayer.isPlaying() && message.getMsgId().equals(voicePlayer.getCurrentPlayingId())) {
             startVoicePlayAnimation();
         }
+    }
+
+    public int getVoicePadding(int voiceLen) {
+        return EaseVoiceLengthUtils.getVoiceLength(getContext(), voiceLen);
     }
 
     @Override
@@ -131,7 +137,9 @@ public class EaseChatRowVoice extends EaseChatRowFile {
 
         // Hide the voice item not listened status view.
         if (message.direct() == ChatMessage.Direct.RECEIVE) {
-            readStatusView.setVisibility(View.INVISIBLE);
+            if(readStatusView != null) {
+                readStatusView.setVisibility(View.INVISIBLE);
+            }
         }
     }
 

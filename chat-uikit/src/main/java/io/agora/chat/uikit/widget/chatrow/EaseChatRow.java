@@ -503,12 +503,7 @@ public abstract class EaseChatRow extends LinearLayout {
                     prevMessage = (ChatMessage) ((EaseBaseAdapter)adapter).getItem(position - 1);
                 }
 
-                if (prevMessage != null && EaseDateUtils.isCloseEnough(message.getMsgTime(), prevMessage.getMsgTime())) {
-                    timestamp.setVisibility(View.GONE);
-                } else {
-                    timestamp.setText(EaseDateUtils.getTimestampString(getContext(), new Date(message.getMsgTime())));
-                    timestamp.setVisibility(View.VISIBLE);
-                }
+                setOtherTimestamp(prevMessage);
             }
         }
     }
@@ -518,14 +513,19 @@ public abstract class EaseChatRow extends LinearLayout {
             timeStampView.setText(EaseDateUtils.getTimestampString(getContext(), new Date(message.getMsgTime())));
             timeStampView.setVisibility(View.VISIBLE);
         } else {
-            if (preMessage != null && EaseDateUtils.isCloseEnough(message.getMsgTime(), preMessage.getMsgTime())) {
-                timeStampView.setVisibility(View.GONE);
-            } else {
-                timeStampView.setText(EaseDateUtils.getTimestampString(getContext(), new Date(message.getMsgTime())));
-                timeStampView.setVisibility(View.VISIBLE);
-            }
+            setOtherTimestamp(preMessage);
         }
     }
+
+    public void setOtherTimestamp(ChatMessage preMessage) {
+        if (preMessage != null && EaseDateUtils.isCloseEnough(message.getMsgTime(), preMessage.getMsgTime())) {
+            timeStampView.setVisibility(View.GONE);
+        } else {
+            timeStampView.setText(EaseDateUtils.getTimestampString(getContext(), new Date(message.getMsgTime())));
+            timeStampView.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     /**
      * set click listener
@@ -721,9 +721,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 @Override
                 public void run() {
                     onMessageError();
-                    if(itemClickListener != null) {
-                        itemClickListener.onMessageError(message, code, error);
-                    }
+                    postMessageError(message, code, error);
                 }
             });
         }
@@ -739,6 +737,12 @@ public abstract class EaseChatRow extends LinearLayout {
                     }
                 }
             });
+        }
+    }
+
+    public void postMessageError(ChatMessage message, int code, String error) {
+        if(itemClickListener != null) {
+            itemClickListener.onMessageError(message, code, error);
         }
     }
 

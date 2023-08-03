@@ -1,6 +1,8 @@
 package io.agora.chat.uikit.manager;
 
+import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 
 import java.util.HashMap;
@@ -34,27 +36,27 @@ public class EaseChatInterfaceManager {
         return mInstance;
     }
 
-    public void setInterface(String tag, IUIKitInterface iuiKitInterface) {
+    public void setInterface(Context context, String tag, IUIKitInterface iuiKitInterface) {
         if(TextUtils.isEmpty(tag)) {
             EMLog.e(TAG, "tag should not be null");
             return;
         }
-        interfaceMap.put(tag, iuiKitInterface);
+        interfaceMap.put(tag+context.hashCode(), iuiKitInterface);
     }
 
-    public IUIKitInterface getInterface(String tag) {
-        if(!interfaceMap.containsKey(tag)) {
+    public IUIKitInterface getInterface(Context context, String tag) {
+        if(!interfaceMap.containsKey(tag+context.hashCode())) {
             EMLog.e(TAG, "Do not have interface with tag: "+tag);
             return null;
         }
-        return interfaceMap.get(tag);
+        return interfaceMap.get(tag+context.hashCode());
     }
 
-    public boolean removeInterface(String tag) {
+    public boolean removeInterface(Context context, String tag) {
         if(TextUtils.isEmpty(tag)) {
             return false;
         }
-        return interfaceMap.remove(tag) != null;
+        return interfaceMap.remove(tag+context.hashCode()) != null;
     }
 
     public void clear() {
