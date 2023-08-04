@@ -10,7 +10,6 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.Conversation;
 import io.agora.chat.uikit.base.EaseBasePresenter;
-import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.utils.EaseUtils;
@@ -96,12 +95,6 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
      * @param action
      */
     public abstract void sendCmdMessage(String action);
-
-    /**
-     * Send a combine message.
-     * @param messageList
-     */
-    public abstract void sendCombineMessage(List<String> messageList);
 
     /**
      * Resend message

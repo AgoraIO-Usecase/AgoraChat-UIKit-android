@@ -34,7 +34,7 @@
             app:ease_chat_quote_sender="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_userid"
             app:layout_constraintEnd_toEndOf="@id/bubble"
             app:layout_constraintBottom_toTopOf="@id/bubble"
             android:visibility="gone"/>
@@ -142,8 +142,9 @@
             android:layout_marginBottom="2dp"
             android:textSize="@dimen/ease_chat_nick_text_size"
             android:textColor="@color/ease_msg_name_color"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/chat_quote_view"
-            app:layout_constraintRight_toRightOf="@id/bubble"
+            app:layout_constraintEnd_toEndOf="@id/bubble"
             android:visibility="gone"
             tools:text="som"/>
 

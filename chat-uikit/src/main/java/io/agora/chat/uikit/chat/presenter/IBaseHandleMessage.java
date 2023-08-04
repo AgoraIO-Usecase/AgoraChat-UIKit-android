@@ -49,8 +49,21 @@ public interface IBaseHandleMessage {
     void sendFileMessage(Uri fileUri);
 
     /**
+     * Send a combine message.
+     * @param message
+     */
+    void sendCombineMessage(ChatMessage message);
+
+    /**
      * Send message
      * @param message
      */
     void sendMessage(ChatMessage message);
+
+    /**
+     * Send message
+     * @param message
+     * @param isCheckChatType
+     */
+    void sendMessage(ChatMessage message, boolean isCheckChatType);
 }

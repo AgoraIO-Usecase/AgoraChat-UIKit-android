@@ -104,9 +104,9 @@ public interface IChatLayout {
 
     /**
      * Send a combine message.
-     * @param messageList
+     * @param message
      */
-    void sendCombineMessage(List<String> messageList);
+    void sendCombineMessage(ChatMessage message);
 
     /**
      * Send file message

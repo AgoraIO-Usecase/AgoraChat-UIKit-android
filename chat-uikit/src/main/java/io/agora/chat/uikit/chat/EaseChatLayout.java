@@ -465,8 +465,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     @Override
-    public void sendCombineMessage(List<String> messageList) {
-        presenter.sendCombineMessage(messageList);
+    public void sendCombineMessage(ChatMessage message) {
+        presenter.sendCombineMessage(message);
     }
 
     @Override

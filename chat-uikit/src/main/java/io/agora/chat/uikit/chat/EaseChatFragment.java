@@ -69,6 +69,7 @@ import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
+import io.agora.chat.uikit.models.EaseMessageMenuData;
 import io.agora.chat.uikit.utils.EaseCompat;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
@@ -357,7 +358,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     }
 
     private void AddCustomLongClickMenu() {
-        MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_quote, chatLayout.getMenuHelper().getLength() * 10, mContext.getString(R.string.ease_action_quote));
+        MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_quote, EaseMessageMenuData.MENU_ITEM_IDS.length * 10, mContext.getString(R.string.ease_action_quote));
         itemBean.setResourceId(R.drawable.ease_chat_item_menu_forward);
         chatLayout.addItemMenu(itemBean);
 

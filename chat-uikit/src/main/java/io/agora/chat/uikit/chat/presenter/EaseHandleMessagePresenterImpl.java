@@ -114,6 +114,11 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     }
 
     @Override
+    public void sendCombineMessage(ChatMessage message) {
+        sendMessage(message, false);
+    }
+
+    @Override
     public void addMessageAttributes(ChatMessage message) {
         //You can add some custom attributes
         mView.addMsgAttrBeforeSend(message);
@@ -121,18 +126,25 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
 
     @Override
     public void sendMessage(ChatMessage message) {
+        sendMessage(message, true);
+    }
+
+    @Override
+    public void sendMessage(ChatMessage message, boolean isCheckChatType) {
         if(message == null) {
             if(isActive()) {
                 runOnUI(() -> mView.sendMessageFail("message is null!"));
             }
             return;
         }
-        addMessageAttributes(message);
-        if (chatType == EaseChatType.GROUP_CHAT){
-            message.setChatType(ChatMessage.ChatType.GroupChat);
-        }else if(chatType == EaseChatType.CHATROOM){
-            message.setChatType(ChatMessage.ChatType.ChatRoom);
+        if(isCheckChatType) {
+            if (chatType == EaseChatType.GROUP_CHAT){
+                message.setChatType(ChatMessage.ChatType.GroupChat);
+            }else if(chatType == EaseChatType.CHATROOM){
+                message.setChatType(ChatMessage.ChatType.ChatRoom);
+            }
         }
+        addMessageAttributes(message);
         // Should add thread label if it is a thread conversation
         message.setIsChatThreadMessage(isThread);
         message.setMessageStatusCallback(new CallBack() {
@@ -173,12 +185,6 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
         beginMsg.addBody(body);
         beginMsg.setTo(toChatUsername);
         ChatClient.getInstance().chatManager().sendMessage(beginMsg);
-    }
-
-    @Override
-    public void sendCombineMessage(List<String> messageList) {
-        ChatMessage message = ChatMessage.createCombinedSendMessage("", "", "", messageList, toChatUsername);
-        sendMessage(message);
     }
 
     @Override

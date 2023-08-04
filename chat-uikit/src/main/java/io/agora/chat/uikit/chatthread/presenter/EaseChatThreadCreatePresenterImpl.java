@@ -115,6 +115,11 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
     }
 
     @Override
+    public void sendCombineMessage(ChatMessage message) {
+        sendMessage(message, false);
+    }
+
+    @Override
     public void addMessageAttributes(ChatMessage message) {
         //You can add some custom attributes
         mView.addMsgAttrBeforeSend(message);
@@ -148,6 +153,11 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
 
     @Override
     public void sendMessage(ChatMessage message) {
+        sendMessage(message, true);
+    }
+
+    @Override
+    public void sendMessage(ChatMessage message, boolean isCheckChatType) {
         if(message == null) {
             if(isActive()) {
                 runOnUI(() -> mView.sendMessageFail("message is null!"));
@@ -157,12 +167,14 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
         if(TextUtils.isEmpty(message.getTo())) {
             message.setTo(toChatUsername);
         }
-        addMessageAttributes(message);
-        if (chatType == EaseChatType.GROUP_CHAT){
-            message.setChatType(ChatMessage.ChatType.GroupChat);
-        }else if(chatType == EaseChatType.CHATROOM){
-            message.setChatType(ChatMessage.ChatType.ChatRoom);
+        if(isCheckChatType) {
+            if (chatType == EaseChatType.GROUP_CHAT){
+                message.setChatType(ChatMessage.ChatType.GroupChat);
+            }else if(chatType == EaseChatType.CHATROOM){
+                message.setChatType(ChatMessage.ChatType.ChatRoom);
+            }
         }
+        addMessageAttributes(message);
         // Add thread label for message
         message.setIsChatThreadMessage(true);
         message.setMessageStatusCallback(new CallBack() {
