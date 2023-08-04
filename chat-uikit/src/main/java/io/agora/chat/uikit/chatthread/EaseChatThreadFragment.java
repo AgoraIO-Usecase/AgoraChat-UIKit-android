@@ -102,7 +102,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         // Chat Thread is load from server, not need to delete from local
         helper.findItemVisible(R.id.action_chat_delete, false);
         // Chat Thread can not reply again
-        helper.findItemVisible(R.id.action_chat_reply, false);
+        helper.findItemVisible(R.id.action_chat_thread, false);
         if(!message.isChatThreadMessage() || message.direct() == ChatMessage.Direct.RECEIVE) {
             helper.findItemVisible(R.id.action_chat_recall, false);
         }

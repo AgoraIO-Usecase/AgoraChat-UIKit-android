@@ -15,6 +15,8 @@
     <item name="action_chat_quote" type="id" />
     <!--select-->
     <item name="action_chat_select" type="id" />
+    <!--create thread-->
+    <item name="action_chat_thread" type="id" />
     <!--long click-->
     <item name="action_chat_long_click" type="id"/>
 

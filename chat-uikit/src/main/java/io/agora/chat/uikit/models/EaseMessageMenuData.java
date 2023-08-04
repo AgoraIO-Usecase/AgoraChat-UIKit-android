@@ -66,9 +66,9 @@ public class EaseMessageMenuData {
             "emoji_10",
     };
 
-    public static final int[] MENU_ITEM_IDS = {R.id.action_chat_reply, R.id.action_chat_copy, R.id.action_chat_delete, R.id.action_chat_recall};
-    public static final int[] MENU_TITLES = {R.string.ease_action_reply, R.string.ease_action_copy, R.string.ease_action_delete, R.string.ease_action_unsent};
-    public static final int[] MENU_ICONS = {R.drawable.ease_chat_item_menu_reply, R.drawable.ease_chat_item_menu_copy, R.drawable.ease_chat_item_menu_delete,
+    public static final int[] MENU_ITEM_IDS = {R.id.action_chat_thread, R.id.action_chat_copy, R.id.action_chat_delete, R.id.action_chat_recall};
+    public static final int[] MENU_TITLES = {R.string.ease_action_thread, R.string.ease_action_copy, R.string.ease_action_delete, R.string.ease_action_unsent};
+    public static final int[] MENU_ICONS = {R.drawable.ease_chat_item_menu_thread, R.drawable.ease_chat_item_menu_copy, R.drawable.ease_chat_item_menu_delete,
             R.drawable.ease_chat_item_menu_unsent};
 
 

@@ -741,7 +741,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         boolean isThreadNotify = message.getBooleanAttribute(EaseConstant.EASE_THREAD_NOTIFICATION_TYPE, false);
         if(isThreadNotify) {
             helper.findItemVisible(R.id.action_chat_copy, false);
-            helper.findItemVisible(R.id.action_chat_reply, false);
+            helper.findItemVisible(R.id.action_chat_thread, false);
             helper.findItemVisible(R.id.action_chat_recall, false);
             helper.findItemVisible(R.id.action_chat_delete, true);
             helper.showHeaderView(false);

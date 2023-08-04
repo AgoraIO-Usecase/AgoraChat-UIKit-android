@@ -1056,7 +1056,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                         EMLog.i(TAG,"currentMsgId = "+message.getMsgId() + " timestamp = "+message.getMsgTime());
                     }else if(itemId == R.id.action_chat_recall) {
                         recallMessage(message);
-                    }else if(itemId == R.id.action_chat_reply) {
+                    }else if(itemId == R.id.action_chat_thread) {
                         skipToCreateThread(message);
                     }
                     return true;
@@ -1111,7 +1111,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     private void setMenuByMsgType(ChatMessage message) {
         ChatMessage.Type type = message.getType();
-        menuHelper.findItemVisible(R.id.action_chat_reply, false);
+        menuHelper.findItemVisible(R.id.action_chat_thread, false);
         menuHelper.findItemVisible(R.id.action_chat_copy, false);
         menuHelper.findItemVisible(R.id.action_chat_recall, false);
         menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_action_delete));
@@ -1135,7 +1135,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 break;
         }
         if(message.getChatType() == ChatMessage.ChatType.GroupChat && message.getChatThread() == null) {
-            menuHelper.findItemVisible(R.id.action_chat_reply, true);
+            menuHelper.findItemVisible(R.id.action_chat_thread, true);
         }
 
         if(message.direct() == ChatMessage.Direct.RECEIVE ){
