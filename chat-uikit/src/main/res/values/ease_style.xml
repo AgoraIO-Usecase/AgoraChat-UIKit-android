@@ -257,6 +257,7 @@
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:textColor">@color/ease_chat_row_combine_summary_text_color</item>
         <item name="android:visibility">gone</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>

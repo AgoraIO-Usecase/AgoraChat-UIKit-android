@@ -1,6 +1,5 @@
 package io.agora.chat.uikit.chathistory.viewholder;
 
-import android.content.Intent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -9,9 +8,9 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.FileMessageBody;
 import io.agora.chat.VideoMessageBody;
-import io.agora.chat.uikit.activities.EaseShowVideoActivity;
 import io.agora.chat.uikit.chat.viewholder.EaseChatRowViewHolder;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.util.EMLog;
 
 
@@ -38,8 +37,6 @@ public class EaseHistoryVideoViewHolder extends EaseChatRowViewHolder {
                 return;
             }
         }
-        Intent intent = new Intent(getContext(), EaseShowVideoActivity.class);
-        intent.putExtra("msg", message);
-        getContext().startActivity(intent);
+        EaseActivityProviderHelper.startToDownloadVideoActivity(getContext(), message);
     }
 }

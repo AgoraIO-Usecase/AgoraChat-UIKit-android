@@ -36,10 +36,6 @@ import io.agora.chat.ImageMessageBody;
 import io.agora.chat.NormalFileMessageBody;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.activities.EaseImageGridActivity;
-import io.agora.chat.uikit.activities.EaseShowBigImageActivity;
-import io.agora.chat.uikit.activities.EaseShowNormalFileActivity;
-import io.agora.chat.uikit.activities.EaseShowVideoActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
 import io.agora.chat.uikit.chat.interfaces.ChatQuoteMessageProvider;
@@ -63,8 +59,8 @@ import io.agora.chat.uikit.chat.widget.EaseChatMultiSelectView;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.interfaces.OnQuoteViewClickListener;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseChatInterfaceManager;
-import io.agora.chat.uikit.manager.EaseChatMessageMultiSelectHelper;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
@@ -244,12 +240,18 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         setCustomExtendMenu();
         setCustomTopExtendMenu();
         AddCustomLongClickMenu();
+        initSubView();
         // Provide views after finishing inflate
         if(finishInflateListener != null) {
             finishInflateListener.onTitleBarFinishInflate(titleBar);
             finishInflateListener.onChatListFinishInflate(chatLayout);
         }
     }
+
+    /**
+     * Subclass can initialize views int this method.
+     */
+    public void initSubView() {}
 
     public void initListener() {
         chatLayout.setOnChatLayoutListener(this);
@@ -337,7 +339,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         multiSelectView.setOnSelectClickListener(new EaseChatMultiSelectView.OnSelectClickListener() {
             @Override
             public void onMultiDeleteClick(List<String> deleteMsgIdList) {
-                if(messageSelectResultListener != null && messageSelectResultListener.onMessageDelete(deleteMsgIdList)) {
+                if(messageSelectResultListener != null && messageSelectResultListener.onMessageDelete(multiSelectView, deleteMsgIdList)) {
                     return;
                 }
                 chatLayout.deleteMessages(deleteMsgIdList);
@@ -345,10 +347,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
             @Override
             public void onMultiReplyClick(List<String> replyMsgIdList) {
-                if(messageSelectResultListener != null && messageSelectResultListener.onMessageReply(replyMsgIdList)) {
+                if(messageSelectResultListener != null && messageSelectResultListener.onMessageReply(multiSelectView, replyMsgIdList)) {
                     return;
                 }
-                EaseChatMessageMultiSelectHelper.getCombineMessageSummary(replyMsgIdList);
+                //EaseChatMessageMultiSelectHelper.getCombineMessageSummary(replyMsgIdList);
             }
         });
         multiSelectView.setupWithAdapter(messageAdapter);
@@ -358,13 +360,24 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     }
 
     private void AddCustomLongClickMenu() {
-        MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_quote, EaseMessageMenuData.MENU_ITEM_IDS.length * 10, mContext.getString(R.string.ease_action_quote));
-        itemBean.setResourceId(R.drawable.ease_chat_item_menu_forward);
+        // after copy
+        MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_reply, (getTargetPosition(R.id.action_chat_copy) + 1) * 10 + 5, mContext.getString(R.string.ease_action_reply));
+        itemBean.setResourceId(R.drawable.ease_chat_item_menu_reply);
         chatLayout.addItemMenu(itemBean);
 
-        itemBean = new MenuItemBean(0, R.id.action_chat_select, chatLayout.getMenuHelper().getLength() * 10, mContext.getString(R.string.ease_action_select));
+        itemBean = new MenuItemBean(0, R.id.action_chat_select, (getTargetPosition(R.id.action_chat_delete) + 1) * 10 - 5, mContext.getString(R.string.ease_action_select));
         itemBean.setResourceId(R.drawable.ease_chat_item_menu_select);
         chatLayout.addItemMenu(itemBean);
+    }
+
+    private int getTargetPosition(int id) {
+        for (int i = 0; i < EaseMessageMenuData.MENU_ITEM_IDS.length; i++) {
+            int menuItemId = EaseMessageMenuData.MENU_ITEM_IDS[i];
+            if(id == menuItemId) {
+                return i;
+            }
+        }
+        return EaseMessageMenuData.MENU_ITEM_IDS.length - 1;
     }
 
     @Override
@@ -402,26 +415,19 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         switch (type){
             case IMAGE:
                 ImageMessageBody imgBody = (ImageMessageBody) message.getBody();
-                Intent imageIntent = new Intent(getContext(), EaseShowBigImageActivity.class);
                 Uri imgUri = imgBody.getLocalUri();
                 EaseFileUtils.takePersistableUriPermission(getContext(), imgUri);
                 if(EaseFileUtils.isFileExistByUri(getContext(), imgUri)) {
-                    imageIntent.putExtra("uri", imgUri);
+                    EaseActivityProviderHelper.startToLocalImageActivity(getContext(), imgUri);
                 } else{
-                    String msgId = message.getMsgId();
-                    imageIntent.putExtra("messageId", msgId);
-                    imageIntent.putExtra("filename", imgBody.getFileName());
-                }
-                if (getContext() != null){
-                    getContext().startActivity(imageIntent);
+                    EaseActivityProviderHelper.startToLocalImageActivity(getContext(), message.getMsgId(), imgBody.getFileName());
                 }
                 break;
             case VIDEO:
-                Intent videoIntent = new Intent(getContext(), EaseShowVideoActivity.class);
-                videoIntent.putExtra("msg", message);
                 if (getContext() != null){
-                    getContext().startActivity(videoIntent);
+                    EaseActivityProviderHelper.startToDownloadVideoActivity(getContext(), message);
                 }
+
                 break;
             case FILE:
                 NormalFileMessageBody fileMessageBody = (NormalFileMessageBody) message.getBody();
@@ -430,9 +436,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                 if(EaseFileUtils.isFileExistByUri(getContext(), filePath)){
                     EaseCompat.openFile(getContext(), filePath);
                 } else {
-                    if (getContext() != null){
-                        getContext().startActivity(new Intent(getContext(), EaseShowNormalFileActivity.class).putExtra("msg", message));
-                    }
+                    EaseActivityProviderHelper.startToDownloadFileActivity(getContext(), message);
                 }
                 break;
             default:
@@ -442,7 +446,9 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     @Override
     public void onQuoteViewClickError(int code, String message) {
-
+        if(messageSendCallBack != null) {
+            messageSendCallBack.onError(code, message);
+        }
     }
 
     private void setHeaderBackPressListener(EaseTitleBar.OnBackPressListener listener) {
@@ -639,8 +645,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
      * select local video
      */
     protected void selectVideoFromLocal() {
-        Intent intent = new Intent(getActivity(), EaseImageGridActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
+        EaseActivityProviderHelper.startToImageGridActivity(getActivity(), REQUEST_CODE_SELECT_VIDEO);
     }
 
     /**
@@ -739,21 +744,25 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     @Override
     public void onPreMenu(EasePopupWindowHelper helper, ChatMessage message) {
+        helper.findItemVisible(R.id.action_chat_select, true);
         boolean isThreadNotify = message.getBooleanAttribute(EaseConstant.EASE_THREAD_NOTIFICATION_TYPE, false);
+        helper.findItemVisible(R.id.action_chat_reply, message.status() == ChatMessage.Status.SUCCESS);
+        helper.findItemVisible(R.id.action_chat_select, message.status() == ChatMessage.Status.SUCCESS);
         if(isThreadNotify) {
             helper.findItemVisible(R.id.action_chat_copy, false);
             helper.findItemVisible(R.id.action_chat_thread, false);
             helper.findItemVisible(R.id.action_chat_recall, false);
+            helper.findItemVisible(R.id.action_chat_reply, false);
+            helper.findItemVisible(R.id.action_chat_select, false);
             helper.findItemVisible(R.id.action_chat_delete, true);
             helper.showHeaderView(false);
         }
         helper.findItem(R.id.action_chat_recall).setTitleColor(ContextCompat.getColor(mContext, R.color.ease_message_unsend_menu_txt));
-        helper.findItemVisible(R.id.action_chat_quote, message.status() == ChatMessage.Status.SUCCESS);
     }
 
     @Override
     public boolean onMenuItemClick(MenuItemBean item, ChatMessage message) {
-        if(item.getItemId() == R.id.action_chat_quote) {
+        if(item.getItemId() == R.id.action_chat_reply) {
             setCustomTopExtendMenu();
             onQuoteMenuItemClick(message);
             return true;

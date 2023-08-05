@@ -10,8 +10,8 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.FileMessageBody;
 import io.agora.chat.ImageMessageBody;
-import io.agora.chat.uikit.activities.EaseShowBigImageActivity;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.util.EMLog;
@@ -43,20 +43,7 @@ public class EaseImageViewHolder extends EaseChatRowViewHolder {
                 return;
             }
         }
-        Intent intent = new Intent(getContext(), EaseShowBigImageActivity.class);
-        Uri imgUri = imgBody.getLocalUri();
-        EaseFileUtils.takePersistableUriPermission(getContext(), imgUri);
-        EMLog.e("Tag", "big image uri: " + imgUri + "  exist: "+EaseFileUtils.isFileExistByUri(getContext(), imgUri));
-        if(EaseFileUtils.isFileExistByUri(getContext(), imgUri)) {
-            intent.putExtra("uri", imgUri);
-        } else{
-            // The local full size pic does not exist yet.
-            // ShowBigImage needs to download it from the server
-            // first
-            String msgId = message.getMsgId();
-            intent.putExtra("messageId", msgId);
-            intent.putExtra("filename", imgBody.getFileName());
-        }
+
         if(!EaseConfigsManager.enableSendChannelAck()) {
             //Here no longer send read_ack message separately, instead enter the chat page to send channel_ack
             //New messages are sent in the onReceiveMessage method of the chat page, except for video
@@ -70,8 +57,17 @@ public class EaseImageViewHolder extends EaseChatRowViewHolder {
                 }
             }
         }
-
-        getContext().startActivity(intent);
+        Uri imgUri = imgBody.getLocalUri();
+        EaseFileUtils.takePersistableUriPermission(getContext(), imgUri);
+        EMLog.e("Tag", "big image uri: " + imgUri + "  exist: "+EaseFileUtils.isFileExistByUri(getContext(), imgUri));
+        if(EaseFileUtils.isFileExistByUri(getContext(), imgUri)) {
+            EaseActivityProviderHelper.startToLocalImageActivity(getContext(), imgUri);
+        } else{
+            // The local full size pic does not exist yet.
+            // ShowBigImage needs to download it from the server
+            // first
+            EaseActivityProviderHelper.startToLocalImageActivity(getContext(), message.getMsgId(), imgBody.getFileName());
+        }
     }
 
     @Override

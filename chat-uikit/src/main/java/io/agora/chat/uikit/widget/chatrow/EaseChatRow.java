@@ -303,8 +303,8 @@ public abstract class EaseChatRow extends LinearLayout {
         }
 
         if(selectRadio != null) {
-            selectRadio.setVisibility(EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle() ? VISIBLE : GONE);
-            selectRadio.setChecked(EaseChatMessageMultiSelectHelper.getInstance().isContainsMessage(message));
+            selectRadio.setVisibility(EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle(getContext()) ? VISIBLE : GONE);
+            selectRadio.setChecked(EaseChatMessageMultiSelectHelper.getInstance().isContainsMessage(getContext(), message));
         }
     }
 
@@ -627,16 +627,16 @@ public abstract class EaseChatRow extends LinearLayout {
                 return false;
             });
         }
-        if(selectRadio != null && EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle()) {
+        if(selectRadio != null && EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle(getContext())) {
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     boolean checked = selectRadio.isChecked();
                     selectRadio.setChecked(!checked);
                     if(!checked) {
-                        EaseChatMessageMultiSelectHelper.getInstance().addChatMessage(message);
+                        EaseChatMessageMultiSelectHelper.getInstance().addChatMessage(getContext(), message);
                     }else {
-                        EaseChatMessageMultiSelectHelper.getInstance().removeChatMessage(message);
+                        EaseChatMessageMultiSelectHelper.getInstance().removeChatMessage(getContext(), message);
                     }
                 }
             });

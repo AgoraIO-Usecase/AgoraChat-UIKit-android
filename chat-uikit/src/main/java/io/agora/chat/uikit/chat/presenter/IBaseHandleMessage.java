@@ -63,7 +63,7 @@ public interface IBaseHandleMessage {
     /**
      * Send message
      * @param message
-     * @param isCheckChatType
+     * @param isCheck
      */
-    void sendMessage(ChatMessage message, boolean isCheckChatType);
+    void sendMessage(ChatMessage message, boolean isCheck);
 }

@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import java.util.List;
 
 import io.agora.chat.uikit.R;
@@ -46,40 +45,50 @@ public class EaseChatMultiSelectView extends FrameLayout implements IChatTopExte
 
     private void initListener() {
         ivMultiSelectDelete.setOnClickListener(v -> {
-            showTopExtendMenu(false);
-            if(dismissListener != null) {
-                dismissListener.onDismiss(v);
-            }
-            List<String> sortedMessages = EaseChatMessageMultiSelectHelper.getInstance().getSortedMessages();
-            EaseChatMessageMultiSelectHelper.getInstance().clear();
-            notifyAdapter();
+            List<String> sortedMessages = EaseChatMessageMultiSelectHelper.getInstance().getSortedMessages(getContext());
             if(clickListener != null) {
                 clickListener.onMultiDeleteClick(sortedMessages);
             }
         });
         ivMultiSelectForward.setOnClickListener(v -> {
-            showTopExtendMenu(false);
-            if(dismissListener != null) {
-                dismissListener.onDismiss(v);
-            }
-            List<String> sortedMessages = EaseChatMessageMultiSelectHelper.getInstance().getSortedMessages();
-            EaseChatMessageMultiSelectHelper.getInstance().setMultiStyle(false);
-            notifyAdapter();
+            List<String> sortedMessages = EaseChatMessageMultiSelectHelper.getInstance().getSortedMessages(getContext());
             if(clickListener != null) {
                 clickListener.onMultiReplyClick(sortedMessages);
             }
         });
     }
 
+    public void dismissSelectView(View v) {
+        cancelSelectModel();
+        setDismissListener(v);
+    }
+
+    public void cancelSelectModel() {
+        showTopExtendMenu(false);
+        EaseChatMessageMultiSelectHelper.getInstance().setMultiStyle(getContext(), false);
+        notifyAdapter();
+    }
+
+    public void dismiss() {
+        cancelSelectModel();
+        setDismissListener(null);
+    }
+
     public void setupWithAdapter(EaseMessageAdapter adapter) {
         this.messageAdapter = adapter;
+    }
+
+    private void setDismissListener(View view) {
+        if(dismissListener != null) {
+            dismissListener.onDismiss(view);
+        }
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        EaseChatMessageMultiSelectHelper.getInstance().clear();
-        EaseChatMessageMultiSelectHelper.getInstance().setMultiStyle(true);
+        EaseChatMessageMultiSelectHelper.getInstance().init(getContext());
+        EaseChatMessageMultiSelectHelper.getInstance().setMultiStyle(getContext(), true);
         notifyAdapter();
     }
 
@@ -93,7 +102,7 @@ public class EaseChatMultiSelectView extends FrameLayout implements IChatTopExte
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         messageAdapter = null;
-        EaseChatMessageMultiSelectHelper.getInstance().clear();
+        EaseChatMessageMultiSelectHelper.getInstance().clear(getContext());
     }
 
     @Override

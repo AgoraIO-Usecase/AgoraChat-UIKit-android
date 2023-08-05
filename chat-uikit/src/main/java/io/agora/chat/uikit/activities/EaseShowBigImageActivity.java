@@ -15,6 +15,8 @@ package io.agora.chat.uikit.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -53,6 +55,25 @@ public class EaseShowBigImageActivity extends EaseBaseActivity {
 	private String filename;
 	private Bitmap bitmap;
 	private boolean isDownloaded;
+
+	public static void actionStart(Context context, Uri imageUri) {
+	    Intent intent = new Intent(context, EaseShowBigImageActivity.class);
+	    intent.putExtra("uri", imageUri);
+	    context.startActivity(intent);
+	}
+
+	public static void actionStart(Context context, String messageId, String filename) {
+	    Intent intent = new Intent(context, EaseShowBigImageActivity.class);
+	    intent.putExtra("messageId", messageId);
+	    intent.putExtra("filename", filename);
+	    context.startActivity(intent);
+	}
+
+	public static void actionStart(Context context, ChatMessage message) {
+	    Intent intent = new Intent(context, EaseShowBigImageActivity.class);
+	    intent.putExtra("msg", message);
+	    context.startActivity(intent);
+	}
 
 	@SuppressLint("NewApi")
 	@Override

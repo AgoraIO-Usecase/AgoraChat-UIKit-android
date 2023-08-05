@@ -157,7 +157,7 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
     }
 
     @Override
-    public void sendMessage(ChatMessage message, boolean isCheckChatType) {
+    public void sendMessage(ChatMessage message, boolean isCheck) {
         if(message == null) {
             if(isActive()) {
                 runOnUI(() -> mView.sendMessageFail("message is null!"));
@@ -167,7 +167,7 @@ public class EaseChatThreadCreatePresenterImpl extends EaseChatThreadCreatePrese
         if(TextUtils.isEmpty(message.getTo())) {
             message.setTo(toChatUsername);
         }
-        if(isCheckChatType) {
+        if(isCheck) {
             if (chatType == EaseChatType.GROUP_CHAT){
                 message.setChatType(ChatMessage.ChatType.GroupChat);
             }else if(chatType == EaseChatType.CHATROOM){

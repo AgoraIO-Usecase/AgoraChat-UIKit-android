@@ -4,13 +4,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import java.util.List;
 
-import io.agora.ValueCallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
-import io.agora.chat.uikit.activities.EaseChatHistoryActivity;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.exceptions.ChatException;
 
@@ -28,7 +26,7 @@ public class EaseCombineViewHolder extends EaseChatRowViewHolder{
     }
 
     private void skipToCombine(ChatMessage message) {
-        EaseChatHistoryActivity.actionStart(getContext(), message);
+        EaseActivityProviderHelper.startToChatHistoryActivity(getContext(), message);
     }
 
     @Override

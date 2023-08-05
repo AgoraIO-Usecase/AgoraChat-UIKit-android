@@ -130,23 +130,23 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     }
 
     @Override
-    public void sendMessage(ChatMessage message, boolean isCheckChatType) {
+    public void sendMessage(ChatMessage message, boolean isCheck) {
         if(message == null) {
             if(isActive()) {
                 runOnUI(() -> mView.sendMessageFail("message is null!"));
             }
             return;
         }
-        if(isCheckChatType) {
+        if(isCheck) {
             if (chatType == EaseChatType.GROUP_CHAT){
                 message.setChatType(ChatMessage.ChatType.GroupChat);
             }else if(chatType == EaseChatType.CHATROOM){
                 message.setChatType(ChatMessage.ChatType.ChatRoom);
             }
+            // Should add thread label if it is a thread conversation
+            message.setIsChatThreadMessage(isThread);
         }
         addMessageAttributes(message);
-        // Should add thread label if it is a thread conversation
-        message.setIsChatThreadMessage(isThread);
         message.setMessageStatusCallback(new CallBack() {
             @Override
             public void onSuccess() {

@@ -27,7 +27,6 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.activities.EaseImageGridActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -404,8 +403,7 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
      * select local video
      */
     protected void selectVideoFromLocal() {
-        Intent intent = new Intent(getActivity(), EaseImageGridActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
+        EaseActivityProviderHelper.startToImageGridActivity(getActivity(), REQUEST_CODE_SELECT_VIDEO);
     }
 
     /**

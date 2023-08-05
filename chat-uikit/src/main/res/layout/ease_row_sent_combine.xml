@@ -45,7 +45,7 @@
             app:layout_goneMarginEnd="@dimen/ease_chat_avatar_margin"
             android:minWidth="30dp"
             android:layout_marginTop="2dp"
-            android:background="@drawable/ease_chat_bubble_send_combine_bg">
+            android:background="@drawable/ease_chat_bubble_send_bg">
 
             <TextView
                 android:id="@+id/tv_chatcontent"
@@ -56,6 +56,7 @@
                 app:layout_constraintBottom_toTopOf="@id/tv_chat_summary"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_goneMarginBottom="@dimen/ease_chat_bubble_margin_12"
+                android:textColor="@color/ease_msg_send_message_color"
                 tools:text="Hello, Agora Chat!" />
 
             <TextView
@@ -67,6 +68,7 @@
                 app:layout_constraintBottom_toTopOf="@id/thread_region"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_goneMarginBottom="@dimen/ease_chat_bubble_margin_12"
+                android:textColor="@color/ease_chat_row_combine_sender_summary_text_color"
                 tools:text="Agora Chat" />
 
             <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion
