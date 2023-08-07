@@ -87,57 +87,12 @@ public class EaseChatRowFile extends EaseChatRow {
 	}
 
     @Override
-    protected void onMessageCreate() {
-        super.onMessageCreate();
-        if(progressBar != null) {
-            progressBar.setVisibility(VISIBLE);
-        }
-        if (percentageView != null)
-            percentageView.setVisibility(View.INVISIBLE);
-        if (statusView != null)
-            statusView.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
     protected void onMessageSuccess() {
         super.onMessageSuccess();
-        if(progressBar != null) {
-            progressBar.setVisibility(INVISIBLE);
-        }
-        if (percentageView != null)
-            percentageView.setVisibility(View.INVISIBLE);
-        if (statusView != null)
-            statusView.setVisibility(View.INVISIBLE);
         if (message.direct() == ChatMessage.Direct.SEND)
             if(fileStateView != null) {
                 fileStateView.setText(R.string.ease_have_uploaded);
             }
-    }
-
-    @Override
-    protected void onMessageError() {
-        super.onMessageError();
-        if(progressBar != null) {
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-        if (percentageView != null)
-            percentageView.setVisibility(View.INVISIBLE);
-        if (statusView != null)
-            statusView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onMessageInProgress() {
-        super.onMessageInProgress();
-        if(progressBar.getVisibility() != VISIBLE) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        if (percentageView != null) {
-            percentageView.setVisibility(View.VISIBLE);
-            percentageView.setText(message.progress() + "%");
-        }
-        if (statusView != null)
-            statusView.setVisibility(View.INVISIBLE);
     }
 
     protected void setFileIcon(String fileName) {

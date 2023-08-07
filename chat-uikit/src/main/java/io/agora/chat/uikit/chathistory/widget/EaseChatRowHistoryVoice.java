@@ -7,10 +7,14 @@ import android.widget.TextView;
 
 import java.util.Date;
 
+import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
+import io.agora.chat.FileMessageBody;
+import io.agora.chat.VoiceMessageBody;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoice;
+import io.agora.util.EMLog;
 
 
 public class EaseChatRowHistoryVoice extends EaseChatRowVoice {
@@ -26,6 +30,21 @@ public class EaseChatRowHistoryVoice extends EaseChatRowVoice {
     @Override
     protected void onInflateView() {
         inflater.inflate(R.layout.ease_row_history_voice, this);
+    }
+
+    @Override
+    protected void onSetUpView() {
+        super.onSetUpView();
+        if (message.direct() == ChatMessage.Direct.RECEIVE) {
+            VoiceMessageBody voiceBody = (VoiceMessageBody) message.getBody();
+            FileMessageBody.EMDownloadStatus downloadStatus = voiceBody.downloadStatus();
+            if((voiceBody.downloadStatus() == FileMessageBody.EMDownloadStatus.DOWNLOADING
+                    || downloadStatus == FileMessageBody.EMDownloadStatus.PENDING) &&
+                    ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
+                ChatClient.getInstance().chatManager().downloadAttachment(message);
+                updateView(message);
+            }
+        }
     }
 
     @Override

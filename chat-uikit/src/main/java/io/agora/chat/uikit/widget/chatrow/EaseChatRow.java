@@ -751,6 +751,13 @@ public abstract class EaseChatRow extends LinearLayout {
      */
     protected void onMessageCreate() {
         EMLog.i(TAG, "onMessageCreate");
+        if(progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        if (percentageView != null)
+            percentageView.setVisibility(View.INVISIBLE);
+        if (statusView != null)
+            statusView.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -763,6 +770,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 deliveredView.setVisibility(View.VISIBLE);
             }
         }
+        showSuccessStatus();
     }
 
     /**
@@ -776,6 +784,7 @@ public abstract class EaseChatRow extends LinearLayout {
             deliveredView.setVisibility(INVISIBLE);
         }
         EMLog.e(TAG, "onMessageError");
+        showErrorStatus();
     }
 
     /**
@@ -783,6 +792,48 @@ public abstract class EaseChatRow extends LinearLayout {
      */
     protected void onMessageInProgress() {
         EMLog.i(TAG, "onMessageInProgress");
+        showInProgressStatus();
+    }
+
+    /**
+     * Show progress bar.
+     */
+    protected void showInProgressStatus() {
+        if(progressBar != null && progressBar.getVisibility() != VISIBLE) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        if (percentageView != null) {
+            percentageView.setVisibility(View.VISIBLE);
+            percentageView.setText(message.progress() + "%");
+        }
+        if (statusView != null)
+            statusView.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Show error status.
+     */
+    protected void showErrorStatus() {
+        if(progressBar != null) {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+        if (percentageView != null)
+            percentageView.setVisibility(View.INVISIBLE);
+        if (statusView != null)
+            statusView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Show success status.
+     */
+    protected void showSuccessStatus() {
+        if(progressBar != null) {
+            progressBar.setVisibility(INVISIBLE);
+        }
+        if (percentageView != null)
+            percentageView.setVisibility(View.INVISIBLE);
+        if (statusView != null)
+            statusView.setVisibility(View.INVISIBLE);
     }
 
     /**

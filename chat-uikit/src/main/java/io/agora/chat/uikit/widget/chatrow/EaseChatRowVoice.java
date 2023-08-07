@@ -154,4 +154,5 @@ public class EaseChatRowVoice extends EaseChatRowFile {
             voiceImageView.setImageResource(R.drawable.ease_chatto_voice_playing);
         }
     }
+
 }

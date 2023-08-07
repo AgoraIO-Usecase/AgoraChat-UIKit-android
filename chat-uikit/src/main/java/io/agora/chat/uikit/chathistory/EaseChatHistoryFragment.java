@@ -21,6 +21,7 @@ import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
 import io.agora.chat.uikit.chat.interfaces.ChatQuoteMessageProvider;
 import io.agora.chat.uikit.constants.EaseConstant;
+import io.agora.chat.uikit.interfaces.OnCombineMessageDownloadAndParseListener;
 import io.agora.chat.uikit.manager.EaseChatInterfaceManager;
 import io.agora.chat.uikit.widget.EaseTitleBar;
 
@@ -30,6 +31,7 @@ public class EaseChatHistoryFragment extends EaseBaseFragment implements ChatQuo
     private EaseMessageAdapter messageAdapter;
     private ChatMessage combineMessage;
     private EaseTitleBar.OnBackPressListener backPressListener;
+    private OnCombineMessageDownloadAndParseListener downloadCombineMessageListener;
 
     @Nullable
     @Override
@@ -120,6 +122,7 @@ public class EaseChatHistoryFragment extends EaseBaseFragment implements ChatQuo
 
     public void initListener() {
         EaseChatInterfaceManager.getInstance().setInterface(mContext, ChatQuoteMessageProvider.class.getSimpleName(), this);
+        chatLayout.setOnCombineMessageDownloadAndParseListener(downloadCombineMessageListener);
     }
 
     public void initData() {
@@ -142,6 +145,10 @@ public class EaseChatHistoryFragment extends EaseBaseFragment implements ChatQuo
         this.backPressListener = listener;
     }
 
+    private void setOnCombineMessageDownloadAndParseListener(OnCombineMessageDownloadAndParseListener listener) {
+        this.downloadCombineMessageListener = listener;
+    }
+
     private void setCustomAdapter(EaseMessageAdapter adapter) {
         this.messageAdapter = adapter;
     }
@@ -154,6 +161,7 @@ public class EaseChatHistoryFragment extends EaseBaseFragment implements ChatQuo
     public static class Builder {
         protected final Bundle bundle;
         private EaseTitleBar.OnBackPressListener backPressListener;
+        private OnCombineMessageDownloadAndParseListener downloadCombineMessageListener;
         private EaseMessageAdapter adapter;
         protected EaseChatHistoryFragment customFragment;
 
@@ -294,6 +302,16 @@ public class EaseChatHistoryFragment extends EaseBaseFragment implements ChatQuo
         }
 
         /**
+         * Set combine message download and parse listener.
+         * @param listener
+         * @return
+         */
+        public Builder setOnCombineMessageDownloadAndParseListener(OnCombineMessageDownloadAndParseListener listener) {
+            this.downloadCombineMessageListener = listener;
+            return this;
+        }
+
+        /**
          * Set custom fragment which should extends EaseMessageFragment
          * @param fragment
          * @param <T>
@@ -318,6 +336,7 @@ public class EaseChatHistoryFragment extends EaseBaseFragment implements ChatQuo
             EaseChatHistoryFragment fragment = this.customFragment != null ? this.customFragment : new EaseChatHistoryFragment();
             fragment.setArguments(this.bundle);
             fragment.setHeaderBackPressListener(this.backPressListener);
+            fragment.setOnCombineMessageDownloadAndParseListener(downloadCombineMessageListener);
             fragment.setCustomAdapter(this.adapter);
             return fragment;
         }

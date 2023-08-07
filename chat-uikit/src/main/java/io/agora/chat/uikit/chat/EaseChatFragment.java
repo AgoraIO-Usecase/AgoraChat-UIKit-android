@@ -645,7 +645,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
      * select local video
      */
     protected void selectVideoFromLocal() {
-        EaseActivityProviderHelper.startToImageGridActivity(getActivity(), REQUEST_CODE_SELECT_VIDEO);
+        EaseActivityProviderHelper.startToImageGridActivity(this, REQUEST_CODE_SELECT_VIDEO);
     }
 
     /**

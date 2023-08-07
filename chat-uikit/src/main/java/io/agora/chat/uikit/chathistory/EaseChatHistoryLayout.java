@@ -17,12 +17,15 @@ import io.agora.chat.uikit.chathistory.presenter.EaseChatHistoryPresenter;
 import io.agora.chat.uikit.chathistory.presenter.EaseChatHistoryPresenterImpl;
 import io.agora.chat.uikit.chathistory.presenter.IChatHistoryLayoutView;
 import io.agora.chat.uikit.chathistory.presenter.IHandleChatHistory;
+import io.agora.chat.uikit.interfaces.OnCombineMessageDownloadAndParseListener;
 
 public class EaseChatHistoryLayout extends RelativeLayout implements IChatHistoryLayoutView, IHandleChatHistory {
     private EaseChatMessageListLayout messageListLayout;
     private EaseChatHistoryPresenter mPresenter;
     private Context mContext;
     private EaseMessageAdapter messageAdapter;
+    private ChatMessage combineMessage;
+    private OnCombineMessageDownloadAndParseListener downloadCombineMessageListener;
 
     public EaseChatHistoryLayout(Context context) {
         this(context, null);
@@ -69,6 +72,8 @@ public class EaseChatHistoryLayout extends RelativeLayout implements IChatHistor
             finishCurrentChat();
             return;
         }
+        combineMessage = message;
+        messageListLayout.setRefreshing(true);
         mPresenter.downloadCombineMessage(message);
     }
 
@@ -78,12 +83,19 @@ public class EaseChatHistoryLayout extends RelativeLayout implements IChatHistor
 
     @Override
     public void downloadCombinedMessagesSuccess(List<ChatMessage> messageList) {
+        messageListLayout.setRefreshing(false);
         messageListLayout.setData(messageList);
+        if(downloadCombineMessageListener != null) {
+            downloadCombineMessageListener.onDownloadAndParseSuccess(messageList);
+        }
     }
 
     @Override
     public void downloadCombinedMessagesFailed(int error, String errorMsg) {
-
+        messageListLayout.setRefreshing(false);
+        if(downloadCombineMessageListener != null) {
+            downloadCombineMessageListener.onDownloadOrParseFailed(combineMessage, error, errorMsg);
+        }
     }
 
     @Override
@@ -141,5 +153,10 @@ public class EaseChatHistoryLayout extends RelativeLayout implements IChatHistor
     @Override
     public EaseChatMessageListLayout getChatMessageListLayout() {
         return messageListLayout;
+    }
+
+    @Override
+    public void setOnCombineMessageDownloadAndParseListener(OnCombineMessageDownloadAndParseListener listener) {
+        this.downloadCombineMessageListener = listener;
     }
 }

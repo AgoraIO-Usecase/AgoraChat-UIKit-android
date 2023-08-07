@@ -101,14 +101,8 @@ public class EaseChatRowText extends EaseChatRow {
     }
 
     @Override
-    protected void onMessageCreate() {
-        setStatus(View.VISIBLE, View.GONE);
-    }
-
-    @Override
     protected void onMessageSuccess() {
         super.onMessageSuccess();
-        setStatus(View.GONE, View.GONE);
 
         // Show "1 Read" if this msg is a ding-type msg.
         if (isSender() && EaseDingMessageHelper.get().isDingMessage(message) && ackedView != null) {
@@ -119,17 +113,6 @@ public class EaseChatRowText extends EaseChatRow {
 
         // Set ack-user list change listener.
         EaseDingMessageHelper.get().setUserUpdateListener(message, userUpdateListener);
-    }
-
-    @Override
-    protected void onMessageError() {
-        super.onMessageError();
-        setStatus(View.GONE, View.VISIBLE);
-    }
-
-    @Override
-    protected void onMessageInProgress() {
-        setStatus(View.VISIBLE, View.GONE);
     }
 
     public void onSetUpQuoteView(ChatMessage message) {
@@ -152,20 +135,6 @@ public class EaseChatRowText extends EaseChatRow {
     public void updateBackground() {
         bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg_has_top
                 : R.drawable.ease_chat_bubble_receive_bg_has_top));
-    }
-
-    /**
-     * set progress and status view visible or gone
-     * @param progressVisible
-     * @param statusVisible
-     */
-    private void setStatus(int progressVisible, int statusVisible) {
-        if(progressBar != null) {
-            progressBar.setVisibility(progressVisible);
-        }
-        if(statusView != null) {
-            statusView.setVisibility(statusVisible);
-        }
     }
 
     private EaseDingMessageHelper.IAckUserUpdateListener userUpdateListener = list -> onAckUserUpdate(list.size());

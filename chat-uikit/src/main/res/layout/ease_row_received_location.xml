@@ -32,7 +32,7 @@
         <io.agora.chat.uikit.widget.EaseImageView
             android:id="@+id/iv_userhead"
             app:layout_constraintStart_toEndOf="@id/rb_select"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bubble"
             app:layout_goneMarginStart="15dp"
             style="@style/ease_row_receive_iv_userhead_style"/>
 
@@ -42,7 +42,8 @@
             android:layout_height="160dp"
             android:layout_marginLeft="@dimen/ease_margin_chat_activity"
             app:layout_constraintStart_toEndOf="@id/iv_userhead"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_userid"
+            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
             android:orientation="vertical"
             android:background="@drawable/ease_chat_location_bubble_receive_bg" >
 
@@ -86,16 +87,22 @@
             </RelativeLayout>
 
         </LinearLayout>
-         <TextView
+
+        <io.agora.chat.uikit.chat.widget.EaseChatReactionView
+            android:id="@+id/tv_subReactionContent"
+            app:ease_chat_item_sender="false"
+            app:layout_constraintStart_toStartOf="@id/bubble"
+            app:layout_constraintTop_toBottomOf="@id/bubble"
+            style="@style/ease_chat_row_reaction_style" />
+
+        <TextView
             android:id="@+id/tv_userid"
-            style="@style/chat_text_name_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/ease_chat_nick_margin_left"
-            android:textSize="@dimen/ease_chat_nick_text_size"
-             app:layout_constraintBottom_toTopOf="@id/bubble"
-             app:layout_constraintStart_toStartOf="@id/bubble"
-            android:visibility="gone" />
+            style="@style/ease_chat_row_text_name_style"
+            tools:text="som"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bubble"
+            app:layout_constraintStart_toStartOf="@id/bubble" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

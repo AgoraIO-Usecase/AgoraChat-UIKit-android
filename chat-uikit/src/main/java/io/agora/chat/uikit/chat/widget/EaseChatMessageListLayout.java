@@ -1093,6 +1093,18 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         this.messageListItemClickListener = listener;
     }
 
+    @Override
+    public void setRefreshing(boolean refreshing) {
+        if(refreshing) {
+            if(srlRefresh.isRefreshing()) {
+                srlRefresh.setRefreshing(false);
+            }
+            srlRefresh.setRefreshing(true);
+        }else {
+            srlRefresh.setRefreshing(false);
+        }
+    }
+
     public static boolean isVisibleBottom(RecyclerView recyclerView) {
         LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();

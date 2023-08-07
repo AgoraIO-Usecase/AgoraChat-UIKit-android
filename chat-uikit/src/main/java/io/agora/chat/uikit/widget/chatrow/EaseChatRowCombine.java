@@ -61,41 +61,4 @@ public class EaseChatRowCombine extends EaseChatRow {
             tvChatSummary.setVisibility(GONE);
         }
     }
-
-    @Override
-    protected void onMessageCreate() {
-        setStatus(View.VISIBLE, View.GONE);
-    }
-
-    @Override
-    protected void onMessageSuccess() {
-        super.onMessageSuccess();
-        setStatus(View.GONE, View.GONE);
-    }
-
-    @Override
-    protected void onMessageError() {
-        super.onMessageError();
-        setStatus(View.GONE, View.VISIBLE);
-    }
-
-    @Override
-    protected void onMessageInProgress() {
-        setStatus(View.VISIBLE, View.GONE);
-    }
-
-    /**
-     * set progress and status view visible or gone
-     * @param progressVisible
-     * @param statusVisible
-     */
-    private void setStatus(int progressVisible, int statusVisible) {
-        if(progressBar != null) {
-            progressBar.setVisibility(progressVisible);
-        }
-        if(statusView != null) {
-            statusView.setVisibility(statusVisible);
-        }
-    }
-
 }
