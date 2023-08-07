@@ -284,7 +284,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         if(loadDataType == LoadDataType.ROAM) {
             presenter.loadServerMessages(pageSize);
         }else if(loadDataType == LoadDataType.HISTORY) {
-            presenter.loadMoreLocalHistoryMessages(msgId, pageSize, Conversation.SearchDirection.DOWN);
+            presenter.loadLocalHistoryMessages(msgId, pageSize);
         }else if(loadDataType == LoadDataType.THREAD) {
             presenter.loadServerMessages(pageSize, Conversation.SearchDirection.DOWN);
         }else {

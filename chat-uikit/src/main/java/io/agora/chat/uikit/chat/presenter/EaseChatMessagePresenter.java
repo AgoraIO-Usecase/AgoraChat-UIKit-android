@@ -83,6 +83,13 @@ public abstract class EaseChatMessagePresenter extends EaseBasePresenter {
     public abstract void loadMoreRetrievalsMessages(String msgId, int pageSize);
 
     /**
+     * Load historical data locally
+     * @param msgId
+     * @param pageSize
+     */
+    public abstract void loadLocalHistoryMessages(String msgId, int pageSize);
+
+    /**
      * Load more historical data locally
      * @param msgId
      * @param pageSize
