@@ -61,6 +61,7 @@ import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.interfaces.OnQuoteViewClickListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseChatInterfaceManager;
+import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
@@ -261,8 +262,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         chatLayout.setOnReactionListener(reactionMessageListener != null ? reactionMessageListener : this);
         ChatClient.getInstance().addMultiDeviceListener(this);
         ChatClient.getInstance().chatThreadManager().addChatThreadChangeListener(this);
-        EaseChatInterfaceManager.getInstance().setInterface(mContext, OnQuoteViewClickListener.class.getSimpleName(), this);
-        EaseChatInterfaceManager.getInstance().setInterface(mContext, ChatQuoteMessageProvider.class.getSimpleName(), this);
+        if(EaseConfigsManager.enableReplyMessage()) {
+            EaseChatInterfaceManager.getInstance().setInterface(mContext, OnQuoteViewClickListener.class.getSimpleName(), this);
+            EaseChatInterfaceManager.getInstance().setInterface(mContext, ChatQuoteMessageProvider.class.getSimpleName(), this);
+        }
     }
 
     public void initData() {
@@ -314,6 +317,9 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
      * Set custom top extend menu
      */
     public void setCustomTopExtendMenu() {
+        if(!EaseConfigsManager.enableReplyMessage()) {
+            return;
+        }
         IChatTopExtendMenu chatTopExtendMenu = chatLayout.getChatInputMenu().getChatTopExtendMenu();
         if(chatTopExtendMenu instanceof EaseChatExtendQuoteView) {
             chatLayout.getChatInputMenu().getPrimaryMenu().setVisible(View.VISIBLE);
@@ -332,6 +338,9 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
      * Show multi select view on EaseChatInputMenu.
      */
     public void showMultiSelectView() {
+        if(!EaseConfigsManager.enableSendCombineMessage()) {
+            return;
+        }
         EaseChatMultiSelectView multiSelectView = new EaseChatMultiSelectView(mContext);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         multiSelectView.setLayoutParams(params);
@@ -361,13 +370,17 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     private void AddCustomLongClickMenu() {
         // after copy
-        MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_reply, (getTargetPosition(R.id.action_chat_copy) + 1) * 10 + 5, mContext.getString(R.string.ease_action_reply));
-        itemBean.setResourceId(R.drawable.ease_chat_item_menu_reply);
-        chatLayout.addItemMenu(itemBean);
+        if(EaseConfigsManager.enableReplyMessage()) {
+            MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_reply, (getTargetPosition(R.id.action_chat_copy) + 1) * 10 + 5, mContext.getString(R.string.ease_action_reply));
+            itemBean.setResourceId(R.drawable.ease_chat_item_menu_reply);
+            chatLayout.addItemMenu(itemBean);
+        }
 
-        itemBean = new MenuItemBean(0, R.id.action_chat_select, (getTargetPosition(R.id.action_chat_delete) + 1) * 10 - 5, mContext.getString(R.string.ease_action_select));
-        itemBean.setResourceId(R.drawable.ease_chat_item_menu_select);
-        chatLayout.addItemMenu(itemBean);
+        if(EaseConfigsManager.enableSendCombineMessage()) {
+            MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_select, (getTargetPosition(R.id.action_chat_delete) + 1) * 10 - 5, mContext.getString(R.string.ease_action_select));
+            itemBean.setResourceId(R.drawable.ease_chat_item_menu_select);
+            chatLayout.addItemMenu(itemBean);
+        }
     }
 
     private int getTargetPosition(int id) {
@@ -393,8 +406,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         super.onDestroyView();
         ChatClient.getInstance().chatThreadManager().removeChatThreadChangeListener(this);
         ChatClient.getInstance().removeMultiDeviceListener(this);
-        EaseChatInterfaceManager.getInstance().removeInterface(mContext, OnQuoteViewClickListener.class.getSimpleName());
-        EaseChatInterfaceManager.getInstance().removeInterface(mContext, ChatQuoteMessageProvider.class.getSimpleName());
+        if(EaseConfigsManager.enableReplyMessage()) {
+            EaseChatInterfaceManager.getInstance().removeInterface(mContext, OnQuoteViewClickListener.class.getSimpleName());
+            EaseChatInterfaceManager.getInstance().removeInterface(mContext, ChatQuoteMessageProvider.class.getSimpleName());
+        }
     }
 
     @Override
@@ -403,14 +418,13 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             EMLog.d(TAG,"onQuoteViewClick: message is null.");
             return;
         }
-        if(message.getType() == ChatMessage.Type.IMAGE || message.getType() == ChatMessage.Type.VIDEO || message.getType() == ChatMessage.Type.FILE) {
-            showQuoteByType(message);
+        if(showQuoteByType(message)) {
             return;
         }
         chatLayout.getChatMessageListLayout().moveToTarget(message);
     }
 
-    public void showQuoteByType(ChatMessage message){
+    public boolean showQuoteByType(ChatMessage message){
         ChatMessage.Type type = message.getType();
         switch (type){
             case IMAGE:
@@ -422,13 +436,13 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                 } else{
                     EaseActivityProviderHelper.startToLocalImageActivity(getContext(), message.getMsgId(), imgBody.getFileName());
                 }
-                break;
+                return true;
             case VIDEO:
                 if (getContext() != null){
                     EaseActivityProviderHelper.startToDownloadVideoActivity(getContext(), message);
                 }
 
-                break;
+                return true;
             case FILE:
                 NormalFileMessageBody fileMessageBody = (NormalFileMessageBody) message.getBody();
                 Uri filePath = fileMessageBody.getLocalUri();
@@ -438,9 +452,12 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                 } else {
                     EaseActivityProviderHelper.startToDownloadFileActivity(getContext(), message);
                 }
-                break;
+                return true;
+            case COMBINE:
+                EaseActivityProviderHelper.startToChatHistoryActivity(mContext, message);
+                return true;
             default:
-                break;
+                return false;
         }
     }
 
@@ -749,13 +766,9 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         helper.findItemVisible(R.id.action_chat_reply, message.status() == ChatMessage.Status.SUCCESS);
         helper.findItemVisible(R.id.action_chat_select, message.status() == ChatMessage.Status.SUCCESS);
         if(isThreadNotify) {
-            helper.findItemVisible(R.id.action_chat_copy, false);
-            helper.findItemVisible(R.id.action_chat_thread, false);
-            helper.findItemVisible(R.id.action_chat_recall, false);
-            helper.findItemVisible(R.id.action_chat_reply, false);
-            helper.findItemVisible(R.id.action_chat_select, false);
-            helper.findItemVisible(R.id.action_chat_delete, true);
+            helper.setAllItemsVisible(false);
             helper.showHeaderView(false);
+            helper.findItemVisible(R.id.action_chat_delete, true);
         }
         helper.findItem(R.id.action_chat_recall).setTitleColor(ContextCompat.getColor(mContext, R.color.ease_message_unsend_menu_txt));
     }

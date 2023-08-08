@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.view.menu.MenuAdapter;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -156,6 +155,19 @@ public class EasePopupWindowHelper {
     public void findItemVisible(int id, boolean visible) {
         if(menuItemMap.containsKey(id)) {
             menuItemMap.get(id).setVisible(visible);
+        }
+    }
+
+    public void setAllItemsVisible(boolean visible) {
+        if(menuItemMap.size() == 0) {
+            return;
+        }
+        Iterator<MenuItemBean> iterator = menuItemMap.values().iterator();
+        while (iterator.hasNext()) {
+            MenuItemBean itemBean = iterator.next();
+            if(itemBean != null) {
+                itemBean.setVisible(visible);
+            }
         }
     }
 
