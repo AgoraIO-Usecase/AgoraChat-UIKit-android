@@ -98,12 +98,6 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
     public abstract void sendCmdMessage(String action);
 
     /**
-     * Send a combine message.
-     * @param messageList
-     */
-    public abstract void sendCombineMessage(List<String> messageList);
-
-    /**
      * Resend message
      * @param message
      */

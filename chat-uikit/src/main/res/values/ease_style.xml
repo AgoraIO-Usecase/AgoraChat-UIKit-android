@@ -257,6 +257,28 @@
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:textColor">@color/ease_chat_row_combine_summary_text_color</item>
         <item name="android:visibility">gone</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="ease_chat_row_text_name_style" parent="chat_text_name_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/ease_chat_nick_margin_left</item>
+        <item name="android:textSize">@dimen/ease_chat_nick_text_size</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="ease_chat_row_sent_text_name_style" parent="ease_chat_row_text_name_style">
+        <item name="android:layout_marginEnd">@dimen/ease_chat_nick_margin_left</item>
+        <item name="android:textColor">@color/ease_msg_name_color</item>
+    </style>
+
+    <style name="ease_chat_row_reaction_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_marginTop">-4dp</item>
     </style>
 
 </resources>

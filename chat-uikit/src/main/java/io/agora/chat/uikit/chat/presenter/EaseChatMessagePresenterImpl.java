@@ -82,6 +82,29 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
     }
 
     @Override
+    public void loadLocalHistoryMessages(String msgId, int pageSize) {
+        if(conversation == null) {
+            throw new NullPointerException("should first set up with conversation");
+        }
+        if(!isMessageId(msgId)) {
+            throw new IllegalArgumentException("please check if set correct msg id");
+        }
+        ChatMessage message = ChatClient.getInstance().chatManager().getMessage(msgId);
+        List<ChatMessage> messages = conversation.searchMsgFromDB(message.getMsgTime() - 1,
+                pageSize, Conversation.SearchDirection.DOWN);
+        if(isActive()) {
+            runOnUI(()-> {
+                if(messages == null || messages.isEmpty()) {
+                    mView.loadNoMoreLocalHistoryMsg();
+                }else {
+                    mView.loadMoreLocalHistoryMsgSuccess(messages, Conversation.SearchDirection.DOWN);
+                }
+            });
+
+        }
+    }
+
+    @Override
     public void loadMoreLocalHistoryMessages(String msgId, int pageSize, Conversation.SearchDirection direction) {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");

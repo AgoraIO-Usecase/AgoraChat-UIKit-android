@@ -69,5 +69,6 @@
     <color name="ease_color_gray_999999">#999999</color>
     <color name="ease_color_gray_99000000">#99000000</color>
     <color name="ease_color_gray_f9fafa">#f9fafa</color>
-
+    <color name="ease_chat_row_combine_sender_summary_text_color">#E6E6E6</color>
+    <color name="ease_chat_row_text_name_color">#000000</color>
 </resources>

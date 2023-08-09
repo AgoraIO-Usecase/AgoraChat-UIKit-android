@@ -63,7 +63,9 @@ public class EaseChatRowFile extends EaseChatRow {
 	protected void onSetUpView() {
 	    fileMessageBody = (NormalFileMessageBody) message.getBody();
 //        Uri filePath = fileMessageBody.getLocalUri();
-        fileStateView.setVisibility(GONE);
+        if(fileStateView != null) {
+            fileStateView.setVisibility(GONE);
+        }
         fileNameView.setText(fileMessageBody.getFileName());
         fileSizeView.setText(TextFormater.getDataSize(fileMessageBody.getFileSize()));
         setFileIcon(fileMessageBody.getFileName());
@@ -85,54 +87,15 @@ public class EaseChatRowFile extends EaseChatRow {
 	}
 
     @Override
-    protected void onMessageCreate() {
-        super.onMessageCreate();
-        progressBar.setVisibility(View.VISIBLE);
-        if (percentageView != null)
-            percentageView.setVisibility(View.INVISIBLE);
-        if (statusView != null)
-            statusView.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
     protected void onMessageSuccess() {
         super.onMessageSuccess();
-        progressBar.setVisibility(View.INVISIBLE);
-        if (percentageView != null)
-            percentageView.setVisibility(View.INVISIBLE);
-        if (statusView != null)
-            statusView.setVisibility(View.INVISIBLE);
         if (message.direct() == ChatMessage.Direct.SEND)
             if(fileStateView != null) {
                 fileStateView.setText(R.string.ease_have_uploaded);
             }
     }
 
-    @Override
-    protected void onMessageError() {
-        super.onMessageError();
-        progressBar.setVisibility(View.INVISIBLE);
-        if (percentageView != null)
-            percentageView.setVisibility(View.INVISIBLE);
-        if (statusView != null)
-            statusView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onMessageInProgress() {
-        super.onMessageInProgress();
-        if(progressBar.getVisibility() != VISIBLE) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        if (percentageView != null) {
-            percentageView.setVisibility(View.VISIBLE);
-            percentageView.setText(message.progress() + "%");
-        }
-        if (statusView != null)
-            statusView.setVisibility(View.INVISIBLE);
-    }
-
-    private void setFileIcon(String fileName) {
+    protected void setFileIcon(String fileName) {
         EaseFileIconProvider provider = EaseUIKit.getInstance().getFileIconProvider();
         if(provider != null) {
             Drawable icon = provider.getFileIcon(fileName);

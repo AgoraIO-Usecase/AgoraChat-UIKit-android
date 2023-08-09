@@ -311,8 +311,8 @@ public abstract class EaseChatRow extends LinearLayout {
         }
 
         if(selectRadio != null) {
-            selectRadio.setVisibility(EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle() ? VISIBLE : GONE);
-            selectRadio.setChecked(EaseChatMessageMultiSelectHelper.getInstance().isContainsMessage(message));
+            selectRadio.setVisibility(EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle(getContext()) ? VISIBLE : GONE);
+            selectRadio.setChecked(EaseChatMessageMultiSelectHelper.getInstance().isContainsMessage(getContext(), message));
         }
 
         if( editView != null) {
@@ -524,12 +524,7 @@ public abstract class EaseChatRow extends LinearLayout {
                     prevMessage = (ChatMessage) ((EaseBaseAdapter)adapter).getItem(position - 1);
                 }
 
-                if (prevMessage != null && EaseDateUtils.isCloseEnough(message.getMsgTime(), prevMessage.getMsgTime())) {
-                    timestamp.setVisibility(View.GONE);
-                } else {
-                    timestamp.setText(EaseDateUtils.getTimestampString(getContext(), new Date(message.getMsgTime())));
-                    timestamp.setVisibility(View.VISIBLE);
-                }
+                setOtherTimestamp(prevMessage);
             }
         }
     }
@@ -539,14 +534,19 @@ public abstract class EaseChatRow extends LinearLayout {
             timeStampView.setText(EaseDateUtils.getTimestampString(getContext(), new Date(message.getMsgTime())));
             timeStampView.setVisibility(View.VISIBLE);
         } else {
-            if (preMessage != null && EaseDateUtils.isCloseEnough(message.getMsgTime(), preMessage.getMsgTime())) {
-                timeStampView.setVisibility(View.GONE);
-            } else {
-                timeStampView.setText(EaseDateUtils.getTimestampString(getContext(), new Date(message.getMsgTime())));
-                timeStampView.setVisibility(View.VISIBLE);
-            }
+            setOtherTimestamp(preMessage);
         }
     }
+
+    public void setOtherTimestamp(ChatMessage preMessage) {
+        if (preMessage != null && EaseDateUtils.isCloseEnough(message.getMsgTime(), preMessage.getMsgTime())) {
+            timeStampView.setVisibility(View.GONE);
+        } else {
+            timeStampView.setText(EaseDateUtils.getTimestampString(getContext(), new Date(message.getMsgTime())));
+            timeStampView.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     /**
      * set click listener
@@ -648,16 +648,16 @@ public abstract class EaseChatRow extends LinearLayout {
                 return false;
             });
         }
-        if(selectRadio != null && EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle()) {
+        if(selectRadio != null && EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle(getContext())) {
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     boolean checked = selectRadio.isChecked();
                     selectRadio.setChecked(!checked);
                     if(!checked) {
-                        EaseChatMessageMultiSelectHelper.getInstance().addChatMessage(message);
+                        EaseChatMessageMultiSelectHelper.getInstance().addChatMessage(getContext(), message);
                     }else {
-                        EaseChatMessageMultiSelectHelper.getInstance().removeChatMessage(message);
+                        EaseChatMessageMultiSelectHelper.getInstance().removeChatMessage(getContext(), message);
                     }
                 }
             });
@@ -742,9 +742,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 @Override
                 public void run() {
                     onMessageError();
-                    if(itemClickListener != null) {
-                        itemClickListener.onMessageError(message, code, error);
-                    }
+                    postMessageError(message, code, error);
                 }
             });
         }
@@ -763,11 +761,24 @@ public abstract class EaseChatRow extends LinearLayout {
         }
     }
 
+    public void postMessageError(ChatMessage message, int code, String error) {
+        if(itemClickListener != null) {
+            itemClickListener.onMessageError(message, code, error);
+        }
+    }
+
     /**
      * message create status
      */
     protected void onMessageCreate() {
         EMLog.i(TAG, "onMessageCreate");
+        if(progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        if (percentageView != null)
+            percentageView.setVisibility(View.INVISIBLE);
+        if (statusView != null)
+            statusView.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -780,6 +791,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 deliveredView.setVisibility(View.VISIBLE);
             }
         }
+        showSuccessStatus();
     }
 
     /**
@@ -797,6 +809,7 @@ public abstract class EaseChatRow extends LinearLayout {
             editView.setVisibility(GONE);
         }
         EMLog.e(TAG, "onMessageError");
+        showErrorStatus();
     }
 
     /**
@@ -804,6 +817,48 @@ public abstract class EaseChatRow extends LinearLayout {
      */
     protected void onMessageInProgress() {
         EMLog.i(TAG, "onMessageInProgress");
+        showInProgressStatus();
+    }
+
+    /**
+     * Show progress bar.
+     */
+    protected void showInProgressStatus() {
+        if(progressBar != null && progressBar.getVisibility() != VISIBLE) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        if (percentageView != null) {
+            percentageView.setVisibility(View.VISIBLE);
+            percentageView.setText(message.progress() + "%");
+        }
+        if (statusView != null)
+            statusView.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Show error status.
+     */
+    protected void showErrorStatus() {
+        if(progressBar != null) {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+        if (percentageView != null)
+            percentageView.setVisibility(View.INVISIBLE);
+        if (statusView != null)
+            statusView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Show success status.
+     */
+    protected void showSuccessStatus() {
+        if(progressBar != null) {
+            progressBar.setVisibility(INVISIBLE);
+        }
+        if (percentageView != null)
+            percentageView.setVisibility(View.INVISIBLE);
+        if (statusView != null)
+            statusView.setVisibility(View.INVISIBLE);
     }
 
     /**

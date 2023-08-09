@@ -33,6 +33,7 @@ public interface EaseConstant {
     String EXTRA_CHAT_TYPE = "chatType";
     String EXTRA_CONVERSATION_ID = "conversationId";
     String EXTRA_IS_FROM_SERVER = "isRoaming";
+    String EXTRA_CHAT_COMBINE_MESSAGE = "chatCombineMessage";
 
     String MESSAGE_TYPE_TXT = "txt";
     String MESSAGE_TYPE_EXPRESSION = "expression";
@@ -82,8 +83,4 @@ public interface EaseConstant {
     String QUOTE_MSG_SENDER = "msgSender";
     String QUOTE_MSG_TYPE = "msgType";
     String QUOTE_MSG_QUOTE = "msgQuote";
-
-    // interface tag
-    String INTERFACE_QUOTE_MESSAGE_TAG = "quote_message_tag";
-    String INTERFACE_QUOTE_MESSAGE_CLICK_TAG = "quote_message_click_tag";
 }

@@ -52,6 +52,7 @@ import io.agora.chat.VideoMessageBody;
 import io.agora.chat.VoiceMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.chat.interfaces.ChatQuoteMessageProvider;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.IUIKitInterface;
 import io.agora.chat.uikit.interfaces.OnQuoteViewClickListener;
@@ -247,17 +248,30 @@ public class EaseChatQuoteView extends LinearLayout {
         this.setVisibility(GONE);
     }
 
-    private void showHistoryType(ChatMessage quoteMessage, String quoteSender, ChatMessage.Type quoteMsgType, String content) {
-        reSetLayout();
-        switch (quoteMsgType) {
-            case TXT :
-
-                break;
-        }
-    }
-
     private void isShowType(ChatMessage quoteMessage, String quoteSender, ChatMessage.Type quoteMsgType, String content){
         reSetLayout();
+        IUIKitInterface listener = EaseChatInterfaceManager.getInstance().getInterface(mContext, ChatQuoteMessageProvider.class.getSimpleName());
+        if(listener instanceof ChatQuoteMessageProvider) {
+            SpannableString result = ((ChatQuoteMessageProvider)listener).provideQuoteContent(quoteMessage, quoteMsgType, quoteSender, content);
+            if(result != null) {
+                reSetLayout();
+                quoteDefaultView.setText(result);
+                quoteDefaultLayout.setVisibility(VISIBLE);
+                return;
+            }
+        }
+        if(isHistory) {
+            if(quoteMsgType == ChatMessage.Type.TXT) {
+                txtTypeDisplay(quoteMessage,quoteSender,content);
+            }else {
+                SpannableString spannableString = new SpannableString(quoteSender + ": "+content);
+                quoteDefaultView.setText(spannableString);
+                quoteDefaultView.setEllipsize(TextUtils.TruncateAt.END);
+                quoteDefaultView.setMaxLines(2);
+                quoteDefaultLayout.setVisibility(View.VISIBLE);
+            }
+            return;
+        }
         switch (quoteMsgType){
             case TXT:
                 txtTypeDisplay(quoteMessage,quoteSender,content);
@@ -281,15 +295,9 @@ public class EaseChatQuoteView extends LinearLayout {
                 combineTypeDisplay(quoteMessage,quoteSender,content);
                 break;
             default:
-                IUIKitInterface listener = EaseChatInterfaceManager.getInstance().getInterface(EaseConstant.INTERFACE_QUOTE_MESSAGE_TAG);
-                if(listener instanceof IChatQuoteMessageShow) {
-                    SpannableString result = ((IChatQuoteMessageShow)listener).itemQuoteMessageShow(quoteMessage, quoteMsgType, quoteSender, content);
-                    if(result != null) {
-                        reSetLayout();
-                        quoteDefaultView.setText(result);
-                        quoteDefaultLayout.setVisibility(VISIBLE);
-                    }
-                }
+                SpannableString spannableString = new SpannableString(quoteSender + ": "+content);
+                quoteDefaultView.setText(spannableString);
+                quoteDefaultLayout.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -550,10 +558,6 @@ public class EaseChatQuoteView extends LinearLayout {
         quoteDefaultLayout.setVisibility(View.VISIBLE);
     }
 
-    public interface IChatQuoteMessageShow extends IUIKitInterface {
-        SpannableString itemQuoteMessageShow(ChatMessage quoteMessage, ChatMessage.Type quoteMsgType, String quoteSender, String quoteContent);
-    }
-
     private int[] getFitSize(Drawable drawable) {
         if(drawable == null) {
             return new int[]{0, 0};
@@ -591,7 +595,7 @@ public class EaseChatQuoteView extends LinearLayout {
      * @return
      */
     private OnQuoteViewClickListener getClickListener() {
-        IUIKitInterface kitInterface = EaseChatInterfaceManager.getInstance().getInterface(EaseConstant.INTERFACE_QUOTE_MESSAGE_CLICK_TAG);
+        IUIKitInterface kitInterface = EaseChatInterfaceManager.getInstance().getInterface(mContext, OnQuoteViewClickListener.class.getSimpleName());
         if(kitInterface instanceof OnQuoteViewClickListener) {
             return (OnQuoteViewClickListener) kitInterface;
         }

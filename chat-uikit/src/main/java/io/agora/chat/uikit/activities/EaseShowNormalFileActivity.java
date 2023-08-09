@@ -1,5 +1,7 @@
 package io.agora.chat.uikit.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -17,6 +19,12 @@ import io.agora.chat.uikit.utils.EaseCompat;
 public class EaseShowNormalFileActivity extends EaseBaseActivity {
     private static final String TAG = EaseShowNormalFileActivity.class.getSimpleName();
 	private ProgressBar progressBar;
+
+    public static void actionStart(Context context, ChatMessage message) {
+        Intent intent = new Intent(context, EaseShowNormalFileActivity.class);
+        intent.putExtra("msg", message);
+        context.startActivity(intent);
+    }
 
     @Override
     public void setActivityTheme() {

@@ -139,6 +139,9 @@ public class EaseUtils {
         case FILE:
             digest = getString(context, R.string.ease_file);
             break;
+        case COMBINE:
+            digest = getString(context, R.string.ease_combine);
+            break;
         default:
             EMLog.e(TAG, "error, unknow type");
             return "";

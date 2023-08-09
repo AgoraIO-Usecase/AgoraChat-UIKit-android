@@ -56,25 +56,8 @@ public class EaseChatRowCustom extends EaseChatRow {
     }
 
     @Override
-    protected void onMessageCreate() {
-        if(progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        if(statusView != null) {
-            statusView.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
     protected void onMessageSuccess() {
         super.onMessageSuccess();
-        if(progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-        }
-        if(statusView != null) {
-            statusView.setVisibility(View.GONE);
-        }
-
         // Show "1 Read" if this msg is a ding-type msg.
         if (isSender() && EaseDingMessageHelper.get().isDingMessage(message) && ackedView != null) {
             ackedView.setVisibility(VISIBLE);
@@ -84,27 +67,6 @@ public class EaseChatRowCustom extends EaseChatRow {
 
         // Set ack-user list change listener.
         EaseDingMessageHelper.get().setUserUpdateListener(message, userUpdateListener);
-    }
-
-    @Override
-    protected void onMessageError() {
-        super.onMessageError();
-        if(progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-        }
-        if(statusView != null) {
-            statusView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    protected void onMessageInProgress() {
-        if(progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        if(statusView != null) {
-            statusView.setVisibility(View.GONE);
-        }
     }
 
     private EaseDingMessageHelper.IAckUserUpdateListener userUpdateListener =

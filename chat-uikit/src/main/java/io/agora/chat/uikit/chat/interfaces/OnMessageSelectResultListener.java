@@ -1,5 +1,7 @@
 package io.agora.chat.uikit.chat.interfaces;
 
+import android.view.View;
+
 import java.util.List;
 
 /**
@@ -9,15 +11,20 @@ public interface OnMessageSelectResultListener {
 
     /**
      * The event of deleting messages.
+     *
+     * @param view              The EaseChatMultiSelectView object.
      * @param deleteMsgIdList
      * @return
      */
-    boolean onMessageDelete(List<String> deleteMsgIdList);
+    boolean onMessageDelete(View view, List<String> deleteMsgIdList);
 
     /**
      * The event of replying messages.
+     *
+     * @param view              The EaseChatMultiSelectView object.
      * @param replyMsgIdList
      * @return
      */
-    boolean onMessageReply(List<String> replyMsgIdList);
+    boolean onMessageReply(View view, List<String> replyMsgIdList);
+
 }

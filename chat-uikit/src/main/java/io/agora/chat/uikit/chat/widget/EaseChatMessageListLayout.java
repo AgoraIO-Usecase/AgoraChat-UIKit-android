@@ -284,7 +284,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         if(loadDataType == LoadDataType.ROAM) {
             presenter.loadServerMessages(pageSize);
         }else if(loadDataType == LoadDataType.HISTORY) {
-            presenter.loadMoreLocalHistoryMessages(msgId, pageSize, Conversation.SearchDirection.DOWN);
+            presenter.loadLocalHistoryMessages(msgId, pageSize);
         }else if(loadDataType == LoadDataType.THREAD) {
             presenter.loadServerMessages(pageSize, Conversation.SearchDirection.DOWN);
         }else {
@@ -785,12 +785,20 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     @Override
     public void moveToTarget(ChatMessage message) {
         if(message == null || messageAdapter == null || messageAdapter.getData() == null) {
-            EMLog.e(TAG, "moveToTarget failed by message is null or messageAdapter is null");
+            EMLog.e(TAG, "moveToTarget failed: message is null or messageAdapter is null");
             return;
         }
         int position = messageAdapter.getData().indexOf(message);
         if(position >= 0) {
-            seekToPosition(position);
+            if(layoutManager != null) {
+                int firstVisiblePosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+                int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
+                if(position < firstVisiblePosition || position > lastVisiblePosition) {
+                    seekToPosition(position);
+                }
+            }else {
+                seekToPosition(position);
+            }
         }else {
             String msgId = getListFirstMessageId();
             presenter.loadMoreRetrievalsMessages(msgId, retrievalSize);
@@ -1083,6 +1091,18 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     @Override
     public void setMessageListItemClickListener(MessageListItemClickListener listener) {
         this.messageListItemClickListener = listener;
+    }
+
+    @Override
+    public void setRefreshing(boolean refreshing) {
+        if(refreshing) {
+            if(srlRefresh.isRefreshing()) {
+                srlRefresh.setRefreshing(false);
+            }
+            srlRefresh.setRefreshing(true);
+        }else {
+            srlRefresh.setRefreshing(false);
+        }
     }
 
     public static boolean isVisibleBottom(RecyclerView recyclerView) {

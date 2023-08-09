@@ -157,6 +157,19 @@ public class EasePopupWindowHelper {
         }
     }
 
+    public void setAllItemsVisible(boolean visible) {
+        if(menuItemMap.size() == 0) {
+            return;
+        }
+        Iterator<MenuItemBean> iterator = menuItemMap.values().iterator();
+        while (iterator.hasNext()) {
+            MenuItemBean itemBean = iterator.next();
+            if(itemBean != null) {
+                itemBean.setVisible(visible);
+            }
+        }
+    }
+
     public void setOutsideTouchable(boolean touchable) {
         this.touchable = touchable;
     }

@@ -285,6 +285,11 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
                     }else {
                         StatusBarCompat.setToolbarCustomColorDefault(getContext(), mArrowColor);
                     }
+                }else {
+                    // Show back icon
+                    activity.getSupportActionBar().setDisplayHomeAsUpEnabled(mDisplayHomeAsUpEnabled);
+                    // Not show title
+                    activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
                 }
             }
         }
