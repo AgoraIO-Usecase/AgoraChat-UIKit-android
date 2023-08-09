@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import java.util.List;
 
 import io.agora.ConversationListener;
@@ -31,17 +30,17 @@ import io.agora.chat.ChatManager;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.CmdMessageBody;
 import io.agora.chat.Conversation;
+import io.agora.chat.MessageBody;
 import io.agora.chat.MessageReactionChange;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.adapter.EMAChatRoomManagerListener;
-import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.activities.EaseChatThreadCreateActivity;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.IChatLayout;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
 import io.agora.chat.uikit.chat.interfaces.OnChatLayoutListener;
 import io.agora.chat.uikit.chat.interfaces.OnChatRecordTouchListener;
+import io.agora.chat.uikit.chat.interfaces.OnModifyMessageListener;
 import io.agora.chat.uikit.chat.interfaces.OnReactionMessageListener;
 import io.agora.chat.uikit.chat.interfaces.OnRecallMessageResultListener;
 import io.agora.chat.uikit.chat.presenter.EaseHandleMessagePresenter;
@@ -68,7 +67,6 @@ import io.agora.chat.uikit.menu.ReactionItemBean;
 import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 import io.agora.chat.uikit.models.EaseUser;
-import io.agora.chat.uikit.provider.EaseActivityProvider;
 import io.agora.chat.uikit.utils.EaseUserUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
 import io.agora.chat.uikit.widget.EaseDialog;
@@ -159,6 +157,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      * Whether to show reaction view
      */
     private boolean mIsShowReactionView = true;
+
+    /**
+     * listener for modify message
+     */
+    private OnModifyMessageListener modifyMessageListener;
 
     public EaseChatLayout(Context context) {
         this(context, null);
@@ -465,6 +468,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     @Override
+    public void sendCombineMessage(ChatMessage message) {
+        presenter.sendCombineMessage(message);
+    }
+
+    @Override
     public void sendFileMessage(Uri fileUri) {
         presenter.sendFileMessage(fileUri);
     }
@@ -482,13 +490,22 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void deleteMessage(ChatMessage message) {
-        messageListLayout.getCurrentConversation().removeMessage(message.getMsgId());
-        messageListLayout.removeMessage(message);
+        presenter.deleteMessage(message);
+    }
+
+    @Override
+    public void deleteMessages(List<String> messages) {
+        presenter.deleteMessages(messages);
     }
 
     @Override
     public void recallMessage(ChatMessage message) {
         presenter.recallMessage(message);
+    }
+
+    @Override
+    public void modifyMessage(String messageId, MessageBody messageBodyModified) {
+        presenter.modifyMessage(messageId,messageBodyModified);
     }
 
     @Override
@@ -737,6 +754,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void deleteLocalMessageSuccess(ChatMessage message) {
         messageListLayout.removeMessage(message);
+    }
+
+    @Override
+    public void deleteLocalMessagesSuccess() {
+        messageListLayout.refreshMessages();
     }
 
     @Override
@@ -1042,7 +1064,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                         EMLog.i(TAG,"currentMsgId = "+message.getMsgId() + " timestamp = "+message.getMsgTime());
                     }else if(itemId == R.id.action_chat_recall) {
                         recallMessage(message);
-                    }else if(itemId == R.id.action_chat_reply) {
+                    }else if(itemId == R.id.action_chat_thread) {
                         skipToCreateThread(message);
                     }
                     return true;
@@ -1097,7 +1119,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     private void setMenuByMsgType(ChatMessage message) {
         ChatMessage.Type type = message.getType();
-        menuHelper.findItemVisible(R.id.action_chat_reply, false);
+        menuHelper.findItemVisible(R.id.action_chat_thread, false);
         menuHelper.findItemVisible(R.id.action_chat_copy, false);
         menuHelper.findItemVisible(R.id.action_chat_recall, false);
         menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_action_delete));
@@ -1121,7 +1143,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 break;
         }
         if(message.getChatType() == ChatMessage.ChatType.GroupChat && message.getChatThread() == null) {
-            menuHelper.findItemVisible(R.id.action_chat_reply, true);
+            menuHelper.findItemVisible(R.id.action_chat_thread, true);
         }
 
         if(message.direct() == ChatMessage.Direct.RECEIVE ){
@@ -1238,6 +1260,27 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         if (null != reactionMessageListener) {
             reactionMessageListener.removeReactionMessageFail(message, code, error);
         }
+    }
+
+    @Override
+    public void onModifyMessageSuccess(ChatMessage messageModified) {
+        refreshMessage(messageModified);
+        if (modifyMessageListener != null) {
+            modifyMessageListener.onModifyMessageSuccess(messageModified);
+        }
+    }
+
+    @Override
+    public void onModifyMessageFailure(String messageId, int code, String error) {
+        EMLog.i(TAG, "onModifyMessageFailure:" + code + ":" + error);
+        if (modifyMessageListener != null) {
+            modifyMessageListener.onModifyMessageFailure(messageId,code,error);
+        }
+    }
+
+    @Override
+    public void setOnEditMessageListener(OnModifyMessageListener listener) {
+        this.modifyMessageListener = listener;
     }
 
 }

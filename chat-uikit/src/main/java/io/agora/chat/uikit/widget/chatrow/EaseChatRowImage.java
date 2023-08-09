@@ -87,7 +87,9 @@ public class EaseChatRowImage extends EaseChatRowFile {
             if(ChatClient.getInstance().getOptions().getAutodownloadThumbnail()){
                 //imageView.setImageResource(R.drawable.ease_default_image);
             }else {
-                progressBar.setVisibility(View.INVISIBLE);
+                if(progressBar != null) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
                 if(percentageView != null) {
                     percentageView.setVisibility(View.INVISIBLE);
                 }

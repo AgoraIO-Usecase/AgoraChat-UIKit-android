@@ -7,7 +7,6 @@ import android.widget.EditText;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.uikit.base.EaseBasePresenter;
 import io.agora.chat.uikit.chat.presenter.IBaseHandleMessage;
-import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
 import io.agora.chat.uikit.menu.EaseChatType;
 

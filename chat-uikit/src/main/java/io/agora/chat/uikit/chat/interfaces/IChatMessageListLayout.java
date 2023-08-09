@@ -39,4 +39,10 @@ public interface IChatMessageListLayout extends IRecyclerView {
      * @param listener
      */
     void setMessageListItemClickListener(MessageListItemClickListener listener);
+
+    /**
+     * Notify the widget that refresh state has changed.
+     * @param refreshing
+     */
+    void setRefreshing(boolean refreshing);
 }

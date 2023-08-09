@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +25,7 @@ import io.agora.chat.uikit.chat.interfaces.IChatEmojiconMenu;
 import io.agora.chat.uikit.chat.interfaces.IChatExtendMenu;
 import io.agora.chat.uikit.chat.interfaces.IChatInputMenu;
 import io.agora.chat.uikit.chat.interfaces.IChatPrimaryMenu;
+import io.agora.chat.uikit.chat.interfaces.IChatTopExtendMenu;
 import io.agora.chat.uikit.models.EaseEmojicon;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
 import io.agora.util.EMLog;
@@ -36,10 +36,13 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
     private LinearLayout chatMenuContainer;
     private FrameLayout primaryMenuContainer;
     private FrameLayout extendMenuContainer;
+    private FrameLayout topExtendMenuContainer;
 
     private IChatPrimaryMenu primaryMenu;
     private IChatEmojiconMenu emojiconMenu;
     private IChatExtendMenu extendMenu;
+    private IChatTopExtendMenu topExtendMenu;
+
     private ChatInputMenuListener menuListener;
 
     public EaseChatInputMenu(Context context) {
@@ -61,6 +64,7 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
         chatMenuContainer = findViewById(R.id.chat_menu_container);
         primaryMenuContainer = findViewById(R.id.primary_menu_container);
         extendMenuContainer = findViewById(R.id.extend_menu_container);
+        topExtendMenuContainer = findViewById(R.id.top_extend_menu_container);
 
         init();
     }
@@ -94,8 +98,19 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
     }
 
     @Override
+    public void setCustomTopExtendMenu(IChatTopExtendMenu menu) {
+        this.topExtendMenu = menu;
+    }
+
+    @Override
     public void hideExtendContainer() {
         primaryMenu.showNormalStatus();
+        extendMenuContainer.setVisibility(GONE);
+    }
+
+    @Override
+    public void hideInputMenu() {
+        primaryMenu.setVisible(GONE);
         extendMenuContainer.setVisibility(GONE);
     }
 
@@ -117,6 +132,15 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
             if(primaryMenu != null) {
                 primaryMenu.hideExtendStatus();
             }
+        }
+    }
+
+    @Override
+    public void showTopExtendMenu(boolean isShow) {
+        if(isShow) {
+            showTopExtendMenu();
+        }else {
+            topExtendMenuContainer.setVisibility(GONE);
         }
     }
 
@@ -145,6 +169,11 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
     @Override
     public IChatExtendMenu getChatExtendMenu() {
         return extendMenu;
+    }
+
+    @Override
+    public IChatTopExtendMenu getChatTopExtendMenu() {
+        return topExtendMenu;
     }
 
     @Override
@@ -228,6 +257,19 @@ public class EaseChatInputMenu extends LinearLayout implements IChatInputMenu, E
             FragmentManager manager = ((AppCompatActivity) getContext()).getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.extend_menu_container, (Fragment) emojiconMenu).commitAllowingStateLoss();
             emojiconMenu.setEmojiconMenuListener(this);
+        }
+    }
+
+    private void showTopExtendMenu() {
+        if(topExtendMenu instanceof View) {
+            topExtendMenuContainer.setVisibility(VISIBLE);
+            topExtendMenuContainer.removeAllViews();
+            topExtendMenuContainer.addView((View) topExtendMenu);
+        }
+        if(topExtendMenu instanceof Fragment && getContext() instanceof AppCompatActivity) {
+            topExtendMenuContainer.setVisibility(VISIBLE);
+            FragmentManager manager = ((AppCompatActivity) getContext()).getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.top_extend_menu_container, (Fragment) topExtendMenu).commitAllowingStateLoss();
         }
     }
 

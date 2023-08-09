@@ -1,7 +1,6 @@
 package io.agora.chat.uikit.chatthread.widget;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
@@ -20,17 +19,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.Date;
 
 import io.agora.chat.ChatMessage;
+import io.agora.chat.CombineMessageBody;
 import io.agora.chat.ImageMessageBody;
 import io.agora.chat.NormalFileMessageBody;
 import io.agora.chat.VideoMessageBody;
 import io.agora.chat.VoiceMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.activities.EaseShowBigImageActivity;
-import io.agora.chat.uikit.activities.EaseShowNormalFileActivity;
-import io.agora.chat.uikit.activities.EaseShowVideoActivity;
 import io.agora.chat.uikit.chat.interfaces.OnMessageItemClickListener;
 import io.agora.chat.uikit.databinding.EaseLayoutChatThreadParentMsgBinding;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseFileIconProvider;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
@@ -142,32 +140,33 @@ public class EaseChatThreadParentMsgView extends ConstraintLayout {
             case FILE :
                 openFile(message);
                 break;
+            case COMBINE :
+                openCombine(message);
+                break;
         }
+    }
+
+    private void openCombine(ChatMessage message) {
+        EaseActivityProviderHelper.startToChatHistoryActivity(getContext(), message);
     }
 
     private void openImage(ChatMessage message) {
         ImageMessageBody imgBody = (ImageMessageBody) message.getBody();
-        Intent intent = new Intent(getContext(), EaseShowBigImageActivity.class);
         Uri imgUri = imgBody.getLocalUri();
         EaseFileUtils.takePersistableUriPermission(getContext(), imgUri);
         EMLog.e("Tag", "big image uri: " + imgUri + "  exist: "+EaseFileUtils.isFileExistByUri(getContext(), imgUri));
         if(EaseFileUtils.isFileExistByUri(getContext(), imgUri)) {
-            intent.putExtra("uri", imgUri);
+            EaseActivityProviderHelper.startToLocalImageActivity(getContext(), imgUri);
         } else{
             // The local full size pic does not exist yet.
             // ShowBigImage needs to download it from the server
             // first
-            String msgId = message.getMsgId();
-            intent.putExtra("messageId", msgId);
-            intent.putExtra("filename", imgBody.getFileName());
+            EaseActivityProviderHelper.startToLocalImageActivity(getContext(), message.getMsgId(), imgBody.getFileName());
         }
-        getContext().startActivity(intent);
     }
 
     private void openVideo(ChatMessage message) {
-        Intent intent = new Intent(getContext(), EaseShowVideoActivity.class);
-        intent.putExtra("msg", message);
-        getContext().startActivity(intent);
+        EaseActivityProviderHelper.startToDownloadVideoActivity(getContext(), message);
     }
 
     private void openLocation(ChatMessage message) {
@@ -220,7 +219,7 @@ public class EaseChatThreadParentMsgView extends ConstraintLayout {
             EaseCompat.openFile(getContext(), filePath);
         } else {
             // download the file
-            getContext().startActivity(new Intent(getContext(), EaseShowNormalFileActivity.class).putExtra("msg", message));
+            EaseActivityProviderHelper.startToDownloadFileActivity(getContext(), message);
         }
     }
 
@@ -267,6 +266,19 @@ public class EaseChatThreadParentMsgView extends ConstraintLayout {
             case CUSTOM :
                 setCustomMessage(message);
                 break;
+            case COMBINE :
+                setCombineMessage(message);
+                break;
+        }
+    }
+
+    private void setCombineMessage(ChatMessage message) {
+        hideAllBubble();
+        CombineMessageBody combineBody = (CombineMessageBody) message.getBody();
+        if(combineBody != null) {
+            binding.bubbleCombine.tvChatcontent.setText(combineBody.getTitle());
+            binding.bubbleCombine.tvChatSummary.setText(combineBody.getSummary());
+            binding.bubbleCombine.getRoot().setVisibility(VISIBLE);
         }
     }
 
@@ -361,6 +373,7 @@ public class EaseChatThreadParentMsgView extends ConstraintLayout {
         binding.bubbleVideo.setVisibility(GONE);
         binding.bubbleFile.setVisibility(GONE);
         binding.bubbleBigExpression.setVisibility(GONE);
+        binding.bubbleCombine.getRoot().setVisibility(GONE);
     }
 
     public ImageView getAvatarView() {

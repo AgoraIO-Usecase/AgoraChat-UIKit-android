@@ -11,6 +11,14 @@
     <item name="action_chat_recall" type="id"/>
     <!--unsent-->
     <item name="action_chat_unsent" type="id"/>
+    <!--quote-->
+    <item name="action_chat_quote" type="id" />
+    <!--select-->
+    <item name="action_chat_select" type="id" />
+    <!--edit-->
+    <item name="action_chat_edit" type="id" />
+    <!--create thread-->
+    <item name="action_chat_thread" type="id" />
     <!--long click-->
     <item name="action_chat_long_click" type="id"/>
 

@@ -2,7 +2,10 @@ package io.agora.chat.uikit.chat.interfaces;
 
 import android.net.Uri;
 
+import java.util.List;
+
 import io.agora.chat.ChatMessage;
+import io.agora.chat.MessageBody;
 import io.agora.chat.uikit.chat.widget.EaseChatInputMenu;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 
@@ -101,6 +104,12 @@ public interface IChatLayout {
     void sendVideoMessage(Uri videoUri, int videoLength);
 
     /**
+     * Send a combine message.
+     * @param message
+     */
+    void sendCombineMessage(ChatMessage message);
+
+    /**
      * Send file message
      * @param fileUri
      */
@@ -131,10 +140,29 @@ public interface IChatLayout {
     void deleteMessage(ChatMessage message);
 
     /**
+     * Delete local message list.
+     * @param messages
+     */
+    void deleteMessages(List<String> messages);
+
+    /**
      * Recall server message
      * @param message
      */
     void recallMessage(ChatMessage message);
+
+    /**
+     * modify message
+     * @param messageId
+     * @param messageBodyModified
+     */
+    void modifyMessage(String messageId, MessageBody messageBodyModified);
+
+    /**
+     * Set the edit message listening
+     * @param listener
+     */
+    void setOnEditMessageListener(OnModifyMessageListener listener);
 
     void setOnChatLayoutListener(OnChatLayoutListener listener);
 

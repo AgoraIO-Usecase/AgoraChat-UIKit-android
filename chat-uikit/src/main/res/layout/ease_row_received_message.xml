@@ -15,14 +15,35 @@
         android:layout_gravity="center" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_bubble_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/ease_margin_chat_activity" >
 
+        <RadioButton
+            android:id="@+id/rb_select"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_userhead"
+            app:layout_constraintBottom_toBottomOf="@id/iv_userhead"
+            app:layout_constraintEnd_toStartOf="@id/iv_userhead"
+            app:layout_constraintHorizontal_bias="0"
+            style="@style/ease_row_radio_select_style"/>
+
+        <io.agora.chat.uikit.widget.EaseChatQuoteView
+            android:id="@+id/chat_quote_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_userid"
+            app:layout_constraintStart_toStartOf="@id/bubble"
+            app:layout_constraintBottom_toTopOf="@id/bubble"
+            app:ease_chat_quote_sender="false"
+            android:visibility="gone"/>
+
         <io.agora.chat.uikit.widget.EaseImageView
             android:id="@+id/iv_userhead"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/rb_select"
+            app:layout_constraintBottom_toBottomOf="@id/bubble"
+            app:layout_goneMarginStart="15dp"
             style="@style/ease_row_receive_iv_userhead_style"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,28 +54,20 @@
             android:layout_marginStart="@dimen/ease_margin_chat_activity"
             android:layout_marginTop="2dp"
             app:layout_constraintStart_toEndOf="@id/iv_userhead"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chat_quote_view"
+            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
             android:background="@drawable/ease_chat_bubble_receive_bg"
             android:minWidth="30dp">
 
             <TextView
                 android:id="@+id/tv_chatcontent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/bubble_inner_start_top_end_margin"
+                style="@style/ease_chat_row_text_content_style"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/thread_region"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_goneMarginBottom="@dimen/ease_chat_bubble_margin_12"
-                android:autoLink="web"
-                android:gravity="center|left"
-                android:lineSpacingExtra="2dp"
-                android:maxWidth="225.0dip"
-                android:minHeight="@dimen/ease_chat_text_min_height"
-                android:textColor="#ff000000"
-                android:textSize="15sp"
                 tools:text="Agora Chat" />
 
             <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion
@@ -72,26 +85,16 @@
 
         <io.agora.chat.uikit.chat.widget.EaseChatReactionView
             android:id="@+id/tv_subReactionContent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:textSize="15sp"
             app:ease_chat_item_sender="false"
-            android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/bubble"
-            app:layout_constraintBottom_toTopOf="@id/bubble"
-            android:layout_marginBottom="-8dp" />
+            app:layout_constraintTop_toBottomOf="@id/bubble"
+            style="@style/ease_chat_row_reaction_style"/>
 
         <TextView
             android:id="@+id/tv_userid"
-            style="@style/chat_text_name_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/ease_chat_nick_margin_left"
-            android:textSize="@dimen/ease_chat_nick_text_size"
-            android:visibility="gone"
-            android:layout_marginBottom="5dp"
-            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
+            style="@style/ease_chat_row_text_name_style"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/chat_quote_view"
             app:layout_constraintStart_toStartOf="@id/bubble"
             tools:text="som" />
 

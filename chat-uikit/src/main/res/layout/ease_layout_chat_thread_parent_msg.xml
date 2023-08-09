@@ -307,12 +307,9 @@
                     android:layout_width="@dimen/ease_chat_file_icon_size"
                     android:layout_height="@dimen/ease_chat_file_icon_size"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </RelativeLayout>
-
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -335,6 +332,12 @@
                 android:scaleType="fitXY" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include layout="@layout/ease_layout_bubble_combine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bubble_combine"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

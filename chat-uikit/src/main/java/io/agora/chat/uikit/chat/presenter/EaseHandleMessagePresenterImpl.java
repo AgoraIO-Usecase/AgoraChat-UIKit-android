@@ -3,7 +3,11 @@ package io.agora.chat.uikit.chat.presenter;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import java.util.List;
+
 import io.agora.CallBack;
+import io.agora.Error;
+import io.agora.ValueCallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.CmdMessageBody;
@@ -112,6 +116,11 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     }
 
     @Override
+    public void sendCombineMessage(ChatMessage message) {
+        sendMessage(message, false);
+    }
+
+    @Override
     public void addMessageAttributes(ChatMessage message) {
         //You can add some custom attributes
         mView.addMsgAttrBeforeSend(message);
@@ -119,20 +128,27 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
 
     @Override
     public void sendMessage(ChatMessage message) {
+        sendMessage(message, true);
+    }
+
+    @Override
+    public void sendMessage(ChatMessage message, boolean isCheck) {
         if(message == null) {
             if(isActive()) {
                 runOnUI(() -> mView.sendMessageFail("message is null!"));
             }
             return;
         }
-        addMessageAttributes(message);
-        if (chatType == EaseChatType.GROUP_CHAT){
-            message.setChatType(ChatMessage.ChatType.GroupChat);
-        }else if(chatType == EaseChatType.CHATROOM){
-            message.setChatType(ChatMessage.ChatType.ChatRoom);
+        if(isCheck) {
+            if (chatType == EaseChatType.GROUP_CHAT){
+                message.setChatType(ChatMessage.ChatType.GroupChat);
+            }else if(chatType == EaseChatType.CHATROOM){
+                message.setChatType(ChatMessage.ChatType.ChatRoom);
+            }
+            // Should add thread label if it is a thread conversation
+            message.setIsChatThreadMessage(isThread);
         }
-        // Should add thread label if it is a thread conversation
-        message.setIsChatThreadMessage(isThread);
+        addMessageAttributes(message);
         message.setMessageStatusCallback(new CallBack() {
             @Override
             public void onSuccess() {
@@ -192,6 +208,17 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     }
 
     @Override
+    public void deleteMessages(List<String> messages) {
+        if(messages.isEmpty()) {
+            return;
+        }
+        for (String msgId : messages) {
+            conversation.removeMessage(msgId);
+        }
+        runOnUI(()->mView.deleteLocalMessagesSuccess());
+    }
+
+    @Override
     public void recallMessage(ChatMessage message) {
         try {
             ChatMessage msgNotification = ChatMessage.createSendMessage(ChatMessage.Type.TXT);
@@ -214,6 +241,36 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
                 runOnUI(()->mView.recallMessageFail(e.getErrorCode(), e.getDescription()));
             }
         }
+    }
+
+    @Override
+    public void modifyMessage(String messageId, MessageBody messageBodyModified) {
+        if(TextUtils.isEmpty(messageId)||messageBodyModified==null) {
+            runOnUI(() ->{
+                if(isActive()) {
+                    mView.onModifyMessageFailure(messageId, Error .GENERAL_ERROR,"messageId or messageModified is empty !");
+                }
+            });
+            return;
+        }
+        // modify message
+        ChatClient.getInstance().chatManager().asyncModifyMessage(messageId, messageBodyModified, new ValueCallBack<ChatMessage>() {
+            @Override
+            public void onSuccess(ChatMessage messageModified) {
+                runOnUI(() ->{
+                    if(isActive()) {
+                        mView.onModifyMessageSuccess(messageModified);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int code, String error) {
+                if(isActive()) {
+                    mView.onModifyMessageFailure(messageId, code, error);
+                }
+            }
+        });
     }
 
     private String getThumbPath(Uri videoUri) {

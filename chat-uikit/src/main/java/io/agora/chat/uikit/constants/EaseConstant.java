@@ -17,7 +17,6 @@ public interface EaseConstant {
     String MESSAGE_ATTR_IS_VOICE_CALL = "is_voice_call";
     String MESSAGE_ATTR_IS_VIDEO_CALL = "is_video_call";
 
-
     String MESSAGE_ATTR_IS_BIG_EXPRESSION = "em_is_big_expression";
     String MESSAGE_ATTR_EXPRESSION_ID = "em_expression_id";
 
@@ -34,6 +33,7 @@ public interface EaseConstant {
     String EXTRA_CHAT_TYPE = "chatType";
     String EXTRA_CONVERSATION_ID = "conversationId";
     String EXTRA_IS_FROM_SERVER = "isRoaming";
+    String EXTRA_CHAT_COMBINE_MESSAGE = "chatCombineMessage";
 
     String MESSAGE_TYPE_TXT = "txt";
     String MESSAGE_TYPE_EXPRESSION = "expression";
@@ -69,9 +69,18 @@ public interface EaseConstant {
     String DEFAULT_SYSTEM_MESSAGE_TYPE = "em_system_type";
 
     String USER_CARD_EVENT = "userCard";
+    String USER_CARD_ID = "uid";
+    String USER_CARD_NICK = "nickname";
 
     String EASE_THREAD_NOTIFICATION_TYPE = "em_thread_notification_type";
     String EASE_THREAD_PARENT_MSG_ID = "em_thread_parent_msg_id";
 
     String FLAG_REACH_LATEST_THREAD_MESSAGE = "flag_reach_latest_thread_message";
+
+    //quote
+    String QUOTE_MSG_ID = "msgID";
+    String QUOTE_MSG_PREVIEW = "msgPreview";
+    String QUOTE_MSG_SENDER = "msgSender";
+    String QUOTE_MSG_TYPE = "msgType";
+    String QUOTE_MSG_QUOTE = "msgQuote";
 }

@@ -32,8 +32,10 @@ import androidx.annotation.IdRes;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.Conversation;
+import io.agora.chat.Group;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
@@ -136,6 +138,9 @@ public class EaseUtils {
             break;
         case FILE:
             digest = getString(context, R.string.ease_file);
+            break;
+        case COMBINE:
+            digest = getString(context, R.string.ease_combine);
             break;
         default:
             EMLog.e(TAG, "error, unknow type");
@@ -417,5 +422,43 @@ public class EaseUtils {
         }else {
             return "99+";
         }
+    }
+
+    public static boolean canEdit(ChatMessage message) {
+        return (message.getType()== ChatMessage.Type.TXT)&&(isGroupOwnerOrAdmin(message) || isSender(message));
+    }
+
+    public static boolean isGroupOwnerOrAdmin(ChatMessage message) {
+        if(message.getChatType() != ChatMessage.ChatType.GroupChat) {
+            return false;
+        }
+        Group group = ChatClient.getInstance().groupManager().getGroup(message.getFrom());
+        return isOwner(group) || isAdmin(group);
+    }
+
+    public static boolean isSender(ChatMessage message) {
+        return message != null && message.direct() == ChatMessage.Direct.SEND;
+    }
+
+    public static boolean isOwner(Group group) {
+        if(group == null ||
+                TextUtils.isEmpty(group.getOwner())) {
+            return false;
+        }
+        return TextUtils.equals(group.getOwner(), ChatClient.getInstance().getCurrentUser());
+    }
+    /**
+     * Whether is chatRoom owner
+     * @return
+     */
+    public synchronized static boolean isAdmin(Group group) {
+        if (null == group) {
+            return false;
+        }
+        List<String> adminList = group.getAdminList();
+        if(adminList != null && !adminList.isEmpty()) {
+            return adminList.contains(ChatClient.getInstance().getCurrentUser());
+        }
+        return false;
     }
 }

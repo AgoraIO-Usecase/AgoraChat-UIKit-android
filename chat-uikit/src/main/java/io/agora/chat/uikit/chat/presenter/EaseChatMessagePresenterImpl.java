@@ -3,6 +3,7 @@ package io.agora.chat.uikit.chat.presenter;
 import android.text.TextUtils;
 
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,26 +46,13 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
 
     @Override
     public void loadLocalMessages(int pageSize, Conversation.SearchDirection direction) {
-        if(conversation == null) {
-            throw new NullPointerException("should first set up with conversation");
-        }
-        List<ChatMessage> messages = null;
-        try {
-            messages = conversation.loadMoreMsgFromDB(null, pageSize, direction);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<ChatMessage> messages = privateLoadMoreLocalMessages(null, pageSize, direction);
         if(messages == null || messages.isEmpty()) {
-            if(isActive()) {
-                runOnUI(()->mView.loadNoLocalMsg());
-            }
+            runOnUI(()->mView.loadNoLocalMsg());
             return;
         }
-        if(isActive()) {
-            checkMessageStatus(messages);
-            List<ChatMessage> finalMessages = messages;
-            runOnUI(()->mView.loadLocalMsgSuccess(finalMessages));
-        }
+        checkMessageStatus(messages);
+        runOnUI(()->mView.loadLocalMsgSuccess(messages));
     }
 
     @Override
@@ -74,28 +62,45 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
 
     @Override
     public void loadMoreLocalMessages(String msgId, int pageSize, Conversation.SearchDirection direction) {
+        List<ChatMessage> moreMsgs = privateLoadMoreLocalMessages(msgId, pageSize, direction);
+        if(moreMsgs == null || moreMsgs.isEmpty()) {
+            runOnUI(()->mView.loadNoMoreLocalMsg());
+            return;
+        }
+        checkMessageStatus(moreMsgs);
+        runOnUI(()->mView.loadMoreLocalMsgSuccess(moreMsgs));
+    }
+
+    @Override
+    public void loadMoreRetrievalsMessages(String msgId, int pageSize) {
+        List<ChatMessage> moreMsgs = privateLoadMoreLocalMessages(msgId, pageSize, Conversation.SearchDirection.UP);
+        if(moreMsgs == null || moreMsgs.isEmpty()) {
+            runOnUI(()->mView.loadNoMoreLocalMsg());
+            return;
+        }
+        runOnUI(()->mView.loadMoreRetrievalsMessagesSuccess(moreMsgs));
+    }
+
+    @Override
+    public void loadLocalHistoryMessages(String msgId, int pageSize) {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");
         }
         if(!isMessageId(msgId)) {
             throw new IllegalArgumentException("please check if set correct msg id");
         }
-        List<ChatMessage> moreMsgs = null;
-        try {
-            moreMsgs = conversation.loadMoreMsgFromDB(msgId, pageSize, direction);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if(moreMsgs == null || moreMsgs.isEmpty()) {
-            if(isActive()) {
-                runOnUI(()->mView.loadNoMoreLocalMsg());
-            }
-            return;
-        }
+        ChatMessage message = ChatClient.getInstance().chatManager().getMessage(msgId);
+        List<ChatMessage> messages = conversation.searchMsgFromDB(message.getMsgTime() - 1,
+                pageSize, Conversation.SearchDirection.DOWN);
         if(isActive()) {
-            checkMessageStatus(moreMsgs);
-            List<ChatMessage> finalMoreMsgs = moreMsgs;
-            runOnUI(()->mView.loadMoreLocalMsgSuccess(finalMoreMsgs));
+            runOnUI(()-> {
+                if(messages == null || messages.isEmpty()) {
+                    mView.loadNoMoreLocalHistoryMsg();
+                }else {
+                    mView.loadMoreLocalHistoryMsgSuccess(messages, Conversation.SearchDirection.DOWN);
+                }
+            });
+
         }
     }
 
@@ -107,9 +112,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         if(!isMessageId(msgId)) {
             throw new IllegalArgumentException("please check if set correct msg id");
         }
-        ChatMessage message = conversation.getMessage(msgId, true);
-        List<ChatMessage> messages = conversation.searchMsgFromDB(message.getMsgTime() - 1,
-                                                                pageSize, direction);
+        List<ChatMessage> messages = conversation.loadMoreMsgFromDB(msgId, pageSize, direction);
         if(isActive()) {
             runOnUI(()-> {
                 if(messages == null || messages.isEmpty()) {
@@ -310,6 +313,22 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
                 message.setStatus(ChatMessage.Status.FAIL);
             }
         }
+    }
+
+    private List<ChatMessage> privateLoadMoreLocalMessages(String startMsgId, int pageSize, Conversation.SearchDirection direction) {
+        if(conversation == null) {
+            throw new NullPointerException("should first set up with conversation");
+        }
+        if(!isMessageId(startMsgId)) {
+            throw new IllegalArgumentException("please check if set correct msg id");
+        }
+        List<ChatMessage> moreMsgs = null;
+        try {
+            moreMsgs = conversation.loadMoreMsgFromDB(startMsgId, pageSize, direction);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return moreMsgs;
     }
 }
 

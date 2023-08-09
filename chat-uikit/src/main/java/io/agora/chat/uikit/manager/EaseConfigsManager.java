@@ -23,6 +23,39 @@ public class EaseConfigsManager {
         return false;
     }
 
+    /**
+     * Get whether to show send button in input menu
+     * @return
+     */
+    public static boolean isShowInputMenuSendButton() {
+        if(checkIfUIKitInit()) {
+            return EaseUtils.getBooleanResource(EaseUIKit.getInstance().getContext(), R.bool.ease_input_show_send_button);
+        }
+        return false;
+    }
+
+    /**
+     * Get whether to enable reply messages.
+     * @return
+     */
+    public static boolean enableReplyMessage() {
+        if(checkIfUIKitInit()) {
+            return EaseUtils.getBooleanResource(EaseUIKit.getInstance().getContext(), R.bool.ease_enable_message_reply);
+        }
+        return false;
+    }
+
+    /**
+     * Get whether to enable send combine messages.
+     * @return
+     */
+    public static boolean enableSendCombineMessage() {
+        if(checkIfUIKitInit()) {
+            return EaseUtils.getBooleanResource(EaseUIKit.getInstance().getContext(), R.bool.ease_enable_message_combine);
+        }
+        return false;
+    }
+
     private static boolean checkIfUIKitInit() {
         Context context = EaseUIKit.getInstance().getContext();
         if(context == null) {

@@ -191,4 +191,10 @@
         <attr name="thread_region_time" format="reference|string"/>
     </declare-styleable>
 
+    <declare-styleable name="EaseChatQuoteView">
+        <!-- whether is sender -->
+        <attr name="ease_chat_quote_sender" format="boolean" />
+        <attr name="ease_chat_quote_is_history" format="boolean" />
+    </declare-styleable>
+
 </resources>
