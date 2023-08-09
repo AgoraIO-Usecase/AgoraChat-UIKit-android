@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.fragment.app.Fragment;
 
 import io.agora.chat.ChatMessage;
@@ -98,17 +99,17 @@ public class EaseActivityProviderHelper {
 
     /**
      * Jump to create chat thread activity
+     * @param launcher
      * @param context
-     * @param requestCode
      */
-    public static void startToImageGridActivity(Activity context, int requestCode) {
+    public static void startToImageGridActivity(ActivityResultLauncher<Intent> launcher, Context context) {
         EaseActivityProvider provider = EaseUIKit.getInstance().getActivitiesProvider();
         if(provider != null) {
             Class activity = provider.getActivity(EaseImageGridActivity.class.getSimpleName());
             if(activity != null) {
                 Intent intent = new Intent(context, activity);
                 try {
-                    context.startActivityForResult(intent, requestCode);
+                    launcher.launch(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -116,30 +117,7 @@ public class EaseActivityProviderHelper {
             }
         }
         Intent intent = new Intent(context, EaseImageGridActivity.class);
-        context.startActivityForResult(intent, requestCode);
-    }
-
-    /**
-     * Jump to create chat thread activity
-     * @param context
-     * @param requestCode
-     */
-    public static void startToImageGridActivity(Fragment context, int requestCode) {
-        EaseActivityProvider provider = EaseUIKit.getInstance().getActivitiesProvider();
-        if(provider != null) {
-            Class activity = provider.getActivity(EaseImageGridActivity.class.getSimpleName());
-            if(activity != null) {
-                Intent intent = new Intent(context.getContext(), activity);
-                try {
-                    context.startActivityForResult(intent, requestCode);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return;
-            }
-        }
-        Intent intent = new Intent(context.getContext(), EaseImageGridActivity.class);
-        context.startActivityForResult(intent, requestCode);
+        launcher.launch(intent);
     }
 
     /**

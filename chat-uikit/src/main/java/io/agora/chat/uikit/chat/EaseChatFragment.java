@@ -14,6 +14,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
@@ -116,6 +120,15 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
      */
     private boolean isQuoting = false;
     private JSONObject quoteObject = null;
+    private final ActivityResultLauncher<Intent> launcherToCamera = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
+            , result -> onActivityResult(result, REQUEST_CODE_CAMERA));
+    private final ActivityResultLauncher<Intent> launcherToAlbum = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
+            , result -> onActivityResult(result, REQUEST_CODE_LOCAL));
+    private final ActivityResultLauncher<Intent> launcherToVideo = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
+            , result -> onActivityResult(result, REQUEST_CODE_SELECT_VIDEO));
+    private final ActivityResultLauncher<Intent> launcherToFile = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
+            , result -> onActivityResult(result, REQUEST_CODE_SELECT_FILE));
+
 
     @Nullable
     @Override
@@ -620,6 +633,20 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_DING_MSG) { // To send the ding-type msg.
+                onActivityResultForDingMsg(data);
+            }
+        }
+    }
+
+    /**
+     * It's the result from ActivityResultLauncher.
+     * @param result
+     * @param requestCode
+     */
+    public void onActivityResult(ActivityResult result, int requestCode) {
+        if(result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
             chatLayout.getChatInputMenu().hideExtendContainer();
             if (requestCode == REQUEST_CODE_CAMERA) { // capture new image
                 onActivityResultForCamera(data);
@@ -646,23 +673,21 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                 + System.currentTimeMillis() + ".jpg");
         //noinspection ResultOfMethodCallIgnored
         cameraFile.getParentFile().mkdirs();
-        startActivityForResult(
-                new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, EaseCompat.getUriForFile(getContext(), cameraFile)),
-                REQUEST_CODE_CAMERA);
+        launcherToCamera.launch(new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, EaseCompat.getUriForFile(getContext(), cameraFile)));
     }
 
     /**
      * select local image
      */
     protected void selectPicFromLocal() {
-        EaseCompat.openImage(this, REQUEST_CODE_LOCAL);
+        EaseCompat.openImage(launcherToAlbum, mContext);
     }
 
     /**
      * select local video
      */
     protected void selectVideoFromLocal() {
-        EaseActivityProviderHelper.startToImageGridActivity(this, REQUEST_CODE_SELECT_VIDEO);
+        EaseActivityProviderHelper.startToImageGridActivity(launcherToVideo, mContext);
     }
 
     /**
@@ -683,7 +708,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
 
-        startActivityForResult(intent, REQUEST_CODE_SELECT_FILE);
+        launcherToFile.launch(intent);
     }
 
     protected void onActivityResultForCamera(Intent data) {
@@ -750,6 +775,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                 chatLayout.sendVideoMessage(Uri.parse(videoPath), duration);
             } else {
                 Uri videoUri = FileHelper.getInstance().formatInUri(uriString);
+                EaseFileUtils.saveUriPermission(mContext, videoUri, data);
                 chatLayout.sendVideoMessage(videoUri, duration);
             }
         }
