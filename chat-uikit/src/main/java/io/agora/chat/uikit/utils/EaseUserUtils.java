@@ -50,6 +50,35 @@ public class EaseUserUtils {
         if(avatarOptions.getAvatarRadius() != 0)
             imageView.setRadius(avatarOptions.getAvatarRadius());
     }
+
+    /**
+     * set user avatar
+     * @param username
+     */
+    public static void setUserAvatar(Context context,String groupId, String username, ImageView imageView){
+        EaseUser user = getGroupUserInfo(groupId,username);
+        setUserAvatar(context, user, imageView);
+    }
+
+    private static void setUserAvatar(Context context, EaseUser user, ImageView imageView) {
+        if(context == null || imageView == null) {
+            return;
+        }
+        if(user == null || TextUtils.isEmpty(user.getAvatar())) {
+            Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
+            return;
+        }
+        try {
+            int avatarResId = Integer.parseInt(user.getAvatar());
+            Glide.with(context).load(avatarResId).into(imageView);
+        } catch (Exception e) {
+            //use default avatar
+            Glide.with(context).load(user.getAvatar())
+                    .apply(RequestOptions.placeholderOf(R.drawable.ease_default_avatar)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL))
+                    .into(imageView);
+        }
+    }
     
     /**
      * set user avatar
@@ -128,6 +157,27 @@ public class EaseUserUtils {
         		textView.setText(username);
         	}
         }
+    }
+
+    public static void setUserNick(String groupId,String username,TextView textView){
+        EaseUser user = getGroupUserInfo(groupId,username);
+        setUserNickname(user, username, textView);
+    }
+
+    public static EaseUser getGroupUserInfo(String groupId,String username){
+        EaseUserProfileProvider provider = EaseUIKit.getInstance().getUserProvider();
+        return provider == null ? null : provider.getGroupUser(groupId,username);
+    }
+
+    private static void setUserNickname(EaseUser user, String userId, TextView textView) {
+        if(textView == null) {
+            return;
+        }
+        if(user == null || TextUtils.isEmpty(user.getNickname())) {
+            textView.setText(userId);
+            return;
+        }
+        textView.setText(user.getNickname());
     }
     
 }

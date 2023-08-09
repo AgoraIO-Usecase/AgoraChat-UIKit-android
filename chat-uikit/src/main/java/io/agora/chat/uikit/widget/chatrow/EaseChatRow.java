@@ -495,8 +495,13 @@ public abstract class EaseChatRow extends LinearLayout {
                 EaseUserUtils.setUserNick(message.getFrom(), usernickView);
             }
         } else {
-            EaseUserUtils.setUserAvatar(context, message.getFrom(), userAvatarView);
-            EaseUserUtils.setUserNick(message.getFrom(), usernickView);
+            if (message.getChatType() == ChatMessage.ChatType.GroupChat){
+                EaseUserUtils.setUserAvatar(context, message.conversationId(), message.getFrom(), userAvatarView);
+                EaseUserUtils.setUserNick(message.conversationId(),message.getFrom(), usernickView);
+            }else {
+                EaseUserUtils.setUserAvatar(context, message.getFrom(), userAvatarView);
+                EaseUserUtils.setUserNick(message.getFrom(), usernickView);
+            }
         }
     }
 

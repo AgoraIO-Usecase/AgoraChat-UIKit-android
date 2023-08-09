@@ -50,8 +50,8 @@ dependencies {
     api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation files('libs/pinyin4j-2.5.0.jar')
     // Agora Chat SDK
-    api 'io.agora.rtc:chat-sdk:1.1.0'
-    //api project(path: ':hyphenatechatsdk')
+//    api 'io.agora.rtc:chat-sdk:1.1.0'
+    api project(path: ':hyphenatechatsdk')
 }
 
 //apply from: "../maven-push-release.gradle"
