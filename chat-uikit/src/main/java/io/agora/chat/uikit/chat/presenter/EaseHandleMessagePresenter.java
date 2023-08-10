@@ -98,6 +98,15 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
     public abstract void sendCmdMessage(String action);
 
     /**
+     * Send combine message.
+     * @param title
+     * @param summary
+     * @param compatibleText
+     * @param msgIds
+     */
+    public abstract void sendCombineMessage(String title, String summary, String compatibleText, List<String> msgIds);
+
+    /**
      * Resend message
      * @param message
      */
@@ -151,5 +160,11 @@ public abstract class EaseHandleMessagePresenter extends EaseBasePresenter imple
      * @param reaction
      */
     public abstract void removeReaction(ChatMessage message, String reaction);
+
+    /**
+     * create reply message ext.
+     * @param message
+     */
+    public abstract void createReplyMessageExt(ChatMessage message);
 }
 

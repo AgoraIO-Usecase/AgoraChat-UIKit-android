@@ -2,9 +2,10 @@ package io.agora.chat.uikit.chathistory.widget;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.view.View;
-import android.widget.TextView;
 
+import java.io.File;
 import java.util.Date;
 
 import io.agora.chat.ChatClient;
@@ -13,6 +14,7 @@ import io.agora.chat.FileMessageBody;
 import io.agora.chat.VoiceMessageBody;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.utils.EaseDateUtils;
+import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoice;
 import io.agora.util.EMLog;
 
@@ -41,8 +43,14 @@ public class EaseChatRowHistoryVoice extends EaseChatRowVoice {
             if((voiceBody.downloadStatus() == FileMessageBody.EMDownloadStatus.DOWNLOADING
                     || downloadStatus == FileMessageBody.EMDownloadStatus.PENDING) &&
                     ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
-                ChatClient.getInstance().chatManager().downloadAttachment(message);
-                updateView(message);
+                if(!new File(voiceBody.getLocalUrl()).exists()) {
+                    updateView(message);
+                    ChatClient.getInstance().chatManager().downloadAttachment(message);
+                }else {
+                    if(progressBar != null) {
+                        progressBar.setVisibility(GONE);
+                    }
+                }
             }
         }
     }

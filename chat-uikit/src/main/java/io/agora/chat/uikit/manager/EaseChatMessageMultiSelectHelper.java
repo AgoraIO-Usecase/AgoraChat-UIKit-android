@@ -45,6 +45,9 @@ public class EaseChatMessageMultiSelectHelper {
         if(context == null) {
             return;
         }
+        if(dataMap.containsKey(context)) {
+            return;
+        }
         dataMap.put(context, new innerData());
     }
 

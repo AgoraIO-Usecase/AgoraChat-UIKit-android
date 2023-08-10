@@ -112,10 +112,11 @@
     <string name="ease_error_message_not_exist">Message does not exist.</string>
 
     <string name="ease_chat_inputmenu_quote_reply_to">Replying to</string>
-    <string name="ease_combine_default">A Chat history</string>
+    <string name="ease_combine_default">Chat history</string>
+    <string name="ease_combine_compatible_default">Version is too low</string>
 
     <string name="ease_message_edit">Message Edit</string>
     <string name="ease_message_edited">Message Edited</string>
-    <string name="ease_faile_to_edit">Fail to edit</string>
+    <string name="ease_fail_to_edit">Fail to edit</string>
 
 </resources>

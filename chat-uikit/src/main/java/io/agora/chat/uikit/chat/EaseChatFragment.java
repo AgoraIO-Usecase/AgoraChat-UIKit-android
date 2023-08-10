@@ -92,7 +92,7 @@ import io.agora.util.VersionUtils;
 
 public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutListener, OnMenuChangeListener,
         OnAddMsgAttrsBeforeSendEvent, OnChatRecordTouchListener, OnReactionMessageListener,
-        MultiDeviceListener, ChatThreadChangeListener, OnQuoteViewClickListener, OnModifyMessageListener,ChatQuoteMessageProvider{
+        MultiDeviceListener, ChatThreadChangeListener, OnQuoteViewClickListener, OnModifyMessageListener, ChatQuoteMessageProvider, OnMessageSelectResultListener {
     protected static final int REQUEST_CODE_MAP = 1;
     protected static final int REQUEST_CODE_CAMERA = 2;
     protected static final int REQUEST_CODE_LOCAL = 3;
@@ -121,14 +121,9 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     private OnChatLayoutFinishInflateListener finishInflateListener;
     private OnReactionMessageListener reactionMessageListener;
     private OnMessageSelectResultListener messageSelectResultListener;
+    private OnModifyMessageListener modifyMessageListener;
     private EaseMessageAdapter messageAdapter;
     private boolean sendOriginalImage;
-    /**
-     * The inner label is used to mark whether a reference operation is in progress.
-     */
-    private boolean isQuoting = false;
-    private JSONObject quoteObject = null;
-    private FrameLayout flLayout;
     private final ActivityResultLauncher<Intent> launcherToCamera = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
             , result -> onActivityResult(result, REQUEST_CODE_CAMERA));
     private final ActivityResultLauncher<Intent> launcherToAlbum = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
@@ -171,7 +166,6 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     public void initView() {
         titleBar = findViewById(R.id.title_bar);
         chatLayout = findViewById(R.id.layout_chat);
-        flLayout = findViewById(R.id.fl_layout);
         if (this.messageAdapter != null) {
             chatLayout.getChatMessageListLayout().setMessageAdapter(this.messageAdapter);
         }
@@ -262,7 +256,6 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
         setCustomExtendMenu();
         setCustomTopExtendMenu();
-        AddCustomLongClickMenu();
         initSubView();
         // Provide views after finishing inflate
         if (finishInflateListener != null) {
@@ -289,6 +282,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             EaseChatInterfaceManager.getInstance().setInterface(mContext, OnQuoteViewClickListener.class.getSimpleName(), this);
             EaseChatInterfaceManager.getInstance().setInterface(mContext, ChatQuoteMessageProvider.class.getSimpleName(), this);
         }
+        chatLayout.setOnSelectClickListener(this);
     }
 
     public void initData() {
@@ -355,69 +349,6 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         chatLayout.getChatInputMenu().setCustomTopExtendMenu(quoteView);
         chatLayout.getChatInputMenu().showTopExtendMenu(true);
         chatLayout.getChatInputMenu().getPrimaryMenu().setVisible(View.VISIBLE);
-    }
-
-    /**
-     * Show multi select view on EaseChatInputMenu.
-     */
-    public void showMultiSelectView() {
-        if(!EaseConfigsManager.enableSendCombineMessage()) {
-            return;
-        }
-        EaseChatMultiSelectView multiSelectView = new EaseChatMultiSelectView(mContext);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        multiSelectView.setLayoutParams(params);
-        multiSelectView.setOnDismissListener(view -> chatLayout.getChatInputMenu().getPrimaryMenu().setVisible(View.VISIBLE));
-        multiSelectView.setOnSelectClickListener(new EaseChatMultiSelectView.OnSelectClickListener() {
-            @Override
-            public void onMultiDeleteClick(List<String> deleteMsgIdList) {
-                if(messageSelectResultListener != null && messageSelectResultListener.onMessageDelete(multiSelectView, deleteMsgIdList)) {
-                    return;
-                }
-                chatLayout.deleteMessages(deleteMsgIdList);
-            }
-
-            @Override
-            public void onMultiReplyClick(List<String> replyMsgIdList) {
-                if(messageSelectResultListener != null && messageSelectResultListener.onMessageReply(multiSelectView, replyMsgIdList)) {
-                    return;
-                }
-                //EaseChatMessageMultiSelectHelper.getCombineMessageSummary(replyMsgIdList);
-            }
-        });
-        multiSelectView.setupWithAdapter(messageAdapter);
-        chatLayout.getChatInputMenu().setCustomTopExtendMenu(multiSelectView);
-        chatLayout.getChatInputMenu().showTopExtendMenu(true);
-        chatLayout.getChatInputMenu().hideInputMenu();
-    }
-
-    private void AddCustomLongClickMenu() {
-        // after copy
-        if(EaseConfigsManager.enableReplyMessage()) {
-            MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_reply, (getTargetPosition(R.id.action_chat_copy) + 1) * 10 + 5, mContext.getString(R.string.ease_action_reply));
-            itemBean.setResourceId(R.drawable.ease_chat_item_menu_reply);
-            chatLayout.addItemMenu(itemBean);
-        }
-        if(EaseConfigsManager.enableSendCombineMessage()) {
-            MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_select, (getTargetPosition(R.id.action_chat_delete) + 1) * 10 - 5, mContext.getString(R.string.ease_action_select));
-            itemBean.setResourceId(R.drawable.ease_chat_item_menu_select);
-            chatLayout.addItemMenu(itemBean);
-        }
-
-        MenuItemBean itemBean = new MenuItemBean(0, R.id.action_chat_edit, chatLayout.getMenuHelper().getLength() * 10, mContext.getString(R.string.ease_action_edit));
-        itemBean.setResourceId(R.drawable.ease_chat_item_menu_edit);
-        chatLayout.addItemMenu(itemBean);
-
-    }
-
-    private int getTargetPosition(int id) {
-        for (int i = 0; i < EaseMessageMenuData.MENU_ITEM_IDS.length; i++) {
-            int menuItemId = EaseMessageMenuData.MENU_ITEM_IDS[i];
-            if(id == menuItemId) {
-                return i;
-            }
-        }
-        return EaseMessageMenuData.MENU_ITEM_IDS.length - 1;
     }
 
     @Override
@@ -540,6 +471,10 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         this.messageSelectResultListener = messageSelectResultListener;
     }
 
+    private void setOnModifyMessageListener(OnModifyMessageListener listener) {
+        this.modifyMessageListener = listener;
+    }
+
     private void setCustomAdapter(EaseMessageAdapter adapter) {
         this.messageAdapter = adapter;
     }
@@ -616,10 +551,6 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     @Override
     public void onSuccess(ChatMessage message) {
-        if (isQuoting && message.getType() == ChatMessage.Type.TXT) {
-            isQuoting = false;
-            chatLayout.getChatInputMenu().getChatTopExtendMenu().showTopExtendMenu(false);
-        }
         // you can do something after sending a successful message
         if (messageSendCallBack != null) {
             messageSendCallBack.onSuccess(message);
@@ -628,10 +559,6 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     @Override
     public void onError(int code, String errorMsg) {
-        if (isQuoting) {
-            isQuoting = false;
-            chatLayout.getChatInputMenu().getChatTopExtendMenu().showTopExtendMenu(false);
-        }
         if (messageSendCallBack != null) {
             messageSendCallBack.onError(code, errorMsg);
         }
@@ -802,116 +729,23 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
 
     @Override
     public void onPreMenu(EasePopupWindowHelper helper, ChatMessage message) {
-        helper.findItemVisible(R.id.action_chat_select, true);
         boolean isThreadNotify = message.getBooleanAttribute(EaseConstant.EASE_THREAD_NOTIFICATION_TYPE, false);
-        helper.findItemVisible(R.id.action_chat_reply, message.status() == ChatMessage.Status.SUCCESS);
-        helper.findItemVisible(R.id.action_chat_select, message.status() == ChatMessage.Status.SUCCESS);
         if(isThreadNotify) {
             helper.setAllItemsVisible(false);
             helper.showHeaderView(false);
             helper.findItemVisible(R.id.action_chat_delete, true);
         }
         helper.findItem(R.id.action_chat_recall).setTitleColor(ContextCompat.getColor(mContext, R.color.ease_message_unsend_menu_txt));
-        helper.findItemVisible(R.id.action_chat_edit, canEdit(message));
     }
 
     @Override
     public boolean onMenuItemClick(MenuItemBean item, ChatMessage message) {
-        if(item.getItemId() == R.id.action_chat_reply) {
-            setCustomTopExtendMenu();
-            onQuoteMenuItemClick(message);
-            return true;
-        } else if (item.getItemId() == R.id.action_chat_select) {
-            showMultiSelectDialog(message);
-            return true;
-        } else if (item.getItemId() == R.id.action_chat_edit) {
-            if (canEdit(message)) {
-                showEditMessageDialog(message);
-                return true;
-            }
-        }
         return false;
-    }
-
-    private void showEditMessageDialog(ChatMessage message) {
-        EaseAlertDialog dialog = new EaseAlertDialog.Builder<>(mContext)
-                .setGravity(Gravity.BOTTOM)
-                .setContentView(R.layout.ease_dialog_message_edit)
-                .setFullWidth()
-                .setCancelable(true)
-                .show();
-        EditText editText = dialog.getViewById(R.id.edt_msg_edit);
-        TextView tvDone = dialog.getViewById(R.id.tv_done);
-        String content = ((TextMessageBody) message.getBody()).getMessage();
-        dialog.setOnClickListener(R.id.tv_cancel, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        dialog.setOnClickListener(R.id.tv_done, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-                String newContent = editText.getText().toString().trim();
-                if (!TextUtils.isEmpty(newContent)) {
-                    TextMessageBody textMessageBody = new TextMessageBody(newContent);
-                    chatLayout.modifyMessage(message.getMsgId() , textMessageBody);
-                }
-
-            }
-        });
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() == 0) {
-                    if (editText != null) {
-                        editText.setHint(content);
-                    }
-                    if (tvDone != null) {
-                        tvDone.setEnabled(false);
-                    }
-                } else {
-                    editText.setSelection(s.length());
-                    if (tvDone != null) {
-                        tvDone.setEnabled(true);
-                    }
-                }
-            }
-        });
-        editText.setText(content);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showKeyboard(editText);
-            }
-        }, 200);
-
-    }
-
-    protected void showMultiSelectDialog(ChatMessage message) {
-        showMultiSelectView();
     }
 
     @Override
     public void addMsgAttrsBeforeSend(ChatMessage message) {
-        if (message != null && message.getType() == ChatMessage.Type.TXT && isQuoting) {
-            message.setAttribute(EaseConstant.QUOTE_MSG_QUOTE, quoteObject);
-        }
+
     }
 
     /**
@@ -999,85 +833,33 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
     }
 
-    public void onQuoteMenuItemClick(ChatMessage message) {
-        isQuoting = true;
-        quoteObject = new JSONObject();
-        try {
-            if (message.getBody() != null) {
-                quoteObject.put(EaseConstant.QUOTE_MSG_ID, message.getMsgId());
-                if (message.getType() == ChatMessage.Type.TXT && !TextUtils.isEmpty(((TextMessageBody) message.getBody()).getMessage())) {
-                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, ((TextMessageBody) message.getBody()).getMessage());
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "txt");
-                } else if (message.getType() == ChatMessage.Type.IMAGE) {
-                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, getResources().getString(R.string.ease_picture));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "img");
-                } else if (message.getType() == ChatMessage.Type.VIDEO) {
-                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, getResources().getString(R.string.ease_video));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "video");
-                } else if (message.getType() == ChatMessage.Type.LOCATION) {
-                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, getResources().getString(R.string.ease_location));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "location");
-                } else if (message.getType() == ChatMessage.Type.VOICE) {
-                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, getResources().getString(R.string.ease_voice));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "audio");
-                } else if (message.getType() == ChatMessage.Type.FILE) {
-                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, getResources().getString(R.string.ease_file));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "file");
-                } else if (message.getType() == ChatMessage.Type.CUSTOM) {
-                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, getResources().getString(R.string.ease_custom));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "custom");
-                } else {
-                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, "[" + message.getType().name().toLowerCase() + "]");
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, message.getType().name().toLowerCase());
-                }
-                quoteObject.put(EaseConstant.QUOTE_MSG_SENDER, message.getFrom());
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        ((EaseChatExtendQuoteView) (chatLayout.getChatInputMenu().getChatTopExtendMenu())).startQuote(message);
-        chatLayout.getChatInputMenu().getPrimaryMenu().showTextStatus();
-    }
-
     @Override
     public void onModifyMessageSuccess(ChatMessage messageModified) {
         EMLog.e(TAG, "onModifyMessageSuccess !");
+        if(modifyMessageListener != null) {
+            modifyMessageListener.onModifyMessageSuccess(messageModified);
+        }
     }
 
     @Override
     public void onModifyMessageFailure(String messageId, int code, String error) {
         EMLog.e(TAG, "onModifyMessageFailure !messageId =" + messageId + ",code =" + code + ",error =" + error);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                showEditMessageFailureDialog();
-            }
-        });
-
-    }
-
-    private void showEditMessageFailureDialog() {
-        View view = getLayoutInflater().inflate(R.layout.ease_dialog_message_edit_fail, null);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
-        );
-        layoutParams.gravity = Gravity.CENTER;
-        view.setLayoutParams(layoutParams);
-        flLayout.addView(view);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (flLayout != null) {
-                    flLayout.removeView(view);
-                }
-            }
-        }, 1000);
+        if(modifyMessageListener != null) {
+            modifyMessageListener.onModifyMessageFailure(messageId, code, error);
+        }
     }
 
     @Override
     public SpannableString provideQuoteContent(ChatMessage quoteMessage, ChatMessage.Type quoteMsgType, String quoteSender, String quoteContent) {
         return null;
+    }
+
+    @Override
+    public boolean onSelectResult(View view, SelectType type, List<String> msgIdList) {
+        if(messageSelectResultListener != null && messageSelectResultListener.onSelectResult(view, type, msgIdList)) {
+            return true;
+        }
+        return false;
     }
 
     public static class Builder {
@@ -1095,6 +877,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         private OnChatLayoutFinishInflateListener finishInflateListener;
         protected EaseChatFragment customFragment;
         private OnMessageSelectResultListener messageSelectResultListener;
+        private OnModifyMessageListener modifyMessageListener;
 
         /**
          * Constructor
@@ -1388,6 +1171,16 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
         }
 
         /**
+         * Set the message modification listener.
+         * @param listener
+         * @return
+         */
+        public Builder setOnModifyMessageListener(OnModifyMessageListener listener) {
+            this.modifyMessageListener = listener;
+            return this;
+        }
+
+        /**
          * Whether to hide receiver's avatar
          *
          * @param hide
@@ -1525,6 +1318,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
             fragment.setCustomAdapter(this.adapter);
             fragment.setOnReactionMessageListener(this.reactionMessageListener);
             fragment.setOnMessageSelectResultListener(messageSelectResultListener);
+            fragment.setOnModifyMessageListener(modifyMessageListener);
             return fragment;
         }
     }

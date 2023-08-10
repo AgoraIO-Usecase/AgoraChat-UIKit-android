@@ -9,22 +9,19 @@ import java.util.List;
  */
 public interface OnMessageSelectResultListener {
 
-    /**
-     * The event of deleting messages.
-     *
-     * @param view              The EaseChatMultiSelectView object.
-     * @param deleteMsgIdList
-     * @return
-     */
-    boolean onMessageDelete(View view, List<String> deleteMsgIdList);
+    enum SelectType {
+        DELETE,
+        FORWARD
+    }
 
     /**
-     * The event of replying messages.
+     * Callback when the selected messages are deleted or forwarded.
      *
-     * @param view              The EaseChatMultiSelectView object.
-     * @param replyMsgIdList
+     * @param view             The EaseChatMultiSelectView object.
+     * @param type             The type of the selected messages.
+     * @param msgIdList        The list of the selected messages.
      * @return
      */
-    boolean onMessageReply(View view, List<String> replyMsgIdList);
+    boolean onSelectResult(View view, SelectType type, List<String> msgIdList);
 
 }

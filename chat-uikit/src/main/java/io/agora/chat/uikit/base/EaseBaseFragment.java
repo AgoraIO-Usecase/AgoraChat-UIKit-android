@@ -9,6 +9,7 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import io.agora.chat.uikit.manager.EaseSoftKeyboardHelper;
 import io.agora.chat.uikit.manager.EaseThreadManager;
 
 
@@ -42,21 +43,15 @@ public class EaseBaseFragment extends Fragment {
     }
 
     public  void showKeyboard(final View view) {
-        if (view == null) return;
-        view.requestFocus();
-        InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.showSoftInput(view, 0);
+        EaseSoftKeyboardHelper.showKeyboard(view);
     }
 
     public  void hideKeyboard(final View view) {
-        if (view == null) return;
-        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        EaseSoftKeyboardHelper.hideKeyboard(view);
     }
 
-    public static void toggleKeyboard(Context context) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, 0);
+    public void toggleKeyboard(Context context) {
+        EaseSoftKeyboardHelper.toggleKeyboard(context);
     }
 
     /**
