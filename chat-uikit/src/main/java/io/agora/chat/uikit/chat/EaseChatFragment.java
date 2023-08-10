@@ -886,6 +886,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
                         tvDone.setEnabled(false);
                     }
                 } else {
+                    editText.setSelection(s.length());
                     if (tvDone != null) {
                         tvDone.setEnabled(true);
                     }
