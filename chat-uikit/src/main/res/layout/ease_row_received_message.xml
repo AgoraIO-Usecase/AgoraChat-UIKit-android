@@ -90,6 +90,25 @@
             app:layout_constraintTop_toBottomOf="@id/bubble"
             style="@style/ease_chat_row_reaction_style"/>
 
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="tv_subReactionContent,bubble" />
+
+        <TextView
+            android:id="@+id/tv_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/ease_message_edited"
+            android:textColor="@color/ease_color_gray_999999"
+            android:textSize="11sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/bubble"
+            app:layout_constraintTop_toBottomOf="@id/barrier" />
+
         <TextView
             android:id="@+id/tv_userid"
             style="@style/ease_chat_row_text_name_style"
