@@ -99,6 +99,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     private boolean isReachedLatestThreadMessage = false;
 
     private int retrievalSize = QUOTE_DEFAULT_SEARCH_COUNT;
+    /**
+     * Whether to scroll to the bottom when the message list changes.
+     */
+    private boolean isNeedScrollToBottomWhenChange = true;
 
     public EaseChatMessageListLayout(@NonNull Context context) {
         this(context, null);
@@ -413,7 +417,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                 }
                 if(recyclerViewLastHeight != height) {
                     if(messageAdapter.getData() != null && !messageAdapter.getData().isEmpty()) {
-                        if(loadDataType != LoadDataType.HISTORY) {
+                        if(isNeedScrollToLast()) {
                             if(rvList.canScrollVertically(1)) {
                                 post(()-> seekToPosition(messageAdapter.getData().size() - 1));
                             }
@@ -425,6 +429,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         });
 
         setAdapterListener();
+    }
+
+    private boolean isNeedScrollToLast() {
+        return loadDataType != LoadDataType.HISTORY && isNeedScrollToBottomWhenChange;
     }
 
     private void setAdapterListener() {
@@ -1103,6 +1111,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }else {
             srlRefresh.setRefreshing(false);
         }
+    }
+
+    @Override
+    public void isNeedScrollToBottomWhenViewChange(boolean isNeedToScrollBottom) {
+        this.isNeedScrollToBottomWhenChange = isNeedToScrollBottom;
     }
 
     public static boolean isVisibleBottom(RecyclerView recyclerView) {

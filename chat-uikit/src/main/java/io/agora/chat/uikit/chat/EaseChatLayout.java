@@ -1242,7 +1242,10 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         EaseChatMultiSelectView multiSelectView = new EaseChatMultiSelectView(context());
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         multiSelectView.setLayoutParams(params);
-        multiSelectView.setOnDismissListener(view -> getChatInputMenu().getPrimaryMenu().setVisible(View.VISIBLE));
+        multiSelectView.setOnDismissListener(view -> {
+            getChatInputMenu().getPrimaryMenu().setVisible(View.VISIBLE);
+            messageListLayout.isNeedScrollToBottomWhenViewChange(true);
+        });
         multiSelectView.setOnSelectClickListener(new EaseChatMultiSelectView.OnSelectClickListener() {
             @Override
             public void onMultiSelectClick(EaseChatMultiSelectView.MultiSelectType type, List<String> msgIdList) {
@@ -1269,6 +1272,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         }
         getChatInputMenu().showTopExtendMenu(true);
         getChatInputMenu().hideInputMenu();
+        messageListLayout.isNeedScrollToBottomWhenViewChange(false);
     }
 
     private void showEditMessageDialog(ChatMessage message) {

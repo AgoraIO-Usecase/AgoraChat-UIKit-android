@@ -56,5 +56,17 @@ public interface IRecyclerViewHandle {
      * @param position
      */
     void highlightItem(int position);
+
+    /**
+     * Notify the widget that refresh state has changed.
+     * @param refreshing
+     */
+    void setRefreshing(boolean refreshing);
+
+    /**
+     * Whether to scroll to the bottom when the RecyclerView's height changes
+     * @param isNeedToScrollBottom
+     */
+    void isNeedScrollToBottomWhenViewChange(boolean isNeedToScrollBottom);
 }
 
