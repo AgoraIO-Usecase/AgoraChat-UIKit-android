@@ -3,6 +3,7 @@ package io.agora.chat.uikit.chat.presenter;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.agora.CallBack;
@@ -26,6 +27,7 @@ import io.agora.util.EMLog;
 
 public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     private static final String TAG = EaseChatLayout.class.getSimpleName();
+    private ArrayList<ChatMessage> messages = new ArrayList<>();
 
     @Override
     public void sendTextMessage(String content) {
@@ -49,6 +51,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
 
     @Override
     public void sendAtMessage(String content) {
+        messages.clear();
         if(!isGroupChat()){
             EMLog.e(TAG, "only support group chat message");
             if(isActive()) {
@@ -57,13 +60,18 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             return;
         }
         ChatMessage message = ChatMessage.createTxtSendMessage(content, toChatUsername);
-        Group group = ChatClient.getInstance().groupManager().getGroup(toChatUsername);
-        if(ChatClient.getInstance().getCurrentUser().equals(group.getOwner()) && EaseAtMessageHelper.get().containsAtAll(content)){
-            message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL);
-        }else {
-            message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG,
-                    EaseAtMessageHelper.get().atListToJsonArray(EaseAtMessageHelper.get().getAtMessageUsernames(content)));
+        if (message != null){
+            message.setChatType(ChatMessage.ChatType.GroupChat);
+            Group group = ChatClient.getInstance().groupManager().getGroup(toChatUsername);
+            if(ChatClient.getInstance().getCurrentUser().equals(group.getOwner()) && EaseAtMessageHelper.get().containsAtAll(content)){
+                message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL);
+            }else {
+                message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG,
+                        EaseAtMessageHelper.get().atListToJsonArray(EaseAtMessageHelper.get().getAtMessageUsernames(content)));
+            }
         }
+        messages.add(message);
+        EaseAtMessageHelper.get().parseMessages(messages);
         sendMessage(message);
     }
 

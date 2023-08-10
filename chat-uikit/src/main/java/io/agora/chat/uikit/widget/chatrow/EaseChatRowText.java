@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +12,9 @@ import android.widget.TextView.BufferType;
 
 import androidx.core.content.ContextCompat;
 
+import org.json.JSONArray;
+
+import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.R;
@@ -25,6 +29,8 @@ import io.agora.util.EMLog;
 public class EaseChatRowText extends EaseChatRow {
 	private TextView contentView;
     private EaseChatQuoteView quoteView;
+    public static final String AT_PREFIX = "@";
+    public static final String AT_SUFFIX = " ";
 
     public EaseChatRowText(Context context, boolean isSender) {
 		super(context, isSender);
@@ -65,6 +71,7 @@ public class EaseChatRowText extends EaseChatRow {
                 }
             });
             replaceSpan();
+            replacePickAtSpan();
         }
         resetBackground();
         onSetUpQuoteView(message);
@@ -149,5 +156,45 @@ public class EaseChatRowText extends EaseChatRow {
                 ackedView.setText(String.format(getContext().getString(R.string.ease_group_ack_read_count), count));
             }
         });
+    }
+
+    private void replacePickAtSpan(){
+        if (message.ext().containsKey(EaseConstant.MESSAGE_ATTR_AT_MSG)){
+            String atAll = ""; String atMe = "";
+            int start = 0;  int end = 0;
+            try {
+                JSONArray jsonArray = message.getJSONArrayAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG);
+                for(int i = 0; i < jsonArray.length(); i++){
+                    String username = jsonArray.getString(i);
+                    if(ChatClient.getInstance().getCurrentUser().equals(username)){
+                        atMe = username;
+                    }
+                }
+            } catch (Exception e) {
+                String atUsername = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, null);
+                if(atUsername != null){
+                    String s = atUsername.toUpperCase();
+                    if(s.equals((EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL).toUpperCase())){
+                        atAll = atUsername;
+                    }
+                }
+            }
+
+            if (!TextUtils.isEmpty(atMe)){
+                atMe = AT_PREFIX + atMe + AT_SUFFIX;
+                start = contentView.getText().toString().indexOf(atMe);
+                end = start + atMe.length();
+            }else {
+                atAll = AT_PREFIX + atAll + AT_SUFFIX;
+                start = contentView.getText().toString().indexOf(atAll);
+                end = start + atAll.length();
+            }
+
+            if (start != -1 && end > 0){
+                Spannable spannable = (Spannable) contentView.getText();
+                spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.color_conversation_title)), start
+                        , end, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+        }
     }
 }
