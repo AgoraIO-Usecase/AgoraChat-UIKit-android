@@ -8,6 +8,7 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.MessageBody;
 import io.agora.chat.uikit.chat.widget.EaseChatInputMenu;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
+import io.agora.chat.uikit.chat.widget.EaseChatMultiSelectView;
 
 
 public interface IChatLayout {
@@ -190,4 +191,10 @@ public interface IChatLayout {
      * @param reactionListener
      */
     void setOnReactionListener(OnReactionMessageListener reactionListener);
+
+    /**
+     * Set the listener of multi-select.
+     * @param listener  The listener of multi-select.
+     */
+    void setOnSelectClickListener(OnMessageSelectResultListener listener);
 }

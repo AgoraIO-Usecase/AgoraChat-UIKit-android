@@ -83,15 +83,6 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         addHeaderViewToList();
     }
 
-    @Override
-    public void showMultiSelectView() {
-        super.showMultiSelectView();
-        IChatTopExtendMenu chatTopExtendMenu = chatLayout.getChatInputMenu().getChatTopExtendMenu();
-        if(chatTopExtendMenu instanceof EaseChatMultiSelectView) {
-            ((EaseChatMultiSelectView) chatTopExtendMenu).findViewById(R.id.iv_multi_select_delete).setVisibility(View.INVISIBLE);
-        }
-    }
-
     private void addHeaderViewToList() {
         if(hideHeader) {
             return;

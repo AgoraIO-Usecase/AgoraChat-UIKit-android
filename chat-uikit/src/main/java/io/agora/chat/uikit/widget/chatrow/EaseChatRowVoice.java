@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.FileMessageBody;
@@ -67,7 +69,9 @@ public class EaseChatRowVoice extends EaseChatRowFile {
             FileMessageBody.EMDownloadStatus downloadStatus = voiceBody.downloadStatus();
             if(downloadStatus == FileMessageBody.EMDownloadStatus.PENDING &&
                     ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
-                ChatClient.getInstance().chatManager().downloadAttachment(message);
+                if(!new File(voiceBody.getLocalUrl()).exists()) {
+                    ChatClient.getInstance().chatManager().downloadAttachment(message);
+                }
             }
             if(readStatusView != null) {
                 if (message.isListened()) {

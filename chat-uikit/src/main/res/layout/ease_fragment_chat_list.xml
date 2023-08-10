@@ -12,17 +12,10 @@
         android:visibility="gone"
         app:titleBarTitlePosition="left" />
 
-    <FrameLayout
-        android:id="@+id/fl_layout"
+    <io.agora.chat.uikit.chat.EaseChatLayout
+        android:id="@+id/layout_chat"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <io.agora.chat.uikit.chat.EaseChatLayout
-            android:id="@+id/layout_chat"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white" />
-    </FrameLayout>
-
+        android:layout_height="match_parent"
+        android:background="@color/white" />
 
 </LinearLayout>

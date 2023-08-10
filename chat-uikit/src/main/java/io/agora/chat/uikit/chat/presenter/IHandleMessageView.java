@@ -1,6 +1,8 @@
 package io.agora.chat.uikit.chat.presenter;
 
 
+import org.json.JSONObject;
+
 import io.agora.chat.ChatMessage;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
 
@@ -120,5 +122,18 @@ public interface IHandleMessageView extends ILoadDataView {
      * @param error
      */
     void onModifyMessageFailure(String messageId, int code, String error);
+
+    /**
+     * create reply message ext success.
+     * @param extObject reply ext object.
+     */
+    void createReplyMessageExtSuccess(JSONObject extObject);
+
+    /**
+     * create reply message ext fail.
+     * @param code  error code.
+     * @param error error message.
+     */
+    void createReplyMessageExtFail(int code, String error);
 
 }
