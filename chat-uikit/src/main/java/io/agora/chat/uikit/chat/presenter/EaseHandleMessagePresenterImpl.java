@@ -30,7 +30,6 @@ import io.agora.util.EMLog;
 
 public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     private static final String TAG = EaseChatLayout.class.getSimpleName();
-    private ArrayList<ChatMessage> messages = new ArrayList<>();
 
     @Override
     public void sendTextMessage(String content) {
@@ -54,7 +53,6 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
 
     @Override
     public void sendAtMessage(String content) {
-        messages.clear();
         if(!isGroupChat()){
             EMLog.e(TAG, "only support group chat message");
             if(isActive()) {
@@ -73,8 +71,6 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
                         EaseAtMessageHelper.get().atListToJsonArray(EaseAtMessageHelper.get().getAtMessageUsernames(content)));
             }
         }
-        messages.add(message);
-        EaseAtMessageHelper.get().parseMessages(messages);
         sendMessage(message);
     }
 

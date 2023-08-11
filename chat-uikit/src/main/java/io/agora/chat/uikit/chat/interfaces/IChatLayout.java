@@ -6,12 +6,18 @@ import java.util.List;
 
 import io.agora.chat.ChatMessage;
 import io.agora.chat.MessageBody;
+import io.agora.chat.uikit.chat.presenter.EaseHandleMessagePresenter;
 import io.agora.chat.uikit.chat.widget.EaseChatInputMenu;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
-import io.agora.chat.uikit.chat.widget.EaseChatMultiSelectView;
 
 
 public interface IChatLayout {
+
+    /**
+     * set external Presenter
+     * @param presenter
+     */
+    void setPresenter(EaseHandleMessagePresenter presenter);
     /**
      * Get chat list
      * @return

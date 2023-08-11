@@ -425,6 +425,15 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     @Override
+    public void setPresenter(EaseHandleMessagePresenter presenter) {
+        this.presenter = presenter;
+        if(context() instanceof AppCompatActivity) {
+            ((AppCompatActivity) context()).getLifecycle().addObserver(presenter);
+        }
+        presenter.attachView(this);
+    }
+
+    @Override
     public EaseChatMessageListLayout getChatMessageListLayout() {
         return messageListLayout;
     }
