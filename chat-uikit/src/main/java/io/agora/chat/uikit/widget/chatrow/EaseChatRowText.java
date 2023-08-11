@@ -3,7 +3,6 @@ package io.agora.chat.uikit.widget.chatrow;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.TextView;
@@ -14,11 +13,9 @@ import androidx.core.content.ContextCompat;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
 import io.agora.chat.uikit.widget.EaseChatQuoteView;
-import io.agora.exceptions.ChatException;
 import io.agora.util.EMLog;
 
 
