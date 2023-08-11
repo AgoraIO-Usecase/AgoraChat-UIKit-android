@@ -3,7 +3,6 @@ package io.agora.chat.uikit.chat.presenter;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,15 +60,12 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             return;
         }
         ChatMessage message = ChatMessage.createTxtSendMessage(content, toChatUsername);
-        if (message != null){
-            message.setChatType(ChatMessage.ChatType.GroupChat);
-            Group group = ChatClient.getInstance().groupManager().getGroup(toChatUsername);
-            if(ChatClient.getInstance().getCurrentUser().equals(group.getOwner()) && EaseAtMessageHelper.get().containsAtAll(content)){
-                message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL);
-            }else {
-                message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG,
-                        EaseAtMessageHelper.get().atListToJsonArray(EaseAtMessageHelper.get().getAtMessageUsernames(content)));
-            }
+        Group group = ChatClient.getInstance().groupManager().getGroup(toChatUsername);
+        if(ChatClient.getInstance().getCurrentUser().equals(group.getOwner()) && EaseAtMessageHelper.get().containsAtAll(content)){
+            message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL);
+        }else {
+            message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG,
+                    EaseAtMessageHelper.get().atListToJsonArray(EaseAtMessageHelper.get().getAtMessageUsernames(content)));
         }
         sendMessage(message);
     }

@@ -125,7 +125,7 @@ public abstract class EaseChatRow extends LinearLayout {
     private Handler mainThreadHandler;
 
     protected MessageListItemClickListener itemClickListener;
-    protected EaseChatRowActionCallback itemActionCallback;
+    private EaseChatRowActionCallback itemActionCallback;
     private EaseChatRowThreadRegion threadRegion;
     protected EaseChatReactionView reactionContentView;
 
@@ -897,6 +897,5 @@ public abstract class EaseChatRow extends LinearLayout {
          * when view detach from window
          */
         void onDetachedFromWindow();
-
     }
 }
