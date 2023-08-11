@@ -2,18 +2,19 @@ package io.agora.chat.uikit.widget.chatrow;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import androidx.annotation.NonNull;
+
+import io.agora.CallBack;
+import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.NormalFileMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.provider.EaseFileIconProvider;
-import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.util.TextFormater;
 
 /**
@@ -35,6 +36,7 @@ public class EaseChatRowFile extends EaseChatRow {
     protected TextView fileStateView;
     private NormalFileMessageBody fileMessageBody;
     private ImageView ivFileIcon;
+    private boolean isDownloading = false;
 
     public EaseChatRowFile(Context context, boolean isSender) {
         super(context, isSender);
@@ -104,4 +106,59 @@ public class EaseChatRowFile extends EaseChatRow {
             }
         }
     }
+
+    /**
+     * Download file or thumbnail.
+     * @param isThumbnail   Whether to download thumbnail
+     */
+    protected void downloadAttachment(boolean isThumbnail) {
+        if(message != null) {
+            setMessageDownloadCallback();
+            if(isThumbnail) {
+                ChatClient.getInstance().chatManager().downloadThumbnail(message);
+            }else {
+                ChatClient.getInstance().chatManager().downloadAttachment(message);
+            }
+        }
+    }
+
+    @Override
+    public void updateView(ChatMessage msg) {
+        if(!isDownloading) {
+            super.updateView(msg);
+        }
+    }
+
+    /**
+     * Set message download callback.
+     */
+    protected void setMessageDownloadCallback() {
+        if(message != null) {
+            isDownloading = true;
+            message.setMessageStatusCallback(new CallBack() {
+                @Override
+                public void onSuccess() {
+                    post(()->onDownloadAttachmentSuccess());
+                    isDownloading = false;
+                }
+
+                @Override
+                public void onError(int code, String error) {
+                    post(()->onDownloadAttachmentError(code, error));
+                    isDownloading = false;
+                }
+
+                @Override
+                public void onProgress(int progress, String status) {
+                    post(()->onDownloadAttachmentProgress(progress));
+                }
+            });
+        }
+    }
+
+    protected void onDownloadAttachmentSuccess() {}
+
+    protected void onDownloadAttachmentError(int code, String error) {}
+
+    protected void onDownloadAttachmentProgress(int progress) {}
 }

@@ -296,10 +296,10 @@ public class EaseChatThreadParentMsgView extends ConstraintLayout {
 
     private void setVideoMessage(ChatMessage message) {
         hideAllBubble();
-        ViewGroup.LayoutParams params = EaseImageUtils.showVideoThumb(getContext(), binding.chattingContentIv, message);
+        EaseImageUtils.showVideoThumb(getContext(), binding.chattingContentIv, message);
         ViewGroup.LayoutParams bubbleParams = binding.bubbleVideo.getLayoutParams();
-        bubbleParams.width = params.width;
-        bubbleParams.height = params.height;
+        bubbleParams.width = binding.chattingContentIv.getLayoutParams().width;
+        bubbleParams.height = binding.chattingContentIv.getLayoutParams().height;
 
         VideoMessageBody videoBody = (VideoMessageBody) message.getBody();
 

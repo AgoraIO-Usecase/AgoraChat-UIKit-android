@@ -69,7 +69,7 @@ public class EaseChatRowVoice extends EaseChatRowFile {
             FileMessageBody.EMDownloadStatus downloadStatus = voiceBody.downloadStatus();
             if(downloadStatus == FileMessageBody.EMDownloadStatus.PENDING &&
                     ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
-                if(!new File(voiceBody.getLocalUrl()).exists()) {
+                if(isVoiceFileExit(voiceBody)) {
                     ChatClient.getInstance().chatManager().downloadAttachment(message);
                 }
             }
@@ -85,7 +85,7 @@ public class EaseChatRowVoice extends EaseChatRowFile {
             EMLog.d(TAG, "it is receive msg");
             if (voiceBody.downloadStatus() == FileMessageBody.EMDownloadStatus.DOWNLOADING ||
                     voiceBody.downloadStatus() == FileMessageBody.EMDownloadStatus.PENDING) {
-                if (ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
+                if (ChatClient.getInstance().getOptions().getAutodownloadThumbnail() && isVoiceFileExit(voiceBody)) {
                     progressBar.setVisibility(View.VISIBLE);
                 } else {
                     progressBar.setVisibility(View.INVISIBLE);
@@ -106,6 +106,15 @@ public class EaseChatRowVoice extends EaseChatRowFile {
         if (voicePlayer.isPlaying() && message.getMsgId().equals(voicePlayer.getCurrentPlayingId())) {
             startVoicePlayAnimation();
         }
+    }
+
+    /**
+     * Check if the voice file exits.
+     * @param voiceBody
+     * @return
+     */
+    protected boolean isVoiceFileExit(VoiceMessageBody voiceBody) {
+        return new File(voiceBody.getLocalUrl()).exists();
     }
 
     public int getVoicePadding(int voiceLen) {

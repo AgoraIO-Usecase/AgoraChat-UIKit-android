@@ -945,7 +945,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void onMessageSuccess(ChatMessage message) {
-        EMLog.i(TAG, "send message onMessageSuccess");
+        EMLog.i(TAG, "message onMessageSuccess");
         if (isQuoting && message.getType() == ChatMessage.Type.TXT) {
             isQuoting = false;
             getChatInputMenu().getChatTopExtendMenu().showTopExtendMenu(false);
@@ -971,7 +971,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void onMessageInProgress(ChatMessage message, int progress) {
-        EMLog.i(TAG, "send message on progress: "+progress);
+        EMLog.i(TAG, "message in progress: "+progress);
 
     }
 
