@@ -18,6 +18,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -196,6 +197,7 @@ public class EaseChatQuoteView extends LinearLayout {
             EMLog.e(TAG, "message: "+message.getMsgId() + " is not a quote message.");
             return false;
         }
+        quoteDefaultView.setText("");
         setContent(jsonObject);
         this.setVisibility(VISIBLE);
         quoteDefaultView.setVisibility(VISIBLE);
@@ -555,6 +557,14 @@ public class EaseChatQuoteView extends LinearLayout {
             spannableString.setSpan(imageSpan, startIndex, startIndex + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         quoteDefaultView.setText(spannableString);
+        quoteDefaultView.post(()-> {
+            int width = quoteDefaultView.getWidth();
+            if(width == 0) {
+                ViewGroup.LayoutParams layoutParams = quoteDefaultView.getLayoutParams();
+                layoutParams.width = LayoutParams.WRAP_CONTENT;
+                quoteDefaultView.setLayoutParams(layoutParams);
+            }
+        });
         quoteDefaultLayout.setVisibility(View.VISIBLE);
     }
 

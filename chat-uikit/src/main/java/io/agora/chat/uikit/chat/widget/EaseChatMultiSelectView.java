@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.List;
 
+import io.agora.chat.ChatMessage;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
 import io.agora.chat.uikit.chat.interfaces.IChatTopExtendMenu;
@@ -22,6 +23,7 @@ public class EaseChatMultiSelectView extends FrameLayout implements IChatTopExte
     private OnDismissListener dismissListener;
     private OnSelectClickListener clickListener;
     private EaseMessageAdapter messageAdapter;
+    private ChatMessage message;
 
     public EaseChatMultiSelectView(@NonNull Context context) {
         this(context, null);
@@ -47,13 +49,13 @@ public class EaseChatMultiSelectView extends FrameLayout implements IChatTopExte
         ivMultiSelectDelete.setOnClickListener(v -> {
             List<String> sortedMessages = EaseChatMessageMultiSelectHelper.getInstance().getSortedMessages(getContext());
             if(clickListener != null) {
-                clickListener.onMultiDeleteClick(sortedMessages);
+                clickListener.onMultiSelectClick(MultiSelectType.DELETE, sortedMessages);
             }
         });
         ivMultiSelectForward.setOnClickListener(v -> {
             List<String> sortedMessages = EaseChatMessageMultiSelectHelper.getInstance().getSortedMessages(getContext());
             if(clickListener != null) {
-                clickListener.onMultiReplyClick(sortedMessages);
+                clickListener.onMultiSelectClick(MultiSelectType.FORWARD, sortedMessages);
             }
         });
     }
@@ -78,6 +80,10 @@ public class EaseChatMultiSelectView extends FrameLayout implements IChatTopExte
         this.messageAdapter = adapter;
     }
 
+    public void setSelectMessage(ChatMessage message) {
+        this.message = message;
+    }
+
     private void setDismissListener(View view) {
         if(dismissListener != null) {
             dismissListener.onDismiss(view);
@@ -89,6 +95,9 @@ public class EaseChatMultiSelectView extends FrameLayout implements IChatTopExte
         super.onAttachedToWindow();
         EaseChatMessageMultiSelectHelper.getInstance().init(getContext());
         EaseChatMessageMultiSelectHelper.getInstance().setMultiStyle(getContext(), true);
+        if(this.message != null) {
+            EaseChatMessageMultiSelectHelper.getInstance().addChatMessage(getContext(), this.message);
+        }
         notifyAdapter();
     }
 
@@ -122,19 +131,21 @@ public class EaseChatMultiSelectView extends FrameLayout implements IChatTopExte
         void onDismiss(View view);
     }
 
+    /**
+     * Multi select click listener.
+     */
     public interface OnSelectClickListener {
         /**
-         * Click the delete event.
-         * @param deleteMsgIdList
-         * @return
+         * Click the delete or forward event.
+         * @param type  delete or forward
+         * @param msgIdList the message id list
          */
-        void onMultiDeleteClick(List<String> deleteMsgIdList);
+        void onMultiSelectClick(MultiSelectType type, List<String> msgIdList);
 
-        /**
-         * Click the reply event.
-         * @param replyMsgIdList
-         * @return
-         */
-        void onMultiReplyClick(List<String> replyMsgIdList);
+    }
+
+    public enum MultiSelectType {
+        DELETE,
+        FORWARD
     }
 }

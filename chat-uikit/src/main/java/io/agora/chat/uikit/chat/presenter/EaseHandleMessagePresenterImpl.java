@@ -4,6 +4,9 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import io.agora.CallBack;
@@ -198,6 +201,12 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     }
 
     @Override
+    public void sendCombineMessage(String title, String summary, String compatibleText, List<String> msgIds) {
+        ChatMessage message = ChatMessage.createCombinedSendMessage(title, summary, compatibleText, msgIds, toChatUsername);
+        sendMessage(message);
+    }
+
+    @Override
     public void resendMessage(ChatMessage message) {
         message.setStatus(ChatMessage.Status.CREATE);
         long currentTimeMillis = System.currentTimeMillis();
@@ -274,9 +283,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
 
             @Override
             public void onError(int code, String error) {
-                if(isActive()) {
-                    mView.onModifyMessageFailure(messageId, code, error);
-                }
+                runOnUI(()-> mView.onModifyMessageFailure(messageId, code, error));
             }
         });
     }
@@ -331,6 +338,47 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
 
             }
         });
+    }
+
+    @Override
+    public void createReplyMessageExt(ChatMessage message) {
+        JSONObject quoteObject = new JSONObject();
+        try {
+            if (message.getBody() != null) {
+                quoteObject.put(EaseConstant.QUOTE_MSG_ID, message.getMsgId());
+                if (message.getType() == ChatMessage.Type.TXT && !TextUtils.isEmpty(((TextMessageBody) message.getBody()).getMessage())) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, ((TextMessageBody) message.getBody()).getMessage());
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "txt");
+                } else if (message.getType() == ChatMessage.Type.IMAGE) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_picture));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "img");
+                } else if (message.getType() == ChatMessage.Type.VIDEO) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_video));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "video");
+                } else if (message.getType() == ChatMessage.Type.LOCATION) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_location));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "location");
+                } else if (message.getType() == ChatMessage.Type.VOICE) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_voice));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "audio");
+                } else if (message.getType() == ChatMessage.Type.FILE) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_file));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "file");
+                } else if (message.getType() == ChatMessage.Type.CUSTOM) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_custom));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "custom");
+                } else {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, "[" + message.getType().name().toLowerCase() + "]");
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, message.getType().name().toLowerCase());
+                }
+                quoteObject.put(EaseConstant.QUOTE_MSG_SENDER, message.getFrom());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            mView.createReplyMessageExtFail(Error.GENERAL_ERROR, e.getMessage());
+            return;
+        }
+        mView.createReplyMessageExtSuccess(quoteObject);
     }
 }
 

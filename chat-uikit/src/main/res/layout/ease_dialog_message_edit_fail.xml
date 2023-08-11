@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="@string/ease_faile_to_edit"
+            android:text="@string/ease_fail_to_edit"
             android:textColor="@color/ease_color_gray_f9fafa"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"

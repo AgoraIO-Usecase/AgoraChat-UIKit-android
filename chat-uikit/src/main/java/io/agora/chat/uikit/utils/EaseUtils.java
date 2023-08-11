@@ -425,7 +425,7 @@ public class EaseUtils {
     }
 
     public static boolean canEdit(ChatMessage message) {
-        return (message.getType()== ChatMessage.Type.TXT)&&(isGroupOwnerOrAdmin(message) || isSender(message));
+        return message != null && message.status() == ChatMessage.Status.SUCCESS && (message.getType() == ChatMessage.Type.TXT) && (isGroupOwnerOrAdmin(message) || isSender(message));
     }
 
     public static boolean isGroupOwnerOrAdmin(ChatMessage message) {
