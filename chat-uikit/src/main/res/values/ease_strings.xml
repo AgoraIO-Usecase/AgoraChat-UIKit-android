@@ -113,7 +113,7 @@
 
     <string name="ease_chat_inputmenu_quote_reply_to">Replying to</string>
     <string name="ease_combine_default">Chat history</string>
-    <string name="ease_combine_compatible_default">Version is too low</string>
+    <string name="ease_combine_compatible_default">The version is low and unable to display the content.</string>
 
     <string name="ease_message_edit">Message Edit</string>
     <string name="ease_message_edited">Message Edited</string>

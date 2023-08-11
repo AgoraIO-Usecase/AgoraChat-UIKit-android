@@ -33,12 +33,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
+import io.agora.CallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ImageMessageBody;
 import io.agora.chat.MessageBody;
 import io.agora.chat.VideoMessageBody;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.manager.EaseThreadManager;
 import io.agora.util.EMLog;
 import io.agora.util.ImageUtils;
 import io.agora.util.PathUtil;
@@ -94,10 +96,10 @@ public class EaseImageUtils extends ImageUtils {
      * @param message
      * @return
      */
-    public static ViewGroup.LayoutParams showVideoThumb(Context context, ImageView imageView, ChatMessage message) {
+    public static void showVideoThumb(Context context, ImageView imageView, ChatMessage message) {
         MessageBody body = message.getBody();
         if (!(body instanceof VideoMessageBody)) {
-            return imageView.getLayoutParams();
+            return;
         }
         int width = ((VideoMessageBody) body).getThumbnailWidth();
         int height = ((VideoMessageBody) body).getThumbnailHeight();
@@ -107,7 +109,7 @@ public class EaseImageUtils extends ImageUtils {
         if (!EaseFileUtils.isFileExistByUri(context, localThumbUri)) {
             localThumbUri = null;
         }
-        return showImage(context, imageView, localThumbUri, thumbnailUrl, width, height);
+        showImage(context, imageView, localThumbUri, thumbnailUrl, width, height);
     }
 
     public static ViewGroup.LayoutParams getImageShowSize(Context context, ChatMessage message) {
@@ -174,18 +176,19 @@ public class EaseImageUtils extends ImageUtils {
      * @param message
      * @return
      */
-    public static ViewGroup.LayoutParams showImage(Context context, ImageView imageView, ChatMessage message) {
+    public static void showImage(Context context, ImageView imageView, ChatMessage message) {
         MessageBody body = message.getBody();
         if (!(body instanceof ImageMessageBody)) {
-            return imageView.getLayoutParams();
+            return;
         }
-        int width = ((ImageMessageBody) body).getWidth();
-        int height = ((ImageMessageBody) body).getHeight();
-        Uri imageUri = ((ImageMessageBody) body).getLocalUri();
+        ImageMessageBody imageMessageBody = (ImageMessageBody) body;
+        int width = (imageMessageBody).getWidth();
+        int height = (imageMessageBody).getHeight();
+        Uri imageUri = (imageMessageBody).getLocalUri();
         EaseFileUtils.takePersistableUriPermission(context, imageUri);
         EMLog.e("tag", "current show small view big file: uri:" + imageUri + " exist: " + EaseFileUtils.isFileExistByUri(context, imageUri));
         if (!EaseFileUtils.isFileExistByUri(context, imageUri)) {
-            imageUri = ((ImageMessageBody) body).thumbnailLocalUri();
+            imageUri = (imageMessageBody).thumbnailLocalUri();
             EaseFileUtils.takePersistableUriPermission(context, imageUri);
             EMLog.e("tag", "current show small view thumbnail file: uri:" + imageUri + " exist: " + EaseFileUtils.isFileExistByUri(context, imageUri));
             if (!EaseFileUtils.isFileExistByUri(context, imageUri)) {
@@ -206,14 +209,47 @@ public class EaseImageUtils extends ImageUtils {
             }
         }
         String thumbnailUrl = null;
-        // If not auto download thumbnail, do not set remote url
-        if (ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
-            thumbnailUrl = ((ImageMessageBody) body).getThumbnailUrl();
+        // if not auto transfer image, get the remote url
+        if(!ChatClient.getInstance().getOptions().getAutoTransferMessageAttachments()) {
+            thumbnailUrl = (imageMessageBody).getThumbnailUrl();
             if (TextUtils.isEmpty(thumbnailUrl)) {
-                thumbnailUrl = ((ImageMessageBody) body).getRemoteUrl();
+                thumbnailUrl = (imageMessageBody).getRemoteUrl();
             }
+            showImage(context, imageView, imageUri, thumbnailUrl, width, height);
+            return;
         }
-        return showImage(context, imageView, imageUri, thumbnailUrl, width, height);
+        if(imageUri != null && EaseFileUtils.isFileExistByUri(context, imageUri)) {
+            showImage(context, imageView, imageUri, null, width, height);
+            return;
+        }
+        // if auto transfer image to Chat Server, call ChatManager#downloadThumbnail(ChatMessage) to download image from Chat Server
+        int finalHeight = height;
+        int finalWidth = width;
+        imageView.setImageResource(R.drawable.ease_default_image);
+        message.setMessageStatusCallback(new CallBack() {
+            @Override
+            public void onSuccess() {
+                EMLog.d("showImage", "download thumbnail image success");
+                Uri imageUri = (imageMessageBody).thumbnailLocalUri();
+                EaseThreadManager.getInstance().runOnMainThread(()-> {
+                    showImage(context, imageView, imageUri, null, finalWidth, finalHeight);
+                });
+
+            }
+
+            @Override
+            public void onError(int code, String error) {
+                EMLog.e("showImage", "download thumbnail image failed code:" + code + " error:" + error);
+                EaseThreadManager.getInstance().runOnMainThread(()-> {
+                    showImage(context, imageView, null, (imageMessageBody).getThumbnailUrl(), finalWidth, finalHeight);
+                });
+            }
+        });
+        if(TextUtils.isEmpty(imageMessageBody.getThumbnailUrl())) {
+            ChatClient.getInstance().chatManager().downloadAttachment(message);
+            return;
+        }
+        ChatClient.getInstance().chatManager().downloadThumbnail(message);
     }
 
     /**
@@ -238,7 +274,7 @@ public class EaseImageUtils extends ImageUtils {
      * @param imgHeight
      * @return
      */
-    public static ViewGroup.LayoutParams showImage(Context context, ImageView imageView, Uri imageUri, String imageUrl, int imgWidth, int imgHeight) {
+    public static void showImage(Context context, ImageView imageView, Uri imageUri, String imageUrl, int imgWidth, int imgHeight) {
         int[] maxSize = getImageMaxSize(context);
         int maxWidth = maxSize[0];
         int maxHeight = maxSize[1];
@@ -252,10 +288,10 @@ public class EaseImageUtils extends ImageUtils {
 
         if ((maxHeight == 0 && maxWidth == 0) /*|| (width <= maxWidth && height <= maxHeight)*/) {
             if (context instanceof Activity && (((Activity) context).isFinishing() || ((Activity) context).isDestroyed())) {
-                return imageView.getLayoutParams();
+                return;
             }
             Glide.with(context).load(imageUri == null ? imageUrl : imageUri).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
-            return imageView.getLayoutParams();
+            return;
         }
         ViewGroup.LayoutParams params = imageView.getLayoutParams();
         if (mRadio / radio < 0.1f) {
@@ -276,7 +312,7 @@ public class EaseImageUtils extends ImageUtils {
             }
         }
         if (context instanceof Activity && (((Activity) context).isFinishing() || ((Activity) context).isDestroyed())) {
-            return params;
+            return;
         }
         Glide.with(context)
                 .load(imageUri == null ? imageUrl : imageUri)
@@ -285,7 +321,6 @@ public class EaseImageUtils extends ImageUtils {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .override(params.width, params.height)
                 .into(imageView);
-        return params;
     }
 
     public static void setDrawableSize(TextView textView, float defaultSize) {

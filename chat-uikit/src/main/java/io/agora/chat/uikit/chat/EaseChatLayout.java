@@ -954,7 +954,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void onMessageSuccess(ChatMessage message) {
-        EMLog.i(TAG, "send message onMessageSuccess");
+        EMLog.i(TAG, "message onMessageSuccess");
         if (isQuoting && message.getType() == ChatMessage.Type.TXT) {
             isQuoting = false;
             getChatInputMenu().getChatTopExtendMenu().showTopExtendMenu(false);
@@ -980,7 +980,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void onMessageInProgress(ChatMessage message, int progress) {
-        EMLog.i(TAG, "send message on progress: "+progress);
+        EMLog.i(TAG, "message in progress: "+progress);
 
     }
 
@@ -1251,7 +1251,10 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         EaseChatMultiSelectView multiSelectView = new EaseChatMultiSelectView(context());
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         multiSelectView.setLayoutParams(params);
-        multiSelectView.setOnDismissListener(view -> getChatInputMenu().getPrimaryMenu().setVisible(View.VISIBLE));
+        multiSelectView.setOnDismissListener(view -> {
+            getChatInputMenu().getPrimaryMenu().setVisible(View.VISIBLE);
+            messageListLayout.isNeedScrollToBottomWhenViewChange(true);
+        });
         multiSelectView.setOnSelectClickListener(new EaseChatMultiSelectView.OnSelectClickListener() {
             @Override
             public void onMultiSelectClick(EaseChatMultiSelectView.MultiSelectType type, List<String> msgIdList) {
@@ -1278,6 +1281,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         }
         getChatInputMenu().showTopExtendMenu(true);
         getChatInputMenu().hideInputMenu();
+        messageListLayout.isNeedScrollToBottomWhenViewChange(false);
     }
 
     private void showEditMessageDialog(ChatMessage message) {

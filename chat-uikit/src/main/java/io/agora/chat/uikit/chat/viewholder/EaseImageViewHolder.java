@@ -27,22 +27,6 @@ public class EaseImageViewHolder extends EaseChatRowViewHolder {
     public void onBubbleClick(ChatMessage message) {
         super.onBubbleClick(message);
         ImageMessageBody imgBody = (ImageMessageBody) message.getBody();
-        if(ChatClient.getInstance().getOptions().getAutodownloadThumbnail()){
-            if(imgBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.FAILED){
-                getChatRow().updateView(message);
-                // retry download with click event of user
-                ChatClient.getInstance().chatManager().downloadThumbnail(message);
-            }
-        } else{
-            if(imgBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.DOWNLOADING ||
-                    imgBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.PENDING ||
-                    imgBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.FAILED){
-                // retry download with click event of user
-                ChatClient.getInstance().chatManager().downloadThumbnail(message);
-                getChatRow().updateView(message);
-                return;
-            }
-        }
 
         if(!EaseConfigsManager.enableSendChannelAck()) {
             //Here no longer send read_ack message separately, instead enter the chat page to send channel_ack

@@ -43,7 +43,7 @@ public class EaseChatRowHistoryVoice extends EaseChatRowVoice {
             if((voiceBody.downloadStatus() == FileMessageBody.EMDownloadStatus.DOWNLOADING
                     || downloadStatus == FileMessageBody.EMDownloadStatus.PENDING) &&
                     ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
-                if(!new File(voiceBody.getLocalUrl()).exists()) {
+                if(isVoiceFileExit(voiceBody)) {
                     updateView(message);
                     ChatClient.getInstance().chatManager().downloadAttachment(message);
                 }else {
