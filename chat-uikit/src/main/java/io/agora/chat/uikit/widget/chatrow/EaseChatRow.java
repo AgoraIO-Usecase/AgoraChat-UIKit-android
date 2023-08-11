@@ -898,6 +898,5 @@ public abstract class EaseChatRow extends LinearLayout {
          */
         void onDetachedFromWindow();
 
-        default void refreshView(){}
     }
 }
