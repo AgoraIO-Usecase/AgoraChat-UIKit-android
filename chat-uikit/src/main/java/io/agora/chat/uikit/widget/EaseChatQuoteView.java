@@ -54,6 +54,7 @@ import io.agora.chat.VoiceMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.interfaces.ChatQuoteMessageProvider;
+import io.agora.chat.uikit.chat.model.EaseReplyMap;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.IUIKitInterface;
 import io.agora.chat.uikit.interfaces.OnQuoteViewClickListener;
@@ -81,14 +82,14 @@ public class EaseChatQuoteView extends LinearLayout {
 
     private static final Map<String, String> receiveMsgTypes = new HashMap<String, String>() {
         {
-            put("text",ChatMessage.Type.TXT.name());
-            put("img",ChatMessage.Type.IMAGE.name());
-            put("video",ChatMessage.Type.VIDEO.name());
-            put("location",ChatMessage.Type.LOCATION.name());
-            put("audio",ChatMessage.Type.VOICE.name());
-            put("file",ChatMessage.Type.FILE.name());
-            put("cmd",ChatMessage.Type.CMD.name());
-            put("custom",ChatMessage.Type.CUSTOM.name());
+            put(EaseReplyMap.txt.name(),ChatMessage.Type.TXT.name());
+            put(EaseReplyMap.img.name(), ChatMessage.Type.IMAGE.name());
+            put(EaseReplyMap.video.name(), ChatMessage.Type.VIDEO.name());
+            put(EaseReplyMap.location.name(), ChatMessage.Type.LOCATION.name());
+            put(EaseReplyMap.audio.name(), ChatMessage.Type.VOICE.name());
+            put(EaseReplyMap.file.name(), ChatMessage.Type.FILE.name());
+            put(EaseReplyMap.cmd.name(), ChatMessage.Type.CMD.name());
+            put(EaseReplyMap.custom.name(), ChatMessage.Type.CUSTOM.name());
         }
     };
 

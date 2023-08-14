@@ -40,74 +40,62 @@ public class EaseChatQuotePresenterImpl extends EaseChatQuotePresenter {
         StringBuilder builder = new StringBuilder();
         String localPath = null;
         String remoteUrl = null;
-        if(message.isChatThreadMessage()) {
-            ChatThread chatThread = message.getChatThread();
-            String chatThreadName = "";
-            if(chatThread != null) {
-                chatThreadName = chatThread.getChatThreadName();
-            }
-            builder.append(mView.context().getResources().getString(R.string.ease_thread));
-            if(!TextUtils.isEmpty(chatThreadName)) {
-                builder.append(": ").append(chatThreadName);
-            }
-        }else {
-            switch (message.getType()){
-                case TXT:
-                    if (message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)){
-                        builder.append(mView.context().getResources().getString(R.string.ease_emoji));
-                    }else {
-                        TextMessageBody textBody = (TextMessageBody) message.getBody();
-                        builder.append(EaseSmileUtils.getSmiledText(mView.context(), textBody != null ? from + ": " + textBody.getMessage() : "").toString());
+        switch (message.getType()){
+            case TXT:
+                if (message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)){
+                    builder.append(mView.context().getResources().getString(R.string.ease_emoji));
+                }else {
+                    TextMessageBody textBody = (TextMessageBody) message.getBody();
+                    builder.append(EaseSmileUtils.getSmiledText(mView.context(), textBody != null ? from + ": " + textBody.getMessage() : "").toString());
+                }
+                break;
+            case VOICE:
+                VoiceMessageBody voiceBody = (VoiceMessageBody) message.getBody();
+                builder.append(mView.context().getResources().getString(R.string.ease_voice)).append(":").append(((voiceBody != null && voiceBody.getLength() > 0)? voiceBody.getLength() : 0) + "\"");
+                mView.showQuoteMessageAttachment(ChatMessage.Type.VOICE, null, null, R.drawable.ease_chatfrom_voice_playing);
+                break;
+            case VIDEO:
+                builder.append(mView.context().getResources().getString(R.string.ease_video));
+                VideoMessageBody videoBody = (VideoMessageBody) message.getBody();
+                if(videoBody != null) {
+                    if(!TextUtils.isEmpty(videoBody.getLocalThumb()) && EaseFileUtils.isFileExistByUri(mView.context(), videoBody.getLocalThumbUri())) {
+                        localPath = videoBody.getLocalThumb();
                     }
-                    break;
-                case VOICE:
-                    VoiceMessageBody voiceBody = (VoiceMessageBody) message.getBody();
-                    builder.append(mView.context().getResources().getString(R.string.ease_voice)).append(":").append(((voiceBody != null && voiceBody.getLength() > 0)? voiceBody.getLength() : 0) + "\"");
-                    mView.showQuoteMessageAttachment(ChatMessage.Type.VOICE, null, null, R.drawable.ease_chatfrom_voice_playing);
-                    break;
-                case VIDEO:
-                    builder.append(mView.context().getResources().getString(R.string.ease_video));
-                    VideoMessageBody videoBody = (VideoMessageBody) message.getBody();
-                    if(videoBody != null) {
-                        if(!TextUtils.isEmpty(videoBody.getLocalThumb()) && EaseFileUtils.isFileExistByUri(mView.context(), videoBody.getLocalThumbUri())) {
-                            localPath = videoBody.getLocalThumb();
-                        }
-                        remoteUrl = videoBody.getThumbnailUrl();
+                    remoteUrl = videoBody.getThumbnailUrl();
+                }
+                mView.showQuoteMessageAttachment(ChatMessage.Type.VIDEO, localPath, remoteUrl, R.drawable.ease_default_image);
+                break;
+            case FILE:
+                FileMessageBody fileBody = (FileMessageBody) message.getBody();
+                builder.append(mView.context().getResources().getString(R.string.ease_file)).append(fileBody != null ? ": "+fileBody.getFileName() : "");
+                mView.showQuoteMessageAttachment(ChatMessage.Type.FILE, null, null, R.drawable.ease_chat_quote_message_attachment);
+                break;
+            case IMAGE:
+                builder.append(mView.context().getResources().getString(R.string.ease_picture));
+                ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
+                if(imageBody != null) {
+                    if(!TextUtils.isEmpty(imageBody.getThumbnailUrl()) && EaseFileUtils.isFileExistByUri(mView.context(), imageBody.getLocalUri())) {
+                        localPath = imageBody.getLocalUrl();
                     }
-                    mView.showQuoteMessageAttachment(ChatMessage.Type.VIDEO, localPath, remoteUrl, R.drawable.ease_default_image);
-                    break;
-                case FILE:
-                    FileMessageBody fileBody = (FileMessageBody) message.getBody();
-                    builder.append(mView.context().getResources().getString(R.string.ease_file)).append(fileBody != null ? ": "+fileBody.getFileName() : "");
-                    mView.showQuoteMessageAttachment(ChatMessage.Type.FILE, null, null, R.drawable.ease_chat_quote_message_attachment);
-                    break;
-                case IMAGE:
-                    builder.append(mView.context().getResources().getString(R.string.ease_picture));
-                    ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
-                    if(imageBody != null) {
-                        if(!TextUtils.isEmpty(imageBody.getThumbnailUrl()) && EaseFileUtils.isFileExistByUri(mView.context(), imageBody.getLocalUri())) {
-                            localPath = imageBody.getLocalUrl();
-                        }
-                        remoteUrl = imageBody.getRemoteUrl();
-                    }
-                    mView.showQuoteMessageAttachment(ChatMessage.Type.IMAGE, localPath, remoteUrl, R.drawable.ease_default_image);
-                    break;
-                case LOCATION:
-                    LocationMessageBody locationBody = (LocationMessageBody) message.getBody();
-                    builder.append(mView.context().getResources().getString(R.string.ease_location));
-                    if(locationBody != null && !TextUtils.isEmpty(locationBody.getAddress())) {
-                        builder.append(": ").append(locationBody.getAddress());
-                    }
-                    break;
-                case CUSTOM:
-                    builder.append(mView.context().getResources().getString(R.string.ease_custom));
-                    break;
-                case COMBINE:
-                    builder.append(mView.context().getResources().getString(R.string.ease_combine));
-                    break;
-                default:
-                    break;
-            }
+                    remoteUrl = imageBody.getRemoteUrl();
+                }
+                mView.showQuoteMessageAttachment(ChatMessage.Type.IMAGE, localPath, remoteUrl, R.drawable.ease_default_image);
+                break;
+            case LOCATION:
+                LocationMessageBody locationBody = (LocationMessageBody) message.getBody();
+                builder.append(mView.context().getResources().getString(R.string.ease_location));
+                if(locationBody != null && !TextUtils.isEmpty(locationBody.getAddress())) {
+                    builder.append(": ").append(locationBody.getAddress());
+                }
+                break;
+            case CUSTOM:
+                builder.append(mView.context().getResources().getString(R.string.ease_custom));
+                break;
+            case COMBINE:
+                builder.append(mView.context().getResources().getString(R.string.ease_combine));
+                break;
+            default:
+                break;
         }
         mView.showQuoteMessageContent(builder);
     }
