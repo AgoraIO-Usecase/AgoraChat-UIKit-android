@@ -88,7 +88,7 @@ public class EaseChatRowImage extends EaseChatRowFile {
                 setMessageDownloadCallback();
                 return;
             }
-            downloadAttachment(!TextUtils.isEmpty(imgBody.getThumbnailUrl()));
+            downloadAttachment(!TextUtils.isEmpty(imgBody.getThumbnailUrl()) && message.direct() == ChatMessage.Direct.RECEIVE);
         }else {
             showImageView(message);
         }
