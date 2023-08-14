@@ -19,6 +19,7 @@ import io.agora.chat.MessageBody;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.EaseChatLayout;
+import io.agora.chat.uikit.chat.model.EaseReplyMap;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.menu.EaseChatType;
@@ -340,25 +341,25 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
                 quoteObject.put(EaseConstant.QUOTE_MSG_ID, message.getMsgId());
                 if (message.getType() == ChatMessage.Type.TXT && !TextUtils.isEmpty(((TextMessageBody) message.getBody()).getMessage())) {
                     quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, ((TextMessageBody) message.getBody()).getMessage());
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "txt");
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.txt.name());
                 } else if (message.getType() == ChatMessage.Type.IMAGE) {
                     quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_picture));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "img");
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.img.name());
                 } else if (message.getType() == ChatMessage.Type.VIDEO) {
                     quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_video));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "video");
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.video.name());
                 } else if (message.getType() == ChatMessage.Type.LOCATION) {
                     quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_location));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "location");
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.location.name());
                 } else if (message.getType() == ChatMessage.Type.VOICE) {
                     quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_voice));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "audio");
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.audio.name());
                 } else if (message.getType() == ChatMessage.Type.FILE) {
                     quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_file));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "file");
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.file.name());
                 } else if (message.getType() == ChatMessage.Type.CUSTOM) {
                     quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_custom));
-                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, "custom");
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.custom.name());
                 } else {
                     quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, "[" + message.getType().name().toLowerCase() + "]");
                     quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, message.getType().name().toLowerCase());
