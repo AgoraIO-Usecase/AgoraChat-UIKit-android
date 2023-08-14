@@ -20,7 +20,7 @@ import io.agora.util.EMLog;
 
 
 public class EaseChatRowText extends EaseChatRow {
-	private TextView contentView;
+    protected TextView contentView;
     private EaseChatQuoteView quoteView;
 
     public EaseChatRowText(Context context, boolean isSender) {

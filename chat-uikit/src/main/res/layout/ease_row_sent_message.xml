@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -64,13 +65,22 @@
                 android:id="@+id/tv_chatcontent"
                 style="@style/ease_chat_row_text_content_style"
                 android:textColor="@color/ease_msg_send_message_color"
-                app:layout_constraintBottom_toTopOf="@id/thread_region"
+                app:layout_constraintBottom_toTopOf="@id/flContentFillArea"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_goneMarginBottom="@dimen/ease_chat_bubble_margin_12"
+                android:layout_marginBottom="@dimen/ease_chat_bubble_margin_12"
                 tools:text="Hello, Agora Chat!" />
+
+            <FrameLayout
+                android:id="@+id/flContentFillArea"
+                app:layout_constraintTop_toBottomOf="@+id/tv_chatcontent"
+                app:layout_constraintBottom_toTopOf="@+id/thread_region"
+                app:layout_constraintEnd_toEndOf="@+id/bubble"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
 
             <io.agora.chat.uikit.widget.chatrow.EaseChatRowThreadRegion
                 android:id="@+id/thread_region"
@@ -81,7 +91,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_chatcontent" />
+                app:layout_constraintTop_toBottomOf="@id/flContentFillArea" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -109,7 +119,14 @@
             android:textSize="11sp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/bubble"
-            app:layout_constraintTop_toBottomOf="@id/barrier" />
+            app:layout_constraintTop_toBottomOf="@id/flBubbleBottomFillArea" />
+
+        <FrameLayout
+            android:id="@+id/flBubbleBottomFillArea"
+            app:layout_constraintTop_toBottomOf="@+id/barrier"
+            app:layout_constraintEnd_toEndOf="@+id/bubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <ImageView
             android:id="@+id/msg_status"
