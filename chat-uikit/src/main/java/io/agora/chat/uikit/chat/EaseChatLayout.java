@@ -685,7 +685,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      * @param message
      */
     private void sendGroupReadAck(ChatMessage message) {
-        if(message.isNeedGroupAck() && message.isUnread()) {
+        if(message.isNeedGroupAck() && message.isUnread() && TextUtils.equals(message.conversationId(), conversationId)) {
             try {
                 ChatClient.getInstance().chatManager().ackGroupMessageRead(message.getTo(), message.getMsgId(), "");
             } catch (ChatException e) {
