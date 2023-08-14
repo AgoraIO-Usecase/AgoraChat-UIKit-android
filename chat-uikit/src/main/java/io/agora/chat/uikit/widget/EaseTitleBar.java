@@ -56,6 +56,7 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     private ConstraintLayout clTitle;
     private EaseImageView ivIcon;
     private ImageView msgUnreadIcon;
+    Drawable leftDrawable;
     private OnIconClickListener iconClickListener;
 
     public EaseTitleBar(Context context) {
@@ -128,9 +129,11 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
                 subTitleView.setText(subTitle);
             }
 
-            Drawable leftDrawable = ta.getDrawable(R.styleable.EaseTitleBar_titleBarLeftImage);
+            leftDrawable = ta.getDrawable(R.styleable.EaseTitleBar_titleBarLeftImage);
             if (null != leftDrawable) {
-                leftImage.setImageDrawable(leftDrawable);
+                if(toolbar == null) {
+                    leftImage.setImageDrawable(leftDrawable);
+                }
             }
             Drawable rightDrawable = ta.getDrawable(R.styleable.EaseTitleBar_titleBarRightImage);
             if (null != rightDrawable) {
@@ -281,9 +284,9 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
                         }
                     });
                     if(mArrowColorId != -1) {
-                        StatusBarCompat.setToolbarCustomColor(getContext(), mArrowColorId);
+                        StatusBarCompat.setToolbarCustomColor(getContext(), mArrowColorId, leftDrawable);
                     }else {
-                        StatusBarCompat.setToolbarCustomColorDefault(getContext(), mArrowColor);
+                        StatusBarCompat.setToolbarCustomColorDefault(getContext(), mArrowColor, leftDrawable);
                     }
                 }else {
                     // Show back icon
@@ -296,8 +299,14 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     }
 
     public void setLeftImageResource(int resId) {
-        leftImage.setImageResource(resId);
-        leftLayout.setVisibility(View.VISIBLE);
+        Drawable drawable = ContextCompat.getDrawable(getContext(), resId);
+        if(drawable != null) {
+            if(mArrowColorId != -1) {
+                StatusBarCompat.setToolbarCustomColor(getContext(), mArrowColorId, drawable);
+            }else {
+                StatusBarCompat.setToolbarCustomColorDefault(getContext(), mArrowColor, drawable);
+            }
+        }
     }
     
     public void setRightImageResource(int resId) {
