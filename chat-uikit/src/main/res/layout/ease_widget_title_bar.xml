@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:minWidth="50dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@drawable/ease_common_tab_bg" >
 
         <ImageView
