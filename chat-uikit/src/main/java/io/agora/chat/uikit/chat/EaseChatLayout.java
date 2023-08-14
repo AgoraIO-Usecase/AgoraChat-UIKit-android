@@ -667,6 +667,10 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 if(type == ChatMessage.Type.VIDEO || type == ChatMessage.Type.VOICE || type == ChatMessage.Type.FILE) {
                     return;
                 }
+                // If not the same conversation, do not send read ack.
+                if(!TextUtils.equals(message.conversationId(), conversationId)) {
+                    return;
+                }
                 try {
                     ChatClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
                 } catch (ChatException e) {
