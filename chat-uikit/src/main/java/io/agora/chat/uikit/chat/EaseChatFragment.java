@@ -656,7 +656,7 @@ public class EaseChatFragment extends EaseBaseFragment implements OnChatLayoutLi
     protected void onActivityResultForCamera(Intent data) {
         if (cameraFile != null && cameraFile.exists()) {
             Uri uri = Uri.parse(cameraFile.getAbsolutePath());
-            //检查图片是否被旋转并调整回来
+            // Check if the image is rotated and restore it
             if (sendOriginalImage) {
                 uri = ImageUtils.checkDegreeAndRestoreImage(mContext, uri);
             }

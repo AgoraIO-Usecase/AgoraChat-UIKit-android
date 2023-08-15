@@ -80,7 +80,7 @@ public abstract class EaseBasePresenter implements LifecycleObserver {
     }
 
     /**
-     * 切换到UI线程
+     * Switch to the main thread
      * @param runnable
      */
     private void runOnUIThread(Runnable runnable) {
@@ -88,7 +88,7 @@ public abstract class EaseBasePresenter implements LifecycleObserver {
     }
 
     /**
-     * 切换到子线程
+     * Switch to the IO thread
      * @param runnable
      */
     private void runOnIOThread(Runnable runnable) {
