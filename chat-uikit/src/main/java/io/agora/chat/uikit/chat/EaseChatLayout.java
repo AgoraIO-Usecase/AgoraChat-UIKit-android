@@ -1341,6 +1341,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                         tvDone.setEnabled(false);
                     }
                 } else {
+                    editText.setSelection(s.length());
                     if (tvDone != null) {
                         tvDone.setEnabled(true);
                     }
