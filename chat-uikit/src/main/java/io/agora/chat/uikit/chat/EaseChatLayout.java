@@ -1315,6 +1315,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                 String newContent = editText.getText().toString().trim();
                 if (!TextUtils.isEmpty(newContent)) {
                     TextMessageBody textMessageBody = new TextMessageBody(newContent);
+                    textMessageBody.setTargetLanguages(((TextMessageBody) message.getBody()).getTargetLanguages());
                     modifyMessage(message.getMsgId() , textMessageBody);
                 }
 
