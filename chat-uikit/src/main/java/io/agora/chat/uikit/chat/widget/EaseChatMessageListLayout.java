@@ -200,7 +200,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
         srlRefresh.setEnabled(canUseRefresh);
 
-        layoutManager = new LinearLayoutManager(getContext());
+        layoutManager = new EaseCustomLayoutManager(getContext());
         rvList.setLayoutManager(layoutManager);
 
         baseAdapter = new ConcatAdapter();
@@ -235,6 +235,9 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     private void setStackFromEnd() {
         if(layoutManager != null) {
             layoutManager.setStackFromEnd(isStackFromEnd(loadDataType));
+            if(layoutManager instanceof EaseCustomLayoutManager) {
+                ((EaseCustomLayoutManager) layoutManager).setIsStackFromEnd(isStackFromEnd(loadDataType));
+            }
         }
     }
 
@@ -682,15 +685,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
     @Override
     public void refreshCurrentConSuccess(List<ChatMessage> data, boolean toLatest) {
-        if(data != null) {
-            if(data.size() >= pageSize && data.size() >= DEFAULT_PAGE_SIZE) {
-                setStackFromEnd();
-            }else {
-                if(layoutManager != null) {
-                    layoutManager.setStackFromEnd(false);
-                }
-            }
-        }
         messageAdapter.setData(data);
         if(toLatest) {
             seekToPosition(data.size() - 1);
