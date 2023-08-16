@@ -38,6 +38,7 @@ import io.agora.chat.uikit.chat.presenter.EaseChatMessagePresenterImpl;
 import io.agora.chat.uikit.chat.presenter.IChatMessageListView;
 import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
+import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseThreadManager;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
@@ -774,12 +775,16 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         conversation.removeMessage(message.getMsgId());
         runOnUi(()-> {
             if(presenter.isActive()) {
-                List<ChatMessage> messages = messageAdapter.getData();
-                int position = messages.lastIndexOf(message);
-                if(position != -1) {
-                    messages.remove(position);
-                    messageAdapter.notifyItemRemoved(position);
-                    messageAdapter.notifyItemChanged(position);
+                if(EaseConfigsManager.enableReplyMessage()) {
+                    presenter.refreshCurrentConversation();
+                }else {
+                    List<ChatMessage> messages = messageAdapter.getData();
+                    int position = messages.lastIndexOf(message);
+                    if(position != -1) {
+                        messages.remove(position);
+                        messageAdapter.notifyItemRemoved(position);
+                        messageAdapter.notifyItemChanged(position);
+                    }
                 }
             }
         });

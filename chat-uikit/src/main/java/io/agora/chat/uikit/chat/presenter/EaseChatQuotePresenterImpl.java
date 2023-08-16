@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import io.agora.Error;
 import io.agora.chat.ChatMessage;
-import io.agora.chat.ChatThread;
 import io.agora.chat.FileMessageBody;
 import io.agora.chat.ImageMessageBody;
 import io.agora.chat.LocationMessageBody;
@@ -63,7 +62,7 @@ public class EaseChatQuotePresenterImpl extends EaseChatQuotePresenter {
                     }
                     remoteUrl = videoBody.getThumbnailUrl();
                 }
-                mView.showQuoteMessageAttachment(ChatMessage.Type.VIDEO, localPath, remoteUrl, R.drawable.ease_default_image);
+                mView.showQuoteMessageAttachment(ChatMessage.Type.VIDEO, localPath, remoteUrl, R.drawable.ease_chat_quote_default_video);
                 break;
             case FILE:
                 FileMessageBody fileBody = (FileMessageBody) message.getBody();
@@ -74,12 +73,14 @@ public class EaseChatQuotePresenterImpl extends EaseChatQuotePresenter {
                 builder.append(mView.context().getResources().getString(R.string.ease_picture));
                 ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
                 if(imageBody != null) {
-                    if(!TextUtils.isEmpty(imageBody.getThumbnailUrl()) && EaseFileUtils.isFileExistByUri(mView.context(), imageBody.getLocalUri())) {
+                    if(!TextUtils.isEmpty(imageBody.getThumbnailUrl()) && EaseFileUtils.isFileExistByUri(mView.context(), imageBody.thumbnailLocalUri())) {
+                        localPath = imageBody.thumbnailLocalPath();
+                    }else if(!TextUtils.isEmpty(imageBody.getLocalUrl()) && EaseFileUtils.isFileExistByUri(mView.context(), imageBody.getLocalUri())) {
                         localPath = imageBody.getLocalUrl();
                     }
                     remoteUrl = imageBody.getRemoteUrl();
                 }
-                mView.showQuoteMessageAttachment(ChatMessage.Type.IMAGE, localPath, remoteUrl, R.drawable.ease_default_image);
+                mView.showQuoteMessageAttachment(ChatMessage.Type.IMAGE, localPath, remoteUrl, R.drawable.ease_chat_quote_default_image);
                 break;
             case LOCATION:
                 LocationMessageBody locationBody = (LocationMessageBody) message.getBody();

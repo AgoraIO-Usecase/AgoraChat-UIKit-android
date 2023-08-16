@@ -449,7 +449,9 @@ public class EaseChatQuoteView extends LinearLayout {
             Uri imageUri = null;
             String imageUrl = "";
             ImageMessageBody imageMessageBody = (ImageMessageBody) message.getBody();
-            if(EaseFileUtils.isFileExistByUri(mContext, imageMessageBody.getLocalUri())) {
+            if(EaseFileUtils.isFileExistByUri(mContext, imageMessageBody.thumbnailLocalUri())) {
+                imageUri = imageMessageBody.thumbnailLocalUri();
+            }else if(EaseFileUtils.isFileExistByUri(mContext, imageMessageBody.getLocalUri())) {
                 imageUri = imageMessageBody.getLocalUri();
             }else {
                 imageUrl = imageMessageBody.getRemoteUrl();
@@ -457,6 +459,7 @@ public class EaseChatQuoteView extends LinearLayout {
             Glide.with(mContext)
                     .load(imageUri == null ? imageUrl : imageUri)
                     .apply(new RequestOptions()
+                            .placeholder(R.drawable.ease_chat_quote_default_image)
                             .error(R.drawable.ease_chat_quote_default_image))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(new CustomTarget<Drawable>() {

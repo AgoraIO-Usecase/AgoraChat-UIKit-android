@@ -791,6 +791,12 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void sendMessageFinish(ChatMessage message) {
+        if (isQuoting && message.getType() == ChatMessage.Type.TXT) {
+            isQuoting = false;
+            if(getChatInputMenu().getChatTopExtendMenu() instanceof EaseChatExtendQuoteView) {
+                getChatInputMenu().getChatTopExtendMenu().showTopExtendMenu(false);
+            }
+        }
         if(getChatMessageListLayout() != null) {
             getChatMessageListLayout().setSendOrReceiveMessage(message);
             getChatMessageListLayout().refreshToLatest();
@@ -828,10 +834,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onPresenterMessageSuccess(ChatMessage message) {
         EMLog.i(TAG, "send message onPresenterMessageSuccess");
-        if (isQuoting && message.getType() == ChatMessage.Type.TXT) {
-            isQuoting = false;
-            getChatInputMenu().getChatTopExtendMenu().showTopExtendMenu(false);
-        }
         if(message.isChatThreadMessage() && messageListLayout != null && messageListLayout.isReachedLatestThreadMessage()) {
             message.setAttribute(EaseConstant.FLAG_REACH_LATEST_THREAD_MESSAGE, true);
         }
@@ -843,10 +845,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onPresenterMessageError(ChatMessage message, int code, String error) {
         EMLog.i(TAG, "send message onPresenterMessageError code: "+code + " error: "+error);
-        if (isQuoting) {
-            isQuoting = false;
-            getChatInputMenu().getChatTopExtendMenu().showTopExtendMenu(false);
-        }
         refreshMessage(message);
         if(listener != null) {
             listener.onError(code, error);
@@ -959,10 +957,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onMessageSuccess(ChatMessage message) {
         EMLog.i(TAG, "message onMessageSuccess");
-        if (isQuoting && message.getType() == ChatMessage.Type.TXT) {
-            isQuoting = false;
-            getChatInputMenu().getChatTopExtendMenu().showTopExtendMenu(false);
-        }
         if(message.isChatThreadMessage() && messageListLayout != null && messageListLayout.isReachedLatestThreadMessage()) {
             message.setAttribute(EaseConstant.FLAG_REACH_LATEST_THREAD_MESSAGE, true);
         }
@@ -973,10 +967,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     @Override
     public void onMessageError(ChatMessage message, int code, String error) {
-        if (isQuoting) {
-            isQuoting = false;
-            getChatInputMenu().getChatTopExtendMenu().showTopExtendMenu(false);
-        }
         if(listener != null) {
             listener.onError(code, error);
         }
@@ -985,7 +975,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     @Override
     public void onMessageInProgress(ChatMessage message, int progress) {
         EMLog.i(TAG, "message in progress: "+progress);
-
     }
 
     @Override
@@ -1130,9 +1119,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
                         skipToCreateThread(message);
                     }else if(itemId == R.id.action_chat_reply) {
                         showChatExtendQuoteView();
-                        ((EaseChatExtendQuoteView) (getChatInputMenu().getChatTopExtendMenu())).startQuote(message);
-                        getChatInputMenu().getPrimaryMenu().showTextStatus();
-                        presenter.createReplyMessageExt(message);
+                        if(getChatInputMenu().getChatTopExtendMenu() instanceof EaseChatExtendQuoteView) {
+                            ((EaseChatExtendQuoteView) (getChatInputMenu().getChatTopExtendMenu())).startQuote(message);
+                            getChatInputMenu().getPrimaryMenu().showTextStatus();
+                            presenter.createReplyMessageExt(message);
+                        }
                     }else if(itemId == R.id.action_chat_select) {
                         showMultiSelectView(message);
                     }else if(itemId == R.id.action_chat_edit) {
