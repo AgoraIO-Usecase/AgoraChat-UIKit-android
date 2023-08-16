@@ -1210,6 +1210,11 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         if(message.direct() == ChatMessage.Direct.RECEIVE ){
             menuHelper.findItemVisible(R.id.action_chat_recall, false);
         }
+        if(message.status() != ChatMessage.Status.SUCCESS) {
+            menuHelper.findItemVisible(R.id.action_chat_recall, false);
+            menuHelper.findItemVisible(R.id.action_chat_thread, false);
+            menuHelper.showHeaderView(false);
+        }
         menuHelper.findItemVisible(R.id.action_chat_reply, message.status() == ChatMessage.Status.SUCCESS && EaseConfigsManager.enableReplyMessage());
         menuHelper.findItemVisible(R.id.action_chat_select, message.status() == ChatMessage.Status.SUCCESS && EaseConfigsManager.enableSendCombineMessage());
         menuHelper.findItemVisible(R.id.action_chat_edit, canEdit(message));
