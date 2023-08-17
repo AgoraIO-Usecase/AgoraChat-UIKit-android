@@ -12,4 +12,6 @@
     <bool name="ease_enable_message_reply">true</bool>
     <!--Set whether to enable send messages-->
     <bool name="ease_enable_message_combine">true</bool>
+    <!--Set whether to enable modify text messages after they are sent -->
+    <bool name="ease_enable_message_modify">false</bool>
 </resources>

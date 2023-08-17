@@ -40,6 +40,7 @@ import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.constants.EaseConstant;
+import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
@@ -424,8 +425,17 @@ public class EaseUtils {
         }
     }
 
+    /**
+     * Whether the message can be edited.
+     * @param message
+     * @return
+     */
     public static boolean canEdit(ChatMessage message) {
-        return message != null && message.status() == ChatMessage.Status.SUCCESS && (message.getType() == ChatMessage.Type.TXT) && (isGroupOwnerOrAdmin(message) || isSender(message));
+        return message != null
+                && message.status() == ChatMessage.Status.SUCCESS
+                && (message.getType() == ChatMessage.Type.TXT)
+                && (isGroupOwnerOrAdmin(message) || isSender(message)
+                && EaseConfigsManager.enableModifyMessageAfterSent());
     }
 
     public static boolean isGroupOwnerOrAdmin(ChatMessage message) {
