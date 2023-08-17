@@ -118,5 +118,7 @@
     <string name="ease_message_edit">Message Edit</string>
     <string name="ease_message_edited">Message Edited</string>
     <string name="ease_fail_to_edit">Fail to edit</string>
+    
+    <string name="ease_message_unread_count_max">99+</string>
 
 </resources>

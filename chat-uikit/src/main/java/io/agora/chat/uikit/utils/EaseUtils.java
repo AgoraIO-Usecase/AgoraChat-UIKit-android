@@ -22,14 +22,11 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.WindowManager;
 
 import androidx.annotation.BoolRes;
-import androidx.annotation.IdRes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.agora.chat.ChatClient;
@@ -387,41 +384,22 @@ public class EaseUtils {
         return enable;
     }
 
-    public static boolean hasFroyo() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
-
-    }
-
-    public static boolean hasGingerbread() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
-    }
-
     public static boolean hasHoneycomb() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
 
-    public static boolean hasHoneycombMR1() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
-    }
-
-    public static boolean hasJellyBean() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    }
-
-    public static boolean hasKitKat() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-    }
-
     /**
      * Used to handle message unread
+     *
+     * @param context
      * @param count
      * @return
      */
-    public static String handleBigNum(int count) {
+    public static String handleBigNum(Context context, int count) {
         if(count <= 99) {
             return String.valueOf(count);
         }else {
-            return "99+";
+            return context == null ? "99+" : context.getString(R.string.ease_message_unread_count_max);
         }
     }
 

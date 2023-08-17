@@ -1,26 +1,19 @@
 package io.agora.chat.uikit.chat;
 
-import static io.agora.chat.uikit.utils.EaseUtils.canEdit;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
@@ -32,9 +25,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.util.List;
 
@@ -45,7 +35,6 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThreadEvent;
 import io.agora.chat.ImageMessageBody;
 import io.agora.chat.NormalFileMessageBody;
-import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
@@ -67,7 +56,6 @@ import io.agora.chat.uikit.chat.model.EaseInputMenuStyle;
 import io.agora.chat.uikit.chat.widget.EaseChatExtendMenuDialog;
 import io.agora.chat.uikit.chat.widget.EaseChatExtendQuoteView;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
-import io.agora.chat.uikit.chat.widget.EaseChatMultiSelectView;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.interfaces.OnQuoteViewClickListener;
@@ -78,7 +66,6 @@ import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
 import io.agora.chat.uikit.menu.MenuItemBean;
-import io.agora.chat.uikit.models.EaseMessageMenuData;
 import io.agora.chat.uikit.utils.EaseCompat;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseUtils;
