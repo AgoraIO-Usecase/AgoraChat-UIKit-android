@@ -12,6 +12,8 @@ public class EaseCustomLayoutManager extends LinearLayoutManager {
     private boolean canChangeStackFromEndStatus = false;
     private int childCount;
     private boolean isNeedStackFromEnd = false;
+    private int maxViewHeight;
+    private static final int MIN_STACK_FROM_END_COUNT = 10;
     public EaseCustomLayoutManager(Context context) {
         super(context);
     }
@@ -59,7 +61,7 @@ public class EaseCustomLayoutManager extends LinearLayoutManager {
             }
         }
         if(totalHeight == 0 || getHeight() == 0) {
-            if(itemCount >= 10) {
+            if(itemCount >= MIN_STACK_FROM_END_COUNT) {
                 if(!getStackFromEnd()) {
                     setStackFromEnd(true);
                 }
@@ -68,7 +70,8 @@ public class EaseCustomLayoutManager extends LinearLayoutManager {
             }
             return;
         }
-        if(totalHeight < getHeight()) {
+        maxViewHeight = Math.max(maxViewHeight, getHeight());
+        if(totalHeight < maxViewHeight) {
             if(canChangeStackFromEndStatus) {
                 setStackFromEnd(false);
             }
