@@ -46,7 +46,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             sendAtMessage(content);
             return;
         }
-        ChatMessage message = ChatMessage.createTxtSendMessage(content, toChatUsername);
+        ChatMessage message = ChatMessage.createTextSendMessage(content, toChatUsername);
         message.setIsNeedGroupAck(isNeedGroupAck);
         sendMessage(message);
     }
@@ -60,7 +60,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             }
             return;
         }
-        ChatMessage message = ChatMessage.createTxtSendMessage(content, toChatUsername);
+        ChatMessage message = ChatMessage.createTextSendMessage(content, toChatUsername);
         Group group = ChatClient.getInstance().groupManager().getGroup(toChatUsername);
         if(ChatClient.getInstance().getCurrentUser().equals(group.getOwner()) && EaseAtMessageHelper.get().containsAtAll(content)){
             message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL);

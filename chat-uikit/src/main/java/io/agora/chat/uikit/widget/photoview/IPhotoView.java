@@ -90,7 +90,7 @@ public interface IPhotoView {
      *
      * @param listener - Listener to be registered.
      */
-    void setOnPhotoTapListener(PhotoViewAttacher.OnPhotoTapListener listener);
+    void setOnPhotoTapListener(OnPhotoTapListener listener);
 
     /**
      * Register a callback to be invoked when the View is tapped with a single
@@ -98,7 +98,7 @@ public interface IPhotoView {
      *
      * @param listener - Listener to be registered.
      */
-    void setOnViewTapListener(PhotoViewAttacher.OnViewTapListener listener);
+    void setOnViewTapListener(OnViewTapListener listener);
 
     /**
      * Controls how the image should be resized or moved to match the size of

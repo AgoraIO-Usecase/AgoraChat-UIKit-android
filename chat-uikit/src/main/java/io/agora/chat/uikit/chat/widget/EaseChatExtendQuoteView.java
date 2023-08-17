@@ -145,7 +145,9 @@ public class EaseChatExtendQuoteView extends FrameLayout implements IChatQuote, 
     public void showQuoteMessageAttachment(ChatMessage.Type type, String localPath, String remotePath, int defaultResource) {
         Glide.with(quoteImage)
                 .load(TextUtils.isEmpty(localPath) ? remotePath : localPath)
-                .apply(new RequestOptions().error(defaultResource))
+                .apply(new RequestOptions()
+                        .placeholder(defaultResource)
+                        .error(defaultResource))
                 .into(quoteImage);
         quoteImage.setVisibility(VISIBLE);
         if(type == ChatMessage.Type.VIDEO) {

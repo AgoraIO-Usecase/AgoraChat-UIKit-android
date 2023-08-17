@@ -115,19 +115,8 @@ public class EaseShowBigImageActivity extends EaseBaseActivity {
 			image.setImageResource(default_res);
 		}
 
-		image.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
-
-		findViewById(R.id.back).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
+		image.setOnViewTapListener((view, x, y) -> finish());
+		image.setOnPhotoTapListener((view, x, y) -> finish());
 
 	}
 
