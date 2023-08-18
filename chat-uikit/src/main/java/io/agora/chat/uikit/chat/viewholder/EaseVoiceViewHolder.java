@@ -15,7 +15,6 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.VoiceMessageBody;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoice;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoicePlayer;
 import io.agora.exceptions.ChatException;
@@ -24,8 +23,8 @@ import io.agora.util.EMLog;
 public class EaseVoiceViewHolder extends EaseChatRowViewHolder{
     private EaseChatRowVoicePlayer voicePlayer;
 
-    public EaseVoiceViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
-        super(itemView, itemClickListener);
+    public EaseVoiceViewHolder(@NonNull View itemView) {
+        super(itemView);
         voicePlayer = EaseChatRowVoicePlayer.getInstance(getContext());
     }
 

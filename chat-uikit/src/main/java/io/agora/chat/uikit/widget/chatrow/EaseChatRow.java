@@ -33,7 +33,8 @@ import io.agora.chat.uikit.chat.model.EaseChatItemStyleHelper;
 import io.agora.chat.uikit.chat.model.EaseChatSetStyle;
 import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.chat.widget.EaseChatReactionView;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
+import io.agora.chat.uikit.interfaces.MessageResultCallback;
+import io.agora.chat.uikit.interfaces.OnMessageListItemClickListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseChatMessageMultiSelectHelper;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
@@ -124,10 +125,11 @@ public abstract class EaseChatRow extends LinearLayout {
      */
     private Handler mainThreadHandler;
 
-    protected MessageListItemClickListener itemClickListener;
+    protected OnMessageListItemClickListener itemClickListener;
     private EaseChatRowActionCallback itemActionCallback;
     private EaseChatRowThreadRegion threadRegion;
     protected EaseChatReactionView reactionContentView;
+    protected MessageResultCallback messageResultCallback;
 
     public EaseChatRow(Context context, boolean isSender) {
         super(context);
@@ -258,13 +260,9 @@ public abstract class EaseChatRow extends LinearLayout {
      * @param message
      * @param position
      */
-    public void setUpView(ChatMessage message, int position,
-                          MessageListItemClickListener itemClickListener,
-                          EaseChatRowActionCallback itemActionCallback) {
+    public void setUpView(ChatMessage message, int position) {
         this.message = message;
         this.position = position;
-        this.itemClickListener = itemClickListener;
-        this.itemActionCallback = itemActionCallback;
 
         setUpBaseView();
         onSetUpView();
@@ -671,9 +669,6 @@ public abstract class EaseChatRow extends LinearLayout {
         switch (msg.status()) {
             case CREATE:
                 onMessageCreate();
-                if(itemClickListener != null) {
-                    itemClickListener.onMessageCreate(msg);
-                }
                 break;
             case SUCCESS:
                 onMessageSuccess();
@@ -729,8 +724,8 @@ public abstract class EaseChatRow extends LinearLayout {
                 @Override
                 public void run() {
                     onMessageSuccess();
-                    if(itemClickListener != null) {
-                        itemClickListener.onMessageSuccess(message);
+                    if(messageResultCallback != null) {
+                        messageResultCallback.onMessageSuccess(message);
                     }
                 }
             });
@@ -753,8 +748,8 @@ public abstract class EaseChatRow extends LinearLayout {
                 @Override
                 public void run() {
                     onMessageInProgress();
-                    if(itemClickListener != null) {
-                        itemClickListener.onMessageInProgress(message, progress);
+                    if(messageResultCallback != null) {
+                        messageResultCallback.onMessageInProgress(message, progress);
                     }
                 }
             });
@@ -762,8 +757,8 @@ public abstract class EaseChatRow extends LinearLayout {
     }
 
     public void postMessageError(ChatMessage message, int code, String error) {
-        if(itemClickListener != null) {
-            itemClickListener.onMessageError(message, code, error);
+        if(messageResultCallback != null) {
+            messageResultCallback.onMessageError(message, code, error);
         }
     }
 
@@ -859,6 +854,30 @@ public abstract class EaseChatRow extends LinearLayout {
             percentageView.setVisibility(View.INVISIBLE);
         if (statusView != null)
             statusView.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Set message item click listeners.
+     * @param listener
+     */
+    public void setOnMessageListItemClickListener(OnMessageListItemClickListener listener) {
+        itemClickListener = listener;
+    }
+
+    /**
+     * Set message result callback.
+     * @param callback
+     */
+    public void setMessageResultCallback(MessageResultCallback callback) {
+        messageResultCallback = callback;
+    }
+
+    /**
+     * Set message action callback.
+     * @param callback
+     */
+    public void setChatRowActionCallback(EaseChatRowActionCallback callback) {
+        itemActionCallback = callback;
     }
 
     /**

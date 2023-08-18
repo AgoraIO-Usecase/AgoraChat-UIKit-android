@@ -20,7 +20,6 @@ import io.agora.chat.uikit.chathistory.widget.EaseChatRowHistoryVideo;
 import io.agora.chat.uikit.chathistory.widget.EaseChatRowHistoryVoice;
 import io.agora.chat.uikit.chatthread.widget.EaseChatRowThreadNotify;
 import io.agora.chat.uikit.constants.EaseConstant;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowCombine;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowCustom;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowFile;
@@ -31,38 +30,37 @@ import io.agora.chat.uikit.widget.chatrow.EaseChatRowVideo;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoice;
 
 public class EaseChatViewHolderFactory {
-    public static EaseBaseRecyclerViewAdapter.ViewHolder<ChatMessage> createViewHolder(@NonNull ViewGroup parent, EaseMessageViewType viewType
-            , MessageListItemClickListener listener) {
+    public static EaseBaseRecyclerViewAdapter.ViewHolder<ChatMessage> createViewHolder(@NonNull ViewGroup parent, EaseMessageViewType viewType) {
 
         switch (viewType) {
             case VIEW_TYPE_MESSAGE_TXT_ME:
             case VIEW_TYPE_MESSAGE_TXT_OTHER:
-                return new EaseTextViewHolder(new EaseChatRowText(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_TXT_ME), listener);
+                return new EaseTextViewHolder(new EaseChatRowText(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_TXT_ME));
             case VIEW_TYPE_MESSAGE_IMAGE_ME:
             case VIEW_TYPE_MESSAGE_IMAGE_OTHER:
-                return new EaseImageViewHolder(new EaseChatRowImage(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_IMAGE_ME), listener);
+                return new EaseImageViewHolder(new EaseChatRowImage(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_IMAGE_ME));
             case VIEW_TYPE_MESSAGE_VIDEO_ME:
             case VIEW_TYPE_MESSAGE_VIDEO_OTHER:
-                return new EaseVideoViewHolder(new EaseChatRowVideo(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_VIDEO_ME), listener);
+                return new EaseVideoViewHolder(new EaseChatRowVideo(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_VIDEO_ME));
             case VIEW_TYPE_MESSAGE_VOICE_ME:
             case VIEW_TYPE_MESSAGE_VOICE_OTHER:
-                return new EaseVoiceViewHolder(new EaseChatRowVoice(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_VOICE_ME), listener);
+                return new EaseVoiceViewHolder(new EaseChatRowVoice(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_VOICE_ME));
             case VIEW_TYPE_MESSAGE_FILE_ME:
             case VIEW_TYPE_MESSAGE_FILE_OTHER:
-                return new EaseFileViewHolder(new EaseChatRowFile(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_FILE_ME), listener);
+                return new EaseFileViewHolder(new EaseChatRowFile(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_FILE_ME));
             case VIEW_TYPE_MESSAGE_CUSTOM_ME:
             case VIEW_TYPE_MESSAGE_CUSTOM_OTHER:
-                return new EaseCustomViewHolder(new EaseChatRowCustom(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_CUSTOM_ME), listener);
+                return new EaseCustomViewHolder(new EaseChatRowCustom(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_CUSTOM_ME));
             case VIEW_TYPE_MESSAGE_COMBINE_ME:
             case VIEW_TYPE_MESSAGE_COMBINE_OTHER:
-                return new EaseCombineViewHolder(new EaseChatRowCombine(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_COMBINE_ME), listener);
+                return new EaseCombineViewHolder(new EaseChatRowCombine(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_COMBINE_ME));
             case VIEW_TYPE_MESSAGE_CHAT_THREAD_NOTIFY:
-                return new EaseThreadNotifyViewHolder(new EaseChatRowThreadNotify(parent.getContext(), false), listener);
+                return new EaseThreadNotifyViewHolder(new EaseChatRowThreadNotify(parent.getContext(), false));
             case VIEW_TYPE_MESSAGE_UNKNOWN_ME:
             case VIEW_TYPE_MESSAGE_UNKNOWN_OTHER:
-                return new EaseUnknownViewHolder(new EaseChatRowUnknown(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_UNKNOWN_ME), listener);
+                return new EaseUnknownViewHolder(new EaseChatRowUnknown(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_UNKNOWN_ME));
             default:
-                return new EaseUnknownViewHolder(new EaseChatRowUnknown(parent.getContext(), false), listener);
+                return new EaseUnknownViewHolder(new EaseChatRowUnknown(parent.getContext(), false));
         }
     }
 
@@ -71,30 +69,30 @@ public class EaseChatViewHolderFactory {
         switch (viewType) {
             case VIEW_TYPE_MESSAGE_TXT_ME:
             case VIEW_TYPE_MESSAGE_TXT_OTHER:
-                return new EaseHistoryTextViewHolder(new EaseChatRowHistoryText(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_TXT_ME), null);
+                return new EaseHistoryTextViewHolder(new EaseChatRowHistoryText(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_TXT_ME));
             case VIEW_TYPE_MESSAGE_IMAGE_ME:
             case VIEW_TYPE_MESSAGE_IMAGE_OTHER:
-                return new EaseHistoryImageViewHolder(new EaseChatRowHistoryImage(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_IMAGE_ME), null);
+                return new EaseHistoryImageViewHolder(new EaseChatRowHistoryImage(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_IMAGE_ME));
             case VIEW_TYPE_MESSAGE_VIDEO_ME:
             case VIEW_TYPE_MESSAGE_VIDEO_OTHER:
-                return new EaseHistoryVideoViewHolder(new EaseChatRowHistoryVideo(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_VIDEO_ME), null);
+                return new EaseHistoryVideoViewHolder(new EaseChatRowHistoryVideo(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_VIDEO_ME));
             case VIEW_TYPE_MESSAGE_VOICE_ME:
             case VIEW_TYPE_MESSAGE_VOICE_OTHER:
-                return new EaseHistoryVoiceViewHolder(new EaseChatRowHistoryVoice(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_VOICE_ME), null);
+                return new EaseHistoryVoiceViewHolder(new EaseChatRowHistoryVoice(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_VOICE_ME));
             case VIEW_TYPE_MESSAGE_FILE_ME:
             case VIEW_TYPE_MESSAGE_FILE_OTHER:
-                return new EaseHistoryFileViewHolder(new EaseChatRowHistoryFile(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_FILE_ME), null);
+                return new EaseHistoryFileViewHolder(new EaseChatRowHistoryFile(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_FILE_ME));
             case VIEW_TYPE_MESSAGE_CUSTOM_ME:
             case VIEW_TYPE_MESSAGE_CUSTOM_OTHER:
-                return new EaseCustomViewHolder(new EaseChatRowCustom(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_CUSTOM_ME), null);
+                return new EaseCustomViewHolder(new EaseChatRowCustom(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_CUSTOM_ME));
             case VIEW_TYPE_MESSAGE_COMBINE_ME:
             case VIEW_TYPE_MESSAGE_COMBINE_OTHER:
-                return new EaseHistoryCombineViewHolder(new EaseChatRowHistoryCombine(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_COMBINE_ME), null);
+                return new EaseHistoryCombineViewHolder(new EaseChatRowHistoryCombine(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_COMBINE_ME));
             case VIEW_TYPE_MESSAGE_UNKNOWN_ME:
             case VIEW_TYPE_MESSAGE_UNKNOWN_OTHER:
-                return new EaseUnknownViewHolder(new EaseChatRowUnknown(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_UNKNOWN_ME), null);
+                return new EaseUnknownViewHolder(new EaseChatRowUnknown(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_UNKNOWN_ME));
             default:
-                return new EaseUnknownViewHolder(new EaseChatRowUnknown(parent.getContext(), false), null);
+                return new EaseUnknownViewHolder(new EaseChatRowUnknown(parent.getContext(), false));
         }
     }
 

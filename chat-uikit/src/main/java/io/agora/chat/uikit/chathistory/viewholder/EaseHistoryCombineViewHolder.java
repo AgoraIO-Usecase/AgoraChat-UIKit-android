@@ -6,14 +6,13 @@ import androidx.annotation.NonNull;
 
 import io.agora.chat.ChatMessage;
 import io.agora.chat.uikit.chat.viewholder.EaseChatRowViewHolder;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 
 
 public class EaseHistoryCombineViewHolder extends EaseChatRowViewHolder {
 
-    public EaseHistoryCombineViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
-        super(itemView, itemClickListener);
+    public EaseHistoryCombineViewHolder(@NonNull View itemView) {
+        super(itemView);
     }
 
     @Override

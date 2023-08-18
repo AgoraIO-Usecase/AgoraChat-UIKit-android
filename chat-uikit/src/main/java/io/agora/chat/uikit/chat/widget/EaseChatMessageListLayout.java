@@ -36,7 +36,8 @@ import io.agora.chat.uikit.chat.model.EaseChatItemStyleHelper;
 import io.agora.chat.uikit.chat.presenter.EaseChatMessagePresenter;
 import io.agora.chat.uikit.chat.presenter.EaseChatMessagePresenterImpl;
 import io.agora.chat.uikit.chat.presenter.IChatMessageListView;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
+import io.agora.chat.uikit.interfaces.MessageResultCallback;
+import io.agora.chat.uikit.interfaces.OnMessageListItemClickListener;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseThreadManager;
@@ -91,7 +92,8 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
      * The height of the last control
      */
     private int recyclerViewLastHeight;
-    private MessageListItemClickListener messageListItemClickListener;
+    private OnMessageListItemClickListener messageListItemClickListener;
+    private MessageResultCallback messageResultCallback;
     private EaseChatItemStyleHelper chatSetHelper;
     private String messageCursor;
     /**
@@ -448,7 +450,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                 }
             }
         });
-        messageAdapter.setListItemClickListener(new MessageListItemClickListener() {
+        messageAdapter.setOnMessageListItemClickListener(new OnMessageListItemClickListener() {
             @Override
             public boolean onBubbleClick(ChatMessage message) {
                 if(messageListItemClickListener != null) {
@@ -504,34 +506,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             }
 
             @Override
-            public void onMessageCreate(ChatMessage message) {
-                if(messageListItemClickListener != null) {
-                    messageListItemClickListener.onMessageCreate(message);
-                }
-            }
-
-            @Override
-            public void onMessageSuccess(ChatMessage message) {
-                if(messageListItemClickListener != null) {
-                    messageListItemClickListener.onMessageSuccess(message);
-                }
-            }
-
-            @Override
-            public void onMessageError(ChatMessage message, int code, String error) {
-                if(messageListItemClickListener != null) {
-                    messageListItemClickListener.onMessageError(message, code, error);
-                }
-            }
-
-            @Override
-            public void onMessageInProgress(ChatMessage message, int progress) {
-                if(messageListItemClickListener != null) {
-                    messageListItemClickListener.onMessageInProgress(message, progress);
-                }
-            }
-
-            @Override
             public void onRemoveReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
                 if (messageListItemClickListener != null) {
                     messageListItemClickListener.onRemoveReaction(message, reactionEntity);
@@ -542,6 +516,28 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             public void onAddReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
                 if (messageListItemClickListener != null) {
                     messageListItemClickListener.onAddReaction(message, reactionEntity);
+                }
+            }
+        });
+        messageAdapter.setOnMessageResultCallback(new MessageResultCallback() {
+            @Override
+            public void onMessageSuccess(ChatMessage message) {
+                if(messageResultCallback != null) {
+                    messageResultCallback.onMessageSuccess(message);
+                }
+            }
+
+            @Override
+            public void onMessageError(ChatMessage message, int code, String error) {
+                if(messageResultCallback != null) {
+                    messageResultCallback.onMessageError(message, code, error);
+                }
+            }
+
+            @Override
+            public void onMessageInProgress(ChatMessage message, int progress) {
+                if(messageResultCallback != null) {
+                    messageResultCallback.onMessageInProgress(message, progress);
                 }
             }
         });
@@ -1096,8 +1092,13 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     @Override
-    public void setMessageListItemClickListener(MessageListItemClickListener listener) {
+    public void setOnMessageListItemClickListener(OnMessageListItemClickListener listener) {
         this.messageListItemClickListener = listener;
+    }
+
+    @Override
+    public void setMessageResultCallback(MessageResultCallback callback) {
+        this.messageResultCallback = callback;
     }
 
     @Override

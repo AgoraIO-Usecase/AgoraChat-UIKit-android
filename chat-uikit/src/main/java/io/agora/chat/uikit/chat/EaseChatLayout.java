@@ -65,7 +65,8 @@ import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.EaseChatRoomListener;
 import io.agora.chat.uikit.interfaces.EaseGroupListener;
 import io.agora.chat.uikit.interfaces.IPopupWindow;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
+import io.agora.chat.uikit.interfaces.MessageResultCallback;
+import io.agora.chat.uikit.interfaces.OnMessageListItemClickListener;
 import io.agora.chat.uikit.interfaces.OnMenuChangeListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
@@ -92,7 +93,7 @@ import io.agora.util.EMLog;
 
 public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHandleMessageView, IPopupWindow
         , ChatInputMenuListener, MessageListener, EaseChatMessageListLayout.OnMessageTouchListener
-        , MessageListItemClickListener, EaseChatMessageListLayout.OnChatErrorListener, ConversationListener {
+        , OnMessageListItemClickListener, EaseChatMessageListLayout.OnChatErrorListener, ConversationListener, MessageResultCallback {
     private static final String TAG = EaseChatLayout.class.getSimpleName();
     private static final int MSG_TYPING_HEARTBEAT = 0;
     private static final int MSG_TYPING_END = 1;
@@ -224,7 +225,8 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
 
     private void initListener() {
         messageListLayout.setOnMessageTouchListener(this);
-        messageListLayout.setMessageListItemClickListener(this);
+        messageListLayout.setOnMessageListItemClickListener(this);
+        messageListLayout.setMessageResultCallback(this);
         messageListLayout.setOnChatErrorListener(this);
         inputMenu.setChatInputMenuListener(this);
         getChatManager().addMessageListener(this);
@@ -947,11 +949,6 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
             return listener.onThreadLongClick(v, messageId, threadId);
         }
         return false;
-    }
-
-    @Override
-    public void onMessageCreate(ChatMessage message) {
-        EMLog.i(TAG, "onMessageCreate");
     }
 
     @Override
