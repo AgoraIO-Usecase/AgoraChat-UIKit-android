@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -148,7 +146,7 @@ public class EaseChatRowThreadRegion extends FrameLayout implements View.OnClick
         if(!TextUtils.isEmpty(threadName)) {
             tvThreadName.setText(threadName);
         }
-        String num = EaseUtils.handleBigNum(info.getMessageCount());
+        String num = EaseUtils.handleBigNum(getContext(), info.getMessageCount());
         tvThreadMsgCount.setText(num);
 
         ChatMessage msgOverview = info.getLastMessage();

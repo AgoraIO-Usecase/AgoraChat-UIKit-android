@@ -56,6 +56,17 @@ public class EaseConfigsManager {
         return false;
     }
 
+    /**
+     * Get whether to enable modify text messages after they are sent.
+     * @return
+     */
+    public static boolean enableModifyMessageAfterSent() {
+        if(checkIfUIKitInit()) {
+            return EaseUtils.getBooleanResource(EaseUIKit.getInstance().getContext(), R.bool.ease_enable_message_modify);
+        }
+        return false;
+    }
+
     private static boolean checkIfUIKitInit() {
         Context context = EaseUIKit.getInstance().getContext();
         if(context == null) {
