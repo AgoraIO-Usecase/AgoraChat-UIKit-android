@@ -20,6 +20,7 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.utils.EaseUserUtils;
+import io.agora.util.EMLog;
 
 public class EaseChatPresenter implements MessageListener, ChatThreadChangeListener, MultiDeviceListener {
     private static final String TAG = EaseChatPresenter.class.getSimpleName();
@@ -99,6 +100,11 @@ public class EaseChatPresenter implements MessageListener, ChatThreadChangeListe
         for (GroupReadAck ack : groupReadAcks) {
             EaseDingMessageHelper.get().handleGroupReadAck(ack);
         }
+    }
+
+    @Override
+    public void onMessageContentChanged(ChatMessage messageModified, String operatorId, long operationTime){
+        EMLog.d(TAG, "onMessageContentChanged");
     }
 
     public EaseNotifier getNotifier() {
