@@ -539,24 +539,18 @@ public class EaseChatQuoteView extends LinearLayout {
 
     private void appendDrawable(SpannableString spannableString, Drawable drawable, boolean isPlaceholder, boolean isCenter) {
         if(drawable != null) {
-            int[] fitSize = getFitSize(drawable);
-            int width = fitSize[0];
-            int height = fitSize[1];
+            //int[] fitSize = getFitSize(drawable);
+            int width = (int) EaseUtils.dip2px(mContext, MAX_IMAGE_SIZE);
+            int height = width;
             if(!isPlaceholder) {
-                int minSize = Math.min(width, height);
-                int maxSize = Math.max(width, height);
-                if(maxSize < minSize * 3 && minSize > EaseUtils.dip2px(mContext, 6) * 3) {
+                //int minSize = Math.min(width, height);
+                //int maxSize = Math.max(width, height);
+                //if(maxSize < minSize * 3 && minSize > EaseUtils.dip2px(mContext, 6) * 3) {
                     drawable = EaseImageUtils.getRoundedCornerDrawable(mContext, EaseImageUtils.drawableToBitmap(drawable), EaseUtils.dip2px(mContext, 6));
-                }
+                //}
             }
             drawable.setBounds(0, 0, width, height);
-            Drawable finalDrawable = drawable;
-            DynamicDrawableSpan imageSpan = new DynamicDrawableSpan(isCenter ? ALIGN_CENTER : ALIGN_TOP) {
-                @Override
-                public Drawable getDrawable() {
-                    return finalDrawable;
-                }
-            };
+            DynamicDrawableSpan imageSpan = new DynamicDrawableSpan(drawable, isCenter ? ALIGN_CENTER : ALIGN_TOP);
             int startIndex = getStartIndex();
             spannableString.setSpan(imageSpan, startIndex, startIndex + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }

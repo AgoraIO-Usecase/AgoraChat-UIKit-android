@@ -17,7 +17,7 @@ import java.lang.ref.WeakReference;
 import javax.security.auth.login.LoginException;
 
 
-public abstract class DynamicDrawableSpan extends ReplacementSpan {
+public class DynamicDrawableSpan extends ReplacementSpan {
     private static final String TAG = DynamicDrawableSpan.class.getSimpleName();
 
     /**
@@ -58,6 +58,17 @@ public abstract class DynamicDrawableSpan extends ReplacementSpan {
     }
 
     /**
+     * Creates a {@link DynamicDrawableSpan}. The default vertical alignment is
+     * {@link #ALIGN_BOTTOM}
+     */
+    public DynamicDrawableSpan(Drawable drawable) {
+        mVerticalAlignment = ALIGN_BOTTOM;
+        if(drawable != null) {
+            mDrawableRef = new WeakReference<>(drawable);
+        }
+    }
+
+    /**
      * Creates a {@link DynamicDrawableSpan} based on a vertical alignment.\
      *
      * @param verticalAlignment one of {@link #ALIGN_BOTTOM}, {@link #ALIGN_BASELINE} or
@@ -65,6 +76,19 @@ public abstract class DynamicDrawableSpan extends ReplacementSpan {
      */
     protected DynamicDrawableSpan(int verticalAlignment) {
         mVerticalAlignment = verticalAlignment;
+    }
+
+    /**
+     * Creates a {@link DynamicDrawableSpan} based on a vertical alignment.\
+     *
+     * @param verticalAlignment one of {@link #ALIGN_BOTTOM}, {@link #ALIGN_BASELINE} or
+     *                          {@link #ALIGN_CENTER}
+     */
+    protected DynamicDrawableSpan(Drawable drawable, int verticalAlignment) {
+        mVerticalAlignment = verticalAlignment;
+        if(drawable != null) {
+            mDrawableRef = new WeakReference<>(drawable);
+        }
     }
 
     /**
@@ -80,7 +104,9 @@ public abstract class DynamicDrawableSpan extends ReplacementSpan {
      * to be drawn.  The dimensions of the bitmap must be the same
      * from each call to the next.
      */
-    public abstract Drawable getDrawable();
+    public Drawable getDrawable() {
+       return null;
+    }
 
     @Override
     public int getSize(@NonNull Paint paint, CharSequence text,

@@ -258,6 +258,9 @@
         <item name="android:textColor">@color/ease_chat_row_combine_summary_text_color</item>
         <item name="android:visibility">gone</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:maxLines">4</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:autoLink">none</item>
     </style>
 
     <style name="ease_chat_row_text_name_style" parent="chat_text_name_style">

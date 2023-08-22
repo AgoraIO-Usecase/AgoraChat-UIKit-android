@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -545,6 +546,10 @@ public abstract class EaseChatRow extends LinearLayout {
         }
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        return EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle(getContext());
+    }
 
     /**
      * set click listener
