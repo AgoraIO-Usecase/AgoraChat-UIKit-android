@@ -25,7 +25,6 @@ import io.agora.chat.uikit.conversation.model.EaseConversationSetStyle;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.manager.EasePreferenceManager;
 import io.agora.chat.uikit.models.EaseGroupInfo;
-import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseGroupInfoProvider;
 import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
@@ -122,13 +121,8 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
         }
 
         if(item.getAllMsgCount() != 0) {
-            String nickName = "";
             ChatMessage lastMessage = item.getLastMessage();
-            EaseUser userInfo = EaseUserUtils.getGroupUserInfo(lastMessage.conversationId(), lastMessage.getFrom());
-            if (userInfo != null){
-                nickName = userInfo.getNickname() + ": ";
-            }
-            message.setText(nickName + EaseSmileUtils.getSmiledText(context, EaseUtils.getMessageDigest(lastMessage, context)));
+            message.setText(EaseSmileUtils.getSmiledText(context, EaseUtils.getMessageDigest(lastMessage, context)));
             time.setText(EaseDateUtils.getTimestampString(context, new Date(lastMessage.getMsgTime())));
             if (lastMessage.direct() == ChatMessage.Direct.SEND && lastMessage.status() == ChatMessage.Status.FAIL) {
                 mMsgState.setVisibility(View.VISIBLE);
