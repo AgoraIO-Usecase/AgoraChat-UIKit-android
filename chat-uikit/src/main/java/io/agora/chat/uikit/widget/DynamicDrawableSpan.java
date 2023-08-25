@@ -48,6 +48,7 @@ public class DynamicDrawableSpan extends ReplacementSpan {
     protected final int mVerticalAlignment;
 
     private WeakReference<Drawable> mDrawableRef;
+    private Drawable mDrawable;
 
     /**
      * Creates a {@link DynamicDrawableSpan}. The default vertical alignment is
@@ -61,9 +62,10 @@ public class DynamicDrawableSpan extends ReplacementSpan {
      * Creates a {@link DynamicDrawableSpan}. The default vertical alignment is
      * {@link #ALIGN_BOTTOM}
      */
-    public DynamicDrawableSpan(Drawable drawable) {
+    public DynamicDrawableSpan(final Drawable drawable) {
         mVerticalAlignment = ALIGN_BOTTOM;
-        if(drawable != null) {
+        mDrawable = drawable;
+        if(mDrawable != null) {
             mDrawableRef = new WeakReference<>(drawable);
         }
     }
@@ -84,9 +86,10 @@ public class DynamicDrawableSpan extends ReplacementSpan {
      * @param verticalAlignment one of {@link #ALIGN_BOTTOM}, {@link #ALIGN_BASELINE} or
      *                          {@link #ALIGN_CENTER}
      */
-    protected DynamicDrawableSpan(Drawable drawable, int verticalAlignment) {
+    protected DynamicDrawableSpan(final Drawable drawable, int verticalAlignment) {
         mVerticalAlignment = verticalAlignment;
-        if(drawable != null) {
+        mDrawable = drawable;
+        if(mDrawable != null) {
             mDrawableRef = new WeakReference<>(drawable);
         }
     }
@@ -105,7 +108,7 @@ public class DynamicDrawableSpan extends ReplacementSpan {
      * from each call to the next.
      */
     public Drawable getDrawable() {
-       return null;
+       return mDrawable;
     }
 
     @Override

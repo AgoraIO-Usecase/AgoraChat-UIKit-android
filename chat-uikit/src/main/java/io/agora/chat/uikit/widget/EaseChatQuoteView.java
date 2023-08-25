@@ -557,6 +557,10 @@ public class EaseChatQuoteView extends LinearLayout {
                     drawable = EaseImageUtils.getRoundedCornerDrawable(mContext, EaseImageUtils.drawableToBitmap(drawable), EaseUtils.dip2px(mContext, 6));
                 //}
             }
+            if(isPlaceholder) {
+                width = getFitSize(drawable)[0];
+                height = width;
+            }
             drawable.setBounds(0, 0, width, height);
             DynamicDrawableSpan imageSpan = new DynamicDrawableSpan(drawable, isCenter ? ALIGN_CENTER : ALIGN_TOP);
             int startIndex = getStartIndex();
