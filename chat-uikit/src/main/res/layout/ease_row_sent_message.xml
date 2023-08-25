@@ -71,6 +71,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginBottom="@dimen/ease_chat_bubble_margin_12"
+                android:textColorLink="@color/ease_emojicon_tab_nomal"
                 tools:text="Hello, Agora Chat!" />
 
             <FrameLayout
