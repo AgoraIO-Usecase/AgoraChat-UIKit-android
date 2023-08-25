@@ -18,7 +18,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +40,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.agora.Error;
 import io.agora.chat.ChatClient;
@@ -79,6 +80,9 @@ public class EaseChatQuoteView extends LinearLayout {
     private ChatMessage message;
     private String quoteSender;
     private boolean isHistory;
+    public static final String URL_REGEX = "(((https|http)?://)?([a-z0-9]+[.])|(www.))"
+            + "\\w+[.|\\/]([a-z0-9]{0,})?[[.]([a-z0-9]{0,})]+((/[\\S&&[^,;\u4E00-\u9FA5]]+)+)?([.][a-z0-9]{0,}+|/?)";
+
 
     private static final Map<String, String> receiveMsgTypes = new HashMap<String, String>() {
         {
@@ -310,10 +314,14 @@ public class EaseChatQuoteView extends LinearLayout {
             showBigExpression(quoteMessage, quoteSender);
         }else {
             SpannableString spannableString = new SpannableString(EaseSmileUtils.getSmiledText(mContext, quoteSender + ": "+content));
-            quoteDefaultView.setText(spannableString);
-            quoteDefaultView.setEllipsize(TextUtils.TruncateAt.END);
-            quoteDefaultView.setMaxLines(2);
-            quoteDefaultLayout.setVisibility(View.VISIBLE);
+            if (containsUrl(content)){
+                appendDrawable(spannableString, ContextCompat.getDrawable(mContext, R.drawable.ease_quote_text_link), true, true);
+            }else {
+                quoteDefaultView.setText(spannableString);
+                quoteDefaultView.setEllipsize(TextUtils.TruncateAt.END);
+                quoteDefaultView.setMaxLines(2);
+                quoteDefaultLayout.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -608,5 +616,12 @@ public class EaseChatQuoteView extends LinearLayout {
             return (OnQuoteViewClickListener) kitInterface;
         }
         return null;
+    }
+
+    private static boolean containsUrl(String content) {
+        Pattern p = Pattern.compile(URL_REGEX);
+        Matcher m = p.matcher(content);
+        boolean b = m.find();
+        return b;
     }
 }

@@ -1,5 +1,6 @@
 package io.agora.chat.uikit.conversation.viewholder;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -36,6 +37,7 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
         super(itemView, style);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void setData(EaseConversationInfo bean, int position) {
         super.setData(bean, position);
