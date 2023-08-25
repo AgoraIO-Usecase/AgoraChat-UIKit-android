@@ -68,6 +68,7 @@
                 app:layout_constraintBottom_toTopOf="@id/flContentFillArea"
                 app:layout_constraintHorizontal_bias="0"
                 android:layout_marginBottom="@dimen/ease_chat_bubble_margin_12"
+                android:textColorLink="@color/ease_conversation_color_item_mention"
                 tools:text="Agora Chat" />
 
             <FrameLayout
