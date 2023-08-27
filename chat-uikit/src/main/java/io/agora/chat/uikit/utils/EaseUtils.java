@@ -420,8 +420,9 @@ public class EaseUtils {
         if(message.getChatType() != ChatMessage.ChatType.GroupChat) {
             return false;
         }
-        Group group = ChatClient.getInstance().groupManager().getGroup(message.getFrom());
-        return isOwner(group) || isAdmin(group);
+        Group group = ChatClient.getInstance().groupManager().getGroup(message.getTo());
+        boolean b = isOwner(group) || isAdmin(group);
+        return b;
     }
 
     public static boolean isSender(ChatMessage message) {
