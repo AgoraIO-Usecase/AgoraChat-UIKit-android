@@ -20,6 +20,7 @@ import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 public class EaseMessageAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage> {
     protected MessageListItemClickListener listener;
     private int highlightPosition = -1;
+    private ValueAnimator colorAnimation = null;
     
     public EaseMessageAdapter() {}
     
@@ -60,21 +61,21 @@ public class EaseMessageAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage>
     private void startAnimator(View view) {
         Drawable background = view.getBackground();
         int darkColor = ContextCompat.getColor(mContext, R.color.ease_chat_item_bg_dark);
-        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), Color.TRANSPARENT, darkColor);
-        colorAnimation.setDuration(500);
-        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-                view.setBackgroundColor((int)animator.getAnimatedValue());
-                if((int)animator.getAnimatedValue() == darkColor) {
-                    view.setBackground(background);
-                }else if((int)animator.getAnimatedValue() == 0) {
-                    view.setBackground(null);
-                }else {
-                    view.setBackground(null);
+        if (colorAnimation == null){
+            colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), Color.TRANSPARENT, darkColor);
+            colorAnimation.setDuration(500);
+            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                    view.setBackgroundColor((int)animator.getAnimatedValue());
+                    if((int)animator.getAnimatedValue() == darkColor) {
+                        view.setBackground(background);
+                    }else if((int)animator.getAnimatedValue() == 0) {
+                        view.setBackground(null);
+                    }
                 }
-            }
-        });
+            });
+        }
         colorAnimation.start();
     }
 

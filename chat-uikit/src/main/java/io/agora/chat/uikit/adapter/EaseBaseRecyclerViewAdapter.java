@@ -50,7 +50,9 @@ public abstract class EaseBaseRecyclerViewAdapter<T> extends EaseBaseAdapter<Eas
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemClickAction(v, holder.getBindingAdapterPosition());
+                    if (holder.getBindingAdapterPosition() >= 0){
+                        itemClickAction(v, holder.getBindingAdapterPosition());
+                    }
                 }
             });
         }
