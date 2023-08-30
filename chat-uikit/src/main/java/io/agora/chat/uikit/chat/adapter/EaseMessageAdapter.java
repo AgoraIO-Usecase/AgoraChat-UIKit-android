@@ -70,6 +70,8 @@ public class EaseMessageAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage>
                     view.setBackground(background);
                 }else if((int)animator.getAnimatedValue() == 0) {
                     view.setBackground(null);
+                }else {
+                    view.setBackground(null);
                 }
             }
         });

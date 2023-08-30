@@ -3,7 +3,6 @@ package io.agora.chat.uikit.chat.presenter;
 import android.text.TextUtils;
 
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -242,7 +241,7 @@ public class EaseChatMessagePresenterImpl extends EaseChatMessagePresenter {
         if(conversation == null) {
             throw new NullPointerException("should first set up with conversation");
         }
-        conversation.markAllMessagesAsRead();
+
         List<ChatMessage> allMessages = conversation.getAllMessages();
         if(conversation.isChatThread() && reachFlagMessage != null && !isReachFirstFlagMessage) {
             removeNotReachedMessages(allMessages);
