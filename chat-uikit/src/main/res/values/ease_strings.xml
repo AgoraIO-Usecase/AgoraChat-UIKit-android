@@ -66,7 +66,7 @@
     <string name="ease_delete_voice">Delete audio</string>
     <string name="ease_delete_video">Delete video</string>
     <string name="ease_is_download_voice_click_later">Downloading audio, click when done.</string>
-    <string name="ease_chat_unknown_type">Unknown message type</string>
+    <string name="ease_chat_unknown_type">Unsupported message type</string>
     <!-- alert -->
     <string name="ease_prompt">Note</string>
     <string name="ease_cancel">Cancel</string>
