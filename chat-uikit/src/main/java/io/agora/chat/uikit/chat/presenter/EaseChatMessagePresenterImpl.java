@@ -3,7 +3,6 @@ package io.agora.chat.uikit.chat.presenter;
 import android.text.TextUtils;
 
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 

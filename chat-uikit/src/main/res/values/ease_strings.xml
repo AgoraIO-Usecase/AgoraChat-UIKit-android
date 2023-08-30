@@ -33,6 +33,7 @@
     <string name="ease_list_no_conversation_data_text">No data</string>
     <string name="ease_conversation_default_title">Chats</string>
     <string name="ease_chat_were_mentioned">[Someone@You]</string>
+    <string name="ease_chat_were_mentioned_all">[@All]</string>
     <string name="ease_chat_were_not_send_msg">[Draft]</string>
     <string name="ease_msg_recall_by_self">You unsent a message</string>
     <string name="ease_msg_recall_by_user">%1$s unsent a message</string>
