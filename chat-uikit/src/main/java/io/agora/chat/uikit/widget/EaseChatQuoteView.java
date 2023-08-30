@@ -94,6 +94,7 @@ public class EaseChatQuoteView extends LinearLayout {
             put(EaseReplyMap.file.name(), ChatMessage.Type.FILE.name());
             put(EaseReplyMap.cmd.name(), ChatMessage.Type.CMD.name());
             put(EaseReplyMap.custom.name(), ChatMessage.Type.CUSTOM.name());
+            put(EaseReplyMap.combine.name(), ChatMessage.Type.COMBINE.name());
         }
     };
 

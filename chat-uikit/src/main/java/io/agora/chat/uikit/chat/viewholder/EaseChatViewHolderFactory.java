@@ -26,6 +26,7 @@ import io.agora.chat.uikit.widget.chatrow.EaseChatRowFile;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowImage;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowText;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowUnknown;
+import io.agora.chat.uikit.widget.chatrow.EaseChatRowUnsent;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowVideo;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoice;
 
@@ -54,6 +55,9 @@ public class EaseChatViewHolderFactory {
             case VIEW_TYPE_MESSAGE_COMBINE_ME:
             case VIEW_TYPE_MESSAGE_COMBINE_OTHER:
                 return new EaseCombineViewHolder(new EaseChatRowCombine(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_COMBINE_ME));
+            case VIEW_TYPE_MESSAGE_UNSENT_ME:
+            case VIEW_TYPE_MESSAGE_UNSENT_OTHER:
+                return new EaseUnsentViewHolder(new EaseChatRowUnsent(parent.getContext(), viewType == EaseMessageViewType.VIEW_TYPE_MESSAGE_UNSENT_ME));
             case VIEW_TYPE_MESSAGE_CHAT_THREAD_NOTIFY:
                 return new EaseThreadNotifyViewHolder(new EaseChatRowThreadNotify(parent.getContext(), false));
             case VIEW_TYPE_MESSAGE_UNKNOWN_ME:
@@ -106,8 +110,15 @@ public class EaseChatViewHolderFactory {
         ChatMessage.Direct direct = message.direct();
         if (messageType == ChatMessage.Type.TXT) {
             boolean isThreadNotify = message.getBooleanAttribute(EaseConstant.EASE_THREAD_NOTIFICATION_TYPE, false);
+            boolean isRecallMessage = message.getBooleanAttribute(EaseConstant.MESSAGE_TYPE_RECALL, false);
             if(isThreadNotify) {
                 type = EaseMessageViewType.VIEW_TYPE_MESSAGE_CHAT_THREAD_NOTIFY;
+            }else if(isRecallMessage) {
+                if(direct == ChatMessage.Direct.SEND) {
+                    type = EaseMessageViewType.VIEW_TYPE_MESSAGE_UNSENT_ME;
+                }else {
+                    type = EaseMessageViewType.VIEW_TYPE_MESSAGE_UNSENT_OTHER;
+                }
             }else {
                 if(direct == ChatMessage.Direct.SEND) {
                     type = EaseMessageViewType.VIEW_TYPE_MESSAGE_TXT_ME;
