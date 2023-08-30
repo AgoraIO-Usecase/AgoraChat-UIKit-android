@@ -20,6 +20,7 @@ import io.agora.chat.Conversation;
 import io.agora.chat.Group;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
+import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.conversation.model.EaseConversationInfo;
 import io.agora.chat.uikit.conversation.model.EaseConversationSetStyle;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
@@ -56,6 +57,14 @@ public class EaseConversationViewHolder extends EaseBaseConversationViewHolder{
         if(item.getType() == Conversation.ConversationType.GroupChat) {
             if(EaseAtMessageHelper.get().hasAtMeMsg(username)) {
                 mentioned.setText(R.string.ease_chat_were_mentioned);
+                ChatMessage lastMessage = item.getLastMessage();
+                String tag = lastMessage.getStringAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, null);
+                if(tag != null){
+                    String s = tag.toUpperCase();
+                    if(s.equals(EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL)){
+                        mentioned.setText(R.string.ease_chat_were_mentioned_all);
+                    }
+                }
                 mentioned.setVisibility(View.VISIBLE);
             }
             defaultAvatar = R.drawable.ease_default_group_avatar;
