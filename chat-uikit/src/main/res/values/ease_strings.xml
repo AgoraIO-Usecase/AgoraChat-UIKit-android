@@ -110,6 +110,7 @@
     <string name="group_change_name">You named Group %1$s</string>
 
     <string name="ease_error_message_not_exist">Message does not exist</string>
+    <string name="ease_quote_message_not_exist">Quoted content does not exist</string>
 
     <string name="ease_chat_inputmenu_quote_reply_to">Replying to</string>
     <string name="ease_combine_default">Chat history</string>

@@ -152,7 +152,7 @@ public class EaseChatQuoteView extends LinearLayout {
                         String quoteMsgID = jsonObject.getString(EaseConstant.QUOTE_MSG_ID);
                         ChatMessage showMsg = ChatClient.getInstance().chatManager().getMessage(quoteMsgID);
                         if(showMsg == null) {
-                            listener.onQuoteViewClickError(Error.GENERAL_ERROR, mContext.getString(R.string.ease_error_message_not_exist));
+                            //listener.onQuoteViewClickError(Error.GENERAL_ERROR, mContext.getString(R.string.ease_error_message_not_exist));
                             return;
                         }
                         listener.onQuoteViewClick(showMsg);
@@ -278,6 +278,12 @@ public class EaseChatQuoteView extends LinearLayout {
                 quoteDefaultView.setMaxLines(2);
                 quoteDefaultLayout.setVisibility(View.VISIBLE);
             }
+            return;
+        }
+        if(quoteMessage == null) {
+            String msg = getResources().getString(R.string.ease_quote_message_not_exist);
+            quoteDefaultView.setText(msg);
+            quoteDefaultLayout.setVisibility(View.VISIBLE);
             return;
         }
         switch (quoteMsgType){
