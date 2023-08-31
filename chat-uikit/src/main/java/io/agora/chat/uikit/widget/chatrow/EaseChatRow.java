@@ -276,38 +276,11 @@ public abstract class EaseChatRow extends LinearLayout {
      * set timestamp, avatar, nickname and so on
      */
     private void setUpBaseView() {
-        TextView timestamp = (TextView) findViewById(R.id.timestamp);
-        if (timestamp != null) {
-            setTimestamp(timestamp);
-        }
+        setTimestamp();
         setItemStyle();
-        if(userAvatarView != null) {
-            setAvatarAndNick();
-        }
-        if (ChatClient.getInstance().getOptions().getRequireDeliveryAck()) {
-            if(deliveredView != null && isSender()){
-                if (message.isDelivered()) {
-                    deliveredView.setVisibility(View.VISIBLE);
-                } else {
-                    deliveredView.setVisibility(View.INVISIBLE);
-                }
-            }
-        }
-        if (ChatClient.getInstance().getOptions().getRequireAck()) {
-            if (ackedView != null && isSender()) {
-                if (message.isAcked()) {
-                    if (deliveredView != null) {
-                        deliveredView.setVisibility(View.INVISIBLE);
-                    }
-                    ackedView.setVisibility(View.VISIBLE);
-                } else {
-                    ackedView.setVisibility(View.INVISIBLE);
-                }
-            }
-        }
-        if(threadRegion != null) {
-            setThreadRegion();
-        }
+        setAvatarAndNick();
+        updateSenderMessageViewStatus();
+        setThreadRegion();
 
         if(selectRadio != null) {
             selectRadio.setVisibility(EaseChatMessageMultiSelectHelper.getInstance().isMultiStyle(getContext()) ? VISIBLE : GONE);
@@ -323,7 +296,40 @@ public abstract class EaseChatRow extends LinearLayout {
         }
     }
 
+    /**
+     * Update sender message view's status
+     */
+    public void updateSenderMessageViewStatus() {
+        if(message == null || !isSender()) {
+            return;
+        }
+        if(deliveredView != null) {
+            deliveredView.setVisibility(View.INVISIBLE);
+            if(message.status() == ChatMessage.Status.SUCCESS) {
+                deliveredView.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getContext(), R.drawable.ease_msg_status_sent), null);
+                deliveredView.setVisibility(VISIBLE);
+            }
+            if (ChatClient.getInstance().getOptions().getRequireDeliveryAck() && message.isDelivered()) {
+                deliveredView.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getContext(), R.drawable.ease_msg_status_received), null);
+                deliveredView.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if(ackedView != null && ChatClient.getInstance().getOptions().getRequireAck()) {
+            ackedView.setVisibility(View.INVISIBLE);
+            if(message.isAcked()) {
+                if(deliveredView != null) {
+                    deliveredView.setVisibility(View.INVISIBLE);
+                }
+                ackedView.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     public void setThreadRegion() {
+        if(threadRegion == null) {
+            return;
+        }
         if(shouldShowThreadRegion()) {
             threadRegion.setVisibility(VISIBLE);
             threadRegion.setThreadInfo(message.getChatThread());
@@ -488,6 +494,9 @@ public abstract class EaseChatRow extends LinearLayout {
      * set avatar and nickname
      */
     protected void setAvatarAndNick() {
+        if(userAvatarView == null || message == null) {
+            return;
+        }
         if (isSender()) {
             EaseUserUtils.setUserAvatar(context, ChatClient.getInstance().getCurrentUser(), userAvatarView);
             if(EaseChatItemStyleHelper.getInstance().getStyle(getContext()).getItemShowType() != EaseChatMessageListLayout.ShowType.LEFT_RIGHT.ordinal()) {
@@ -506,25 +515,26 @@ public abstract class EaseChatRow extends LinearLayout {
 
     /**
      * set timestamp
-     * @param timestamp
      */
-    protected void setTimestamp(TextView timestamp) {
-        if(adapter != null) {
-            if (position == 0) {
-                timestamp.setText(EaseDateUtils.getTimestampString(getContext(), new Date(message.getMsgTime())));
-                timestamp.setVisibility(View.VISIBLE);
-            } else {
-                // show time stamp if interval with last message is > 30 seconds
-                ChatMessage prevMessage = null;
-                if(adapter instanceof BaseAdapter) {
-                    prevMessage = (ChatMessage) ((BaseAdapter)adapter).getItem(position - 1);
-                }
-                if(adapter instanceof EaseBaseAdapter) {
-                    prevMessage = (ChatMessage) ((EaseBaseAdapter)adapter).getItem(position - 1);
-                }
-
-                setOtherTimestamp(prevMessage);
+    protected void setTimestamp() {
+        TextView timestamp = (TextView) findViewById(R.id.timestamp);
+        if(timestamp == null || message == null || adapter == null) {
+            return;
+        }
+        if (position == 0) {
+            timestamp.setText(EaseDateUtils.getTimestampString(getContext(), new Date(message.getMsgTime())));
+            timestamp.setVisibility(View.VISIBLE);
+        } else {
+            // show time stamp if interval with last message is > 30 seconds
+            ChatMessage prevMessage = null;
+            if(adapter instanceof BaseAdapter) {
+                prevMessage = (ChatMessage) ((BaseAdapter)adapter).getItem(position - 1);
             }
+            if(adapter instanceof EaseBaseAdapter) {
+                prevMessage = (ChatMessage) ((EaseBaseAdapter)adapter).getItem(position - 1);
+            }
+
+            setOtherTimestamp(prevMessage);
         }
     }
 
@@ -786,11 +796,7 @@ public abstract class EaseChatRow extends LinearLayout {
      */
     protected void onMessageSuccess() {
         EMLog.i(TAG, "onMessageSuccess");
-        if (ChatClient.getInstance().getOptions().getRequireDeliveryAck()) {
-            if (deliveredView != null && isSender()) {
-                deliveredView.setVisibility(View.VISIBLE);
-            }
-        }
+        updateSenderMessageViewStatus();
         showSuccessStatus();
     }
 
