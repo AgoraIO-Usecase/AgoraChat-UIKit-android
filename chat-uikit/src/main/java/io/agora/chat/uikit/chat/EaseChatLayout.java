@@ -651,6 +651,10 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
             if (username.equals(conversationId) || message.getTo().equals(conversationId) || message.conversationId().equals(conversationId)) {
                 refresh = true;
             }
+
+            if (EaseAtMessageHelper.get().isAtMeMsg(message) && message.conversationId().equals(conversationId)){
+                EaseAtMessageHelper.get().removeAtMeGroup(conversationId);
+            }
         }
         if(refresh && getChatMessageListLayout() != null && !messages.isEmpty()) {
             getChatMessageListLayout().setSendOrReceiveMessage(messages.get(0));
