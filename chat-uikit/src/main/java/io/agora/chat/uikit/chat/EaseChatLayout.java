@@ -1185,6 +1185,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
         menuHelper.setAllItemsVisible(false);
         menuHelper.findItemVisible(R.id.action_chat_delete, true);
         menuHelper.findItem(R.id.action_chat_delete).setTitle(getContext().getString(R.string.ease_action_delete));
+        if(message.status() == ChatMessage.Status.SUCCESS && message.direct() == ChatMessage.Direct.SEND) {
+            menuHelper.findItemVisible(R.id.action_chat_recall, true);
+        }
         switch (type) {
             case TXT:
                 menuHelper.findItemVisible(R.id.action_chat_copy, true);
