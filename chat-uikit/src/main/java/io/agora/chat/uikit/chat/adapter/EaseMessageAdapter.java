@@ -1,5 +1,7 @@
 package io.agora.chat.uikit.chat.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
@@ -61,7 +63,9 @@ public class EaseMessageAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage>
     private void startAnimator(View view) {
         Drawable background = view.getBackground();
         int darkColor = ContextCompat.getColor(mContext, R.color.ease_chat_item_bg_dark);
-        if (colorAnimation == null){
+        if (colorAnimation != null && colorAnimation.isStarted()){
+            colorAnimation.cancel();
+        }else {
             colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), Color.TRANSPARENT, darkColor);
             colorAnimation.setDuration(500);
             colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -75,8 +79,20 @@ public class EaseMessageAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage>
                     }
                 }
             });
+            colorAnimation.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    view.setBackground(null);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    view.setBackground(null);
+                }
+
+            });
+            colorAnimation.start();
         }
-        colorAnimation.start();
     }
 
     /**
