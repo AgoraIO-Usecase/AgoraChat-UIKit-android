@@ -4,11 +4,9 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.Date;
 
-import io.agora.CallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.FileMessageBody;
@@ -17,9 +15,7 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.utils.EaseDateUtils;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseImageUtils;
-import io.agora.chat.uikit.widget.chatrow.EaseChatRowFile;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowImage;
-import io.agora.util.EMLog;
 
 
 /**
@@ -48,7 +44,7 @@ public class EaseChatRowHistoryImage extends EaseChatRowImage {
         imgBody = (ImageMessageBody) message.getBody();
         // If local file exits, show image directly
         if(EaseFileUtils.isFileExistByUri(context, imgBody.getLocalUri()) || EaseFileUtils.isFileExistByUri(context, imgBody.thumbnailLocalUri())) {
-            showImageView(message);
+            showImageView(message, position);
             return;
         }
         ViewGroup.LayoutParams params = EaseImageUtils.getImageShowSize(context, message);
@@ -65,7 +61,7 @@ public class EaseChatRowHistoryImage extends EaseChatRowImage {
             }
             downloadAttachment(!TextUtils.isEmpty(imgBody.getThumbnailUrl()));
         }else {
-            showImageView(message);
+            showImageView(message, position);
         }
     }
 

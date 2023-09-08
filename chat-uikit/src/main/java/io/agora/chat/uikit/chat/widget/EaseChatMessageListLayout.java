@@ -802,15 +802,18 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             }else {
                 seekToPosition(position);
             }
+            highlightItem(position);
         }else {
             String msgId = getListFirstMessageId();
             presenter.loadMoreRetrievalsMessages(msgId, retrievalSize);
             position = messageAdapter.getData().indexOf(message);
             if(position >= 0) {
                 seekToPosition(position);
+                highlightItem(position);
+            }else {
+                EMLog.e(TAG, "moveToTarget failed: No original message was found within the scope of the query");
             }
         }
-        highlightItem(position);
     }
 
     @Override

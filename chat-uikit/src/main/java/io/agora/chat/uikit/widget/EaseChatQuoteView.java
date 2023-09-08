@@ -78,8 +78,10 @@ public class EaseChatQuoteView extends LinearLayout {
     private final ViewGroup quoteDefaultLayout;
     private final TextView tvSummary;
     private ChatMessage message;
+    private ChatMessage quoteMessage;
     private String quoteSender;
     private boolean isHistory;
+    private int retryTimes = 3;
     public static final String URL_REGEX = "(((https|http)?://)?([a-z0-9]+[.])|(www.))"
             + "\\w+[.|\\/]([a-z0-9]{0,})?[[.]([a-z0-9]{0,})]+((/[\\S&&[^,;\u4E00-\u9FA5]]+)+)?([.][a-z0-9]{0,}+|/?)";
 
@@ -229,7 +231,7 @@ public class EaseChatQuoteView extends LinearLayout {
                 }
             }
             this.quoteSender = quoteSenderNick;
-            ChatMessage quoteMessage = ChatClient.getInstance().chatManager().getMessage(quoteMsgID);
+            quoteMessage = ChatClient.getInstance().chatManager().getMessage(quoteMsgID);
 
             isShowType(quoteMessage, quoteSenderNick, getQuoteMessageType(quoteType), quoteContent);
 
@@ -464,31 +466,49 @@ public class EaseChatQuoteView extends LinearLayout {
             Uri imageUri = null;
             String imageUrl = "";
             ImageMessageBody imageMessageBody = (ImageMessageBody) message.getBody();
-            if(EaseFileUtils.isFileExistByUri(mContext, imageMessageBody.thumbnailLocalUri())) {
-                imageUri = imageMessageBody.thumbnailLocalUri();
-            }else if(EaseFileUtils.isFileExistByUri(mContext, imageMessageBody.getLocalUri())) {
+            if(EaseFileUtils.isFileExistByUri(mContext, imageMessageBody.thumbnailLocalUri())
+                    && imageMessageBody.thumbnailDownloadStatus() != FileMessageBody.EMDownloadStatus.FAILED) {
+                if(imageMessageBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.SUCCESSED) {
+                    imageUri = imageMessageBody.thumbnailLocalUri();
+                    showImageByGlide(message, imageUri, null, quoteSender);
+                }else {
+                    if(retryTimes > 0) {
+                        retryTimes--;
+                        postDelayed(()-> showImageView(message, quoteSender), 500);
+                    }
+                }
+            }else if(EaseFileUtils.isFileExistByUri(mContext, imageMessageBody.getLocalUri())
+                    && imageMessageBody.downloadStatus() == FileMessageBody.EMDownloadStatus.SUCCESSED) {
                 imageUri = imageMessageBody.getLocalUri();
+                showImageByGlide(message, imageUri, null, quoteSender);
             }else {
                 imageUrl = imageMessageBody.getRemoteUrl();
+                showImageByGlide(message, null, imageUrl, quoteSender);
             }
-            Glide.with(mContext)
-                    .load(imageUri == null ? imageUrl : imageUri)
-                    .apply(new RequestOptions()
-                            .placeholder(R.drawable.ease_chat_quote_default_image)
-                            .error(R.drawable.ease_chat_quote_default_image))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(new CustomTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            addDrawable(quoteSender, resource);
-                        }
-
-                        @Override
-                        public void onLoadCleared(@Nullable Drawable placeholder) {
-                            addDrawable(quoteSender, placeholder, true);
-                        }
-                    });
         }
+    }
+
+    private void showImageByGlide(ChatMessage message, Uri imageUri, String imageUrl, String quoteSender) {
+        if(this.quoteMessage == null || !TextUtils.equals(this.quoteMessage.getMsgId(), message.getMsgId())) {
+            return;
+        }
+        Glide.with(mContext)
+                .load(imageUri == null ? imageUrl : imageUri)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.ease_chat_quote_default_image)
+                        .error(R.drawable.ease_chat_quote_default_image))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        addDrawable(quoteSender, resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        addDrawable(quoteSender, placeholder, true);
+                    }
+                });
     }
 
     private void showBigExpression(ChatMessage message, String quoteSender){
