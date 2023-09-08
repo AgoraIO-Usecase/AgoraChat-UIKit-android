@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -316,7 +317,7 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
     }
 
     private void initTypingHandler() {
-        typingHandler = new Handler() {
+        typingHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 switch (msg.what) {
@@ -707,6 +708,9 @@ public class EaseChatLayout extends RelativeLayout implements IChatLayout, IHand
      */
     @Override
     public void onCmdMessageReceived(List<ChatMessage> messages) {
+        if(!turnOnTyping) {
+            return;
+        }
         for (final ChatMessage msg : messages) {
             final CmdMessageBody body = (CmdMessageBody) msg.getBody();
             EMLog.i(TAG, "Receive cmd message: " + body.action() + " - " + body.isDeliverOnlineOnly());
