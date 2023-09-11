@@ -6,12 +6,12 @@
     <string name="ease_picture">[Image]</string>
     <string name="ease_video">[Video]</string>
     <string name="ease_file">[File]</string>
-    <string name="ease_voice">[Voice]</string>
+    <string name="ease_voice">[Audio]</string>
     <string name="ease_emoji">[Emoji]</string>
     <string name="ease_thread">[Thread]</string>
     <string name="ease_custom">[Custom message]</string>
     <string name="ease_combine">[Chat history]</string>
-    <string name="ease_voice_prefix">[Voice]</string>
+    <string name="ease_voice_prefix">[Audio]</string>
     <string name="ease_dynamic_expression">[Animoji]</string>
     <string name="ease_list_no_data_text">No data</string>
     <string name="ease_all_members">All</string>
@@ -35,8 +35,8 @@
     <string name="ease_chat_were_mentioned">[Someone@You]</string>
     <string name="ease_chat_were_mentioned_all">[@All]</string>
     <string name="ease_chat_were_not_send_msg">[Draft]</string>
-    <string name="ease_msg_recall_by_self">You unsent a message</string>
-    <string name="ease_msg_recall_by_user">%1$s unsent a message</string>
+    <string name="ease_msg_recall_by_self">You recalled a message</string>
+    <string name="ease_msg_recall_by_user">%1$s recalled a message</string>
     <string name="ease_not_download">Not download:</string>
     <string name="ease_text_ack_msg">Read</string>
     <string name="ease_text_delivered_msg">Delivered</string>
@@ -64,10 +64,10 @@
     <string name="ease_recoding_fail">Recording failed, please try again!</string>
     <string name="ease_resend">Resend</string>
     <string name="ease_confirm_resend">Are you sure you want to resend this message?</string>
-    <string name="ease_delete_voice">Delete voice</string>
+    <string name="ease_delete_voice">Delete audio</string>
     <string name="ease_delete_video">Delete video</string>
     <string name="ease_is_download_voice_click_later">Downloading audio, click when done.</string>
-    <string name="ease_chat_unknown_type">Unknown message type</string>
+    <string name="ease_chat_unknown_type">Unsupported message type</string>
     <!-- alert -->
     <string name="ease_prompt">Note</string>
     <string name="ease_cancel">Cancel</string>
@@ -110,7 +110,8 @@
     <string name="group_change_owner">%1$s becomes the new Group Owner</string>
     <string name="group_change_name">You named Group %1$s</string>
 
-    <string name="ease_error_message_not_exist">Message does not exist.</string>
+    <string name="ease_error_message_not_exist">Message does not exist</string>
+    <string name="ease_quote_message_not_exist">Quoted content does not exist</string>
 
     <string name="ease_chat_inputmenu_quote_reply_to">Replying to</string>
     <string name="ease_combine_default">Chat history</string>

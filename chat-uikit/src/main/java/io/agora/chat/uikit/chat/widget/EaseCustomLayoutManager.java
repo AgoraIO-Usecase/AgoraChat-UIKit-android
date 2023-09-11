@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import io.agora.util.EMLog;
+
 
 public class EaseCustomLayoutManager extends LinearLayoutManager {
-    private boolean canChangeStackFromEndStatus = false;
-    private int childCount;
     private boolean isNeedStackFromEnd = false;
     private int maxViewHeight;
     private static final int MIN_STACK_FROM_END_COUNT = 10;
@@ -37,17 +37,6 @@ public class EaseCustomLayoutManager extends LinearLayoutManager {
             return;
         }
         int itemCount = getItemCount();
-        if(childCount == 0) {
-            childCount = itemCount;
-        }
-        if(itemCount != childCount) {
-            if(itemCount < childCount) {
-                canChangeStackFromEndStatus = true;
-            }
-            childCount = itemCount;
-        }else {
-            canChangeStackFromEndStatus = false;
-        }
         int totalHeight = 0;
         for(int i = 0; i < itemCount; i++) {
             View subView = findViewByPosition(i);
@@ -66,13 +55,15 @@ public class EaseCustomLayoutManager extends LinearLayoutManager {
                     setStackFromEnd(true);
                 }
             }else {
-                setStackFromEnd(false);
+                if(getStackFromEnd()) {
+                    setStackFromEnd(false);
+                }
             }
             return;
         }
         maxViewHeight = Math.max(maxViewHeight, getHeight());
         if(totalHeight < maxViewHeight) {
-            if(canChangeStackFromEndStatus) {
+            if(getStackFromEnd()) {
                 setStackFromEnd(false);
             }
         }else if(!getStackFromEnd()) {

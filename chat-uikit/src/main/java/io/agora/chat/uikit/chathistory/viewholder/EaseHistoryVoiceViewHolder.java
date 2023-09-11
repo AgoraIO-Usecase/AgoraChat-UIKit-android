@@ -14,17 +14,15 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.VoiceMessageBody;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.viewholder.EaseChatRowViewHolder;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoice;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRowVoicePlayer;
-import io.agora.exceptions.ChatException;
 import io.agora.util.EMLog;
 
 public class EaseHistoryVoiceViewHolder extends EaseChatRowViewHolder {
     private EaseChatRowVoicePlayer voicePlayer;
 
-    public EaseHistoryVoiceViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
-        super(itemView, itemClickListener);
+    public EaseHistoryVoiceViewHolder(@NonNull View itemView) {
+        super(itemView);
         voicePlayer = EaseChatRowVoicePlayer.getInstance(getContext());
     }
 

@@ -9,7 +9,6 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.FileMessageBody;
 import io.agora.chat.VideoMessageBody;
 import io.agora.chat.uikit.chat.viewholder.EaseChatRowViewHolder;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.util.EMLog;
 
@@ -17,8 +16,8 @@ import io.agora.util.EMLog;
 public class EaseHistoryVideoViewHolder extends EaseChatRowViewHolder {
     private static final String TAG = EaseHistoryVideoViewHolder.class.getSimpleName();
 
-    public EaseHistoryVideoViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
-        super(itemView, itemClickListener);
+    public EaseHistoryVideoViewHolder(@NonNull View itemView) {
+        super(itemView);
     }
 
     @Override
