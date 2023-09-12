@@ -51,7 +51,7 @@
     <string name="ease_attach_location">Location</string>
     <string name="ease_attach_video">Videos</string>
     <string name="ease_attach_file">Files</string>
-    <string name="ease_button_pushtotalk">Press and hold to speak</string>
+    <string name="ease_button_pushtotalk">Hold to talk</string>
     <string name="ease_button_pushtotalk_pressed">Release to send message</string>
     <string name="ease_button_send">Send</string>
     <string name="ease_recording_without_permission">No Recording permission</string>
@@ -85,8 +85,8 @@
     <string name="ease_take_video_capture">Shoot video</string>
     <string name="ease_presence_online">Online</string>
     <string name="ease_presence_busy">Busy</string>
-    <string name="ease_presence_do_not_disturb">Do not Disturb</string>
-    <string name="ease_presence_leave">Leave</string>
+    <string name="ease_presence_do_not_disturb">Do Not Disturb</string>
+    <string name="ease_presence_leave">Away</string>
     <string name="ease_presence_offline">Offline</string>
     <string name="ease_presence_custom">Custom Status</string>
     <string name="ease_presence_status">Status</string>
