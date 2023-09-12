@@ -1,6 +1,5 @@
 package io.agora.chat.uikit.chat.viewholder;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 
@@ -8,9 +7,7 @@ import androidx.annotation.NonNull;
 
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
-import io.agora.chat.FileMessageBody;
 import io.agora.chat.ImageMessageBody;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.utils.EaseFileUtils;
@@ -19,8 +16,8 @@ import io.agora.util.EMLog;
 
 public class EaseImageViewHolder extends EaseChatRowViewHolder {
 
-    public EaseImageViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
-        super(itemView, itemClickListener);
+    public EaseImageViewHolder(@NonNull View itemView) {
+        super(itemView);
     }
 
     @Override

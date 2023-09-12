@@ -78,8 +78,10 @@ public class EaseChatQuoteView extends LinearLayout {
     private final ViewGroup quoteDefaultLayout;
     private final TextView tvSummary;
     private ChatMessage message;
+    private ChatMessage quoteMessage;
     private String quoteSender;
     private boolean isHistory;
+    private int retryTimes = 3;
     public static final String URL_REGEX = "(((https|http)?://)?([a-z0-9]+[.])|(www.))"
             + "\\w+[.|\\/]([a-z0-9]{0,})?[[.]([a-z0-9]{0,})]+((/[\\S&&[^,;\u4E00-\u9FA5]]+)+)?([.][a-z0-9]{0,}+|/?)";
 
@@ -94,6 +96,7 @@ public class EaseChatQuoteView extends LinearLayout {
             put(EaseReplyMap.file.name(), ChatMessage.Type.FILE.name());
             put(EaseReplyMap.cmd.name(), ChatMessage.Type.CMD.name());
             put(EaseReplyMap.custom.name(), ChatMessage.Type.CUSTOM.name());
+            put(EaseReplyMap.combine.name(), ChatMessage.Type.COMBINE.name());
         }
     };
 
@@ -151,7 +154,7 @@ public class EaseChatQuoteView extends LinearLayout {
                         String quoteMsgID = jsonObject.getString(EaseConstant.QUOTE_MSG_ID);
                         ChatMessage showMsg = ChatClient.getInstance().chatManager().getMessage(quoteMsgID);
                         if(showMsg == null) {
-                            listener.onQuoteViewClickError(Error.GENERAL_ERROR, mContext.getString(R.string.ease_error_message_not_exist));
+                            //listener.onQuoteViewClickError(Error.GENERAL_ERROR, mContext.getString(R.string.ease_error_message_not_exist));
                             return;
                         }
                         listener.onQuoteViewClick(showMsg);
@@ -228,7 +231,7 @@ public class EaseChatQuoteView extends LinearLayout {
                 }
             }
             this.quoteSender = quoteSenderNick;
-            ChatMessage quoteMessage = ChatClient.getInstance().chatManager().getMessage(quoteMsgID);
+            quoteMessage = ChatClient.getInstance().chatManager().getMessage(quoteMsgID);
 
             isShowType(quoteMessage, quoteSenderNick, getQuoteMessageType(quoteType), quoteContent);
 
@@ -277,6 +280,12 @@ public class EaseChatQuoteView extends LinearLayout {
                 quoteDefaultView.setMaxLines(2);
                 quoteDefaultLayout.setVisibility(View.VISIBLE);
             }
+            return;
+        }
+        if(quoteMessage == null) {
+            String msg = getResources().getString(R.string.ease_quote_message_not_exist);
+            quoteDefaultView.setText(msg);
+            quoteDefaultLayout.setVisibility(View.VISIBLE);
             return;
         }
         switch (quoteMsgType){
@@ -457,31 +466,49 @@ public class EaseChatQuoteView extends LinearLayout {
             Uri imageUri = null;
             String imageUrl = "";
             ImageMessageBody imageMessageBody = (ImageMessageBody) message.getBody();
-            if(EaseFileUtils.isFileExistByUri(mContext, imageMessageBody.thumbnailLocalUri())) {
-                imageUri = imageMessageBody.thumbnailLocalUri();
-            }else if(EaseFileUtils.isFileExistByUri(mContext, imageMessageBody.getLocalUri())) {
+            if(EaseFileUtils.isFileExistByUri(mContext, imageMessageBody.thumbnailLocalUri())
+                    && imageMessageBody.thumbnailDownloadStatus() != FileMessageBody.EMDownloadStatus.FAILED) {
+                if(imageMessageBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.SUCCESSED) {
+                    imageUri = imageMessageBody.thumbnailLocalUri();
+                    showImageByGlide(message, imageUri, null, quoteSender);
+                }else {
+                    if(retryTimes > 0) {
+                        retryTimes--;
+                        postDelayed(()-> showImageView(message, quoteSender), 500);
+                    }
+                }
+            }else if(EaseFileUtils.isFileExistByUri(mContext, imageMessageBody.getLocalUri())
+                    && imageMessageBody.downloadStatus() == FileMessageBody.EMDownloadStatus.SUCCESSED) {
                 imageUri = imageMessageBody.getLocalUri();
+                showImageByGlide(message, imageUri, null, quoteSender);
             }else {
                 imageUrl = imageMessageBody.getRemoteUrl();
+                showImageByGlide(message, null, imageUrl, quoteSender);
             }
-            Glide.with(mContext)
-                    .load(imageUri == null ? imageUrl : imageUri)
-                    .apply(new RequestOptions()
-                            .placeholder(R.drawable.ease_chat_quote_default_image)
-                            .error(R.drawable.ease_chat_quote_default_image))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(new CustomTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            addDrawable(quoteSender, resource);
-                        }
-
-                        @Override
-                        public void onLoadCleared(@Nullable Drawable placeholder) {
-                            addDrawable(quoteSender, placeholder, true);
-                        }
-                    });
         }
+    }
+
+    private void showImageByGlide(ChatMessage message, Uri imageUri, String imageUrl, String quoteSender) {
+        if(this.quoteMessage == null || !TextUtils.equals(this.quoteMessage.getMsgId(), message.getMsgId())) {
+            return;
+        }
+        Glide.with(mContext)
+                .load(imageUri == null ? imageUrl : imageUri)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.ease_chat_quote_default_image)
+                        .error(R.drawable.ease_chat_quote_default_image))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        addDrawable(quoteSender, resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        addDrawable(quoteSender, placeholder, true);
+                    }
+                });
     }
 
     private void showBigExpression(ChatMessage message, String quoteSender){
@@ -547,24 +574,22 @@ public class EaseChatQuoteView extends LinearLayout {
 
     private void appendDrawable(SpannableString spannableString, Drawable drawable, boolean isPlaceholder, boolean isCenter) {
         if(drawable != null) {
-            int[] fitSize = getFitSize(drawable);
-            int width = fitSize[0];
-            int height = fitSize[1];
+            //int[] fitSize = getFitSize(drawable);
+            int width = (int) EaseUtils.dip2px(mContext, MAX_IMAGE_SIZE);
+            int height = width;
             if(!isPlaceholder) {
-                int minSize = Math.min(width, height);
-                int maxSize = Math.max(width, height);
-                if(maxSize < minSize * 3 && minSize > EaseUtils.dip2px(mContext, 6) * 3) {
+                //int minSize = Math.min(width, height);
+                //int maxSize = Math.max(width, height);
+                //if(maxSize < minSize * 3 && minSize > EaseUtils.dip2px(mContext, 6) * 3) {
                     drawable = EaseImageUtils.getRoundedCornerDrawable(mContext, EaseImageUtils.drawableToBitmap(drawable), EaseUtils.dip2px(mContext, 6));
-                }
+                //}
+            }
+            if(isPlaceholder) {
+                width = getFitSize(drawable)[0];
+                height = width;
             }
             drawable.setBounds(0, 0, width, height);
-            Drawable finalDrawable = drawable;
-            DynamicDrawableSpan imageSpan = new DynamicDrawableSpan(isCenter ? ALIGN_CENTER : ALIGN_TOP) {
-                @Override
-                public Drawable getDrawable() {
-                    return finalDrawable;
-                }
-            };
+            DynamicDrawableSpan imageSpan = new DynamicDrawableSpan(drawable, isCenter ? ALIGN_CENTER : ALIGN_TOP);
             int startIndex = getStartIndex();
             spannableString.setSpan(imageSpan, startIndex, startIndex + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }

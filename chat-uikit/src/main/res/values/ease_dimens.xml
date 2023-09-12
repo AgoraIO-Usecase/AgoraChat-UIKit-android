@@ -48,4 +48,5 @@
     <dimen name="ease_no_parent_message_text_size">16sp</dimen>
 
     <dimen name="ease_chat_bubble_margin_12">12dp</dimen>
+    <dimen name="ease_chat_unsent_text_size">12sp</dimen>
 </resources>

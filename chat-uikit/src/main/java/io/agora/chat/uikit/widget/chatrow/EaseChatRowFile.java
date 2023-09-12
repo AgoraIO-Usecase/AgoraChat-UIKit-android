@@ -2,6 +2,7 @@ package io.agora.chat.uikit.widget.chatrow;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -135,21 +136,25 @@ public class EaseChatRowFile extends EaseChatRow {
     protected void setMessageDownloadCallback() {
         if(message != null) {
             isDownloading = true;
+            Log.e("message", "setMessageDownloadCallback");
             message.setMessageStatusCallback(new CallBack() {
                 @Override
                 public void onSuccess() {
+                    Log.e("message", "setMessageDownloadCallback onSuccess");
                     post(()->onDownloadAttachmentSuccess());
                     isDownloading = false;
                 }
 
                 @Override
                 public void onError(int code, String error) {
+                    Log.e("message", "setMessageDownloadCallback onError");
                     post(()->onDownloadAttachmentError(code, error));
                     isDownloading = false;
                 }
 
                 @Override
                 public void onProgress(int progress, String status) {
+                    Log.e("message", "setMessageDownloadCallback onProgress");
                     post(()->onDownloadAttachmentProgress(progress));
                 }
             });

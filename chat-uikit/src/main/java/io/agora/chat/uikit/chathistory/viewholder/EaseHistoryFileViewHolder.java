@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.NormalFileMessageBody;
 import io.agora.chat.uikit.chat.viewholder.EaseChatRowViewHolder;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.utils.EaseCompat;
 import io.agora.chat.uikit.utils.EaseFileUtils;
@@ -16,8 +15,8 @@ import io.agora.chat.uikit.utils.EaseFileUtils;
 
 public class EaseHistoryFileViewHolder extends EaseChatRowViewHolder {
 
-    public EaseHistoryFileViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
-        super(itemView, itemClickListener);
+    public EaseHistoryFileViewHolder(@NonNull View itemView) {
+        super(itemView);
     }
 
     @Override

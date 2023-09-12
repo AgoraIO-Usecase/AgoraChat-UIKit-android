@@ -360,6 +360,9 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
                 } else if (message.getType() == ChatMessage.Type.CUSTOM) {
                     quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_custom));
                     quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.custom.name());
+                } else if (message.getType() == ChatMessage.Type.COMBINE) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_combine));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.combine.name());
                 } else {
                     quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, "[" + message.getType().name().toLowerCase() + "]");
                     quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, message.getType().name().toLowerCase());

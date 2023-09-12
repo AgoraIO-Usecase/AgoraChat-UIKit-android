@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.exceptions.ChatException;
@@ -15,8 +14,8 @@ import io.agora.exceptions.ChatException;
 
 public class EaseCombineViewHolder extends EaseChatRowViewHolder{
 
-    public EaseCombineViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
-        super(itemView, itemClickListener);
+    public EaseCombineViewHolder(@NonNull View itemView) {
+        super(itemView);
     }
 
     @Override
