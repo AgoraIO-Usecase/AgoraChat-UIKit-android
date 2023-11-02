@@ -2,6 +2,23 @@
 
 _[English](README.md) | 中文_
 
+## 重要特性
+- 消息扩展功能
+  - 表情消息
+  - 消息子区
+  - 消息引用
+  - 群 @ 消息
+  - 消息编辑
+  - 消息撤回
+  - 消息多选&合并转发
+- 通用功能
+  - 会话列表
+  - 聊天
+  - 语音消息
+  - 正在输入通知
+  - 已发送回执
+  - 已读回执
+
 ## 示例项目
 
 Agora 在 GitHub 上提供了一个开源的 [AgoraChat-android](https://github.com/AgoraIO-Usecase/AgoraChat-android) 示例项目。 您可以下载示例进行试用或查看源代码。
