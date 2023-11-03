@@ -2,6 +2,8 @@
 
 _[English](README.md) | 中文_
 
+## [更新日志](CHANGE_LOG.md)
+
 ## 重要特性
 - 消息扩展功能
   - 表情消息

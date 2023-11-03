@@ -2,6 +2,8 @@
 
 _English | [中文](README.zh.md)_
 
+## [Change log](CHANGE_LOG.md)
+
 ## Important features
 - Message extension functions  
     - Reactions
