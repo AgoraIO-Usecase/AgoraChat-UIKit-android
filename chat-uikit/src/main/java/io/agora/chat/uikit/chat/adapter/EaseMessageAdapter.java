@@ -1,9 +1,12 @@
 package io.agora.chat.uikit.chat.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -95,6 +98,12 @@ public class EaseMessageAdapter extends EaseBaseRecyclerViewAdapter<ChatMessage>
                 }else if((int)animator.getAnimatedValue() == 0) {
                     view.setBackground(null);
                 }
+            }
+        });
+        colorAnimation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                view.setBackground(background);
             }
         });
         colorAnimation.start();

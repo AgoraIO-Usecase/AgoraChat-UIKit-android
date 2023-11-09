@@ -35,6 +35,12 @@ public class EaseChatPresenter implements MessageListener, ChatThreadChangeListe
         ChatClient.getInstance().addMultiDeviceListener(this);
     }
 
+    public void clear() {
+        ChatClient.getInstance().chatManager().removeMessageListener(this);
+        ChatClient.getInstance().chatThreadManager().removeChatThreadChangeListener(this);
+        ChatClient.getInstance().removeMultiDeviceListener(this);
+    }
+
 
     public void attachApp(Context context) {
         this.context = context;
