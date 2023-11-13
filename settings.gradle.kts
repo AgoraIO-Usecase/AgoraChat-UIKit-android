@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ChatUIKit"
 include(":app")
- 
+include(":ChatUIKit")

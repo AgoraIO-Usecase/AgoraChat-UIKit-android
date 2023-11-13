@@ -1,8 +1,8 @@
-package com.easemob.chatuikit
+package com.easemob.chatuikit.demo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.easemob.chatuikit.databinding.ActivityMainBinding
+import com.easemob.chatuikit.demo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
