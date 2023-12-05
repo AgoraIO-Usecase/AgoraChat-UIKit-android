@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.FileMessageBody;
@@ -17,10 +19,10 @@ import io.agora.util.EMLog;
 
 public class EaseChatRowVoice extends EaseChatRowFile {
     private static final String TAG = EaseChatRowVoice.class.getSimpleName();
-    private ImageView voiceImageView;
+    protected ImageView voiceImageView;
     private TextView voiceLengthView;
     private ImageView readStatusView;
-    private AnimationDrawable voiceAnimation;
+    protected AnimationDrawable voiceAnimation;
 
     public EaseChatRowVoice(Context context, boolean isSender) {
         super(context, isSender);
@@ -49,7 +51,7 @@ public class EaseChatRowVoice extends EaseChatRowFile {
         int len = voiceBody.getLength();
         int padding = 0;
         if (len > 0) {
-            padding = EaseVoiceLengthUtils.getVoiceLength(getContext(), len);
+            padding = getVoicePadding(len);
             voiceLengthView.setText(voiceBody.getLength() + "\"");
             voiceLengthView.setVisibility(View.VISIBLE);
         } else {
@@ -67,7 +69,9 @@ public class EaseChatRowVoice extends EaseChatRowFile {
             FileMessageBody.EMDownloadStatus downloadStatus = voiceBody.downloadStatus();
             if(downloadStatus == FileMessageBody.EMDownloadStatus.PENDING &&
                     ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
-                ChatClient.getInstance().chatManager().downloadAttachment(message);
+                if(isVoiceFileExit(voiceBody)) {
+                    ChatClient.getInstance().chatManager().downloadAttachment(message);
+                }
             }
             if(readStatusView != null) {
                 if (message.isListened()) {
@@ -81,7 +85,7 @@ public class EaseChatRowVoice extends EaseChatRowFile {
             EMLog.d(TAG, "it is receive msg");
             if (voiceBody.downloadStatus() == FileMessageBody.EMDownloadStatus.DOWNLOADING ||
                     voiceBody.downloadStatus() == FileMessageBody.EMDownloadStatus.PENDING) {
-                if (ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
+                if (ChatClient.getInstance().getOptions().getAutodownloadThumbnail() && isVoiceFileExit(voiceBody)) {
                     progressBar.setVisibility(View.VISIBLE);
                 } else {
                     progressBar.setVisibility(View.INVISIBLE);
@@ -92,7 +96,9 @@ public class EaseChatRowVoice extends EaseChatRowFile {
             }
         }else {
             // hide the unread icon
-            readStatusView.setVisibility(View.INVISIBLE);
+            if(readStatusView != null) {
+                readStatusView.setVisibility(View.INVISIBLE);
+            }
         }
 
         // To avoid the item is recycled by listview and slide to this item again but the animation is stopped.
@@ -100,6 +106,19 @@ public class EaseChatRowVoice extends EaseChatRowFile {
         if (voicePlayer.isPlaying() && message.getMsgId().equals(voicePlayer.getCurrentPlayingId())) {
             startVoicePlayAnimation();
         }
+    }
+
+    /**
+     * Check if the voice file exits.
+     * @param voiceBody
+     * @return
+     */
+    protected boolean isVoiceFileExit(VoiceMessageBody voiceBody) {
+        return new File(voiceBody.getLocalUrl()).exists();
+    }
+
+    public int getVoicePadding(int voiceLen) {
+        return EaseVoiceLengthUtils.getVoiceLength(getContext(), voiceLen);
     }
 
     @Override
@@ -131,7 +150,9 @@ public class EaseChatRowVoice extends EaseChatRowFile {
 
         // Hide the voice item not listened status view.
         if (message.direct() == ChatMessage.Direct.RECEIVE) {
-            readStatusView.setVisibility(View.INVISIBLE);
+            if(readStatusView != null) {
+                readStatusView.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -146,4 +167,5 @@ public class EaseChatRowVoice extends EaseChatRowFile {
             voiceImageView.setImageResource(R.drawable.ease_chatto_voice_playing);
         }
     }
+
 }

@@ -12,7 +12,6 @@ import java.util.List;
 
 import io.agora.chat.ChatMessage;
 import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
 import io.agora.chat.uikit.widget.chatrow.EaseChatRow;
 
 
@@ -21,14 +20,12 @@ public class EaseChatRowViewHolder extends EaseMessageAdapter.ViewHolder<ChatMes
     private Context context;
     private EaseChatRow chatRow;
     private ChatMessage message;
-    private MessageListItemClickListener mItemClickListener;
 
-    public EaseChatRowViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
+    public EaseChatRowViewHolder(@NonNull View itemView) {
         super(itemView);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         itemView.setLayoutParams(params);
         this.context = itemView.getContext();
-        this.mItemClickListener = itemClickListener;
     }
 
     @Override
@@ -39,7 +36,8 @@ public class EaseChatRowViewHolder extends EaseMessageAdapter.ViewHolder<ChatMes
     @Override
     public void setData(ChatMessage item, int position) {
         message = item;
-        chatRow.setUpView(item, position, mItemClickListener, this);
+        chatRow.setUpView(item, position);
+        chatRow.setChatRowActionCallback(this);
         handleMessage();
     }
 

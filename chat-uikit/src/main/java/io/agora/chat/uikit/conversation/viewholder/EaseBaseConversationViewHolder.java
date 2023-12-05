@@ -171,14 +171,14 @@ public class EaseBaseConversationViewHolder extends EaseBaseRecyclerViewAdapter.
         unreadMsgDot.setVisibility(View.GONE);
         unreadMsgDotRight.setVisibility(View.GONE);
         if(unreadMsgCount > 0) {
-            mUnreadMsgNumber.setText(handleBigNum(unreadMsgCount));
-            unreadMsgNumberRight.setText(handleBigNum(unreadMsgCount));
+            mUnreadMsgNumber.setText(handleBigNum(mContext, unreadMsgCount));
+            unreadMsgNumberRight.setText(handleBigNum(mContext, unreadMsgCount));
             showUnreadRight(setModel.getUnreadDotPosition() == EaseConversationSetStyle.UnreadDotPosition.RIGHT);
         }
     }
 
-    public String handleBigNum(int unreadMsgCount) {
-        return EaseUtils.handleBigNum(unreadMsgCount);
+    public String handleBigNum(Context context, int unreadMsgCount) {
+        return EaseUtils.handleBigNum(context, unreadMsgCount);
     }
 
     public void showUnreadRight(boolean isRight) {

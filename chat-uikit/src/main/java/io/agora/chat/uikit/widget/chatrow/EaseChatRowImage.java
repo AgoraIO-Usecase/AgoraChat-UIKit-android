@@ -2,23 +2,21 @@ package io.agora.chat.uikit.widget.chatrow;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
+import io.agora.chat.FileMessageBody;
 import io.agora.chat.ImageMessageBody;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.chat.model.EaseChatItemStyleHelper;
+import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.chat.uikit.utils.EaseImageUtils;
-import io.agora.chat.uikit.utils.EaseUtils;
+import io.agora.util.EMLog;
 
 
 /**
@@ -26,7 +24,9 @@ import io.agora.chat.uikit.utils.EaseUtils;
  */
 public class EaseChatRowImage extends EaseChatRowFile {
     protected ImageView imageView;
-    private ImageMessageBody imgBody;
+    protected ImageMessageBody imgBody;
+
+    private int retryTimes = 10;
 
     public EaseChatRowImage(Context context, boolean isSender) {
         super(context, isSender);
@@ -48,22 +48,74 @@ public class EaseChatRowImage extends EaseChatRowFile {
         imageView = (ImageView) findViewById(R.id.image);
     }
 
-    
     @Override
     protected void onSetUpView() {
         if(bubbleLayout != null) {
             bubbleLayout.setBackground(null);
         }
         imgBody = (ImageMessageBody) message.getBody();
-        // received messages
-        if (message.direct() == ChatMessage.Direct.RECEIVE) {
-            ViewGroup.LayoutParams params = EaseImageUtils.getImageShowSize(context, message);
-            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-            layoutParams.width = params.width;
-            layoutParams.height = params.height;
+        // If local file exits, show image directly
+        if(EaseFileUtils.isFileExistByUri(context, imgBody.getLocalUri()) || EaseFileUtils.isFileExistByUri(context, imgBody.thumbnailLocalUri())) {
+            showImageView(message, position);
             return;
         }
-        showImageView(message);
+        retryTimes = 10;
+        ViewGroup.LayoutParams params = EaseImageUtils.getImageShowSize(context, message);
+        ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+        layoutParams.width = params.width;
+        layoutParams.height = params.height;
+        imageView.setImageResource(R.drawable.ease_default_image);
+        checkAttachmentStatus(position);
+    }
+
+    private void checkAttachmentStatus(int position) {
+        // If auto transfer message attachments to Chat Server, then download attachments
+        if(ChatClient.getInstance().getOptions().getAutoTransferMessageAttachments()) {
+            ImageMessageBody imgBody = (ImageMessageBody) message.getBody();
+            // received messages
+            if (message.direct() == ChatMessage.Direct.RECEIVE) {
+                if(ChatClient.getInstance().getOptions().getAutodownloadThumbnail()) {
+                    if(imgBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.SUCCESSED){
+                        showImageView(message, position);
+                        return;
+                    }else if(imgBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.DOWNLOADING
+                            || imgBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.PENDING) {
+                        if(isInRetrying()) {
+                            showInProgressStatus();
+                            postDelayed(()->checkAttachmentStatus(position), 500);
+                        }else {
+                            showSuccessStatus();
+                        }
+                        return;
+                    }
+                }
+            }
+            if(message.status() != ChatMessage.Status.SUCCESS) {
+                return;
+            }
+            if(imgBody.downloadStatus() == FileMessageBody.EMDownloadStatus.SUCCESSED
+                    || imgBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.SUCCESSED) {
+                showImageView(message, position);
+            }else if(imgBody.downloadStatus() == FileMessageBody.EMDownloadStatus.DOWNLOADING
+                    || imgBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.DOWNLOADING) {
+                if(isInRetrying()) {
+                    showInProgressStatus();
+                    postDelayed(()-> checkAttachmentStatus(position), 500);
+                }else {
+                    showSuccessStatus();
+                }
+                return;
+            }
+            downloadAttachment(!TextUtils.isEmpty(imgBody.getThumbnailUrl()) && message.direct() == ChatMessage.Direct.RECEIVE);
+        }else {
+            showImageView(message, position);
+        }
+    }
+
+    private boolean isInRetrying() {
+        int times = retryTimes;
+        retryTimes--;
+        return times > 0;
     }
 
     @Override
@@ -76,7 +128,9 @@ public class EaseChatRowImage extends EaseChatRowFile {
         super.onMessageSuccess();
         //Even if it's the sender, it needs to be executed after 
         // it's successfully sent to prevent the image size from being wrong
-        showImageView(message);
+        if(imgBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.SUCCESSED || imgBody.thumbnailDownloadStatus() == FileMessageBody.EMDownloadStatus.FAILED) {
+            showImageView(message, position);
+        }
     }
 
     @Override
@@ -87,7 +141,9 @@ public class EaseChatRowImage extends EaseChatRowFile {
             if(ChatClient.getInstance().getOptions().getAutodownloadThumbnail()){
                 //imageView.setImageResource(R.drawable.ease_default_image);
             }else {
-                progressBar.setVisibility(View.INVISIBLE);
+                if(progressBar != null) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
                 if(percentageView != null) {
                     percentageView.setVisibility(View.INVISIBLE);
                 }
@@ -95,13 +151,31 @@ public class EaseChatRowImage extends EaseChatRowFile {
         }
     }
 
+    @Override
+    protected void onDownloadAttachmentSuccess() {
+        showImageView(message, position);
+    }
+
+    @Override
+    protected void onDownloadAttachmentError(int code, String error) {
+        EMLog.e(EaseChatRowImage.class.getSimpleName(), "onDownloadAttachmentError:" + code + ", error:" + error);
+    }
+
+    @Override
+    protected void onDownloadAttachmentProgress(int progress) {
+        showInProgressStatus();
+    }
+
     /**
      * load image into image view
      *
      */
     @SuppressLint("StaticFieldLeak")
-    private void showImageView(final ChatMessage message) {
-        EaseImageUtils.showImage(context, imageView, message);
-        setImageIncludeThread(imageView);
+    protected void showImageView(final ChatMessage message, int position) {
+        if(position == this.position && TextUtils.equals(message.getMsgId(), this.message.getMsgId())) {
+            showSuccessStatus();
+            EaseImageUtils.showImage(context, imageView, message);
+            setImageIncludeThread(imageView);
+        }
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/subBubble_default_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="30dp"
+    android:padding="8dp"
+    android:layout_marginTop="2dp"
+    android:background="@drawable/ease_chat_bubble_quote_send_bg"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/tv_default"
+        style="@style/chat_quote_message_text_name_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:maxWidth="238dp"
+        android:layout_marginStart="6dp"
+        tools:text="apex:"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>

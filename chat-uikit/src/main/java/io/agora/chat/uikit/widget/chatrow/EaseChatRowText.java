@@ -8,15 +8,20 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
+import androidx.core.content.ContextCompat;
+
 import io.agora.chat.ChatMessage;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.manager.EaseDingMessageHelper;
 import io.agora.chat.uikit.utils.EaseSmileUtils;
+import io.agora.chat.uikit.widget.EaseChatQuoteView;
+import io.agora.util.EMLog;
 
 
 public class EaseChatRowText extends EaseChatRow {
-	private TextView contentView;
+    protected TextView contentView;
+    private EaseChatQuoteView quoteView;
 
     public EaseChatRowText(Context context, boolean isSender) {
 		super(context, isSender);
@@ -35,6 +40,8 @@ public class EaseChatRowText extends EaseChatRow {
 	@Override
 	protected void onFindViewById() {
 		contentView = (TextView) findViewById(R.id.tv_chatcontent);
+        quoteView = (EaseChatQuoteView)findViewById(R.id.chat_quote_view);
+        resetBackground();
 	}
 
     @Override
@@ -56,6 +63,8 @@ public class EaseChatRowText extends EaseChatRow {
             });
             replaceSpan();
         }
+        resetBackground();
+        onSetUpQuoteView(message);
     }
 
     /**
@@ -89,14 +98,8 @@ public class EaseChatRowText extends EaseChatRow {
     }
 
     @Override
-    protected void onMessageCreate() {
-        setStatus(View.VISIBLE, View.GONE);
-    }
-
-    @Override
     protected void onMessageSuccess() {
         super.onMessageSuccess();
-        setStatus(View.GONE, View.GONE);
 
         // Show "1 Read" if this msg is a ding-type msg.
         if (isSender() && EaseDingMessageHelper.get().isDingMessage(message) && ackedView != null) {
@@ -109,29 +112,26 @@ public class EaseChatRowText extends EaseChatRow {
         EaseDingMessageHelper.get().setUserUpdateListener(message, userUpdateListener);
     }
 
-    @Override
-    protected void onMessageError() {
-        super.onMessageError();
-        setStatus(View.GONE, View.VISIBLE);
+    public void onSetUpQuoteView(ChatMessage message) {
+        if(quoteView == null) {
+            EMLog.e(TAG, "view is null, don't setup quote view");
+            return;
+        }
+        quoteView.setVisibility(GONE);
+        boolean isUpdated = quoteView.updateMessageInfo(message);
+        if(isUpdated) {
+            updateBackground();
+        }
     }
 
-    @Override
-    protected void onMessageInProgress() {
-        setStatus(View.VISIBLE, View.GONE);
+    public void resetBackground() {
+        bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender()
+                ? R.drawable.ease_chat_bubble_send_bg : R.drawable.ease_chat_bubble_receive_bg));
     }
 
-    /**
-     * set progress and status view visible or gone
-     * @param progressVisible
-     * @param statusVisible
-     */
-    private void setStatus(int progressVisible, int statusVisible) {
-        if(progressBar != null) {
-            progressBar.setVisibility(progressVisible);
-        }
-        if(statusView != null) {
-            statusView.setVisibility(statusVisible);
-        }
+    public void updateBackground() {
+        bubbleLayout.setBackground(ContextCompat.getDrawable(context, isSender() ? R.drawable.ease_chat_bubble_send_bg_has_top
+                : R.drawable.ease_chat_bubble_receive_bg_has_top));
     }
 
     private EaseDingMessageHelper.IAckUserUpdateListener userUpdateListener = list -> onAckUserUpdate(list.size());

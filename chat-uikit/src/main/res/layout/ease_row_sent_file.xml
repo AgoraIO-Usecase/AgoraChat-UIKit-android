@@ -15,16 +15,23 @@
         android:layout_height="wrap_content" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_bubble_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/ease_margin_chat_activity"
-        android:paddingLeft="20dp" >
+        android:layout_marginTop="@dimen/ease_margin_chat_activity" >
+
+        <RadioButton
+            android:id="@+id/rb_select"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bubble"
+            app:layout_constraintEnd_toStartOf="@id/bubble"
+            app:layout_constraintHorizontal_bias="0"
+            style="@style/ease_row_radio_select_style"/>
 
         <io.agora.chat.uikit.widget.EaseImageView
             android:id="@+id/iv_userhead"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/bubble"
+            app:layout_constraintEnd_toEndOf="parent"
             style="@style/ease_row_sent_iv_userhead_style"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,10 +41,9 @@
             app:layout_constrainedWidth="true"
             android:minHeight="@dimen/ease_chat_file_bubble_min_height"
             android:layout_marginEnd="@dimen/ease_margin_chat_activity"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toStartOf="@id/iv_userhead"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_userid"
+            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
             app:layout_goneMarginEnd="@dimen/ease_chat_avatar_margin"
             android:background="@drawable/ease_chat_bubble_send_file_bg">
 
@@ -120,16 +126,11 @@
 
         <io.agora.chat.uikit.chat.widget.EaseChatReactionView
             android:id="@+id/tv_subReactionContent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lineSpacingExtra="2dp"
-            android:textColor="#000000"
-            android:textSize="15sp"
             app:ease_chat_item_sender="true"
-            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bubble"
             app:layout_constraintEnd_toEndOf="@id/bubble"
-            app:layout_constraintBottom_toTopOf="@id/bubble"
-            android:layout_marginBottom="-8dp" />
+            style="@style/ease_chat_row_reaction_style"/>
 
         <ImageView
             android:id="@+id/msg_status"
@@ -143,7 +144,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@id/bubble"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bubble"
             android:drawableEnd="@drawable/ease_msg_status_read"
             android:visibility="invisible" />
 
@@ -153,7 +154,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@id/bubble"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bubble"
             android:drawableEnd="@drawable/ease_msg_status_received"
             android:visibility="invisible" />
 
@@ -162,7 +163,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@id/bubble"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bubble"
             android:gravity="center"
             android:orientation="vertical" >
 
@@ -187,16 +188,11 @@
 
         <TextView
             android:id="@+id/tv_userid"
-            style="@style/chat_text_name_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/ease_chat_nick_margin_left"
-            android:textSize="@dimen/ease_chat_nick_text_size"
-            android:text="som"
-            android:textColor="@color/ease_msg_name_color"
-            app:layout_constraintBottom_toTopOf="@id/tv_subReactionContent"
-            app:layout_constraintRight_toRightOf="@id/bubble"
-            android:visibility="visible" />
+            style="@style/ease_chat_row_sent_text_name_style"
+            tools:text="som"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bubble"
+            app:layout_constraintEnd_toEndOf="@id/bubble" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -67,4 +67,6 @@ public interface IChatPrimaryMenu {
      * @param listener
      */
     void setEaseChatPrimaryMenuListener(EaseChatPrimaryMenuListener listener);
+
+    void setVisible(int visible);
 }

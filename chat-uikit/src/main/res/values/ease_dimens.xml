@@ -12,6 +12,7 @@
     <dimen name="ease_msg_status_icon_margin_bubble">8dp</dimen>
     <dimen name="ease_msg_status_icon_margin_bottom_bubble">8dp</dimen>
     <dimen name="ease_msg_file_bubble_default_width">254dp</dimen>
+    <dimen name="ease_chat_row_quote_margin_end">15dp</dimen>
 
     <dimen name="ease_chat_nick_margin_left">12dp</dimen>
     <dimen name="ease_chat_nick_text_size">13sp</dimen>
@@ -47,4 +48,5 @@
     <dimen name="ease_no_parent_message_text_size">16sp</dimen>
 
     <dimen name="ease_chat_bubble_margin_12">12dp</dimen>
+    <dimen name="ease_chat_unsent_text_size">12sp</dimen>
 </resources>

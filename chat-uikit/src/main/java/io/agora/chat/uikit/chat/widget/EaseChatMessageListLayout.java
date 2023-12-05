@@ -1,6 +1,5 @@
 package io.agora.chat.uikit.chat.widget;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -37,8 +36,10 @@ import io.agora.chat.uikit.chat.model.EaseChatItemStyleHelper;
 import io.agora.chat.uikit.chat.presenter.EaseChatMessagePresenter;
 import io.agora.chat.uikit.chat.presenter.EaseChatMessagePresenterImpl;
 import io.agora.chat.uikit.chat.presenter.IChatMessageListView;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
+import io.agora.chat.uikit.interfaces.MessageResultCallback;
+import io.agora.chat.uikit.interfaces.OnMessageListItemClickListener;
 import io.agora.chat.uikit.interfaces.OnItemClickListener;
+import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.manager.EaseThreadManager;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
@@ -50,6 +51,14 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                                                                         , IChatMessageItemSet, IChatMessageListLayout {
     private static final int DEFAULT_PAGE_SIZE = 10;
     private static final String TAG = EaseChatMessageListLayout.class.getSimpleName();
+    /**
+     * The default search range for searching quoted messages
+     */
+    private static final int QUOTE_DEFAULT_SEARCH_COUNT = 100;
+    /**
+     * The maximum search range for searching quoted messages
+     */
+    private static final int QUOTE_MAX_SEARCH_COUNT = 200;
     private EaseChatMessagePresenter presenter;
     private EaseMessageAdapter messageAdapter;
     private ConcatAdapter baseAdapter;
@@ -83,7 +92,8 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
      * The height of the last control
      */
     private int recyclerViewLastHeight;
-    private MessageListItemClickListener messageListItemClickListener;
+    private OnMessageListItemClickListener messageListItemClickListener;
+    private MessageResultCallback messageResultCallback;
     private EaseChatItemStyleHelper chatSetHelper;
     private String messageCursor;
     /**
@@ -91,12 +101,22 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
      */
     private boolean isReachedLatestThreadMessage = false;
 
+    private int retrievalSize = QUOTE_DEFAULT_SEARCH_COUNT;
+    /**
+     * Whether to scroll to the bottom when the message list changes.
+     */
+    private boolean isNeedScrollToBottomWhenChange = true;
+
     public EaseChatMessageListLayout(@NonNull Context context) {
         this(context, null);
     }
 
     public EaseChatMessageListLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
+    }
+
+    public RecyclerView getListView() {
+        return rvList;
     }
 
     public EaseChatMessageListLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -182,7 +202,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
 
         srlRefresh.setEnabled(canUseRefresh);
 
-        layoutManager = new LinearLayoutManager(getContext());
+        layoutManager = new EaseCustomLayoutManager(getContext());
         rvList.setLayoutManager(layoutManager);
 
         baseAdapter = new ConcatAdapter();
@@ -214,6 +234,19 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         EaseChatItemStyleHelper.getInstance().clear(getContext());
     }
 
+    private void setStackFromEnd() {
+        if(layoutManager != null) {
+            layoutManager.setStackFromEnd(isStackFromEnd(loadDataType));
+            if(layoutManager instanceof EaseCustomLayoutManager) {
+                ((EaseCustomLayoutManager) layoutManager).setIsStackFromEnd(isStackFromEnd(loadDataType));
+            }
+        }
+    }
+
+    private boolean isStackFromEnd(LoadDataType loadDataType) {
+        return loadDataType != LoadDataType.THREAD && loadDataType != LoadDataType.HISTORY;
+    }
+
     public void init(LoadDataType loadDataType, String username, EaseChatType chatType) {
         this.username = username;
         this.loadDataType = loadDataType;
@@ -224,6 +257,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         if(this.loadDataType == LoadDataType.THREAD) {
             srlRefresh.setEnabled(false);
         }
+        setStackFromEnd();
     }
 
     public void init(String username, EaseChatType chatType) {
@@ -260,7 +294,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         if(loadDataType == LoadDataType.ROAM) {
             presenter.loadServerMessages(pageSize);
         }else if(loadDataType == LoadDataType.HISTORY) {
-            presenter.loadMoreLocalHistoryMessages(msgId, pageSize, Conversation.SearchDirection.DOWN);
+            presenter.loadLocalHistoryMessages(msgId, pageSize);
         }else if(loadDataType == LoadDataType.THREAD) {
             presenter.loadServerMessages(pageSize, Conversation.SearchDirection.DOWN);
         }else {
@@ -389,7 +423,11 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                 }
                 if(recyclerViewLastHeight != height) {
                     if(messageAdapter.getData() != null && !messageAdapter.getData().isEmpty()) {
-                        post(()-> smoothSeekToPosition(messageAdapter.getData().size() - 1));
+                        if(isNeedScrollToLast()) {
+                            if(rvList.canScrollVertically(1)) {
+                                post(()-> seekToPosition(messageAdapter.getData().size() - 1));
+                            }
+                        }
                     }
                 }
                 recyclerViewLastHeight = height;
@@ -397,6 +435,10 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         });
 
         setAdapterListener();
+    }
+
+    private boolean isNeedScrollToLast() {
+        return loadDataType != LoadDataType.HISTORY && isNeedScrollToBottomWhenChange;
     }
 
     private void setAdapterListener() {
@@ -408,7 +450,7 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
                 }
             }
         });
-        messageAdapter.setListItemClickListener(new MessageListItemClickListener() {
+        messageAdapter.setOnMessageListItemClickListener(new OnMessageListItemClickListener() {
             @Override
             public boolean onBubbleClick(ChatMessage message) {
                 if(messageListItemClickListener != null) {
@@ -464,34 +506,6 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             }
 
             @Override
-            public void onMessageCreate(ChatMessage message) {
-                if(messageListItemClickListener != null) {
-                    messageListItemClickListener.onMessageCreate(message);
-                }
-            }
-
-            @Override
-            public void onMessageSuccess(ChatMessage message) {
-                if(messageListItemClickListener != null) {
-                    messageListItemClickListener.onMessageSuccess(message);
-                }
-            }
-
-            @Override
-            public void onMessageError(ChatMessage message, int code, String error) {
-                if(messageListItemClickListener != null) {
-                    messageListItemClickListener.onMessageError(message, code, error);
-                }
-            }
-
-            @Override
-            public void onMessageInProgress(ChatMessage message, int progress) {
-                if(messageListItemClickListener != null) {
-                    messageListItemClickListener.onMessageInProgress(message, progress);
-                }
-            }
-
-            @Override
             public void onRemoveReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
                 if (messageListItemClickListener != null) {
                     messageListItemClickListener.onRemoveReaction(message, reactionEntity);
@@ -502,6 +516,28 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
             public void onAddReaction(ChatMessage message, EaseReactionEmojiconEntity reactionEntity) {
                 if (messageListItemClickListener != null) {
                     messageListItemClickListener.onAddReaction(message, reactionEntity);
+                }
+            }
+        });
+        messageAdapter.setOnMessageResultCallback(new MessageResultCallback() {
+            @Override
+            public void onMessageSuccess(ChatMessage message) {
+                if(messageResultCallback != null) {
+                    messageResultCallback.onMessageSuccess(message);
+                }
+            }
+
+            @Override
+            public void onMessageError(ChatMessage message, int code, String error) {
+                if(messageResultCallback != null) {
+                    messageResultCallback.onMessageError(message, code, error);
+                }
+            }
+
+            @Override
+            public void onMessageInProgress(ChatMessage message, int progress) {
+                if(messageResultCallback != null) {
+                    messageResultCallback.onMessageInProgress(message, progress);
                 }
             }
         });
@@ -576,13 +612,19 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     @Override
     public void loadMoreLocalMsgSuccess(List<ChatMessage> data) {
         finishRefresh();
-        presenter.refreshCurrentConversation();
-        post(()->smoothSeekToPosition(data.size() - 1));
+        messageAdapter.addData(0, data, false);
+        messageAdapter.notifyItemRangeInserted(0, data.size());
+        rvList.post(()->smoothSeekToPosition(data.size() - 1));
     }
 
     @Override
     public void loadNoMoreLocalMsg() {
         finishRefresh();
+    }
+
+    @Override
+    public void loadMoreRetrievalsMessagesSuccess(List<ChatMessage> data) {
+        presenter.refreshCurrentConversation();
     }
 
     @Override
@@ -643,6 +685,19 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         if(toLatest) {
             seekToPosition(data.size() - 1);
         }
+    }
+
+    private boolean isFullScreen() {
+        boolean isOverOneScreen = false;
+        int totalHeight = 0;
+        for (int i = 0; i < rvList.getChildCount(); i++) {
+            totalHeight += rvList.getChildAt(i).getHeight();
+            if (rvList.getHeight() < totalHeight) {
+                isOverOneScreen = true;
+                break;
+            }
+        }
+        return isOverOneScreen;
     }
 
     @Override
@@ -710,12 +765,16 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         conversation.removeMessage(message.getMsgId());
         runOnUi(()-> {
             if(presenter.isActive()) {
-                List<ChatMessage> messages = messageAdapter.getData();
-                int position = messages.lastIndexOf(message);
-                if(position != -1) {
-                    messages.remove(position);
-                    messageAdapter.notifyItemRemoved(position);
-                    messageAdapter.notifyItemChanged(position);
+                if(EaseConfigsManager.enableReplyMessage()) {
+                    presenter.refreshCurrentConversation();
+                }else {
+                    List<ChatMessage> messages = messageAdapter.getData();
+                    int position = messages.lastIndexOf(message);
+                    if(position != -1) {
+                        messages.remove(position);
+                        messageAdapter.notifyItemRemoved(position);
+                        messageAdapter.notifyItemChanged(position);
+                    }
                 }
             }
         });
@@ -724,6 +783,46 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     @Override
     public void moveToPosition(int position) {
         seekToPosition(position);
+    }
+
+    @Override
+    public void moveToTarget(ChatMessage message) {
+        if(message == null || messageAdapter == null || messageAdapter.getData() == null) {
+            EMLog.e(TAG, "moveToTarget failed: message is null or messageAdapter is null");
+            return;
+        }
+        int position = messageAdapter.getData().indexOf(message);
+        if(position >= 0) {
+            if(layoutManager != null) {
+                int firstVisiblePosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+                int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
+                if(position < firstVisiblePosition || position > lastVisiblePosition) {
+                    seekToPosition(position);
+                }
+            }else {
+                seekToPosition(position);
+            }
+            highlightItem(position);
+        }else {
+            String msgId = getListFirstMessageId();
+            presenter.loadMoreRetrievalsMessages(msgId, retrievalSize);
+            position = messageAdapter.getData().indexOf(message);
+            if(position >= 0) {
+                seekToPosition(position);
+                highlightItem(position);
+            }else {
+                EMLog.e(TAG, "moveToTarget failed: No original message was found within the scope of the query");
+            }
+        }
+    }
+
+    @Override
+    public void highlightItem(int position) {
+        rvList.post(()-> {
+            if(messageAdapter != null) {
+                messageAdapter.highlightItem(position);
+            }
+        });
     }
 
     @Override
@@ -881,13 +980,52 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         if(position < 0) {
             position = 0;
         }
-        RecyclerView.LayoutManager manager = rvList.getLayoutManager();
-        if(manager instanceof LinearLayoutManager) {
-            ((LinearLayoutManager) manager).scrollToPositionWithOffset(position, 0);
+        int finalPosition = position;
+        rvList.post(()-> {
+            if(isLastPosition(finalPosition) && !rvList.canScrollVertically(1)) {
+                return;
+            }
+            RecyclerView.LayoutManager manager = rvList.getLayoutManager();
+            if(manager instanceof LinearLayoutManager) {
+                ((LinearLayoutManager) manager).scrollToPositionWithOffset(finalPosition, 0);
+                checkIfMoveToBottom(finalPosition);
+            }
+        });
+
+    }
+
+    private void checkIfMoveToBottom(int position) {
+        if(!rvList.canScrollVertically(1)) {
+            return;
         }
+        if(!isLastPosition(position) || !isFullScreen()) {
+            return;
+        }
+        rvList.post(()-> {
+            if(rvList == null || layoutManager == null) {
+                return;
+            }
+            int rvPosition = layoutManager.findLastVisibleItemPosition() - layoutManager.findFirstVisibleItemPosition();
+            if(rvList.getChildCount() > rvPosition) {
+                int bottom = rvList.getChildAt(rvPosition).getBottom();
+                int height = rvList.getHeight();
+                layoutManager.scrollToPositionWithOffset(position, height - bottom);
+            }
+        });
+    }
+
+    private boolean isLastPosition(int position) {
+        if(messageAdapter == null || messageAdapter.getData() == null) {
+            return false;
+        }
+        return position == messageAdapter.getData().size() - 1;
     }
 
     private void smoothSeekToPosition(int position) {
+        smoothSeekToPosition(position, true);
+    }
+
+    private void smoothSeekToPosition(int position, boolean isMoveToTop) {
         if(presenter.isDestroy() || rvList == null) {
             return;
         }
@@ -896,35 +1034,39 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
         }
         RecyclerView.LayoutManager manager = rvList.getLayoutManager();
         if(manager instanceof LinearLayoutManager) {
-            ((LinearLayoutManager) manager).scrollToPositionWithOffset(position, 0);
-            //setMoveAnimation(manager, position);
+            setMoveAnimation(manager, position, isMoveToTop);
         }
     }
 
-    private void setMoveAnimation(RecyclerView.LayoutManager manager, int position) {
-        int prePosition;
-        if(position > 0) {
-            prePosition = position - 1;
-        }else {
-            prePosition = position;
+    private void setMoveAnimation(RecyclerView.LayoutManager manager, int position, boolean isMoveToTop) {
+        if(!(manager instanceof LinearLayoutManager)) {
+            return;
         }
-        View view = manager.findViewByPosition(0);
-        int height;
-        if(view != null) {
-            height = view.getHeight();
-        }else {
-            height = 200;
-        }
-        ValueAnimator animator = ValueAnimator.ofInt(-height, 0);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (int) animation.getAnimatedValue();
-                ((LinearLayoutManager)manager).scrollToPositionWithOffset(prePosition, value);
+        int moveHeight = isMoveToTop ? -10 : 10;
+        rvList.smoothScrollBy(0, moveHeight, null, 10);
+        rvList.postDelayed(()-> {
+            int itemViewHeight = getViewHeight(position);
+            if(itemViewHeight != -1) {
+                int excessHeight = isMoveToTop ? -itemViewHeight + 10 : itemViewHeight - 10;
+                rvList.smoothScrollBy(0, excessHeight, null, 900);
+            }else {
+                ((LinearLayoutManager)manager).scrollToPositionWithOffset(position, 0);
             }
-        });
-        animator.setDuration(800);
-        animator.start();
+        }, 100);
+    }
+
+    private int getViewHeight(int position) {
+        View view = layoutManager.findViewByPosition(position);
+        int height = -1;
+        if(view != null) {
+            height = view.getMeasuredHeight();
+        }else {
+            RecyclerView.ViewHolder holder = rvList.findViewHolderForAdapterPosition(position);
+            if(holder != null) {
+                height = holder.itemView.getHeight();
+            }
+        }
+        return height;
     }
 
     @Override
@@ -953,8 +1095,30 @@ public class EaseChatMessageListLayout extends RelativeLayout implements IChatMe
     }
 
     @Override
-    public void setMessageListItemClickListener(MessageListItemClickListener listener) {
+    public void setOnMessageListItemClickListener(OnMessageListItemClickListener listener) {
         this.messageListItemClickListener = listener;
+    }
+
+    @Override
+    public void setMessageResultCallback(MessageResultCallback callback) {
+        this.messageResultCallback = callback;
+    }
+
+    @Override
+    public void setRefreshing(boolean refreshing) {
+        if(refreshing) {
+            if(srlRefresh.isRefreshing()) {
+                srlRefresh.setRefreshing(false);
+            }
+            srlRefresh.setRefreshing(true);
+        }else {
+            srlRefresh.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void isNeedScrollToBottomWhenViewChange(boolean isNeedToScrollBottom) {
+        this.isNeedScrollToBottomWhenChange = isNeedToScrollBottom;
     }
 
     public static boolean isVisibleBottom(RecyclerView recyclerView) {

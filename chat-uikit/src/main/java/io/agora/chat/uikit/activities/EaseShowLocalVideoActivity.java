@@ -26,11 +26,15 @@ public class EaseShowLocalVideoActivity extends EaseBaseActivity implements Easy
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.ease_activity_show_local_video);
-        setFitSystemForTheme(false, R.color.transparent, false);
         initIntent(getIntent());
         initView();
         initListener();
         initData();
+    }
+
+    @Override
+    public void setActivityTheme() {
+        setFitSystemForTheme(false, R.color.transparent, false);
     }
 
     @Override

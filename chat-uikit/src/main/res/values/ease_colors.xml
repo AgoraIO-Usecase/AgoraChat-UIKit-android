@@ -56,4 +56,22 @@
     <color name="ease_chat_parent_region_owner_color">#4D4D4D</color>
     <color name="ease_edit_line_color">#E6E6E6</color>
 
+    <color name="ease_chat_top_extend_text_color">#808080</color>
+    <color name="ease_chat_top_extend_text_name_color">#000000</color>
+    <color name="ease_chat_top_extend_background_color">#f5f5f5</color>
+    <color name="ease_chat_bubble_quote_bg_color">#ebebeb</color>
+
+    <color name="ease_chat_quote_message_sender_text_color">#4d4d4d</color>
+    <color name="ease_chat_item_bg_dark">#FFE6E6E6</color>
+    <color name="ease_chat_extend_quote_message_bg_color">#E6E6E6</color>
+    <color name="ease_chat_row_combine_summary_text_color">#666666</color>
+    <color name="ease_chat_row_history_message_content_link_text_color">#005FFF</color>
+
+    <color name="ease_color_blue_005fff">#005fff</color>
+    <color name="ease_color_gray_cccccc">#cccccc</color>
+    <color name="ease_color_gray_999999">#999999</color>
+    <color name="ease_color_gray_99000000">#99000000</color>
+    <color name="ease_color_gray_f9fafa">#f9fafa</color>
+    <color name="ease_chat_row_combine_sender_summary_text_color">#E6E6E6</color>
+    <color name="ease_chat_row_text_name_color">#000000</color>
 </resources>
