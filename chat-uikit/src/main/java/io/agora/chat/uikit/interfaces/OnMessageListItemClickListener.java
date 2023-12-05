@@ -9,7 +9,7 @@ import io.agora.chat.uikit.models.EaseReactionEmojiconEntity;
 /**
  * Item click listener for chat list
  */
-public interface MessageListItemClickListener {
+public interface OnMessageListItemClickListener {
 	/**
 	 * there is default handling when bubble is clicked, if you want handle it, return true
 	 * another way is you implement in onBubbleClick() of chat row
@@ -61,33 +61,6 @@ public interface MessageListItemClickListener {
 	default boolean onThreadLongClick(View v, String messageId, String threadId) {
 		return false;
 	}
-
-	/**
-	 * message is create status
-	 * @param message
-	 */
-	default void onMessageCreate(ChatMessage message) {}
-
-	/**
-	 * message send success
-	 * @param message
-	 */
-	default void onMessageSuccess(ChatMessage message) {}
-
-	/**
-	 * message send fail
-	 * @param message
-	 * @param code
-	 * @param error
-	 */
-	default void onMessageError(ChatMessage message, int code, String error) {}
-
-	/**
-	 * message in sending progress
-	 * @param message
-	 * @param progress
-	 */
-	default void onMessageInProgress(ChatMessage message, int progress) {}
 
 	/**
 	 * remove reaction

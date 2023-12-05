@@ -1,6 +1,8 @@
 package io.agora.chat.uikit.chat.presenter;
 
 
+import org.json.JSONObject;
+
 import io.agora.chat.ChatMessage;
 import io.agora.chat.uikit.interfaces.ILoadDataView;
 
@@ -34,6 +36,11 @@ public interface IHandleMessageView extends ILoadDataView {
      * @param message
      */
     void deleteLocalMessageSuccess(ChatMessage message);
+
+    /**
+     * Delete local message list successfully.
+     */
+    void deleteLocalMessagesSuccess();
 
     /**
      * Complete withdrawal message
@@ -101,5 +108,32 @@ public interface IHandleMessageView extends ILoadDataView {
      * @param error
      */
     void removeReactionMessageFail(ChatMessage message, int code, String error);
+
+    /**
+     * modify message success
+     * @param messageModified
+     */
+    void onModifyMessageSuccess(ChatMessage messageModified);
+
+    /**
+     * modify message failure
+     * @param messageId
+     * @param code
+     * @param error
+     */
+    void onModifyMessageFailure(String messageId, int code, String error);
+
+    /**
+     * create reply message ext success.
+     * @param extObject reply ext object.
+     */
+    void createReplyMessageExtSuccess(JSONObject extObject);
+
+    /**
+     * create reply message ext fail.
+     * @param code  error code.
+     * @param error error message.
+     */
+    void createReplyMessageExtFail(int code, String error);
 
 }

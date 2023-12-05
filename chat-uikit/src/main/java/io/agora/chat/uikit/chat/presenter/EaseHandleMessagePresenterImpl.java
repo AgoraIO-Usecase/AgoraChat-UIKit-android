@@ -3,7 +3,14 @@ package io.agora.chat.uikit.chat.presenter;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
 import io.agora.CallBack;
+import io.agora.Error;
+import io.agora.ValueCallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.CmdMessageBody;
@@ -12,6 +19,7 @@ import io.agora.chat.MessageBody;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.EaseChatLayout;
+import io.agora.chat.uikit.chat.model.EaseReplyMap;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.manager.EaseAtMessageHelper;
 import io.agora.chat.uikit.menu.EaseChatType;
@@ -38,7 +46,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             sendAtMessage(content);
             return;
         }
-        ChatMessage message = ChatMessage.createTxtSendMessage(content, toChatUsername);
+        ChatMessage message = ChatMessage.createTextSendMessage(content, toChatUsername);
         message.setIsNeedGroupAck(isNeedGroupAck);
         sendMessage(message);
     }
@@ -52,7 +60,7 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
             }
             return;
         }
-        ChatMessage message = ChatMessage.createTxtSendMessage(content, toChatUsername);
+        ChatMessage message = ChatMessage.createTextSendMessage(content, toChatUsername);
         Group group = ChatClient.getInstance().groupManager().getGroup(toChatUsername);
         if(ChatClient.getInstance().getCurrentUser().equals(group.getOwner()) && EaseAtMessageHelper.get().containsAtAll(content)){
             message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL);
@@ -112,6 +120,11 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     }
 
     @Override
+    public void sendCombineMessage(ChatMessage message) {
+        sendMessage(message, false);
+    }
+
+    @Override
     public void addMessageAttributes(ChatMessage message) {
         //You can add some custom attributes
         mView.addMsgAttrBeforeSend(message);
@@ -119,20 +132,27 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
 
     @Override
     public void sendMessage(ChatMessage message) {
+        sendMessage(message, true);
+    }
+
+    @Override
+    public void sendMessage(ChatMessage message, boolean isCheck) {
         if(message == null) {
             if(isActive()) {
                 runOnUI(() -> mView.sendMessageFail("message is null!"));
             }
             return;
         }
-        addMessageAttributes(message);
-        if (chatType == EaseChatType.GROUP_CHAT){
-            message.setChatType(ChatMessage.ChatType.GroupChat);
-        }else if(chatType == EaseChatType.CHATROOM){
-            message.setChatType(ChatMessage.ChatType.ChatRoom);
+        if(isCheck) {
+            if (chatType == EaseChatType.GROUP_CHAT){
+                message.setChatType(ChatMessage.ChatType.GroupChat);
+            }else if(chatType == EaseChatType.CHATROOM){
+                message.setChatType(ChatMessage.ChatType.ChatRoom);
+            }
+            // Should add thread label if it is a thread conversation
+            message.setIsChatThreadMessage(isThread);
         }
-        // Should add thread label if it is a thread conversation
-        message.setIsChatThreadMessage(isThread);
+        addMessageAttributes(message);
         message.setMessageStatusCallback(new CallBack() {
             @Override
             public void onSuccess() {
@@ -174,6 +194,12 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
     }
 
     @Override
+    public void sendCombineMessage(String title, String summary, String compatibleText, List<String> msgIds) {
+        ChatMessage message = ChatMessage.createCombinedSendMessage(title, summary, compatibleText, msgIds, toChatUsername);
+        sendMessage(message);
+    }
+
+    @Override
     public void resendMessage(ChatMessage message) {
         message.setStatus(ChatMessage.Status.CREATE);
         long currentTimeMillis = System.currentTimeMillis();
@@ -189,6 +215,17 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
         if(isActive()) {
             runOnUI(()->mView.deleteLocalMessageSuccess(message));
         }
+    }
+
+    @Override
+    public void deleteMessages(List<String> messages) {
+        if(messages.isEmpty()) {
+            return;
+        }
+        for (String msgId : messages) {
+            conversation.removeMessage(msgId);
+        }
+        runOnUI(()->mView.deleteLocalMessagesSuccess());
     }
 
     @Override
@@ -214,6 +251,34 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
                 runOnUI(()->mView.recallMessageFail(e.getErrorCode(), e.getDescription()));
             }
         }
+    }
+
+    @Override
+    public void modifyMessage(String messageId, MessageBody messageBodyModified) {
+        if(TextUtils.isEmpty(messageId)||messageBodyModified==null) {
+            runOnUI(() ->{
+                if(isActive()) {
+                    mView.onModifyMessageFailure(messageId, Error .GENERAL_ERROR,"messageId or messageModified is empty !");
+                }
+            });
+            return;
+        }
+        // modify message
+        ChatClient.getInstance().chatManager().asyncModifyMessage(messageId, messageBodyModified, new ValueCallBack<ChatMessage>() {
+            @Override
+            public void onSuccess(ChatMessage messageModified) {
+                runOnUI(() ->{
+                    if(isActive()) {
+                        mView.onModifyMessageSuccess(messageModified);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int code, String error) {
+                runOnUI(()-> mView.onModifyMessageFailure(messageId, code, error));
+            }
+        });
     }
 
     private String getThumbPath(Uri videoUri) {
@@ -266,6 +331,50 @@ public class EaseHandleMessagePresenterImpl extends EaseHandleMessagePresenter {
 
             }
         });
+    }
+
+    @Override
+    public void createReplyMessageExt(ChatMessage message) {
+        JSONObject quoteObject = new JSONObject();
+        try {
+            if (message.getBody() != null) {
+                quoteObject.put(EaseConstant.QUOTE_MSG_ID, message.getMsgId());
+                if (message.getType() == ChatMessage.Type.TXT && !TextUtils.isEmpty(((TextMessageBody) message.getBody()).getMessage())) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, ((TextMessageBody) message.getBody()).getMessage());
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.txt.name());
+                } else if (message.getType() == ChatMessage.Type.IMAGE) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_picture));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.img.name());
+                } else if (message.getType() == ChatMessage.Type.VIDEO) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_video));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.video.name());
+                } else if (message.getType() == ChatMessage.Type.LOCATION) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_location));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.location.name());
+                } else if (message.getType() == ChatMessage.Type.VOICE) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_voice));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.audio.name());
+                } else if (message.getType() == ChatMessage.Type.FILE) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_file));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.file.name());
+                } else if (message.getType() == ChatMessage.Type.CUSTOM) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_custom));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.custom.name());
+                } else if (message.getType() == ChatMessage.Type.COMBINE) {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, mView.context().getResources().getString(R.string.ease_combine));
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, EaseReplyMap.combine.name());
+                } else {
+                    quoteObject.put(EaseConstant.QUOTE_MSG_PREVIEW, "[" + message.getType().name().toLowerCase() + "]");
+                    quoteObject.put(EaseConstant.QUOTE_MSG_TYPE, message.getType().name().toLowerCase());
+                }
+                quoteObject.put(EaseConstant.QUOTE_MSG_SENDER, message.getFrom());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            mView.createReplyMessageExtFail(Error.GENERAL_ERROR, e.getMessage());
+            return;
+        }
+        mView.createReplyMessageExtSuccess(quoteObject);
     }
 }
 

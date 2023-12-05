@@ -2,18 +2,20 @@ package io.agora.chat.uikit.widget.chatrow;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import androidx.annotation.NonNull;
+
+import io.agora.CallBack;
+import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.NormalFileMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.provider.EaseFileIconProvider;
-import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.util.TextFormater;
 
 /**
@@ -35,6 +37,7 @@ public class EaseChatRowFile extends EaseChatRow {
     protected TextView fileStateView;
     private NormalFileMessageBody fileMessageBody;
     private ImageView ivFileIcon;
+    private boolean isDownloading = false;
 
     public EaseChatRowFile(Context context, boolean isSender) {
         super(context, isSender);
@@ -63,7 +66,9 @@ public class EaseChatRowFile extends EaseChatRow {
 	protected void onSetUpView() {
 	    fileMessageBody = (NormalFileMessageBody) message.getBody();
 //        Uri filePath = fileMessageBody.getLocalUri();
-        fileStateView.setVisibility(GONE);
+        if(fileStateView != null) {
+            fileStateView.setVisibility(GONE);
+        }
         fileNameView.setText(fileMessageBody.getFileName());
         fileSizeView.setText(TextFormater.getDataSize(fileMessageBody.getFileSize()));
         setFileIcon(fileMessageBody.getFileName());
@@ -85,54 +90,15 @@ public class EaseChatRowFile extends EaseChatRow {
 	}
 
     @Override
-    protected void onMessageCreate() {
-        super.onMessageCreate();
-        progressBar.setVisibility(View.VISIBLE);
-        if (percentageView != null)
-            percentageView.setVisibility(View.INVISIBLE);
-        if (statusView != null)
-            statusView.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
     protected void onMessageSuccess() {
         super.onMessageSuccess();
-        progressBar.setVisibility(View.INVISIBLE);
-        if (percentageView != null)
-            percentageView.setVisibility(View.INVISIBLE);
-        if (statusView != null)
-            statusView.setVisibility(View.INVISIBLE);
         if (message.direct() == ChatMessage.Direct.SEND)
             if(fileStateView != null) {
                 fileStateView.setText(R.string.ease_have_uploaded);
             }
     }
 
-    @Override
-    protected void onMessageError() {
-        super.onMessageError();
-        progressBar.setVisibility(View.INVISIBLE);
-        if (percentageView != null)
-            percentageView.setVisibility(View.INVISIBLE);
-        if (statusView != null)
-            statusView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onMessageInProgress() {
-        super.onMessageInProgress();
-        if(progressBar.getVisibility() != VISIBLE) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        if (percentageView != null) {
-            percentageView.setVisibility(View.VISIBLE);
-            percentageView.setText(message.progress() + "%");
-        }
-        if (statusView != null)
-            statusView.setVisibility(View.INVISIBLE);
-    }
-
-    private void setFileIcon(String fileName) {
+    protected void setFileIcon(String fileName) {
         EaseFileIconProvider provider = EaseUIKit.getInstance().getFileIconProvider();
         if(provider != null) {
             Drawable icon = provider.getFileIcon(fileName);
@@ -141,4 +107,63 @@ public class EaseChatRowFile extends EaseChatRow {
             }
         }
     }
+
+    /**
+     * Download file or thumbnail.
+     * @param isThumbnail   Whether to download thumbnail
+     */
+    protected void downloadAttachment(boolean isThumbnail) {
+        if(message != null) {
+            setMessageDownloadCallback();
+            if(isThumbnail) {
+                ChatClient.getInstance().chatManager().downloadThumbnail(message);
+            }else {
+                ChatClient.getInstance().chatManager().downloadAttachment(message);
+            }
+        }
+    }
+
+    @Override
+    public void updateView(ChatMessage msg) {
+        if(!isDownloading) {
+            super.updateView(msg);
+        }
+    }
+
+    /**
+     * Set message download callback.
+     */
+    protected void setMessageDownloadCallback() {
+        if(message != null) {
+            isDownloading = true;
+            Log.e("message", "setMessageDownloadCallback");
+            message.setMessageStatusCallback(new CallBack() {
+                @Override
+                public void onSuccess() {
+                    Log.e("message", "setMessageDownloadCallback onSuccess");
+                    post(()->onDownloadAttachmentSuccess());
+                    isDownloading = false;
+                }
+
+                @Override
+                public void onError(int code, String error) {
+                    Log.e("message", "setMessageDownloadCallback onError");
+                    post(()->onDownloadAttachmentError(code, error));
+                    isDownloading = false;
+                }
+
+                @Override
+                public void onProgress(int progress, String status) {
+                    Log.e("message", "setMessageDownloadCallback onProgress");
+                    post(()->onDownloadAttachmentProgress(progress));
+                }
+            });
+        }
+    }
+
+    protected void onDownloadAttachmentSuccess() {}
+
+    protected void onDownloadAttachmentError(int code, String error) {}
+
+    protected void onDownloadAttachmentProgress(int progress) {}
 }

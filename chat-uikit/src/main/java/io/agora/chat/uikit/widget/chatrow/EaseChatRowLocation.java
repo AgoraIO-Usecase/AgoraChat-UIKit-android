@@ -42,49 +42,4 @@ public class EaseChatRowLocation extends EaseChatRow {
 		locBody = (LocationMessageBody) message.getBody();
 		locationView.setText(locBody.getAddress());
     }
-
-    @Override
-    protected void onMessageCreate() {
-        if(progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        if(statusView != null) {
-            statusView.setVisibility(View.GONE);
-        }
-
-    }
-
-    @Override
-    protected void onMessageSuccess() {
-        super.onMessageSuccess();
-        if(progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-        }
-        if(statusView != null) {
-            statusView.setVisibility(View.GONE);
-        }
-
-    }
-
-    @Override
-    protected void onMessageError() {
-        super.onMessageError();
-        if(progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-        }
-        if(statusView != null) {
-            statusView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    protected void onMessageInProgress() {
-        if(progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        if(statusView != null) {
-            statusView.setVisibility(View.GONE);
-        }
-    }
-
 }

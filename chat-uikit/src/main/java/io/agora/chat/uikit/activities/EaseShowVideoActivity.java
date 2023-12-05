@@ -1,5 +1,7 @@
 package io.agora.chat.uikit.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,6 +23,7 @@ import io.agora.chat.ChatMessage;
 import io.agora.chat.VideoMessageBody;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.base.EaseBaseActivity;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.chat.uikit.utils.EaseFileUtils;
 import io.agora.util.EMLog;
 
@@ -34,6 +37,12 @@ public class EaseShowVideoActivity extends EaseBaseActivity {
 	private RelativeLayout loadingLayout;
 	private ProgressBar progressBar;
 	private Uri localFilePath;
+
+	public static void actionStart(Context context, ChatMessage message) {
+	    Intent intent = new Intent(context, EaseShowVideoActivity.class);
+	    intent.putExtra("msg", message);
+	    context.startActivity(intent);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +83,7 @@ public class EaseShowVideoActivity extends EaseBaseActivity {
 	}
 
 	private void showLocalVideo(Uri videoUri) {
-		EaseShowLocalVideoActivity.actionStart(this, videoUri.toString());
+		EaseActivityProviderHelper.startToLocalVideoActivity(this, videoUri.getPath());
 		finish();
 	}
 

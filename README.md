@@ -300,8 +300,8 @@ public class CustomTypeChatRow extends EaseChatRow {
 ```java
 public class CustomChatTypeViewViewHolder extends EaseChatRowViewHolder {
 
-    public CustomChatTypeViewViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
-        super(itemView, itemClickListener);
+    public CustomChatTypeViewViewHolder(@NonNull View itemView) {
+        super(itemView);
     }
 
     @Override

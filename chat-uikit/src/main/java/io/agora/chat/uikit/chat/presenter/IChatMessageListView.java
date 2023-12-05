@@ -46,6 +46,12 @@ public interface IChatMessageListView extends ILoadDataView {
     void loadNoMoreLocalMsg();
 
     /**
+     * Load more retrieval messages successfully.
+     * @param data
+     */
+    void loadMoreRetrievalsMessagesSuccess(List<ChatMessage> data);
+
+    /**
      * Load more local historical data
      * @param data
      */

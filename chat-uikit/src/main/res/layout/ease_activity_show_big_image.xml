@@ -18,15 +18,4 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ease_mm_title_back"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:padding="20dp"
-        />
-
-
 </RelativeLayout>

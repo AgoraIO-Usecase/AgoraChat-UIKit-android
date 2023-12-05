@@ -5,7 +5,8 @@ import io.agora.chat.uikit.chat.widget.EaseChatMessageListLayout;
 import io.agora.chat.uikit.chat.adapter.EaseMessageAdapter;
 import io.agora.chat.uikit.chat.presenter.EaseChatMessagePresenter;
 import io.agora.chat.uikit.interfaces.IRecyclerView;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
+import io.agora.chat.uikit.interfaces.MessageResultCallback;
+import io.agora.chat.uikit.interfaces.OnMessageListItemClickListener;
 
 public interface IChatMessageListLayout extends IRecyclerView {
     
@@ -38,5 +39,11 @@ public interface IChatMessageListLayout extends IRecyclerView {
      * Set the click event of each control in the chat list entry
      * @param listener
      */
-    void setMessageListItemClickListener(MessageListItemClickListener listener);
+    void setOnMessageListItemClickListener(OnMessageListItemClickListener listener);
+
+    /**
+     * Set message result callback.
+     * @param callback
+     */
+    void setMessageResultCallback(MessageResultCallback callback);
 }

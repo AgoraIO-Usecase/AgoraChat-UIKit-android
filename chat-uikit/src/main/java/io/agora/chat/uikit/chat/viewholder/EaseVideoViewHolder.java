@@ -1,6 +1,5 @@
 package io.agora.chat.uikit.chat.viewholder;
 
-import android.content.Intent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -9,16 +8,15 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.FileMessageBody;
 import io.agora.chat.VideoMessageBody;
-import io.agora.chat.uikit.activities.EaseShowVideoActivity;
-import io.agora.chat.uikit.interfaces.MessageListItemClickListener;
+import io.agora.chat.uikit.manager.EaseActivityProviderHelper;
 import io.agora.util.EMLog;
 
 
 public class EaseVideoViewHolder extends EaseChatRowViewHolder {
     private static final String TAG = EaseVideoViewHolder.class.getSimpleName();
 
-    public EaseVideoViewHolder(@NonNull View itemView, MessageListItemClickListener itemClickListener) {
-        super(itemView, itemClickListener);
+    public EaseVideoViewHolder(@NonNull View itemView) {
+        super(itemView);
     }
 
     @Override
@@ -37,8 +35,6 @@ public class EaseVideoViewHolder extends EaseChatRowViewHolder {
                 return;
             }
         }
-        Intent intent = new Intent(getContext(), EaseShowVideoActivity.class);
-        intent.putExtra("msg", message);
         if (message != null && message.direct() == ChatMessage.Direct.RECEIVE && !message.isAcked()
                 && message.getChatType() == ChatMessage.ChatType.Chat) {
             try {
@@ -47,6 +43,6 @@ public class EaseVideoViewHolder extends EaseChatRowViewHolder {
                 e.printStackTrace();
             }
         }
-        getContext().startActivity(intent);
+        EaseActivityProviderHelper.startToDownloadVideoActivity(getContext(), message);
     }
 }

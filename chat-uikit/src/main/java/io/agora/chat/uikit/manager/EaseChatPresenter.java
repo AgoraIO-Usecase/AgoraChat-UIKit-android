@@ -1,6 +1,7 @@
 package io.agora.chat.uikit.manager;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.utils.EaseUserUtils;
+import io.agora.util.EMLog;
 
 public class EaseChatPresenter implements MessageListener, ChatThreadChangeListener, MultiDeviceListener {
     private static final String TAG = EaseChatPresenter.class.getSimpleName();
@@ -81,7 +83,32 @@ public class EaseChatPresenter implements MessageListener, ChatThreadChangeListe
      */
     @Override
     public void onMessageRecalled(List<ChatMessage> messages) {
-        
+        for (ChatMessage msg : messages) {
+            if(msg.getChatType() == ChatMessage.ChatType.GroupChat && EaseAtMessageHelper.get().isAtMeMsg(msg)){
+                EaseAtMessageHelper.get().removeAtMeGroup(msg.getTo());
+            }
+            ChatMessage msgNotification = ChatMessage.createReceiveMessage(ChatMessage.Type.TXT);
+            String content;
+            if(TextUtils.equals(msg.getFrom(), ChatClient.getInstance().getCurrentUser())) {
+                msgNotification.setDirection(ChatMessage.Direct.SEND);
+                content = context.getString(R.string.ease_msg_recall_by_self);
+            }else {
+                msgNotification.setDirection(ChatMessage.Direct.RECEIVE);
+                content = String.format(context.getString(R.string.ease_msg_recall_by_user), msg.getFrom());
+            }
+            TextMessageBody txtBody = new TextMessageBody(content);
+            msgNotification.addBody(txtBody);
+            msgNotification.setFrom(msg.getFrom());
+            msgNotification.setTo(msg.getTo());
+            msgNotification.setUnread(false);
+            msgNotification.setMsgTime(msg.getMsgTime());
+            msgNotification.setLocalTime(msg.getMsgTime());
+            msgNotification.setChatType(msg.getChatType());
+            msgNotification.setAttribute(EaseConstant.MESSAGE_TYPE_RECALL, true);
+            msgNotification.setStatus(ChatMessage.Status.SUCCESS);
+            msgNotification.setIsChatThreadMessage(msg.isChatThreadMessage());
+            ChatClient.getInstance().chatManager().saveMessage(msgNotification);
+        }
     }
 
     /**
@@ -99,6 +126,11 @@ public class EaseChatPresenter implements MessageListener, ChatThreadChangeListe
         for (GroupReadAck ack : groupReadAcks) {
             EaseDingMessageHelper.get().handleGroupReadAck(ack);
         }
+    }
+
+    @Override
+    public void onMessageContentChanged(ChatMessage messageModified, String operatorId, long operationTime){
+        EMLog.d(TAG, "onMessageContentChanged");
     }
 
     public EaseNotifier getNotifier() {

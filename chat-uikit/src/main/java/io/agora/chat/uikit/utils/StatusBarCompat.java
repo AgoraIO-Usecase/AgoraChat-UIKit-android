@@ -191,10 +191,20 @@ public class StatusBarCompat {
      * @param colorId
      */
     public static void setToolbarCustomColor(Context context, @ColorRes int colorId) {
+        setToolbarCustomColor(context, colorId, null);
+    }
+
+    /**
+     * Set custom color for toolbar arrow
+     * @param context
+     * @param colorId
+     * @param leftArrow
+     */
+    public static void setToolbarCustomColor(Context context, @ColorRes int colorId, Drawable leftArrow) {
         if(context == null) {
             return;
         }
-        setToolbarCustomColorDefault(context, ContextCompat.getColor(context, colorId));
+        setToolbarCustomColorDefault(context, ContextCompat.getColor(context, colorId), leftArrow);
     }
 
     /**
@@ -203,10 +213,22 @@ public class StatusBarCompat {
      * @param colorId
      */
     public static void setToolbarCustomColorDefault(Context context, @ColorInt int colorId) {
+        setToolbarCustomColorDefault(context, colorId, null);
+    }
+
+    /**
+     * Set custom color for toolbar arrow
+     * @param context
+     * @param colorId
+     * @param leftArrow
+     */
+    public static void setToolbarCustomColorDefault(Context context, @ColorInt int colorId, Drawable leftArrow) {
         if(context == null) {
             return;
         }
-        Drawable leftArrow = ContextCompat.getDrawable(context, R.drawable.abc_ic_ab_back_material);
+        if(leftArrow == null) {
+            leftArrow = ContextCompat.getDrawable(context, R.drawable.abc_ic_ab_back_material);
+        }
         if(leftArrow != null) {
             leftArrow.setColorFilter(colorId, PorterDuff.Mode.SRC_ATOP);
             if(context instanceof AppCompatActivity) {

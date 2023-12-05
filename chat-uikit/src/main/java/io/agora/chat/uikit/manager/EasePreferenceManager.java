@@ -3,6 +3,7 @@ package io.agora.chat.uikit.manager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -113,6 +114,7 @@ public class EasePreferenceManager {
     public Map<String,Long> getMuteMap(){
         Map<String, Long> mute = new HashMap<>();
         String result = mSharedPreferences.getString(MUTE_DATA_KEY, "");
+        if (TextUtils.isEmpty(result)) return mute;
         try {
             JSONArray array = new JSONArray(result);
             for (int i = 0; i < array.length(); i++) {

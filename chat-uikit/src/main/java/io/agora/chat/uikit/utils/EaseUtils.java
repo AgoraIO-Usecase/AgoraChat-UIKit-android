@@ -22,22 +22,22 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.WindowManager;
 
 import androidx.annotation.BoolRes;
-import androidx.annotation.IdRes;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.Conversation;
+import io.agora.chat.Group;
 import io.agora.chat.TextMessageBody;
 import io.agora.chat.uikit.EaseUIKit;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.constants.EaseConstant;
+import io.agora.chat.uikit.manager.EaseConfigsManager;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.provider.EaseUserProfileProvider;
@@ -136,6 +136,9 @@ public class EaseUtils {
             break;
         case FILE:
             digest = getString(context, R.string.ease_file);
+            break;
+        case COMBINE:
+            digest = getString(context, R.string.ease_combine);
             break;
         default:
             EMLog.e(TAG, "error, unknow type");
@@ -381,41 +384,70 @@ public class EaseUtils {
         return enable;
     }
 
-    public static boolean hasFroyo() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
-
-    }
-
-    public static boolean hasGingerbread() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
-    }
-
     public static boolean hasHoneycomb() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
 
-    public static boolean hasHoneycombMR1() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
-    }
-
-    public static boolean hasJellyBean() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    }
-
-    public static boolean hasKitKat() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-    }
-
     /**
      * Used to handle message unread
+     *
+     * @param context
      * @param count
      * @return
      */
-    public static String handleBigNum(int count) {
+    public static String handleBigNum(Context context, int count) {
         if(count <= 99) {
             return String.valueOf(count);
         }else {
-            return "99+";
+            return context == null ? "99+" : context.getString(R.string.ease_message_unread_count_max);
         }
+    }
+
+    /**
+     * Whether the message can be edited.
+     * @param message
+     * @return
+     */
+    public static boolean canEdit(ChatMessage message) {
+        return message != null
+                && message.status() == ChatMessage.Status.SUCCESS
+                && (message.getType() == ChatMessage.Type.TXT)
+                && (isGroupOwnerOrAdmin(message) || isSender(message)
+                && EaseConfigsManager.enableModifyMessageAfterSent());
+    }
+
+    public static boolean isGroupOwnerOrAdmin(ChatMessage message) {
+        if(message.getChatType() != ChatMessage.ChatType.GroupChat) {
+            return false;
+        }
+        Group group = ChatClient.getInstance().groupManager().getGroup(message.getTo());
+        boolean b = isOwner(group) || isAdmin(group);
+        return b;
+    }
+
+    public static boolean isSender(ChatMessage message) {
+        return message != null && message.direct() == ChatMessage.Direct.SEND;
+    }
+
+    public static boolean isOwner(Group group) {
+        if(group == null ||
+                TextUtils.isEmpty(group.getOwner())) {
+            return false;
+        }
+        return TextUtils.equals(group.getOwner(), ChatClient.getInstance().getCurrentUser());
+    }
+    /**
+     * Whether is chatRoom owner
+     * @return
+     */
+    public synchronized static boolean isAdmin(Group group) {
+        if (null == group) {
+            return false;
+        }
+        List<String> adminList = group.getAdminList();
+        if(adminList != null && !adminList.isEmpty()) {
+            return adminList.contains(ChatClient.getInstance().getCurrentUser());
+        }
+        return false;
     }
 }

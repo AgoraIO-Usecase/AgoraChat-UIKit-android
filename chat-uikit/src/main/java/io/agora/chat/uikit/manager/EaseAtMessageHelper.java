@@ -16,6 +16,7 @@ import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.models.EaseUser;
 import io.agora.chat.uikit.utils.EaseUserUtils;
+import io.agora.util.EMLog;
 
 public class EaseAtMessageHelper {
     private List<String> toAtUserList = new ArrayList<String>();
@@ -76,11 +77,8 @@ public class EaseAtMessageHelper {
     }
 
     public boolean containsAtAll(String content){
-        String atAll = "@" + EaseUIKit.getInstance().getContext().getString(R.string.ease_all_members);
-        if(content.contains(atAll)){
-            return true;
-        }
-        return false;
+        String atAll = "@" + EaseUIKit.getInstance().getContext().getString(R.string.ease_all_members).toUpperCase();
+        return content.toUpperCase().contains(atAll);
     }
     
     /**
@@ -138,9 +136,11 @@ public class EaseAtMessageHelper {
                     //Determine whether is @ all message
                     String usernameStr = msg.getStringAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, null);
                     if(usernameStr != null){
-                        if(usernameStr.toUpperCase().equals(EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL)){
+                        String s = usernameStr.toUpperCase();
+                        if(s.equals(EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL)){
                             if(!atMeGroupList.contains(groupId)){
                                 atMeGroupList.add(groupId);
+                                EMLog.d("EaseAtMessageHelper", "atMeGroupList: "+ atMeGroupList.toString());
                             }
                         }
                     }

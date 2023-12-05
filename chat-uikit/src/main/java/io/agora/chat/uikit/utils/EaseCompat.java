@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -39,9 +40,27 @@ public class EaseCompat {
         context.startActivityForResult(intent, requestCode);
     }
 
+    /**
+     * Open the system album.
+     * @param context
+     * @param requestCode
+     * @deprecated Use {@link #openImage(ActivityResultLauncher, Context)} instead.
+     */
+    @Deprecated
     public static void openImage(Fragment context, int requestCode) {
         Intent intent = getOpenImageIntent(context.getActivity());
         context.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * Open the system album.
+     * @param launcher
+     * @param context
+     */
+    public static void openImage(ActivityResultLauncher<Intent> launcher, Context context) {
+        if(launcher != null) {
+            launcher.launch(getOpenImageIntent(context));
+        }
     }
 
     private static Intent getOpenImageIntent(Context context) {

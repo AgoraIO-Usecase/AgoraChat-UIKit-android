@@ -14,4 +14,13 @@ public interface EaseUserProfileProvider {
      * @return
      */
     EaseUser getUser(String userID);
+    /**
+     * If not overridden will return the info from {@link #getUser(String)}
+     * @param groupId
+     * @param userId
+     * @return
+     */
+    default EaseUser getGroupUser(String groupId,String userId){
+        return getUser(userId);
+    }
 }

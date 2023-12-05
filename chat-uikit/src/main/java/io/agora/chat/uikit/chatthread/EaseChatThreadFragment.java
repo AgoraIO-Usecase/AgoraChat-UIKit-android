@@ -3,6 +3,8 @@ package io.agora.chat.uikit.chatthread;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,14 +21,14 @@ import io.agora.chat.ImageMessageBody;
 import io.agora.chat.MessageBody;
 import io.agora.chat.uikit.R;
 import io.agora.chat.uikit.chat.EaseChatFragment;
+import io.agora.chat.uikit.chat.interfaces.IChatTopExtendMenu;
 import io.agora.chat.uikit.chat.interfaces.OnRecallMessageResultListener;
+import io.agora.chat.uikit.chat.widget.EaseChatMultiSelectView;
 import io.agora.chat.uikit.chatthread.interfaces.EaseChatThreadParentMsgViewProvider;
-import io.agora.chat.uikit.constants.EaseConstant;
 import io.agora.chat.uikit.interfaces.EaseMessageListener;
 import io.agora.chat.uikit.interfaces.OnJoinChatThreadResultListener;
 import io.agora.chat.uikit.menu.EaseChatType;
 import io.agora.chat.uikit.menu.EasePopupWindowHelper;
-import io.agora.chat.uikit.menu.MenuItemBean;
 import io.agora.chat.uikit.chatthread.adapter.EaseChatThreadHeaderAdapter;
 import io.agora.chat.uikit.chatthread.interfaces.OnChatThreadRoleResultCallback;
 import io.agora.chat.uikit.chatthread.presenter.EaseChatThreadPresenter;
@@ -73,6 +75,11 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
                 data.add(message);
             }
         }
+    }
+
+    @Override
+    public void initSubView() {
+        super.initSubView();
         addHeaderViewToList();
     }
 
@@ -102,7 +109,7 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
         // Chat Thread is load from server, not need to delete from local
         helper.findItemVisible(R.id.action_chat_delete, false);
         // Chat Thread can not reply again
-        helper.findItemVisible(R.id.action_chat_reply, false);
+        helper.findItemVisible(R.id.action_chat_thread, false);
         if(!message.isChatThreadMessage() || message.direct() == ChatMessage.Direct.RECEIVE) {
             helper.findItemVisible(R.id.action_chat_recall, false);
         }
@@ -298,19 +305,19 @@ public class EaseChatThreadFragment extends EaseChatFragment implements IChatThr
 
     }
 
-    private void setParentMsgViewProvider(EaseChatThreadParentMsgViewProvider parentMsgViewProvider) {
+    protected void setParentMsgViewProvider(EaseChatThreadParentMsgViewProvider parentMsgViewProvider) {
         this.parentMsgViewProvider = parentMsgViewProvider;
     }
 
-    private void setThreadPresenter(EaseChatThreadPresenter presenter) {
+    protected void setThreadPresenter(EaseChatThreadPresenter presenter) {
         this.mPresenter = presenter;
     }
 
-    private void setOnJoinThreadResultListener(OnJoinChatThreadResultListener listener) {
+    protected void setOnJoinThreadResultListener(OnJoinChatThreadResultListener listener) {
         this.joinThreadResultListener = listener;
     }
 
-    private void setOnThreadRoleResultCallback(OnChatThreadRoleResultCallback callback) {
+    protected void setOnThreadRoleResultCallback(OnChatThreadRoleResultCallback callback) {
         this.resultCallback = callback;
     }
 

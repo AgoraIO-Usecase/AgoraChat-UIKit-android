@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +30,6 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.ChatThread;
 import io.agora.chat.uikit.R;
-import io.agora.chat.uikit.activities.EaseImageGridActivity;
 import io.agora.chat.uikit.base.EaseBaseFragment;
 import io.agora.chat.uikit.chat.interfaces.ChatInputMenuListener;
 import io.agora.chat.uikit.chat.interfaces.OnAddMsgAttrsBeforeSendEvent;
@@ -82,6 +84,14 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
     private boolean sendOriginalImage;
     private ChatThread chatThread;
     private OnChatThreadCreatedResultListener resultListener;
+    private final ActivityResultLauncher<Intent> launcherToCamera = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
+            , result -> onActivityResult(result, REQUEST_CODE_CAMERA));
+    private final ActivityResultLauncher<Intent> launcherToAlbum = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
+            , result -> onActivityResult(result, REQUEST_CODE_LOCAL));
+    private final ActivityResultLauncher<Intent> launcherToVideo = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
+            , result -> onActivityResult(result, REQUEST_CODE_SELECT_VIDEO));
+    private final ActivityResultLauncher<Intent> launcherToFile = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
+            , result -> onActivityResult(result, REQUEST_CODE_SELECT_FILE));
 
     @Nullable
     @Override
@@ -388,24 +398,21 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
                 + System.currentTimeMillis() + ".jpg");
         //noinspection ResultOfMethodCallIgnored
         cameraFile.getParentFile().mkdirs();
-        startActivityForResult(
-                new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, EaseCompat.getUriForFile(getContext(), cameraFile)),
-                REQUEST_CODE_CAMERA);
+        launcherToCamera.launch(new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, EaseCompat.getUriForFile(getContext(), cameraFile)));
     }
 
     /**
      * select local image
      */
     protected void selectPicFromLocal() {
-        EaseCompat.openImage(this, REQUEST_CODE_LOCAL);
+        EaseCompat.openImage(launcherToAlbum, mContext);
     }
 
     /**
      * select local video
      */
     protected void selectVideoFromLocal() {
-        Intent intent = new Intent(getActivity(), EaseImageGridActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
+        EaseActivityProviderHelper.startToImageGridActivity(launcherToVideo, mContext);
     }
 
     /**
@@ -426,13 +433,27 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
 
-        startActivityForResult(intent, REQUEST_CODE_SELECT_FILE);
+        launcherToFile.launch(intent);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_DING_MSG) { // To send the ding-type msg.
+                onActivityResultForDingMsg(data);
+            }
+        }
+    }
+
+    /**
+     * It's the result from ActivityResultLauncher.
+     * @param result
+     * @param requestCode
+     */
+    public void onActivityResult(ActivityResult result, int requestCode) {
+        if(result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
             binding.layoutMenu.hideExtendContainer();
             if (requestCode == REQUEST_CODE_CAMERA) { // capture new image
                 onActivityResultForCamera(data);
@@ -440,7 +461,7 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
                 onActivityResultForLocalPhotos(data);
             } else if (requestCode == REQUEST_CODE_DING_MSG) { // To send the ding-type msg.
                 onActivityResultForDingMsg(data);
-            }else if(requestCode == REQUEST_CODE_SELECT_FILE) {
+            } else if (requestCode == REQUEST_CODE_SELECT_FILE) {
                 onActivityResultForLocalFiles(data);
             } else if (REQUEST_CODE_SELECT_VIDEO == requestCode) {
                 onActivityResultForLocalVideos(data);
@@ -461,6 +482,7 @@ public class EaseChatThreadCreateFragment extends EaseBaseFragment implements Ch
                 presenter.sendVideoMessage(Uri.parse(videoPath), duration);
             } else {
                 Uri videoUri = FileHelper.getInstance().formatInUri(uriString);
+                EaseFileUtils.saveUriPermission(mContext, videoUri, data);
                 presenter.sendVideoMessage(videoUri, duration);
             }
         }
