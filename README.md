@@ -1,6 +1,5 @@
 # Agora Chat UIKit Readme
 
-_English | [中文](README.zh.md)_
 
 ## Sample project
 
