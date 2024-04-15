@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="EasyVideoPlayer">
+        <!--Play resources-->
+        <attr name="easy_source" format="string" />
+        <!--Play button-->
+        <attr name="easy_playDrawable" format="reference" />
+        <!--Pause button-->
+        <attr name="easy_pauseDrawable" format="reference" />
+        <!--Hide the control disk when playback starts-->
+        <attr name="easy_hideControlsOnPlay" format="boolean" />
+        <!--Autoplay-->
+        <attr name="easy_autoPlay" format="boolean" />
+        <!--Controls enable-->
+        <attr name="easy_disableControls" format="boolean" />
+        <!--Theme color-->
+        <attr name="easy_themeColor" format="color" />
+        <!--Full screen-->
+        <attr name="easy_autoFullscreen" format="boolean" />
+        <!--Automatic loop-->
+        <attr name="easy_loop" format="boolean" />
+    </declare-styleable>
+
+</resources>

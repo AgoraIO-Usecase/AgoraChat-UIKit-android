@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/ease_color_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.hyphenate.easeui.widget.EaseTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ease_toolbar_height"
+        app:titleBarDisplayHomeAsUpEnabled="true"
+        app:titleBarReplaceActionBar="false"
+        app:titleBarTitle=""
+        app:titleBarMenu="@menu/menu_action_more"
+        app:titleBarMenuIconTint="@color/ease_color_on_background"/>
+
+    <ScrollView
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:paddingBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.hyphenate.easeui.widget.EaseImageView
+                android:id="@+id/iv_group_avatar"
+                android:layout_marginTop="20dp"
+                app:ease_shape_type="rectangle"
+                android:scaleType="fitXY"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/ease_default_group_avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+
+            <TextView
+                app:layout_constraintTop_toBottomOf="@+id/iv_group_avatar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                android:id="@+id/tv_name"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                style="@style/ease_detail_layout_title"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                app:layout_constraintTop_toBottomOf="@+id/tv_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone"
+                android:id="@+id/tv_signature"
+                style="@style/ease_detail_layout_subtitle1"
+                android:maxLines="3"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                app:layout_constraintTop_toBottomOf="@+id/tv_signature"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/tv_number"
+                style="@style/ease_detail_layout_subtitle2"
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/function_layout"
+                app:layout_constraintTop_toBottomOf="@+id/tv_number"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:minHeight="80dp"
+                android:layout_height="wrap_content">
+
+                <GridView
+                    android:id="@+id/gvGridview"
+                    android:scrollbars="none"
+                    android:fadingEdge="none"
+                    android:horizontalSpacing="8dp"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.hyphenate.easeui.widget.EaseArrowItemView
+                android:id="@+id/item_member_list"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@+id/function_layout"
+                app:arrowItemTitle="@string/ease_group_detail_member_list"
+                style="@style/ease_group_detail_arrow_item"
+                app:arrowItemShowArrow="true"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"/>
+
+            <com.hyphenate.easeui.widget.EaseSwitchItemView
+                android:id="@+id/switch_item_disturb"
+                app:layout_constraintTop_toBottomOf="@+id/item_member_list"
+                app:switchItemTitle="@string/ease_message_no_disturbance"
+                style="@style/ease_group_detail_switch_item"
+                android:layout_width="match_parent"
+                android:layout_height="54dp" />
+
+            <com.hyphenate.easeui.widget.EaseArrowItemView
+                android:id="@+id/item_clear"
+                app:layout_constraintTop_toBottomOf="@+id/switch_item_disturb"
+                app:arrowItemTitle="@string/ease_clear_history"
+                style="@style/ease_group_detail_arrow_item"
+                app:arrowItemShowArrow="false"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"/>
+
+            <View
+                android:id="@+id/item_spacing"
+                android:visibility="gone"
+                android:background="@color/ease_color_spacing_view"
+                app:layout_constraintTop_toBottomOf="@+id/item_clear"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"/>
+
+            <com.hyphenate.easeui.widget.EaseArrowItemView
+                android:id="@+id/item_group_name"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/item_spacing"
+                app:arrowItemTitle="@string/ease_group_detail_group_name"
+                style="@style/ease_group_detail_arrow_item"
+                app:arrowItemShowArrow="true"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"/>
+
+            <com.hyphenate.easeui.widget.EaseArrowItemView
+                android:id="@+id/item_group_describe"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/item_group_name"
+                app:arrowItemTitle="@string/ease_group_detail_group_describe"
+                style="@style/ease_group_detail_arrow_item"
+                app:arrowItemShowArrow="true"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

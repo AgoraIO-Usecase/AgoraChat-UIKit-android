@@ -1,8 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.ChatUIKit" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.ChatUIKit" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:textCursorDrawable">@drawable/custom_cursor</item>
+        <item name="android:selectableItemBackground">@drawable/ease_chat_recyclerview_item_shadow</item>
     </style>
 
     <style name="Theme.ChatUIKit" parent="Base.Theme.ChatUIKit" />

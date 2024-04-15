@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- new conversation -->
+    <item name="sheet_item_new_conversation" type="id"/>
+    <!-- add contact -->
+    <item name="sheet_item_add_contact" type="id"/>
+    <!-- create group -->
+    <item name="sheet_item_create_group" type="id"/>
+
+    <!-- new request -->
+    <item name="header_new_request" type="id"/>
+    <!-- group -->
+    <item name="header_group" type="id"/>
+
+    <!-- thread more -->
+    <item name="thread_more_edit" type="id"/>
+    <item name="thread_more_member" type="id"/>
+    <item name="thread_more_leave" type="id"/>
+    <item name="thread_more_destroy" type="id"/>
+
+</resources>

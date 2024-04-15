@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="@dimen/ease_size_4"
+    app:cardBackgroundColor="@color/ease_color_on_background"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@color/ease_color_background"
+        android:padding="@dimen/ease_size_8">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_down_arrow"
+            android:src="@drawable/ease_icon_down_arrow"
+            style="@style/ease_chat_notification_unread_scroll_icon_style" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_unread_count"
+            tools:text="500 unread messages"
+            style="@style/ease_chat_notification_unread_text_style" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

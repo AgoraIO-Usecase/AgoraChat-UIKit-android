@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/ease_chat_extend_menu_indicator_selected_color"/>
+            <size android:width="@dimen/ease_size_6" android:height="@dimen/ease_size_6"/>
+        </shape>
+    </item>
+
+    <item android:state_pressed="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/ease_chat_extend_menu_indicator_selected_color"/>
+            <size android:width="@dimen/ease_size_6" android:height="@dimen/ease_size_6"/>
+        </shape>
+    </item>
+
+    <item >
+        <shape android:shape="oval">
+            <solid android:color="@color/ease_chat_extend_menu_indicator_unselected_color"/>
+            <size android:width="@dimen/ease_size_6" android:height="@dimen/ease_size_6"/>
+        </shape>
+    </item>
+
+</selector>

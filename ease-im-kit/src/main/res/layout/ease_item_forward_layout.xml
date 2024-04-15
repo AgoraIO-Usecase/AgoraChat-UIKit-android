@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ease_message_forward_contact_item_root_style">
+
+    <com.hyphenate.easeui.widget.EaseImageView
+        android:id="@+id/iv_avatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:src="@drawable/ease_default_avatar"
+        style="@style/ease_message_forward_to_list_item_avatar_style" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        app:layout_constraintStart_toEndOf="@id/iv_avatar"
+        app:layout_constraintEnd_toStartOf="@id/btn_forward"
+        app:layout_constraintTop_toTopOf="@id/iv_avatar"
+        app:layout_constraintBottom_toBottomOf="@id/iv_avatar"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constrainedWidth="true"
+        tools:text="name"
+        style="@style/ease_message_forward_to_list_item_name_style" />
+
+    <Button
+        android:id="@+id/btn_forward"
+        tools:text="@string/ease_action_forward"
+        app:layout_constraintStart_toEndOf="@id/tv_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/ease_message_forward_to_list_item_btn_style" />
+
+    <View
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+        android:layout_marginTop="10dp"
+        style="@style/ease_list_item_divider"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

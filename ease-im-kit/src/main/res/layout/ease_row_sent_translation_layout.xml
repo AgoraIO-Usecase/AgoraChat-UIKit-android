@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ease_chat_row_message_translation_root_style">
+
+    <View
+        android:id="@+id/v_divider"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/ease_chat_message_sent_translation_divider_style" />
+
+    <TextView
+        android:id="@+id/tv_translation_content"
+        style="@style/ease_chat_message_sent_translation_content_style"
+        app:layout_constraintTop_toBottomOf="@+id/v_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tv_translation_status"
+        app:layout_constraintHorizontal_bias="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tv_translation_status"
+        app:layout_constraintTop_toBottomOf="@+id/tv_translation_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/ease_chat_message_sent_translation_status_style" />
+
+    <com.hyphenate.easeui.widget.EaseImageView
+        android:scaleType="centerCrop"
+        android:id="@+id/iv_translation"
+        app:layout_constraintEnd_toStartOf="@+id/tv_translation_status"
+        app:layout_constraintTop_toTopOf="@+id/tv_translation_status"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_translation_status"
+        style="@style/ease_chat_message_sent_translation_status_icon_style"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

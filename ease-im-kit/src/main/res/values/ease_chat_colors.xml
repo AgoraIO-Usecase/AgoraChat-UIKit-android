@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ease_chat_layout_bg_color">@color/ease_color_background</color>
+    <color name="ease_chat_primary_menu_divider_bg">@color/ease_color_background_higher</color>
+    <color name="ease_chat_primary_menu_input_bg_color">@color/ease_color_background_high</color>
+    <color name="ease_chat_extend_menu_item_title_color">@color/ease_color_primary</color>
+    <color name="ease_chat_extend_menu_item_divider_color">@color/ease_color_outline_variant</color>
+    <color name="ease_chat_extend_menu_indicator_unselected_color">@color/ease_color_background_higher</color>
+    <color name="ease_chat_extend_menu_indicator_selected_color">@color/ease_neutral_50</color>
+
+    <color name="ease_chat_emoji_tab_selected">@color/ease_color_background_higher</color>
+    <color name="ease_chat_emoji_tab_normal">@color/ease_color_background</color>
+
+    <color name="ease_chat_item_bg_dark">@color/ease_color_background_higher</color>
+
+    <color name="ease_chat_row_text_timestamp_color">@color/ease_color_on_background_high</color>
+    <color name="ease_chat_quote_message_sender_text_color">#4d4d4d</color>
+    <color name="ease_chat_row_receive_bubble_bg_color">@color/ease_color_primary_container</color>
+    <color name="ease_chat_row_send_bubble_bg_color">@color/ease_primary_50</color>
+    <color name="ease_chat_row_text_content_link_color">#005FFF</color>
+    <color name="ease_chat_row_receive_text_content_color">@color/ease_color_on_background_low</color>
+    <color name="ease_chat_row_send_text_content_color">@color/ease_color_text_on_container</color>
+    <color name="ease_chat_row_receive_edit_label_color">@color/ease_color_text_special_high</color>
+    <color name="ease_chat_row_send_edit_label_color">@color/ease_color_text_special_higher</color>
+    <color name="ease_chat_row_receive_voice_length_text_color">@color/ease_color_on_background_low</color>
+    <color name="ease_chat_row_send_voice_length_text_color">@color/ease_color_text_on_container</color>
+    <color name="ease_chat_row_voice_unread_icon_color">@color/ease_color_error</color>
+    <color name="ease_chat_row_video_size_color">@color/ease_color_text_on_container</color>
+    <color name="ease_chat_row_unsent_text_color">@color/ease_color_text_secondary_container</color>
+    <color name="ease_chat_row_voice_receive_icon_color">@color/ease_color_on_background_special</color>
+    <color name="ease_chat_row_voice_send_icon_color">@color/ease_color_background</color>
+    <color name="ease_chat_voice_record_wave_color">@color/ease_color_primary_container</color>
+    <color name="ease_chat_voice_record_wave_bg_color">@color/ease_primary_90</color>
+    <color name="ease_chat_record_delete_bg_color">@color/ease_color_background_higher</color>
+    <color name="ease_chat_record_delete_tint_color">@color/ease_neutral_50</color>
+    <color name="ease_chat_record_voice_length_text_color">@color/ease_color_text_title</color>
+
+    <!-- attachment -->
+    <color name="ease_chat_attachment_download_video_bg">@color/ease_color_on_background_high</color>
+
+    <!-- reply -->
+    <color name="ease_chat_input_reply_content_color">@color/ease_color_text_secondary</color>
+    <color name="ease_chat_input_reply_text_name_color">@color/ease_color_text_special</color>
+    <color name="ease_chat_input_reply_divider_color">@color/ease_color_outline_variant</color>
+    <color name="ease_chat_input_reply_bg_color">@color/ease_color_background_high</color>
+    <color name="ease_chat_row_receive_message_reply_bg_color">@color/ease_color_background_high</color>
+    <color name="ease_chat_row_send_message_reply_bg_color">@color/ease_color_background_high</color>
+
+    <!-- edit -->
+    <color name="ease_chat_message_edit_root_bg_color">@color/ease_color_background</color>
+    <color name="ease_chat_message_edit_title_color">@color/ease_color_text_special</color>
+
+    <color name="ease_chat_emoji_item_bg_pressed_color">@color/ease_color_background_high</color>
+
+    <!-- Mention -->
+    <color name="ease_chat_mention_text_color">@color/ease_color_primary</color>
+
+    <!-- Reaction -->
+    <color name="ease_chat_message_menu_reaction_item_bg_pressed_color">@color/ease_color_background_high</color>
+    <color name="ease_chat_message_menu_reaction_item_bg_selected_color">@color/ease_color_primary</color>
+    <color name="ease_chat_message_reaction_item_bg_normal_color">@color/ease_color_background_high</color>
+    <color name="ease_chat_message_reaction_item_bg_selected_color">@color/ease_color_primary_container</color>
+    <color name="ease_chat_message_reaction_item_bg_stroke_selected_color">@color/ease_color_primary</color>
+    <color name="ease_chat_message_reaction_list_tab_layout_bg_color">@color/ease_color_background</color>
+    <color name="ease_chat_message_reaction_list_vp_bg_color">@color/ease_color_background</color>
+    <color name="ease_chat_message_reaction_tab_item_bg_selected_color">@color/ease_color_background_higher</color>
+
+    <!-- combine -->
+    <color name="ease_chat_row_receive_combine_label_color">@color/ease_color_on_background_special</color>
+    <color name="ease_chat_row_send_combine_label_color">@color/ease_color_on_background_container</color>
+    <color name="ease_chat_row_receive_combine_summary_text_color">@color/ease_color_text_secondary</color>
+    <color name="ease_chat_row_send_combine_summary_text_color">@color/ease_color_text_primary</color>
+
+</resources>

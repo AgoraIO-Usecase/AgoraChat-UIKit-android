@@ -13,6 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ChatUIKit"
+rootProject.name = "easeui"
 include(":app")
-include(":ChatUIKit")
+include(":ease-im-kit")
+include(":quickstart")

@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">ChatUIKit</string>
+
+    <string name="em_conversation_menu_video">Voice and video conference</string>
+    <string name="em_conversation_menu_group">Create group</string>
+
+    <string name="loading">Loading&#8230;</string>
+
+    <string name="em_login_btn_info_incomplete">用户名或者密码不能为空</string>
+    <string name="em_login_failed">登录失败</string>
+    <string name="em_login_agreement">请选择同意《环信服务条款》与《环信隐私协议》</string>
+    <string name="em_login_im">登录环信IM</string>
+    <string name="em_login_input_verification_code">请输入验证码</string>
+    <string name="em_login_get_verification_code">获取验证码</string>
+    <string name="em_login_phone_empty">请输入手机号</string>
+    <string name="em_login_code_empty">请输入验证码</string>
+    <string name="em_login_phone_illegal">请输入正确的手机号</string>
+    <string name="em_login_illegal_code">验证码错误</string>
+    <string name="em_login_post_code">验证码已发送</string>
+    <string name="em_login_get_code_again">重新获取</string>
+    <string name="em_login_get_code_again_time">重新获取(%1$ds)</string>
+    <string name="em_login_not_select_agreement">请选择服务条款和隐私协议</string>
+    <string name="em_login_error_send_code_later">请稍后再发</string>
+    <string name="em_login_error_send_code_limit">获取已达上限</string>
+    <string name="em_login_server_configure">服务器配置</string>
+    <string name="demo_login_dialog_content">环信非常重视保护您的隐私，请您仔细阅读下面的《环信服务条款》与《环信隐私协议》，如果您同意请点击"同意并继续"按钮，如果您不同意，请点击"不同意"退出应用。</string>
+    <string name="demo_login_dialog_content_privacy">阅读完整的《环信服务条款》与《环信隐私协议》了解详细内容。</string>
+    <string name="demo_login_dialog_cancel">不同意</string>
+    <string name="demo_login_dialog_confirm">同意并继续</string>
+    <string name="demo_login_dialog_title">用户协议与隐私政策</string>
+    <string name="em_login_btn">登\u0020录</string>
+    <string name="demo_error_user_authentication_failed">您输入的用户名或密码不正确</string>
+    <string name="em_login_name_hint">用户名</string>
+    <string name="em_login_password_hint">密码</string>
+    <string name="em_login_tv_token">token登录</string>
+    <string name="em_login_tv_pwd">密码登录</string>
+    <string name="em_login_token_hint">token</string>
+
+    <string name="em_main_title_home">会话</string>
+    <string name="em_main_title_friends">通讯录</string>
+    <string name="em_main_title_me">我</string>
+
+    <string name="menu_thread_topic">话题</string>
+    <string name="menu_voice_call">语音呼叫</string>
+    <string name="menu_video_call">视频通话</string>
+
+    <string name="register_phone_number">请输入手机号</string>
+    <string name="phone_number">手机号</string>
+    <string name="localLogin">账号密码登录</string>
+
+    <string name="em_about_me_set">切换明暗模式</string>
+    <string name="logout">退出</string>
+
+    <string name="em_header_request">新请求</string>
+    <string name="em_header_group">群聊</string>
+
+    <string name="em_login_out_hint">是否退出？</string>
+
+    <string name="em_main_add_contact_success">Contact request sent</string>
+    <string name="em_main_add_contact_fail">Contact request failed to send: %1$s</string>
+
+    <string name="thread_edit">编辑话题</string>
+    <string name="thread_member">话题成员</string>
+    <string name="thread_leave">离开话题</string>
+    <string name="thread_destroy">销毁话题</string>
+
+    <string name="message_forward_success">消息转发成功</string>
+    <string name="message_forward_fail">消息转发失败</string>
+</resources>

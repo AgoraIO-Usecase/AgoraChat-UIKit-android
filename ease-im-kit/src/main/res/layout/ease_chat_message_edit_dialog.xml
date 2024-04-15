@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ease_chat_message_edit_root_style">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_title"
+        android:text="@string/ease_message_edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:drawableStartCompat="@drawable/ease_chat_item_menu_edit"
+        app:drawableTint="@color/ease_color_text_special"
+        style="@style/ease_chat_message_edit_title_style" />
+
+    <EditText
+        android:id="@+id/edt_msg_edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ib_done"
+        style="@style/ease_chat_edit_input_text_style"/>
+
+    <ImageButton
+        android:id="@+id/ib_done"
+        app:layout_constraintStart_toEndOf="@id/edt_msg_edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/ease_chat_message_edit_button_style" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

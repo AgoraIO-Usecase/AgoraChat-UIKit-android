@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- public -->
+    <color name="ease_widget_search_content_bg">@color/ease_color_background_high</color>
+    <color name="ease_widget_title_bar_title_color">@color/ease_color_on_background_low</color>
+    <color name="ease_details_title_color">@color/ease_color_on_background_low</color>
+    <color name="ease_details_subtitle1_color">@color/ease_color_text_subtitle</color>
+    <color name="ease_details_subtitle2_color">@color/ease_color_on_background_high</color>
+
+    <color name="ease_chang_text_color_select">@color/ease_color_background</color>
+    <color name="ease_chang_text_select_bg">@color/ease_color_primary</color>
+    <color name="ease_chang_text_select_remove_bg">@color/ease_color_error</color>
+    <color name="ease_chang_text_unselect_bg">@color/ease_color_background_high</color>
+    <color name="ease_chang_text_color_unselect">@color/ease_color_on_background_high</color>
+
+    <!-- dialog -->
+    <color name="ease_dialog_menu_cancel_color">@color/ease_color_primary</color>
+    <color name="ease_dialog_menu_bg_color">@color/ease_color_background</color>
+    <color name="ease_dialog_menu_divider_color">@color/ease_color_on_background_higher</color>
+
+    <color name="ease_custom_dialog_title_color">@color/ease_color_on_background_low</color>
+    <color name="ease_custom_dialog_subtitle_color">@color/ease_color_text_secondary</color>
+    <color name="ease_custom_dialog_left_bg">@color/ease_color_text_on_container</color>
+    <color name="ease_custom_dialog_left_text_color">@color/ease_color_text_subtitle_high</color>
+    <color name="ease_custom_dialog_border_bg">@color/ease_color_text_secondary_container</color>
+    <color name="ease_custom_dialog_right_bg">@color/ease_color_primary</color>
+    <color name="ease_custom_dialog_right_text_color">@color/ease_color_text_title</color>
+
+    <!-- bottom sheet dialog -->
+    <color name="ease_bottom_sheet_dialog_top_icon_color">@color/ease_color_on_background_higher</color>
+    <color name="ease_bottom_sheet_cancel_text_color">@color/ease_color_primary</color>
+    <color name="ease_bottom_sheet_item_text_color">@color/ease_color_primary</color>
+
+    <!-- ease title bar default color-->
+    <color name="ease_title_bar_navigation_icon_tint_color">@color/ease_color_on_background</color>
+    <color name="ease_title_bar_menu_icon_tint_color">@color/ease_color_on_background</color>
+    <color name="ease_title_bar_menu_text_color">@color/ease_color_on_background</color>
+    <color name="ease_title_bar_title_text_color">@color/ease_color_on_background_low</color>
+    <color name="ease_title_bar_subtitle_text_color">@color/ease_color_text_secondary</color>
+</resources>

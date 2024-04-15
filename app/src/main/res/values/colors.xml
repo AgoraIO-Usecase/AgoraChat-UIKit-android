@@ -1,5 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <color name="red">#ffff0000</color>
+    <color name="white">#feffffff</color>
+    <color name="gray">#ffe9e9e9</color>
+    <color name="blue">#FF5A5DD0</color>
+    <color name="black">#ff000000</color>
+    <color name="em_color_brand">#ff04aef0</color>
+    <color name="em_color_warning">#ffff2b2b</color>
+
+    <color name="transparent">@android:color/transparent</color>
+
+    <color name="em_color_common_text_black">@color/ease_color_on_background_low</color>
+
+    <color name="em_toast_color_bg">#99000000</color>
+    <color name="em_toast_color_text">@color/white</color>
+
+    <color name="em_login_color_bg">#4c000000</color>
+    <color name="em_login_color_btn_unable">#44000000</color>
+    <color name="em_login_color_btn_enable_left">#ff04aef0</color>
+    <color name="em_login_color_btn_enable_right">#ff5a5dd0</color>
+    <color name="em_login_color_btn_text_unable">#ffffffff</color>
+    <color name="em_login_color_btn_text_enable">#FFF4F4F4</color>
+    <color name="em_login_color_text">@color/white</color>
+    <color name="em_login_color_btn_right_unable">#44f2f2f2</color>
+    <color name="em_login_color_btn_right_enable">@color/white</color>
+
+    <color name="em_sheet_item_title_color">#33b1ff</color>
+
+    <color name="em_main_color_tab_normal">@color/em_color_common_text_black</color>
+    <color name="em_main_color_tab_selected">@color/ease_color_primary</color>
+
+    <color name="ease_conversation_color_item_name">@color/ease_color_on_background_low</color>
+    <color name="em_color_on_background">@color/ease_color_on_background</color>
+    <color name="em_color_error">@color/ease_color_error</color>
+
 </resources>

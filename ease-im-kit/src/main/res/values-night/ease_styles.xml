@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ease_dialog_edit_clear">
+        <item name="android:src">@drawable/ease_dialog_input_clear_dark</item>
+    </style>
+</resources>

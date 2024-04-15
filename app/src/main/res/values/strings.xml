@@ -1,3 +1,69 @@
 <resources>
     <string name="app_name">ChatUIKit</string>
+
+    <string name="em_conversation_menu_video">Voice and video conference</string>
+    <string name="em_conversation_menu_group">Create group</string>
+
+    <string name="loading">Loading&#8230;</string>
+
+    <string name="em_login_btn_info_incomplete">Username or password cannot be empty.</string>
+    <string name="em_login_failed">Login failed</string>
+    <string name="em_login_agreement">By joining, you agree to our Terms of Service and Privacy Policy</string>
+    <string name="em_login_im">Login Easemob IM</string>
+    <string name="em_login_input_verification_code">Verification Code</string>
+    <string name="em_login_get_verification_code">Get Code</string>
+    <string name="em_login_phone_empty">Please enter mobile number</string>
+    <string name="em_login_code_empty">Please enter verification code</string>
+    <string name="em_login_phone_illegal">Please enter correct mobile number</string>
+    <string name="em_login_illegal_code">Incorrect Code</string>
+    <string name="em_login_post_code">Code Sent</string>
+    <string name="em_login_get_code_again">Get Code</string>
+    <string name="em_login_get_code_again_time">Get After(%1$ds)</string>
+    <string name="em_login_not_select_agreement">Please confirm Terms &amp; Policy</string>
+    <string name="em_login_error_send_code_later">Please wait a moment while trying to send</string>
+    <string name="em_login_error_send_code_limit">Access limit reached</string>
+    <string name="em_login_server_configure">Server Configure</string>
+    <string name="demo_login_dialog_content">Easemob attaches great importance to protecting your privacy. Please read the following Service and Privacy Policy carefully. Please click "OK" button to agree, and click "Deny" to exit the app.</string>
+    <string name="demo_login_dialog_content_privacy">Read the complete Service and Privacy Policy for more details.</string>
+    <string name="demo_login_dialog_cancel">Deny</string>
+    <string name="demo_login_dialog_confirm">OK</string>
+    <string name="demo_login_dialog_title">Service and Privacy Policy</string>
+    <string name="em_login_btn">Login</string>
+    <string name="demo_error_user_authentication_failed">Incorrect username or password</string>
+    <string name="em_login_name_hint">Username</string>
+    <string name="em_login_password_hint">Password</string>
+    <string name="em_login_tv_token">Log in with token</string>
+    <string name="em_login_tv_pwd">Log in with password</string>
+    <string name="em_login_token_hint">Token</string>
+
+    <string name="em_main_title_home">Chat</string>
+    <string name="em_main_title_friends">Contacts</string>
+    <string name="em_main_title_me">Me</string>
+
+    <string name="menu_thread_topic">Thread</string>
+    <string name="menu_voice_call">Voice Call</string>
+    <string name="menu_video_call">Video Call</string>
+
+    <string name="register_phone_number">Please enter your phone number</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="localLogin">Internal Login</string>
+
+    <string name="em_about_me_set">Switch modes</string>
+    <string name="logout">Logout</string>
+
+    <string name="em_header_request">New request</string>
+    <string name="em_header_group">Group Chat</string>
+
+    <string name="em_login_out_hint">Exit now?</string>
+
+    <string name="em_main_add_contact_success">Contact request sent</string>
+    <string name="em_main_add_contact_fail">Contact request failed to send: %1$s</string>
+
+    <string name="thread_edit">thread edit</string>
+    <string name="thread_member">thread member</string>
+    <string name="thread_leave">leave thread</string>
+    <string name="thread_destroy">destroy thread</string>
+
+    <string name="message_forward_success">Message forwarded successfully</string>
+    <string name="message_forward_fail">Message forwarding failed</string>
 </resources>

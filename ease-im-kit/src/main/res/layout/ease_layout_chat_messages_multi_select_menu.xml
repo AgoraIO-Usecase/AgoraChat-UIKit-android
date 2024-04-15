@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/iv_multi_select_delete"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_multi_select_forward"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        android:src="@drawable/ease_chat_item_menu_delete"
+        android:tint="@color/ease_selector_chat_multiple_select_del_button_color"
+        style="@style/ease_chat_messages_multi_select_menu_style" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/iv_multi_select_forward"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_multi_select_delete"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ease_chat_item_menu_forward"
+        android:tint="@color/ease_selector_chat_multiple_select_forward_button_color"
+        style="@style/ease_chat_messages_multi_select_menu_style"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="2.5dp"/>
+    <solid android:color="@color/ease_bottom_sheet_dialog_top_icon_color"/>
+    <size android:width="36dp" android:height="5dp"/>
+</shape>

@@ -1,0 +1,112 @@
+package com.hyphenate.easeui.feature.chat.activities
+
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.text.TextUtils
+import android.view.LayoutInflater
+import androidx.core.content.ContextCompat
+import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.R
+import com.hyphenate.easeui.base.EaseBaseActivity
+import com.hyphenate.easeui.common.extensions.hasRoute
+import com.hyphenate.easeui.databinding.EaseActivityShowLocalVideoBinding
+import com.hyphenate.easeui.common.player.EasyVideoCallback
+import com.hyphenate.easeui.common.player.EasyVideoPlayer
+
+class EaseShowLocalVideoActivity : EaseBaseActivity<EaseActivityShowLocalVideoBinding>(),
+    EasyVideoCallback {
+    private var evpPlayer: EasyVideoPlayer? = null
+    private var uri: Uri? = null
+    override fun onCreate(arg0: Bundle?) {
+        super.onCreate(arg0)
+        initIntent(intent)
+        initView()
+        initListener()
+        initData()
+    }
+
+    override fun getViewBinding(inflater: LayoutInflater): EaseActivityShowLocalVideoBinding {
+        return EaseActivityShowLocalVideoBinding.inflate(inflater)
+    }
+
+    override fun setActivityTheme() {
+        setFitSystemForTheme(false, ContextCompat.getColor(mContext, R.color.transparent), false)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        initIntent(intent)
+        if (uri != null) {
+            evpPlayer?.setSource(uri!!)
+        }
+    }
+
+    private fun initIntent(intent: Intent) {
+        val path: String? = intent.getStringExtra("path")
+        val u: Uri? = intent.getParcelableExtra("uri")
+        if (u != null) {
+            uri = u
+        } else if (!TextUtils.isEmpty(path)) {
+            uri = Uri.parse(path)
+        }
+        if (uri == null) {
+            finish()
+        }
+    }
+
+    fun initView() {
+        evpPlayer = findViewById(R.id.evp_player)
+    }
+
+    fun initListener() {
+        evpPlayer?.setCallback(this)
+    }
+
+    fun initData() {
+        evpPlayer?.setAutoPlay(true)
+        if (uri != null) {
+            evpPlayer?.setSource(uri!!)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        evpPlayer?.pause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (evpPlayer != null) {
+            evpPlayer?.release()
+            evpPlayer = null
+        }
+    }
+
+    override fun onStarted(player: EasyVideoPlayer?) {}
+    override fun onPaused(player: EasyVideoPlayer?) {}
+    override fun onPreparing(player: EasyVideoPlayer?) {}
+    override fun onPrepared(player: EasyVideoPlayer?) {}
+    override fun onBuffering(percent: Int) {}
+    override fun onError(player: EasyVideoPlayer?, e: Exception?) {}
+    override fun onCompletion(player: EasyVideoPlayer?) {
+        finish()
+    }
+
+    override fun onClickVideoFrame(player: EasyVideoPlayer?) {}
+
+    companion object {
+        fun actionStart(context: Context, uri: Uri?) {
+            val intent = Intent(context, EaseShowLocalVideoActivity::class.java)
+            intent.putExtra("uri", uri)
+            EaseIM.getCustomActivityRoute()?.getActivityRoute(intent.clone() as Intent)?.let {
+                if (it.hasRoute()) {
+                    context.startActivity(it)
+                    return
+                }
+            }
+            context.startActivity(intent)
+        }
+    }
+}

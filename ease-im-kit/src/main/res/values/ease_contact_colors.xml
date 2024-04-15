@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- contact -->
+    <!-- contact list header-->
+    <color name="ease_contact_arrow_item_title_color">@color/ease_color_on_background_low</color>
+    <color name="ease_contact_switch_item_title_color">@color/ease_color_on_background_low</color>
+    <color name="ease_contact_arrow_item_content_color">@color/ease_color_text_secondary</color>
+    <!-- contact layout sidebar-->
+    <color name="ease_contact_layout_side_bar_focus_bg_color">@color/ease_color_primary</color>
+    <!-- contact layout list item-->
+    <color name="ease_contact_list_item_initial_text_color">@color/ease_color_text_secondary</color>
+    <color name="ease_contact_list_item_title_color">@color/ease_color_on_background_low</color>
+    <color name="ease_contact_list_item_subtitle_color">@color/ease_color_text_secondary</color>
+    <color name="ease_contact_list_unread_color">@color/ease_color_background</color>
+</resources>

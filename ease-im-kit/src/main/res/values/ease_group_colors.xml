@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Group create -->
+    <color name="ease_group_list_title_color">@color/ease_color_on_background_low</color>
+    <!-- Group details -->
+    <color name="ease_group_arrow_item_title_color">@color/ease_color_on_background_low</color>
+    <color name="ease_group_arrow_item_content_color">@color/ease_color_text_secondary</color>
+    <color name="ease_group_switch_item_title_color">@color/ease_color_on_background_low</color>
+    <color name="ease_group_detail_custom_layout_item_title_color">@color/ease_color_primary</color>
+    <color name="ease_group_detail_edit_bg">@color/ease_color_background_high</color>
+    <color name="ease_group_detail_edit_text_color">@color/ease_color_on_background_low</color>
+    <color name="ease_group_detail_edit_hint_text_color">@color/ease_color_text_hint</color>
+    <color name="ease_group_detail_edit_input_count">@color/ease_color_text_hint</color>
+    <color name="ease_group_detail_edit_cursor_color">@color/ease_color_primary</color>
+</resources>

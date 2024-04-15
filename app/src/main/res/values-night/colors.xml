@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="em_sheet_item_title_color">#009eff</color>
+    <color name="em_color_on_background">@color/ease_color_on_background</color>
+    <color name="em_color_error">@color/ease_color_error</color>
+</resources>

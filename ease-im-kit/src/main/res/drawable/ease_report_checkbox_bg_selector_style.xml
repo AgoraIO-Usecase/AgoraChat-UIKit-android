@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/ease_report_checkbox_select_bg" android:state_checked="true"/>
+    <item android:drawable="@drawable/ease_checkbox_unselect"/>
+    <item android:drawable="@drawable/ease_checkbox_unselect" android:state_enabled="false"/>
+    <item android:drawable="@drawable/ease_checkbox_unselect" android:state_checkable="false"/>
+</selector>	

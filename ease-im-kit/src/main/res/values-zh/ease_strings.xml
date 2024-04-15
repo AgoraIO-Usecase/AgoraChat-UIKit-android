@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ease_search_text_hint">搜索</string>
+    <string name="ease_sheet_cancel">取消</string>
+
+    <!-- dialog -->
+    <string name="ease_dialog_black_title">确认拉黑?</string>
+    <string name="ease_dialog_black">确认拉黑后，您将无法收到对方发来的任何消息。</string>
+    <string name="ease_dialog_clear">确认清空聊天记录？</string>
+    <string name="ease_dialog_delete_contact_title">确认删除联系人？</string>
+    <string name="ease_dialog_delete_contact_subtitle">确认删除%1$s，同时删除与该联系人的聊天记录。</string>
+    <string name="ease_dialog_edit_input_id_hint">输入用户ID</string>
+    <string name="ease_dialog_cancel">取消</string>
+    <string name="ease_dialog_confirm">确认</string>
+
+    <!-- conversation -->
+    <string name="ease_message_unread_count_max">99+</string>
+    <string name="ease_location_recv">[%1$s的位置消息]</string>
+    <string name="ease_location_prefix">[我的位置消息]</string>
+    <string name="ease_location">[位置]</string>
+    <string name="ease_picture">[图片]</string>
+    <string name="ease_video">[视频]</string>
+    <string name="ease_file">[附件]</string>
+    <string name="ease_voice">[语音]</string>
+    <string name="ease_custom">[自定义消息]</string>
+    <string name="ease_combine">[聊天记录]</string>
+    <string name="ease_user_card">[联系人] %1$s</string>
+    <string name="ease_dynamic_expression">[Animoji]</string>
+    <string name="ease_chat_were_not_send_msg">[草稿]</string>
+    <string name="ease_all_members">All</string>
+    <string name="ease_chat_were_mentioned">[有人@你]</string>
+    <string name="ease_chat_were_mentioned_all">[@所有人]</string>
+
+    <string name="ease_search_conversation_hint">搜索</string>
+
+    <string name="ease_conversation_menu_action_more">更多</string>
+    <string name="ease_conversation_title">聊天</string>
+    <string name="ease_conv_action_new_conversation">发起新会话</string>
+    <string name="ease_conv_action_add_contact">添加联系人</string>
+    <string name="ease_conv_action_create_group">创建群组</string>
+    <string name="ease_conv_dialog_add_contact">通过用户ID添加联系人</string>
+
+    <!-- chat -->
+    <string name="ease_chat_primary_menu_button_send">发送</string>
+    <string name="ease_chat_primary_menu_button_pushtotalk">按住说话</string>
+    <string name="ease_chat_primary_menu_input_hint">Aa</string>
+    <string name="ease_chat_search_message">搜索消息</string>
+
+    <string name="ease_attach_picture">图片</string>
+    <string name="ease_attach_take_pic">相机</string>
+    <string name="ease_attach_location">位置</string>
+    <string name="ease_attach_video">视频</string>
+    <string name="ease_attach_file">文件</string>
+    <string name="ease_attach_contact_card">名片</string>
+
+    <string name="ease_group_ack_read_count">%1$d人已读</string>
+    <string name="ease_custom_message">自定义消息: %1$s</string>
+    <string name="ease_have_uploaded">已上传</string>
+    <string name="ease_chat_unknown_type">不支持的消息类型</string>
+    <string name="ease_msg_recall_by_self">你 撤回了一条消息</string>
+    <string name="ease_msg_recall_by_user">%1$s 撤回了一条消息</string>
+    <string name="ease_is_download_voice_click_later">下载中，完成后再次点击.</string>
+
+    <!-- chat menu -->
+    <string name="ease_action_reply">回复</string>
+    <string name="ease_action_copy">复制</string>
+    <string name="ease_action_forward">转发</string>
+    <string name="ease_action_recall">撤回</string>
+    <string name="ease_action_delete">删除</string>
+    <string name="ease_action_unsent">撤回</string>
+    <string name="ease_action_edit">编辑</string>
+    <string name="ease_action_report">举报</string>
+    <string name="ease_action_translation">翻译</string>
+    <string name="ease_action_hide_translation">隐藏翻译</string>
+    <string name="ease_action_multi_select">多选</string>
+    <string name="ease_action_thread">创建话题</string>
+
+    <!-- chat record -->
+    <string name="ease_chat_record_voice_record">点击录音</string>
+    <string name="ease_chat_record_voice_recording">正在录音</string>
+    <string name="ease_chat_record_voice_play">点击播放</string>
+    <string name="ease_chat_record_voice_playing">播放中</string>
+    <string name="ease_chat_record_voice_remain">剩余 %1$ds</string>
+    <string name="ease_chat_record_voice_time">%1$ds</string>
+
+    <!-- chat attachment -->
+    <string name="ease_download_the_pictures">下载图片中: 0%</string>
+    <string name="ease_image_expired">图片已过期</string>
+    <string name="ease_download_the_pictures_new">下载图片中：</string>
+    <string name="ease_downwaiting">正在下载文件，请稍候。</string>
+    <string name="ease_failed_to_download_file">下载文件失败：</string>
+    <string name="ease_file_expired">文件已过期：</string>
+    <string name="ease_is_down_please_wait">正在下载视频，请稍候。</string>
+    <string name="ease_video_expired">视频已过期</string>
+
+    <!-- chat message reply -->
+    <string name="ease_emoji">[表情]</string>
+    <string name="ease_thread">[子区]</string>
+    <string name="ease_chat_inputmenu_quote_reply_to">正在回复</string>
+    <string name="ease_error_message_not_exist">消息不存在</string>
+    <string name="ease_quote_message_not_exist">引用的内容不存在</string>
+    <string name="ease_message_reply_emoji_type">表情</string>
+    <string name="ease_message_reply_image_type">图片</string>
+    <string name="ease_message_reply_video_type">视频</string>
+    <string name="ease_message_reply_file_type">附件</string>
+    <string name="ease_message_reply_voice_type">语音</string>
+    <string name="ease_message_reply_location_type">位置</string>
+    <string name="ease_message_reply_custom_type">自定义消息</string>
+    <string name="ease_message_reply_combine_type">聊天记录</string>
+    <string name="ease_message_reply_location_content">位置: %1$s</string>
+    <string name="ease_message_reply_file_content">附件: %1$s</string>
+    <string name="ease_message_reply_voice_content">语音: %1$d \"</string>
+    <string name="ease_message_reply_unknown_type">不支持的消息类型</string>
+
+    <!-- chat message edit -->
+    <string name="ease_cancel">取消</string>
+    <string name="ease_message_edit">编辑中</string>
+    <string name="ease_message_edited">消息已编辑</string>
+    <string name="ease_fail_to_edit">编辑失败</string>
+    <string name="ease_chat_message_edit_edited">已编辑</string>
+
+    <!-- chat user card -->
+    <string name="ease_chat_message_user_card_label">联系人</string>
+    <string name="ease_chat_message_user_card_select_title">分享联系人</string>
+    <string name="ease_chat_message_user_card_share_content">确认分享“%1$s”给"%2$s?"</string>
+
+    <!-- chat dialog -->
+    <string name="ease_chat_dialog_delete_title">确认删除这条消息？</string>
+    <string name="ease_chat_dialog_delete_content">删除后，对方依旧可以看到这条消息。</string>
+    <string name="ease_chat_dialog_recall_title">确认撤回这条消息？</string>
+    <string name="ease_chat_dialog_resend_title">确认重新发送这条消息？</string>
+    <string name="ease_chat_dialog_delete_multi_message_title">删除%1$d条消息？</string>
+    <string name="ease_chat_dialog_delete_one_message_title">删除1条消息？</string>
+
+    <!-- chat copy -->
+    <string name="ease_chat_copy_success">已复制</string>
+
+    <!-- chat reaction -->
+    <string name="ease_chat_reaction_reach_limit">表情回应已达上限</string>
+
+    <!-- chat reply -->
+    <string name="ease_chat_reply_forwarded">已转发</string>
+
+    <!-- chat forward -->
+    <string name="ease_message_forward">转发给</string>
+    <string name="ease_message_forward_to_contact">联系人</string>
+    <string name="ease_message_forward_to_group">群组</string>
+    <string name="ease_combine_default">聊天记录</string>
+    <string name="ease_combine_compatible_default">当前版本过低，无法展示对应内容。</string>
+
+    <!-- chat unread -->
+    <string name="ease_message_unread_count">%1$d 条未读消息</string>
+
+    <!-- chat new -->
+    <string name="ease_chat_new_conversation">新会话</string>
+    <string name="ease_chat_new_group_welcome">群聊创建成功</string>
+
+    <!-- conversation menu -->
+    <string name="ease_conv_menu_item_silent">静音</string>
+    <string name="ease_conv_menu_item_unsilent">取消静音</string>
+    <string name="ease_conv_menu_item_pin">置顶</string>
+    <string name="ease_conv_menu_item_unpin">取消置顶</string>
+    <string name="ease_conv_menu_item_read">标记为已读</string>
+    <string name="ease_conv_menu_item_delete">删除会话</string>
+
+    <!-- alert -->
+    <string name="ease_prompt">Note</string>
+    <string name="ease_ok">确认</string>
+
+    <!-- Date format -->
+    <string name="ease_date_language_zh">zh</string>
+    <string name="ease_date_just">just</string>
+    <string name="ease_data_format_hour">HH:mm</string>
+    <string name="ease_data_format_today">hh:mm aa</string>
+    <string name="ease_loading">Loading…</string>
+
+    <!--presence-->
+    <string name="ease_presence_online">在线</string>
+    <string name="ease_presence_busy">忙碌</string>
+    <string name="ease_presence_do_not_disturb">请勿打扰</string>
+    <string name="ease_presence_leave">离开</string>
+    <string name="ease_presence_offline">离线</string>
+    <string name="ease_presence_custom">自定义状态</string>
+    <string name="ease_presence_status">状态</string>
+    <string name="ease_presence_done">完成</string>
+
+    <!--contact-->
+    <string name="ease_contact_title">联系人</string>
+    <string name="ease_delete_contact">删除联系人</string>
+    <string name="ease_clear_history">清空聊天记录</string>
+    <string name="ease_message_no_disturbance">消息免打扰</string>
+    <string name="ease_contact_header_request">新请求</string>
+    <string name="ease_contact_header_group">群聊</string>
+    <string name="ease_contact_search">搜索联系人</string>
+    <string name="ease_contact_add">添加联系人</string>
+    <string name="ease_contact_number">环信ID: %1$s</string>
+    <string name="ease_header_request">新请求</string>
+    <string name="ease_header_group">群聊</string>
+
+    <!--add contact dialog-->
+    <string name="ease_contact_add_dialog_title">添加联系人</string>
+    <string name="ease_contact_add_dialog_contact">通过用户ID添加联系人</string>
+
+    <!--Invitation-->
+    <string name="ease_new_invitation_title">新请求</string>
+    <string name="ease_new_invitation">新邀请</string>
+    <string name="ease_invitation_detail_action">添加联系人</string>
+    <string name="ease_invitation_reason">请求添加为好友</string>
+    <string name="ease_invitation_action_add">添加</string>
+    <string name="ease_invitation_action_added">已添加</string>
+    <string name="contact_listener_onFriendRequestDeclined">%1$s 拒绝了您的好友请求</string>
+    <string name="contact_listener_onFriendRequestAccepted">您的好友请求已被接受</string>
+
+    <string name="ease_agreed_to">您已同意来自 %1$s 的请求</string>
+    <string name="system_decline_invite">您拒绝了%1$s的好友请求</string>
+
+    <string name="system_msg_expired">已过期</string>
+
+
+    <string name="ease_detail_item_message">发消息</string>
+    <string name="ease_detail_item_audio">音频通话</string>
+    <string name="ease_detail_item_video">视频通话</string>
+    <string name="ease_detail_item_search_msg">搜索消息</string>
+
+    <!--Group-->
+    <string name="ease_new_group_title">新群组</string>
+    <string name="ease_new_group_count">创建(%1$d)</string>
+    <string name="ease_group_detail_member_list">群成员</string>
+    <string name="ease_group_detail_member_count">%1$d人</string>
+    <string name="ease_group_detail_my_notes">我在本群的昵称</string>
+    <string name="ease_group_detail_group_name">群名称</string>
+    <string name="ease_group_detail_group_id">群ID: %1$s</string>
+    <string name="ease_group_detail_group_describe">群描述</string>
+    <string name="ease_group_detail_change_owner">转移群主</string>
+    <string name="ease_group_detail_destroy">解散群组</string>
+    <string name="ease_group_detail_leave">退出群聊</string>
+    <string name="ease_group_detail_leave_dialog">确认退出群聊?</string>
+    <string name="ease_group_detail_leave_dialog_destroy">确认解散群聊?</string>
+    <string name="ease_group_detail_leave_dialog_des">确认退出群组，同时删除该群组的聊天记录。</string>
+    <string name="ease_group_detail_leave_dialog_owner_des">确认解散群组，同时删除该群组的聊天记录。</string>
+    <string name="ease_group_count">群聊(%1$d)</string>
+    <string name="ease_group_change_name">修改群名称</string>
+    <string name="ease_group_change_name_count">%1$d/32</string>
+    <string name="ease_group_change_describe">修改群描述</string>
+    <string name="ease_group_change_describe_count">%1$d/512</string>
+    <string name="ease_group_change_save">保存</string>
+    <string name="ease_group_change_owner_title">选择新群主</string>
+    <string name="ease_group_change_owner">转让群主身份给“%1$s”？</string>
+    <string name="ease_group_remove_members">确认删除"%1$s"群成员?</string>
+    <string name="ease_group_remove_members_2">确认删除"%1$s"2位群成员?</string>
+    <string name="ease_group_remove_members_more_than_3">确认删除"%1$s"等%2$d位群成员?</string>
+
+    <string name="menu_thread_topic">话题</string>
+
+    <!--Group Member-->
+    <string name="ease_group_member_count">群成员(%1$d)</string>
+    <string name="ease_add_group_member_title">添加群成员</string>
+    <string name="ease_add_group_member_select_count">添加(%1$d)</string>
+    <string name="ease_remove_group_member_title">删除群成员</string>
+    <string name="ease_remove_group_member_select_count">删除(%1$d)</string>
+
+    <!--Group Mention-->
+    <string name="ease_group_mention_title">\@提及</string>
+    <string name="ease_group_mention_all">所有人</string>
+
+    <!--report-->
+    <string name="ease_report_title">消息举报</string>
+    <string name="ease_report_reason">举报原因</string>
+    <string name="ease_report_bottom_left">取消</string>
+    <string name="ease_report_bottom_right">举报</string>
+    <string name="ease_report_success">举报已提交</string>
+
+    <!-- notifier -->
+    <string name="ease_notifier_channel_name">hyphenate chatuidemo message default channel.</string>
+    <string name="ease_notifier_default_content">%1$s个联系人发来%2$s条消息</string>
+
+    <!-- translation -->
+    <string name="ease_translation_status">已翻译</string>
+
+    <!-- thread -->
+    <string name="ease_thread_list_title">所有话题%1$s</string>
+    <string name="ease_thread_affiliation_group">#所属群 %1$s</string>
+    <string name="ease_thread_region_count">%1$s 回复</string>
+    <string name="ease_thread_region_no_msg">没有消息</string>
+    <string name="ease_thread_member_title">话题成员</string>
+    <string name="ease_thread_remove_from_topic">从话题移除</string>
+    <string name="ease_thread_delete_topic_title">确认删除话题？</string>
+    <string name="ease_thread_delete_topic_subtitle">此操作不可恢复</string>
+    <string name="ease_thread_notify_content">%1$s 创建了话题: %2$s</string>
+    <string name="ease_thread_notify_detail">查看详情</string>
+    <string name="ease_thread_edit_title">话题名称</string>
+    <string name="ease_thread_edit_name_count">%1$d/64</string>
+    <string name="ease_thread_unknown_message">原消息不存在</string>
+
+    <string name="thread_edit">编辑话题</string>
+    <string name="thread_member">话题成员</string>
+    <string name="thread_leave">离开话题</string>
+    <string name="thread_destroy">销毁话题</string>
+
+</resources>

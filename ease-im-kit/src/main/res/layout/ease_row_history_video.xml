@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.hyphenate.easeui.widget.EaseImageView
+        android:id="@+id/iv_userhead"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginStart="@dimen/ease_size_15"
+        style="@style/ease_chat_row_history_iv_userhead_style"/>
+
+    <TextView
+        android:id="@+id/tv_userid"
+        style="@style/ease_chat_row_history_text_name_style"
+        tools:text="som"
+        app:layout_constraintStart_toEndOf="@id/iv_userhead"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bubble"/>
+
+    <TextView
+        android:id="@+id/timestamp"
+        style="@style/ease_chat_row_history_text_date_style"
+        tools:text="09:02"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bubble"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_userid"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bubble"
+        style="@style/ease_chat_row_history_bubble_style"
+        app:layout_constraintStart_toStartOf="@id/tv_userid"
+        app:layout_constraintTop_toBottomOf="@id/tv_userid"
+        app:layout_constraintBottom_toTopOf="@id/view_bottom_divider">
+
+        <com.hyphenate.easeui.widget.EaseImageView
+            android:id="@+id/chatting_content_iv"
+            style="@style/ease_chat_row_image_style"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:ease_shape_type="rectangle"
+            app:ease_radius="@dimen/ease_chat_image_corner_radius"
+            android:src="@drawable/ease_default_video_thumbnail" />
+
+        <ImageView
+            android:clickable="false"
+            android:id="@+id/chatting_status_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/chatting_content_iv"
+            app:layout_constraintEnd_toEndOf="@id/chatting_content_iv"
+            app:layout_constraintTop_toTopOf="@id/chatting_content_iv"
+            app:layout_constraintBottom_toBottomOf="@id/chatting_content_iv"
+            android:background="@drawable/ease_video_play_btn_small_nor" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view_bottom_divider"
+        app:layout_constraintTop_toBottomOf="@id/bubble"
+        app:layout_constraintStart_toStartOf="@id/bubble"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/ease_chat_row_divider_style" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

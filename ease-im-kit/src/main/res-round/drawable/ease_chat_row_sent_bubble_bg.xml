@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- transparent background -->
+    <item>
+        <shape android:shape="rectangle">
+            <size
+                android:width="@dimen/ease_size_40"
+                android:height="@dimen/ease_size_36"/>
+        </shape>
+    </item>
+
+    <!-- triangle label -->
+    <item
+        android:bottom="@dimen/ease_size_15"
+        android:right="@dimen/ease_size_0"
+        android:gravity="bottom|right">
+        <rotate
+            android:fromDegrees="-45"
+            android:pivotX="100%"
+            android:pivotY="100%">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/ease_chat_row_send_bubble_bg_color"/>
+                <corners android:radius="@dimen/ease_size_1"/>
+                <size
+                    android:width="@dimen/ease_size_9"
+                    android:height="@dimen/ease_size_9"/>
+            </shape>
+        </rotate>
+    </item>
+
+    <!-- rectangle background -->
+    <item
+        android:right="@dimen/ease_size_5">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/ease_chat_row_send_bubble_bg_color"/>
+            <corners android:radius="@dimen/ease_corner_extra_small"/>
+            <size
+                android:width="@dimen/ease_size_40"
+                android:height="@dimen/ease_size_36"/>
+        </shape>
+    </item>
+
+</layer-list>

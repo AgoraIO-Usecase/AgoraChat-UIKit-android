@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    style="@style/ease_chat_message_reaction_tab_item_style"
+    android:gravity="center">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_emoji"
+        tools:src="@drawable/emoji_1"
+        style="@style/ease_chat_message_reaction_icon_style" />
+
+    <TextView
+        android:id="@+id/tv_emoji"
+        tools:text="😀"
+        style="@style/ease_chat_message_reaction_text_style"/>
+
+    <TextView
+        android:id="@+id/tv_emoji_count"
+        tools:text="1"
+        style="@style/ease_chat_message_reaction_item_count_style" />
+
+</LinearLayout>

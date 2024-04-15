@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ease_contact_list_new_request_item_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/ease_selector_action_text_change_color</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Medium</item>
+        <item name="android:background">@drawable/ease_invitation_action_bg</item>
+    </style>
+
+</resources>
