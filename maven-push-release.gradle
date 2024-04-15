@@ -1,6 +1,6 @@
 group = "io.hyphenate"
 archivesBaseName = "ease-im-kit"
-version = "1.0.0"//发布aar的库版本
+version = "4.5.0"//发布aar的库版本
 
 apply {
     plugin 'maven-publish'
