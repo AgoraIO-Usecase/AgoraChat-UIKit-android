@@ -43,14 +43,17 @@
                 app:layout_constraintEnd_toStartOf="@+id/ic_notice"
                 android:id="@+id/tv_name"
                 android:layout_marginTop="12dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 style="@style/ease_detail_layout_title"
                 app:layout_constraintHorizontal_chainStyle="packed"
+                android:maxWidth="200dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <com.hyphenate.easeui.widget.EaseImageView
                 android:id="@+id/ic_notice"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:src="@drawable/ease_do_not_disturb"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintTop_toTopOf="@+id/tv_name"

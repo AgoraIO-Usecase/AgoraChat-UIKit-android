@@ -2,6 +2,7 @@ package com.hyphenate.easeui.base
 
 import android.content.DialogInterface
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -56,8 +57,10 @@ abstract class EaseBaseSheetFragmentDialog<B : ViewBinding?> : BottomSheetDialog
             ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v: View?, insets: WindowInsetsCompat ->
                 val systemInset = insets.getInsets(WindowInsetsCompat.Type.systemBars())
                 view.setPadding(0, 0, 0, systemInset.bottom)
-                context?.getColor(R.color.ease_color_background)?.let {
-                    window.navigationBarColor = it
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    context?.getColor(R.color.ease_color_background)?.let {
+                        window.navigationBarColor = it
+                    }
                 }
                 WindowInsetsCompat.CONSUMED
             }

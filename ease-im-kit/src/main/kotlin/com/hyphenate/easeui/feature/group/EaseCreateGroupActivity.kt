@@ -120,7 +120,7 @@ open class EaseCreateGroupActivity:EaseBaseActivity<EaseActivityCreateGroupLayou
     }
 
     override fun createGroupSuccess(group: ChatGroup) {
-        ChatClient.getInstance().chatManager().saveMessage(group.createNewGroupMessage())
+        ChatClient.getInstance().chatManager().saveMessage(group.createNewGroupMessage(group.groupName))
         EaseChatActivity.actionStart(mContext,group.groupId, EaseChatType.GROUP_CHAT)
         finish()
     }

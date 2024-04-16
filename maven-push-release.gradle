@@ -1,6 +1,6 @@
 group = "io.hyphenate"
-archivesBaseName = "ease-im-kit"
-version = "1.0.0"//发布aar的库版本
+archivesBaseName = "ease-chat-kit"
+version = "4.5.0"//发布aar的库版本
 
 apply {
     plugin 'maven-publish'
@@ -46,6 +46,7 @@ task javadoc(type: Javadoc) {
             owner.source = variant.javaCompiler.source
             owner.classpath = files(android.bootClasspath.join(File.pathSeparator))
             owner.classpath += variant.javaCompiler.classpath
+            owner.include "**/*.kt"
         }
     }
     failOnError false
@@ -86,7 +87,13 @@ afterEvaluate {
                 afterEvaluate {
                     from components.release
                 }
-
+                // 设置要发布的文件
+                artifact("$buildDir/libs/$archivesBaseName-$version-javadoc.jar"){
+                    classifier 'javadoc'
+                }
+                artifact("$buildDir/libs/$archivesBaseName-$version-sources.jar"){
+                    classifier 'sources'
+                }
                 signing.sign publishing.publications.release
 
                 pom {

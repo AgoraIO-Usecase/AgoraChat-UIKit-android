@@ -197,16 +197,9 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
 
     private fun showAddContactDialog(){
         val contactDialog = CustomDialog(
-            this@EaseNewRequestsActivity,
-            resources.getString(R.string.ease_contact_add_dialog_title),
-            resources.getString(R.string.ease_contact_add_dialog_contact),
-            true,
-            onLeftButtonClickListener = {
-
-            },
-            onRightButtonClickListener = {
-
-            },
+            context = this@EaseNewRequestsActivity,
+            title = resources.getString(R.string.ease_contact_add_dialog_title),
+            isEditTextMode = true,
             onInputModeConfirmListener = {
                 contactViewModel?.addContact(it)
             }
