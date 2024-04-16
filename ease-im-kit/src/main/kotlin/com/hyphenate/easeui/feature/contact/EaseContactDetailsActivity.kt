@@ -105,8 +105,10 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
         val isSilent = EaseIM.getCache().getMutedConversationList().containsKey(user?.userId)
         if (isSilent){
             binding.switchItemDisturb.setChecked(true)
+            binding.icNotice.visibility = View.VISIBLE
         }else{
             binding.switchItemDisturb.setChecked(false)
+            binding.icNotice.visibility = View.GONE
         }
         binding.switchItemDisturb.setSwitchTarckDrawable(R.drawable.ease_switch_track_selector)
         binding.switchItemDisturb.setSwitchThumbDrawable(R.drawable.ease_switch_thumb_selector)
@@ -356,6 +358,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
     }
 
     override fun makeSilentForContactSuccess(silentResult: ChatSilentModeResult) {
+        binding.icNotice.visibility = View.VISIBLE
         EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.UPDATE.name)
             .post(lifecycleScope
                 , EaseEvent(EaseEvent.EVENT.UPDATE.name
@@ -371,6 +374,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
     }
 
     override fun cancelSilentForContactSuccess() {
+        binding.icNotice.visibility = View.GONE
         EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.UPDATE.name)
             .post(mContext.mainScope()
                 , EaseEvent(EaseEvent.EVENT.UPDATE.name

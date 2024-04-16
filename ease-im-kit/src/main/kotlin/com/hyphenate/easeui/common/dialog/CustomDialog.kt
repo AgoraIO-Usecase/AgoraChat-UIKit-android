@@ -23,6 +23,8 @@ class CustomDialog(
     private val subtitle: String = "",
     private val isEditTextMode: Boolean,
     private val inputHint: String = "",
+    private val leftButtonText:String? = null,
+    private val rightButtonText:String? = null,
     private var onLeftButtonClickListener: (() -> Unit)? = {},
     private var onRightButtonClickListener: (() -> Unit)? = {},
     private var onInputTextChangeListener: ((String) -> Unit)? = {},
@@ -49,6 +51,13 @@ class CustomDialog(
 
         titleTextView.text = title
         subtitleTextView.text = subtitle
+
+        leftButtonText?.let {
+            leftButton.text = it
+        }
+        rightButtonText?.let {
+            rightButton.text = it
+        }
 
         if (subtitle.isEmpty()){
             subtitleTextView.visibility = View.GONE

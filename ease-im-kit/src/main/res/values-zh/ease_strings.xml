@@ -7,7 +7,7 @@
     <string name="ease_dialog_black_title">确认拉黑?</string>
     <string name="ease_dialog_black">确认拉黑后，您将无法收到对方发来的任何消息。</string>
     <string name="ease_dialog_clear">确认清空聊天记录？</string>
-    <string name="ease_dialog_delete_contact_title">确认删除联系人？</string>
+    <string name="ease_dialog_delete_contact_title">删除联系人？</string>
     <string name="ease_dialog_delete_contact_subtitle">确认删除%1$s，同时删除与该联系人的聊天记录。</string>
     <string name="ease_dialog_edit_input_id_hint">输入用户ID</string>
     <string name="ease_dialog_cancel">取消</string>
@@ -44,7 +44,7 @@
     <string name="ease_chat_primary_menu_button_send">发送</string>
     <string name="ease_chat_primary_menu_button_pushtotalk">按住说话</string>
     <string name="ease_chat_primary_menu_input_hint">Aa</string>
-    <string name="ease_chat_search_message">搜索消息</string>
+    <string name="ease_chat_search_message">搜索关键字</string>
 
     <string name="ease_attach_picture">图片</string>
     <string name="ease_attach_take_pic">相机</string>
@@ -120,14 +120,14 @@
     <string name="ease_chat_message_edit_edited">已编辑</string>
 
     <!-- chat user card -->
-    <string name="ease_chat_message_user_card_label">联系人</string>
-    <string name="ease_chat_message_user_card_select_title">分享联系人</string>
+    <string name="ease_chat_message_user_card_label">名片</string>
+    <string name="ease_chat_message_user_card_select_title">分享联系人?</string>
     <string name="ease_chat_message_user_card_share_content">确认分享“%1$s”给"%2$s?"</string>
 
     <!-- chat dialog -->
-    <string name="ease_chat_dialog_delete_title">确认删除这条消息？</string>
+    <string name="ease_chat_dialog_delete_title">删除这条消息？</string>
     <string name="ease_chat_dialog_delete_content">删除后，对方依旧可以看到这条消息。</string>
-    <string name="ease_chat_dialog_recall_title">确认撤回这条消息？</string>
+    <string name="ease_chat_dialog_recall_title">撤回这条消息？</string>
     <string name="ease_chat_dialog_resend_title">确认重新发送这条消息？</string>
     <string name="ease_chat_dialog_delete_multi_message_title">删除%1$d条消息？</string>
     <string name="ease_chat_dialog_delete_one_message_title">删除1条消息？</string>
@@ -153,15 +153,15 @@
 
     <!-- chat new -->
     <string name="ease_chat_new_conversation">新会话</string>
-    <string name="ease_chat_new_group_welcome">群聊创建成功</string>
+    <string name="ease_chat_new_group_welcome">群组 %1$s 创建成功</string>
 
     <!-- conversation menu -->
-    <string name="ease_conv_menu_item_silent">静音</string>
-    <string name="ease_conv_menu_item_unsilent">取消静音</string>
+    <string name="ease_conv_menu_item_silent">免打扰</string>
+    <string name="ease_conv_menu_item_unsilent">取消免打扰</string>
     <string name="ease_conv_menu_item_pin">置顶</string>
     <string name="ease_conv_menu_item_unpin">取消置顶</string>
     <string name="ease_conv_menu_item_read">标记为已读</string>
-    <string name="ease_conv_menu_item_delete">删除会话</string>
+    <string name="ease_conv_menu_item_delete">删除</string>
 
     <!-- alert -->
     <string name="ease_prompt">Note</string>
@@ -190,22 +190,22 @@
     <string name="ease_clear_history">清空聊天记录</string>
     <string name="ease_message_no_disturbance">消息免打扰</string>
     <string name="ease_contact_header_request">新请求</string>
-    <string name="ease_contact_header_group">群聊</string>
+    <string name="ease_contact_header_group">群组</string>
     <string name="ease_contact_search">搜索联系人</string>
     <string name="ease_contact_add">添加联系人</string>
-    <string name="ease_contact_number">环信ID: %1$s</string>
+    <string name="ease_contact_number">ID: %1$s</string>
     <string name="ease_header_request">新请求</string>
     <string name="ease_header_group">群聊</string>
+    <string name="ease_dialog_right_text">添加</string>
 
     <!--add contact dialog-->
     <string name="ease_contact_add_dialog_title">添加联系人</string>
-    <string name="ease_contact_add_dialog_contact">通过用户ID添加联系人</string>
 
     <!--Invitation-->
     <string name="ease_new_invitation_title">新请求</string>
-    <string name="ease_new_invitation">新邀请</string>
+    <string name="ease_new_invitation">新请求</string>
     <string name="ease_invitation_detail_action">添加联系人</string>
-    <string name="ease_invitation_reason">请求添加为好友</string>
+    <string name="ease_invitation_reason">请求添加你为好友</string>
     <string name="ease_invitation_action_add">添加</string>
     <string name="ease_invitation_action_added">已添加</string>
     <string name="contact_listener_onFriendRequestDeclined">%1$s 拒绝了您的好友请求</string>
@@ -229,22 +229,22 @@
     <string name="ease_group_detail_member_count">%1$d人</string>
     <string name="ease_group_detail_my_notes">我在本群的昵称</string>
     <string name="ease_group_detail_group_name">群名称</string>
-    <string name="ease_group_detail_group_id">群ID: %1$s</string>
+    <string name="ease_group_detail_group_id">ID: %1$s</string>
     <string name="ease_group_detail_group_describe">群描述</string>
     <string name="ease_group_detail_change_owner">转移群主</string>
     <string name="ease_group_detail_destroy">解散群组</string>
-    <string name="ease_group_detail_leave">退出群聊</string>
-    <string name="ease_group_detail_leave_dialog">确认退出群聊?</string>
-    <string name="ease_group_detail_leave_dialog_destroy">确认解散群聊?</string>
+    <string name="ease_group_detail_leave">离开群组</string>
+    <string name="ease_group_detail_leave_dialog">离开群组?</string>
+    <string name="ease_group_detail_leave_dialog_destroy">解散群组?</string>
     <string name="ease_group_detail_leave_dialog_des">确认退出群组，同时删除该群组的聊天记录。</string>
     <string name="ease_group_detail_leave_dialog_owner_des">确认解散群组，同时删除该群组的聊天记录。</string>
     <string name="ease_group_count">群聊(%1$d)</string>
     <string name="ease_group_change_name">修改群名称</string>
     <string name="ease_group_change_name_count">%1$d/32</string>
-    <string name="ease_group_change_describe">修改群描述</string>
+    <string name="ease_group_change_describe">群描述</string>
     <string name="ease_group_change_describe_count">%1$d/512</string>
-    <string name="ease_group_change_save">保存</string>
-    <string name="ease_group_change_owner_title">选择新群主</string>
+    <string name="ease_group_change_save">确认</string>
+    <string name="ease_group_change_owner_title">转移群主</string>
     <string name="ease_group_change_owner">转让群主身份给“%1$s”？</string>
     <string name="ease_group_remove_members">确认删除"%1$s"群成员?</string>
     <string name="ease_group_remove_members_2">确认删除"%1$s"2位群成员?</string>
@@ -260,7 +260,7 @@
     <string name="ease_remove_group_member_select_count">删除(%1$d)</string>
 
     <!--Group Mention-->
-    <string name="ease_group_mention_title">\@提及</string>
+    <string name="ease_group_mention_title">\@&#160;提及</string>
     <string name="ease_group_mention_all">所有人</string>
 
     <!--report-->

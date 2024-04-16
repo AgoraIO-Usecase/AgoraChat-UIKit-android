@@ -69,10 +69,11 @@ class EaseConvDialogController(
     fun showAddContactDialog(addContactAction: (String) -> Unit){
         val context = (context as FragmentActivity)
         val contactDialog = CustomDialog(
-            context,
-            context.getString(R.string.ease_conv_action_add_contact),
-            context.getString(R.string.ease_conv_dialog_add_contact),
-            true,
+            context = context,
+            title = context.getString(R.string.ease_conv_action_add_contact),
+            subtitle = context.getString(R.string.ease_conv_dialog_add_contact),
+            rightButtonText = context.getString(R.string.ease_dialog_right_text),
+            isEditTextMode = true,
             onInputModeConfirmListener = {
                 addContactAction.invoke(it)
             }

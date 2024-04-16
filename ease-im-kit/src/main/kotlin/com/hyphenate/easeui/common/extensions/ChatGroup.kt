@@ -32,7 +32,12 @@ fun ChatGroup.getOwnerInfo():EaseUser{
 /**
  * Create local group message.
  */
-internal fun ChatGroup.createNewGroupMessage(): ChatMessage? {
+internal fun ChatGroup.createNewGroupMessage(groupName:String): ChatMessage? {
+   val name = if (groupName.length > 16) {
+      groupName.substring(0, 16) + "..."
+   } else {
+      groupName
+   }
    EaseIM.getContext()?.let { context ->
       return ChatMessage.createSendMessage(ChatMessageType.CUSTOM).let {
          it.from = ChatClient.getInstance().currentUser
@@ -41,7 +46,7 @@ internal fun ChatGroup.createNewGroupMessage(): ChatMessage? {
          val body = ChatCustomMessageBody(EaseConstant.MESSAGE_CUSTOM_ALERT)
          mutableMapOf(
             EaseConstant.MESSAGE_CUSTOM_ALERT_TYPE to EaseConstant.GROUP_WELCOME_MESSAGE,
-            EaseConstant.MESSAGE_CUSTOM_ALERT_CONTENT to context.getString(R.string.ease_chat_new_group_welcome),
+            EaseConstant.MESSAGE_CUSTOM_ALERT_CONTENT to context.getString(R.string.ease_chat_new_group_welcome,name),
             EaseConstant.GROUP_WELCOME_MESSAGE_GROUP_NAME to groupName
          ).let { map ->
             body.params = map
