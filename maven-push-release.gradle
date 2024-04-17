@@ -5,6 +5,7 @@ version = "4.5.0"//发布aar的库版本
 apply {
     plugin 'maven-publish'
     plugin 'signing'
+//    plugin 'org.jetbrains.dokka'
 }
 
 
@@ -34,29 +35,11 @@ configurations {
     deployerJars
 }
 
-task javadoc(type: Javadoc) {
-    options {
-        encoding 'UTF-8'
-        charSet 'UTF-8'
-    }
-    source = android.sourceSets.main.kotlin.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    android.libraryVariants.all { variant ->
-        if (variant.name == 'release') {
-            owner.source = variant.javaCompiler.source
-            owner.classpath = files(android.bootClasspath.join(File.pathSeparator))
-            owner.classpath += variant.javaCompiler.classpath
-            owner.include "**/*.kt"
-        }
-    }
-    failOnError false
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
+task javadocJar(type: Jar) {
     // classifier = 'javadoc'
     // 8.0 使用 archiveClassifier 代替 classifier
     archiveClassifier = 'javadoc'
-    from javadoc.destinationDir
+    from "$buildDir/dokka/javadoc"
 }
 
 task sourcesJar(type: Jar) {
