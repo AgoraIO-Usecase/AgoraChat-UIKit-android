@@ -208,4 +208,16 @@ open class EaseMenuHelper {
         }
     }
 
+    /**
+     * Clear top view for EaseMenuDialog.
+     */
+    fun clearTopView(){
+        this.view?.context?.mainScope()?.launch {
+            delay(100)
+            menuView?.let {
+                (it as? EaseMenuDialog)?.clearTopView()
+            }
+        }
+    }
+
 }

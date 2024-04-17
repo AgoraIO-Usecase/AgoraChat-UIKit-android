@@ -34,6 +34,7 @@ import com.hyphenate.easeui.common.enums.EaseChatFinishReason
 import com.hyphenate.easeui.common.extensions.plus
 import com.hyphenate.easeui.common.extensions.showToast
 import com.hyphenate.easeui.common.extensions.toUser
+import com.hyphenate.easeui.common.helper.EaseMenuFilterHelper
 import com.hyphenate.easeui.common.helper.EaseThreadNotifyHelper
 import com.hyphenate.easeui.common.utils.EasePresenceUtil
 import com.hyphenate.easeui.configs.setAvatarStyle
@@ -687,7 +688,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     }
 
     override fun onPreMenu(helper: EaseChatMenuHelper?, message: ChatMessage?) {
-
+        EaseMenuFilterHelper.filterMenu(helper,message)
     }
 
     override fun onMenuItemClick(item: EaseMenuItem?, message: ChatMessage?): Boolean {

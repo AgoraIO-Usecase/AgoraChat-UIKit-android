@@ -56,6 +56,14 @@ class EaseChatMenuHelper: EaseMenuHelper() {
         }
     }
 
+    fun hindReactionView(){
+        if (EaseIM.getConfig()?.chatConfig?.enableMessageReaction == true && message?.status() == ChatMessageStatus.SUCCESS){
+            view?.let { view->
+                clearTopView()
+            }
+        }
+    }
+
     private fun setMenuVisibleByMessageType() {
         message?.let {
             val type: ChatMessageType = it.type

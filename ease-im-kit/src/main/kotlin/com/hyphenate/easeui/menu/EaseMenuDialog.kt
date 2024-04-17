@@ -164,4 +164,11 @@ open class EaseMenuDialog
         }
     }
 
+    /**
+     * Clear top view for EaseMenuDialog.
+     */
+    fun clearTopView(){
+        binding?.llMenuTop?.removeAllViews()
+    }
+
 }
