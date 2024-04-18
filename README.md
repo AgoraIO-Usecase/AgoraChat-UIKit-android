@@ -6,11 +6,11 @@
 
 ## 开发环境要求
 
-- Android Studio 4.0 及以上
-- Gradle 4.10.x 及以上
+- Android Studio Flamingo | 2022.2.1 及以上
+- Gradle 8.0 及以上
 - targetVersion 26 及以上
 - Android SDK API 21 及以上
-- JDK 11 及以上
+- JDK 17 及以上
 
 ## 集成`单群聊 UIKit`
 
@@ -55,6 +55,16 @@ dependencyResolutionManagement {
 }
 ```
 
+### Module 远程依赖
+
+在 app 项目 build.gradle.kts 中添加以下依赖
+
+```kotlin
+
+implementation("io.hyphenate:ease-chat-kit:4.5.0")
+
+```
+
 ### Module 源码集成
 
 从 github 获取 [Chat UIKit](https://github.com/easemob/chatuikit-android) 源码，按照下面的方式集成：
@@ -62,15 +72,15 @@ dependencyResolutionManagement {
 1. 在根目录 settings.gradle.kts 文件（/Gradle Scripts/settings.gradle.kts(Project Settings)）中添加如下代码：
 
 ```kotlin
-include(":ease-im-kit")
-project(":ease-im-kit").projectDir = File("../chatuikit-android/ease-im-kit")
+include(":ease-chat-kit")
+project(":ease-chat-kit").projectDir = File("../chatuikit-android/ease-im-kit")
 ```
 
 2. 在 build.gradle.kts 文件（/Gradle Scripts/build.gradle(Module: app)）中添加如下代码：
 
 ```kotlin
 //chatuikit-android
-implementation(project(mapOf("path" to ":ease-im-kit")))
+implementation(project(mapOf("path" to ":ease-chat-kit")))
 ```
 
 ### 防止代码混淆
