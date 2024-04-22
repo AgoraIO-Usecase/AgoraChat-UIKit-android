@@ -54,6 +54,10 @@ data class EaseUser @JvmOverloads constructor(
     fun getRemarkOrName(): String? {
         return if (remark.isNullOrEmpty()) getNickname() else remark
     }
+
+    override fun toString(): String {
+        return "userId: $userId \n nickname: $nickname \n avatar: $avatar \n remark: $remark"
+    }
 }
 
 /**

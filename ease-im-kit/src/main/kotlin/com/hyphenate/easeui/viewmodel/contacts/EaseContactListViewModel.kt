@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 open class EaseContactListViewModel(
     private val chatContactManager: ChatContactManager = ChatClient.getInstance().contactManager(),
-    val stopTimeoutMillis: Long = 5000
+    private val stopTimeoutMillis: Long = 5000
 ): EaseBaseViewModel<IEaseContactResultView>(),IContactListRequest {
 
     val repository:EaseContactListRepository = EaseContactListRepository(chatContactManager)
@@ -194,9 +194,9 @@ open class EaseContactListViewModel(
     }
 
     override fun fetchContactInfo(contactList: List<EaseUser>) {
-        val requestList = contactList.filter { EaseIM.getCache().getUser(it.userId) == null }
-        if (requestList.isEmpty()) {
-            return
+        val requestList = contactList.filter { user ->
+            val u = EaseIM.getCache().getUser(user.userId) ?: return@filter true
+            u.avatar.isNullOrEmpty() || u.name.isNullOrEmpty()
         }
         viewModelScope.launch {
             flow {
@@ -206,7 +206,10 @@ open class EaseContactListViewModel(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
             .collect {
                 if (it != null) {
-                    val result = it.map { it.toUser() }
+                    val result = it.map { profile ->
+                        ChatLog.d(TAG,"fetchUserInfoByUserSuccess result ${profile.toUser()}")
+                        profile.toUser()
+                    }
                     view?.fetchUserInfoByUserSuccess(result)
                 }
             }
@@ -227,7 +230,7 @@ open class EaseContactListViewModel(
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
                 .collect {
                     if (it != null) {
-                        ChatLog.e("conversation", "makeSilentForContactSuccess")
+                        ChatLog.d(TAG, "makeSilentForContactSuccess")
                         view?.makeSilentForContactSuccess(it)
                     }
                 }
@@ -249,7 +252,7 @@ open class EaseContactListViewModel(
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
                 .collect {
                     if (it != null) {
-                        ChatLog.e("conversation", "cancelSilentForContactSuccess")
+                        ChatLog.d(TAG, "cancelSilentForContactSuccess")
                         view?.cancelSilentForContactSuccess()
                     }
                 }
