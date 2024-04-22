@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.feature.contact.adapter.EaseContactListAdapter
@@ -140,12 +139,8 @@ class EaseContactListLayout@JvmOverloads constructor(
                     val visibleList = listAdapter?.mData?.filterIndexed { index, _ ->
                         index in firstVisibleItemPosition..lastVisibleItemPosition
                     }
-                    val fetchList = visibleList?.filter { user ->
-                        val u = EaseIM.getCache().getUser(user.userId)
-                        (u == null ) && (user.nickname == null && user.avatar == null)
-                    }
-                    if (!fetchList.isNullOrEmpty()) {
-                        contactViewModel?.fetchContactInfo(fetchList)
+                    if (!visibleList.isNullOrEmpty()) {
+                        contactViewModel?.fetchContactInfo(visibleList)
                     }
                 }
             }
