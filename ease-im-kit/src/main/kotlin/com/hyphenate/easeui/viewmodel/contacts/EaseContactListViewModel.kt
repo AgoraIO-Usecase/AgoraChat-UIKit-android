@@ -28,8 +28,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 open class EaseContactListViewModel(
-    private val chatContactManager: ChatContactManager = ChatClient.getInstance().contactManager(),
-    private val stopTimeoutMillis: Long = 5000
+    val chatContactManager: ChatContactManager = ChatClient.getInstance().contactManager(),
+    val stopTimeoutMillis: Long = 5000
 ): EaseBaseViewModel<IEaseContactResultView>(),IContactListRequest {
 
     val repository:EaseContactListRepository = EaseContactListRepository(chatContactManager)

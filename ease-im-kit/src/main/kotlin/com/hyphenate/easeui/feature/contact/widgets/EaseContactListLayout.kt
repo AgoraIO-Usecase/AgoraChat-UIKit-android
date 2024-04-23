@@ -36,7 +36,7 @@ class EaseContactListLayout@JvmOverloads constructor(
     private val attrs: AttributeSet? = null,
     private val defStyleAttr: Int = 0
 ): LinearLayout(context, attrs, defStyleAttr), IContactListLayout ,IEaseContactResultView {
-
+    private var isFirstLoad = false
     /**
      * Refresh layout.
      */
@@ -254,7 +254,11 @@ class EaseContactListLayout@JvmOverloads constructor(
     override fun loadContactListSuccess(list: MutableList<EaseUser>) {
         refreshLayout.finishRefresh()
         listAdapter?.setData(list.toMutableList())
-        loadContactListener?.loadContactListSuccess(list)
+        listAdapter?.mData?.let {
+            if (it.size > 0){
+                loadContactListener?.loadContactListSuccess(list)
+            }
+        }
     }
 
     override fun loadContactListFail(code: Int, error: String) {
@@ -269,6 +273,10 @@ class EaseContactListLayout@JvmOverloads constructor(
     override fun fetchUserInfoByUserSuccess(users: List<EaseUser>?) {
         if (!users.isNullOrEmpty()) {
             listAdapter?.notifyItemRangeChanged(0, listAdapter?.itemCount ?: 0)
+            if (!isFirstLoad){
+                contactViewModel?.loadData()
+                isFirstLoad = true
+            }
         }
     }
 }
