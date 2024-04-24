@@ -119,6 +119,13 @@ object EaseEmojiHelper {
     private const val o_ee_49 = "[(Z)]"
     private const val o_ee_50 = "[-)]"
     private const val o_ee_51 = "[:-]"
+    private const val o_ee_52 = "☺"
+    private const val o_ee_53 = "\uD83E\uDD74"
+    private const val o_ee_54 = "\uD83D\uDE41"
+    private const val o_ee_55 = "\uD83D\uDE2D"
+    private const val o_ee_56 = "\uD83D\uDE10"
+    private const val o_ee_57 = "\uD83D\uDE07"
+    private const val o_ee_58 = "\uD83D\uDE2C"
 
     private val mapping: Map<String, String> = mapOf(
         o_ee_1 to "☺️",
@@ -172,6 +179,14 @@ object EaseEmojiHelper {
         o_ee_49 to "🎉",
         o_ee_50 to "🤢",
         o_ee_51 to "🙄",
+        o_ee_52 to "☺️",
+        o_ee_53 to "\uD83E\uDD74",
+        o_ee_54 to "\uD83D\uDE41",
+        o_ee_55 to "\uD83D\uDE2D",
+        o_ee_56 to "\uD83D\uDE10",
+        o_ee_57 to "\uD83D\uDE07",
+        o_ee_58 to "\uD83D\uDE2C",
+
     )
 
     private val emojiMap by lazy { mutableMapOf<String, Any>() }
