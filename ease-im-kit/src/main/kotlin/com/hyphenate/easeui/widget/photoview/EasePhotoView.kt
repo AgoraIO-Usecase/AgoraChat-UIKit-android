@@ -6,13 +6,14 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.AttributeSet
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 import com.hyphenate.easeui.widget.photoview.PhotoViewAttacher.OnMatrixChangedListener
 
 class EasePhotoView @JvmOverloads constructor(
-    context: Context?,
+    context: Context,
     attr: AttributeSet? = null,
     defStyle: Int = 0
-) : ImageView(context, attr, defStyle), IPhotoView {
+) : AppCompatImageView(context, attr, defStyle), IPhotoView {
     private var mAttacher: PhotoViewAttacher
 
     private var mPendingScaleType: ScaleType? = null
