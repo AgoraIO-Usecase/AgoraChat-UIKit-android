@@ -4,6 +4,8 @@ import android.app.Activity
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -167,7 +169,11 @@ abstract class EaseBaseActivity<B : ViewBinding> :  AppCompatActivity() {
     }
 
     open fun showKeyboard(editText: EditText) {
-        val imm = editText.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(editText, 0)
+        Looper.myLooper()?.let {
+            Handler(it).postDelayed({
+                val imm = editText.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(editText, 0)
+            }, 500)
+        }
     }
 }
