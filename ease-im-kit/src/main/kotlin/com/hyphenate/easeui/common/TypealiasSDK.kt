@@ -48,6 +48,8 @@ typealias ChatTextFormater = com.hyphenate.util.TextFormater
 // java bean
 typealias Chatroom =  com.hyphenate.chat.EMChatRoom
 typealias ChatUserInfo = com.hyphenate.chat.EMUserInfo
+typealias ChatLoginExtensionInfo = com.hyphenate.chat.EMLoginExtensionInfo
+typealias ChatRecallMessageInfo = com.hyphenate.chat.EMRecallMessageInfo
 
 // Chat
 typealias ChatFetchMessageOption = com.hyphenate.chat.EMFetchMessageOption

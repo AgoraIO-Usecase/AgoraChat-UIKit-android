@@ -1,8 +1,6 @@
 package com.hyphenate.easeui.common
 
 import com.hyphenate.EMChatThreadChangeListener
-import com.hyphenate.chat.EMLoginExtensionInfo
-import com.hyphenate.chat.EMRecallMessageInfo
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.CONTACT_ACCEPT
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.CONTACT_REMOVE
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_CREATE
@@ -11,6 +9,8 @@ import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_JOIN
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_LEAVE
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.common.ChatLoginExtensionInfo
+import com.hyphenate.easeui.common.ChatRecallMessageInfo
 import com.hyphenate.easeui.common.extensions.createUnsentMessage
 import com.hyphenate.easeui.common.extensions.getUserInfo
 import com.hyphenate.easeui.common.extensions.isGroupChat
@@ -231,7 +231,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         }
     }
 
-    override fun onLogout(errorCode: Int, info: EMLoginExtensionInfo?) {
+    override fun onLogout(errorCode: Int, info: ChatLoginExtensionInfo?) {
         chatConnectionListener.let {
             try {
                 for (connectionListener in it) {
@@ -344,7 +344,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         }
     }
 
-    override fun onMessageRecalledWithExt(recallMessageInfo: MutableList<EMRecallMessageInfo>?) {
+    override fun onMessageRecalledWithExt(recallMessageInfo: MutableList<ChatRecallMessageInfo>?) {
         if (recallMessageInfo != null && recallMessageInfo.size > 0) {
             for (message in recallMessageInfo) {
                 message.recallMessage?.let {
