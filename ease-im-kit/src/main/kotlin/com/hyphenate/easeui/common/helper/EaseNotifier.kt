@@ -194,7 +194,7 @@ open class EaseNotifier(context: Context) {
                         appContext,
                         NOTIFY_ID,
                         intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_IMMUTABLE
                     )
                     builder.setContentIntent(pendingIntent)
                 }
@@ -232,7 +232,7 @@ open class EaseNotifier(context: Context) {
         val title: String = pm.getApplicationLabel(appContext.applicationInfo).toString()
         val i: Intent? = appContext.packageManager.getLaunchIntentForPackage(packageName)
         val pendingIntent: PendingIntent =
-            PendingIntent.getActivity(appContext, NOTIFY_ID, i, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getActivity(appContext, NOTIFY_ID, i, PendingIntent.FLAG_IMMUTABLE)
         return NotificationCompat.Builder(appContext, CHANNEL_ID)
             .setSmallIcon(appContext.applicationInfo.icon)
             .setContentTitle(title)

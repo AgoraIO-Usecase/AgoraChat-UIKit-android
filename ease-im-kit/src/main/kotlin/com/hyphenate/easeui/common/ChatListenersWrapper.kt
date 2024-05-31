@@ -1,6 +1,8 @@
 package com.hyphenate.easeui.common
 
 import com.hyphenate.EMChatThreadChangeListener
+import com.hyphenate.chat.EMLoginExtensionInfo
+import com.hyphenate.chat.EMRecallMessageInfo
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.CONTACT_ACCEPT
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.CONTACT_REMOVE
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_CREATE
@@ -229,7 +231,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         }
     }
 
-    override fun onLogout(errorCode: Int, info: String?) {
+    override fun onLogout(errorCode: Int, info: EMLoginExtensionInfo?) {
         chatConnectionListener.let {
             try {
                 for (connectionListener in it) {
@@ -256,8 +258,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         }
         chatMessageListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onMessageReceived(messages)
+                for (messageListener in it) {
+                    messageListener.onMessageReceived(messages)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -268,8 +270,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onCmdMessageReceived(messages: MutableList<ChatMessage>?) {
         chatMessageListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onCmdMessageReceived(messages)
+                for (messageListener in it) {
+                    messageListener.onCmdMessageReceived(messages)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -280,8 +282,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onGroupMessageRead(groupReadAcks: MutableList<ChatGroupReadAck>?) {
         chatMessageListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onGroupMessageRead(groupReadAcks)
+                for (messageListener in it) {
+                    messageListener.onGroupMessageRead(groupReadAcks)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -309,8 +311,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     ) {
         chatMessageListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onMessageContentChanged(messageModified,operatorId,operationTime)
+                for (messageListener in it) {
+                    messageListener.onMessageContentChanged(messageModified,operatorId,operationTime)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -321,8 +323,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onMessageDelivered(messages: MutableList<ChatMessage>?) {
         chatMessageListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onMessageDelivered(messages)
+                for (messageListener in it) {
+                    messageListener.onMessageDelivered(messages)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -333,8 +335,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onMessageRead(messages: MutableList<ChatMessage>?) {
         chatMessageListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onMessageRead(messages)
+                for (messageListener in it) {
+                    messageListener.onMessageRead(messages)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -342,20 +344,22 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         }
     }
 
-    override fun onMessageRecalled(messages: MutableList<ChatMessage>?) {
-        if (messages != null && messages.size > 0) {
-            for (message in messages) {
-                if (message.isGroupChat() && EaseAtMessageHelper.get().isAtMeMsg(message)) {
-                    EaseAtMessageHelper.get().removeAtMeGroup(message.conversationId())
+    override fun onMessageRecalledWithExt(recallMessageInfo: MutableList<EMRecallMessageInfo>?) {
+        if (recallMessageInfo != null && recallMessageInfo.size > 0) {
+            for (message in recallMessageInfo) {
+                message.recallMessage?.let {
+                    if (it.isGroupChat() && EaseAtMessageHelper.get().isAtMeMsg(it)) {
+                        EaseAtMessageHelper.get().removeAtMeGroup(it.conversationId())
+                    }
+                    val recallMsg = it.createUnsentMessage(true)
+                    ChatClient.getInstance().chatManager().saveMessage(recallMsg)
                 }
-                val recallMsg = message.createUnsentMessage(true)
-                ChatClient.getInstance().chatManager().saveMessage(recallMsg)
             }
         }
         chatMessageListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onMessageRecalled(messages)
+                for (messageListener in it) {
+                    messageListener.onMessageRecalledWithExt(recallMessageInfo)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -366,8 +370,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onReactionChanged(messageReactionChangeList: MutableList<ChatMessageReactionChange>?) {
         chatMessageListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onReactionChanged(messageReactionChangeList)
+                for (messageListener in it) {
+                    messageListener.onReactionChanged(messageReactionChangeList)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -378,8 +382,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onReadAckForGroupMessageUpdated() {
         chatMessageListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onReadAckForGroupMessageUpdated()
+                for (messageListener in it) {
+                    messageListener.onReadAckForGroupMessageUpdated()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -396,8 +400,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     ) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onInvitationReceived(groupId,groupName,inviter,reason)
+                for (groupListener in it) {
+                    groupListener.onInvitationReceived(groupId,groupName,inviter,reason)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -413,8 +417,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     ) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onRequestToJoinReceived(groupId,groupName,applicant,reason)
+                for (groupListener in it) {
+                    groupListener.onRequestToJoinReceived(groupId,groupName,applicant,reason)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -425,8 +429,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onRequestToJoinAccepted(groupId: String?, groupName: String?, accepter: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onRequestToJoinAccepted(groupId,groupName,accepter)
+                for (groupListener in it) {
+                    groupListener.onRequestToJoinAccepted(groupId,groupName,accepter)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -442,8 +446,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     ) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onRequestToJoinDeclined(groupId,groupName,decliner,reason)
+                for (groupListener in it) {
+                    groupListener.onRequestToJoinDeclined(groupId,groupName,decliner,reason)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -454,8 +458,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onInvitationAccepted(groupId: String?, invitee: String?, reason: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onInvitationAccepted(groupId,invitee,reason)
+                for (groupListener in it) {
+                    groupListener.onInvitationAccepted(groupId,invitee,reason)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -466,8 +470,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onInvitationDeclined(groupId: String?, invitee: String?, reason: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onInvitationDeclined(groupId,invitee,reason)
+                for (groupListener in it) {
+                    groupListener.onInvitationDeclined(groupId,invitee,reason)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -478,8 +482,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onUserRemoved(groupId: String?, groupName: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onUserRemoved(groupId,groupName)
+                for (groupListener in it) {
+                    groupListener.onUserRemoved(groupId,groupName)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -490,8 +494,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onGroupDestroyed(groupId: String?, groupName: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onGroupDestroyed(groupId,groupName)
+                for (groupListener in it) {
+                    groupListener.onGroupDestroyed(groupId,groupName)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -506,8 +510,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     ) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onAutoAcceptInvitationFromGroup(groupId,inviter,inviteMessage)
+                for (groupListener in it) {
+                    groupListener.onAutoAcceptInvitationFromGroup(groupId,inviter,inviteMessage)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -518,8 +522,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onMuteListAdded(groupId: String?, mutes: MutableList<String>?, muteExpire: Long) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onMuteListAdded(groupId,mutes,muteExpire)
+                for (groupListener in it) {
+                    groupListener.onMuteListAdded(groupId,mutes,muteExpire)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -530,8 +534,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onMuteListRemoved(groupId: String?, mutes: MutableList<String>?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onMuteListRemoved(groupId,mutes)
+                for (groupListener in it) {
+                    groupListener.onMuteListRemoved(groupId,mutes)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -542,8 +546,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onWhiteListAdded(groupId: String?, whitelist: MutableList<String>?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onWhiteListAdded(groupId,whitelist)
+                for (groupListener in it) {
+                    groupListener.onWhiteListAdded(groupId,whitelist)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -554,8 +558,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onWhiteListRemoved(groupId: String?, whitelist: MutableList<String>?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onWhiteListRemoved(groupId,whitelist)
+                for (groupListener in it) {
+                    groupListener.onWhiteListRemoved(groupId,whitelist)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -566,8 +570,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onAllMemberMuteStateChanged(groupId: String?, isMuted: Boolean) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onAllMemberMuteStateChanged(groupId,isMuted)
+                for (groupListener in it) {
+                    groupListener.onAllMemberMuteStateChanged(groupId,isMuted)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -578,8 +582,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onAdminAdded(groupId: String?, administrator: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onAdminAdded(groupId,administrator)
+                for (groupListener in it) {
+                    groupListener.onAdminAdded(groupId,administrator)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -590,8 +594,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onAdminRemoved(groupId: String?, administrator: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onAdminRemoved(groupId,administrator)
+                for (groupListener in it) {
+                    groupListener.onAdminRemoved(groupId,administrator)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -602,8 +606,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onOwnerChanged(groupId: String?, newOwner: String?, oldOwner: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onOwnerChanged(groupId,newOwner,oldOwner)
+                for (groupListener in it) {
+                    groupListener.onOwnerChanged(groupId,newOwner,oldOwner)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -614,8 +618,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onMemberJoined(groupId: String?, member: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onMemberJoined(groupId,member)
+                for (groupListener in it) {
+                    groupListener.onMemberJoined(groupId,member)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -626,8 +630,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onMemberExited(groupId: String?, member: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onMemberExited(groupId,member)
+                for (groupListener in it) {
+                    groupListener.onMemberExited(groupId,member)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -638,8 +642,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onAnnouncementChanged(groupId: String?, announcement: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onAnnouncementChanged(groupId,announcement)
+                for (groupListener in it) {
+                    groupListener.onAnnouncementChanged(groupId,announcement)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -650,8 +654,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onSharedFileAdded(groupId: String?, sharedFile: ChatShareFile?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onSharedFileAdded(groupId,sharedFile)
+                for (groupListener in it) {
+                    groupListener.onSharedFileAdded(groupId,sharedFile)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -662,8 +666,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onSharedFileDeleted(groupId: String?, fileId: String?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onSharedFileDeleted(groupId,fileId)
+                for (groupListener in it) {
+                    groupListener.onSharedFileDeleted(groupId,fileId)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -674,8 +678,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onSpecificationChanged(group: ChatGroup?) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onSpecificationChanged(group)
+                for (groupListener in it) {
+                    groupListener.onSpecificationChanged(group)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -691,8 +695,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     ) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onGroupMemberAttributeChanged(groupId, userId, attribute, from)
+                for (groupListener in it) {
+                    groupListener.onGroupMemberAttributeChanged(groupId, userId, attribute, from)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -709,8 +713,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     ) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onRequestToJoinDeclined(groupId, groupName, decliner, reason, applicant)
+                for (groupListener in it) {
+                    groupListener.onRequestToJoinDeclined(groupId, groupName, decliner, reason, applicant)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -721,8 +725,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onStateChanged(group: ChatGroup?, isDisabled: Boolean) {
         chatGroupChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onStateChanged(group, isDisabled)
+                for (groupListener in it) {
+                    groupListener.onStateChanged(group, isDisabled)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -734,8 +738,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onContactAdded(username: String?) {
         chatContactListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onContactAdded(username)
+                for (contactListener in it) {
+                    contactListener.onContactAdded(username)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -747,8 +751,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         deleteDefaultContactAgreedMsg(username)
         chatContactListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onContactDeleted(username)
+                for (contactListener in it) {
+                    contactListener.onContactDeleted(username)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -760,8 +764,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         saveDefaultContactInvitedMsg(username, reason)
         chatContactListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onContactInvited(username,reason)
+                for (contactListener in it) {
+                    contactListener.onContactInvited(username,reason)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -772,8 +776,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onFriendRequestAccepted(username: String?) {
         chatContactListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onFriendRequestAccepted(username)
+                for (contactListener in it) {
+                    contactListener.onFriendRequestAccepted(username)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -784,8 +788,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onFriendRequestDeclined(username: String?) {
         chatContactListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onFriendRequestDeclined(username)
+                for (contactListener in it) {
+                    contactListener.onFriendRequestDeclined(username)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -797,8 +801,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onConversationUpdate() {
         chatConversationListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onConversationUpdate()
+                for (conversationListener in it) {
+                    conversationListener.onConversationUpdate()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -809,8 +813,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onConversationRead(from: String?, to: String?) {
         chatConversationListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onConversationRead(from, to)
+                for (conversationListener in it) {
+                    conversationListener.onConversationRead(from, to)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -823,8 +827,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         defaultPresencesEvent(presences)
         chatPresenceListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onPresenceUpdated(presences)
+                for (conversationListener in it) {
+                    conversationListener.onPresenceUpdated(presences)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -836,8 +840,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onChatRoomDestroyed(roomId: String?, roomName: String?) {
         chatRoomChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onChatRoomDestroyed(roomId,roomName)
+                for (chatroomListener in it) {
+                    chatroomListener.onChatRoomDestroyed(roomId,roomName)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -848,8 +852,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onMemberExited(roomId: String?, roomName: String?, participant: String?) {
         chatRoomChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onMemberExited(roomId,roomName,participant)
+                for (chatroomListener in it) {
+                    chatroomListener.onMemberExited(roomId,roomName,participant)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -865,8 +869,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     ) {
         chatRoomChangeListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onRemovedFromChatRoom(reason,roomId,roomName,participant)
+                for (chatroomListener in it) {
+                    chatroomListener.onRemovedFromChatRoom(reason,roomId,roomName,participant)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -879,8 +883,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         defaultMultiDeviceContactEvent(event,target,ext)
         chatMultiDeviceListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onContactEvent(event,target,ext)
+                for (emMultiDeviceListener in it) {
+                    emMultiDeviceListener.onContactEvent(event,target,ext)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -892,8 +896,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         defaultMultiDeviceGroupEvent(event,target,usernames)
         chatMultiDeviceListener.let {
             try {
-                for (connectionListener in it) {
-                    connectionListener.onGroupEvent(event,target,usernames)
+                for (emMultiDeviceListener in it) {
+                    emMultiDeviceListener.onGroupEvent(event,target,usernames)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -944,6 +948,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         }
     }
 
+    /**  ThreadChangeListener  */
     override fun onChatThreadCreated(event: ChatThreadEvent?) {
         chatThreadChangeListener.let {
             try {

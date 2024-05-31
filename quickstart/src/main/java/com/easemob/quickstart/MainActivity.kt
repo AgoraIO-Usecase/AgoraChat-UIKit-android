@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initSDK() {
         val appkey = getString(R.string.app_key)
-        if (appkey.isNullOrEmpty()) {
+        if (appkey.isEmpty()) {
             showToast("You should set your AppKey first!")
             ChatLog.e(TAG, "You should set your AppKey first!")
             return
