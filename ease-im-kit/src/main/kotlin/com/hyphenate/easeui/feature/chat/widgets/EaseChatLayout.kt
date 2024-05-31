@@ -18,7 +18,6 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.hyphenate.chat.EMRecallMessageInfo
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
@@ -32,6 +31,7 @@ import com.hyphenate.easeui.common.ChatMessageDirection
 import com.hyphenate.easeui.common.ChatMessageReactionChange
 import com.hyphenate.easeui.common.ChatMessageType
 import com.hyphenate.easeui.common.ChatPresence
+import com.hyphenate.easeui.common.ChatRecallMessageInfo
 import com.hyphenate.easeui.common.ChatTextMessageBody
 import com.hyphenate.easeui.common.ChatThread
 import com.hyphenate.easeui.common.ChatType
@@ -345,7 +345,7 @@ class EaseChatLayout @JvmOverloads constructor(
             refreshMessages(messages)
         }
 
-        override fun onMessageRecalledWithExt(recallMessageInfo: MutableList<EMRecallMessageInfo>?) {
+        override fun onMessageRecalledWithExt(recallMessageInfo: MutableList<ChatRecallMessageInfo>?) {
             super.onMessageRecalledWithExt(recallMessageInfo)
             var isRefresh = false
             if (recallMessageInfo != null && recallMessageInfo.size > 0) {
