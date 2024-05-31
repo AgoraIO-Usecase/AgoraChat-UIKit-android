@@ -12,10 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.hyphenate.chat.EMRecallMessageInfo
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatMessage
+import com.hyphenate.easeui.common.ChatRecallMessageInfo
 import com.hyphenate.easeui.common.RefreshHeader
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.lifecycleScope
@@ -111,7 +111,7 @@ class EaseConversationListLayout @JvmOverloads constructor(
             listViewModel?.loadData()
         }
 
-        override fun onMessageRecalledWithExt(recallMessageInfo: MutableList<EMRecallMessageInfo>?) {
+        override fun onMessageRecalledWithExt(recallMessageInfo: MutableList<ChatRecallMessageInfo>?) {
             super.onMessageRecalledWithExt(recallMessageInfo)
             listViewModel?.loadData()
         }
