@@ -12,8 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ease_toolbar_height"
         app:titleBarDisplayHomeAsUpEnabled="true"
-        app:titleBarReplaceActionBar="false"
-        app:titleBarTitle=""
         app:titleBarMenu="@menu/menu_action_more"
         app:titleBarMenuIconTint="@color/ease_color_on_background"/>
 
