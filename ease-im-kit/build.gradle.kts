@@ -75,6 +75,4 @@ dependencies {
 //    implementation(project(mapOf("path" to ":hyphenatechatsdk")))
 }
 
-//apply {
-//    from("../maven-push-release.gradle")
-//}
+//apply {from("../maven-push-release.gradle")}
