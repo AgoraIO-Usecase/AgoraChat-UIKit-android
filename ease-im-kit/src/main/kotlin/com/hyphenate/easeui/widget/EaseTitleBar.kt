@@ -2,11 +2,6 @@ package com.hyphenate.easeui.widget
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -14,7 +9,6 @@ import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
@@ -135,46 +129,57 @@ class EaseTitleBar @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
-        val marginStart = calculateMarginStart()
-        val marginEnd = calculateMarginEnd()
+        binding.markLayer.let {
+            val layoutParams = it.layoutParams as MarginLayoutParams
+            if ((it.layoutParams as MarginLayoutParams).marginStart != calculateMarginStart() ||
+                (it.layoutParams as MarginLayoutParams).marginEnd != calculateMarginEnd() ){
+                layoutParams.marginStart = calculateMarginStart()
+                layoutParams.marginEnd = calculateMarginEnd()
+                it.layoutParams = layoutParams
+            }
+
+            if (isCentered) {
+                binding.tvTitle.let { tv ->
+                    val lp = (tv.layoutParams as ConstraintLayout.LayoutParams)
+                    if ((tv.layoutParams as ConstraintLayout.LayoutParams).marginStart != lp.marginStart ||
+                        (tv.layoutParams as ConstraintLayout.LayoutParams).marginEnd != lp.marginEnd){
+                        lp.apply {
+                            val margin = getTitleMargin()
+                            if (margin > 0) {
+                                this.marginEnd = abs(margin)
+                            } else {
+                                this.marginStart = abs(margin)
+                            }
+                        }
+                        tv.layoutParams = lp
+                    }
+
+                }
+                binding.tvSubtitle.let { tv ->
+                    val lp = (tv.layoutParams as ConstraintLayout.LayoutParams)
+                    if ((tv.layoutParams as ConstraintLayout.LayoutParams).marginStart != lp.marginStart ||
+                        (tv.layoutParams as ConstraintLayout.LayoutParams).marginEnd != lp.marginEnd){
+                        lp.apply {
+                            val margin = getTitleMargin()
+                            if (margin > 0) {
+                                this.marginEnd = abs(margin)
+                            } else {
+                                this.marginStart = abs(margin)
+                            }
+                        }
+                        tv.layoutParams = lp
+                    }
+                }
+            }
+        }
 
         toolbar.let {
             ToolbarUtils.getTitleTextView(it)?.visibility = GONE
             ToolbarUtils.getSubtitleTextView(it)?.visibility = GONE
             ToolbarUtils.getLogoImageView(it)?.visibility = GONE
         }
-
-        binding.markLayer.let {
-            val layoutParams = it.layoutParams as MarginLayoutParams
-            layoutParams.marginStart = marginStart
-            layoutParams.marginEnd = marginEnd
-            it.layoutParams = layoutParams
-
-            if (isCentered) {
-                binding.tvTitle.let { tv ->
-                    tv.layoutParams = (tv.layoutParams as ConstraintLayout.LayoutParams).apply {
-                        val margin = getTitleMargin()
-                        if (margin > 0) {
-                            this.marginEnd = abs(margin)
-                        } else {
-                            this.marginStart = abs(margin)
-                        }
-                    }
-                }
-                binding.tvSubtitle.let { tv ->
-                    tv.layoutParams = (tv.layoutParams as ConstraintLayout.LayoutParams).apply {
-                        val margin = getTitleMargin()
-                        if (margin > 0) {
-                            this.marginEnd = abs(margin)
-                        } else {
-                            this.marginStart = abs(margin)
-                        }
-                    }
-                }
-            }
-        }
-
     }
+
 
     /**
      * Set whether to display the return button.
