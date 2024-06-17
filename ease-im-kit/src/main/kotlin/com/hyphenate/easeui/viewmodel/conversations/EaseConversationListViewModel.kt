@@ -7,8 +7,10 @@ import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatManager
+import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.collectWithCheckErrorCode
+import com.hyphenate.easeui.common.extensions.parse
 import com.hyphenate.easeui.feature.conversation.interfaces.IEaseConvListResultView
 import com.hyphenate.easeui.model.EaseConversation
 import com.hyphenate.easeui.repository.EaseConversationRepository
@@ -31,6 +33,10 @@ open class EaseConversationListViewModel(
             }
             .catchChatException { e ->
                 view?.loadConversationListFail(e.errorCode, e.description)
+                val localData = chatManager.allConversationsBySort?.filter {
+                        it.conversationId() != EaseConstant.DEFAULT_SYSTEM_MESSAGE_ID && it.allMessages.isNotEmpty()
+                }?.map { it.parse() } ?: listOf()
+                view?.loadLocalConversationListFinished(localData)
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
             .collect {

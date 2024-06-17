@@ -231,9 +231,4 @@ interface IChatLayout {
      */
     fun setOnChatFinishListener(listener: OnChatFinishListener?)
 
-    /**
-     * Set chat presence listener.
-     */
-    fun setChatPresenceListener(listener: OnChatPresenceListener?)
-
 }

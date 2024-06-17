@@ -53,7 +53,6 @@ import com.hyphenate.easeui.feature.chat.controllers.EaseChatMessageReplyControl
 import com.hyphenate.easeui.feature.chat.controllers.EaseChatMessageReportController
 import com.hyphenate.easeui.feature.chat.controllers.EaseChatMessageTranslationController
 import com.hyphenate.easeui.feature.chat.controllers.EaseChatNotificationController
-import com.hyphenate.easeui.feature.chat.controllers.EaseChatPresenceController
 import com.hyphenate.easeui.feature.chat.enums.getConversationType
 import com.hyphenate.easeui.feature.chat.forward.EaseMessageForwardDialogFragment
 import com.hyphenate.easeui.feature.chat.interfaces.ChatInputMenuListener
@@ -64,7 +63,6 @@ import com.hyphenate.easeui.feature.chat.interfaces.OnWillSendMessageListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatErrorListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatFinishListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatLayoutListener
-import com.hyphenate.easeui.feature.chat.interfaces.OnChatPresenceListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatRecordTouchListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageAckSendCallback
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageListItemClickListener
@@ -148,13 +146,6 @@ class EaseChatLayout @JvmOverloads constructor(
      */
     private val chatDialogController: EaseChatDialogController by lazy {
         EaseChatDialogController(mContext, this)
-    }
-
-    /**
-     * Use to control the logic of user presence status.
-     */
-    private val chatPresenceController: EaseChatPresenceController by lazy {
-        EaseChatPresenceController(mContext,this,viewModel)
     }
 
     /**
@@ -264,11 +255,6 @@ class EaseChatLayout @JvmOverloads constructor(
      * listener for translation message
      */
     private var translationMessageListener: OnTranslationMessageListener? = null
-
-    /**
-     * listener for chat presence
-     */
-    private var chatPresenceListener :OnChatPresenceListener? = null
 
     /**
      * listener for chat thread view click listener
@@ -697,10 +683,6 @@ class EaseChatLayout @JvmOverloads constructor(
         getInProgressMessages()
     }
 
-    fun fetchChatPresence(conversationId:String?){
-        chatPresenceController.fetchChatPresence(conversationId)
-    }
-
     private fun sendChannelAck() {
         if (loadDataType == EaseLoadDataType.LOCAL) {
             ChatClient.getInstance().chatManager().getConversation(conversationId)?.let {
@@ -972,10 +954,6 @@ class EaseChatLayout @JvmOverloads constructor(
 
     }
 
-    override fun setChatPresenceListener(listener: OnChatPresenceListener?) {
-        this.chatPresenceListener = listener
-    }
-
     override fun ackConversationReadFail(code: Int, message: String?) {
         listener?.onError(code, message)
     }
@@ -1138,14 +1116,6 @@ class EaseChatLayout @JvmOverloads constructor(
 
     override fun onTranslationMessageFail(code: Int, error: String) {
         translationMessageListener?.onTranslationMessageFailure(code, error)
-    }
-
-    override fun onFetchChatPresenceSuccess(presence: MutableList<ChatPresence>) {
-        this.chatPresenceListener?.fetchChatPresenceSuccess(presence)
-    }
-
-    override fun onFetchChatPresenceFail(code: Int, error: String) {
-        this.chatPresenceListener?.fetchChatPresenceFail(code, error)
     }
 
     override fun onForwardMessageSuccess(message: ChatMessage?) {

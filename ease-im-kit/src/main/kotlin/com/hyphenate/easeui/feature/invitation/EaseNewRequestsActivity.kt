@@ -223,10 +223,6 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
         refreshData()
     }
 
-    override fun fetchChatPresenceFail(code: Int, error: String) {
-        ChatLog.e(TAG,"fetchChatPresenceFail $code $error")
-    }
-
     override fun addContactSuccess() {
 
     }

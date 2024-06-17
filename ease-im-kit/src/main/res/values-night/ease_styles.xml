@@ -4,4 +4,9 @@
     <style name="ease_dialog_edit_clear">
         <item name="android:src">@drawable/ease_dialog_input_clear_dark</item>
     </style>
+
+    <style name="SwitchCompatStyle">
+        <item name="android:thumb">@drawable/ease_switch_thumb_selector</item>
+        <item name="track">@drawable/ease_switch_track_selector</item>
+    </style>
 </resources>

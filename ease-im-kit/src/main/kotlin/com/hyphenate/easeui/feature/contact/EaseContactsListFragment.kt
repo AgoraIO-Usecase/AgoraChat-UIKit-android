@@ -244,17 +244,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
             }
         }
 
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
-            val enablePresences = EaseIM.getConfig()?.presencesConfig?.enablePresences ?: false
-            if (it.isPresenceChange && enablePresences) {
-                setPresence()
-            }
-        }
-
-    }
-
-    private fun setPresence(){
-        binding?.listContact?.setPresence(EaseIM.getCache().getPresenceInfo)
     }
 
     private fun refreshData() {

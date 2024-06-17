@@ -101,11 +101,11 @@ class EaseSearchUserAdapter(
                         cbSelect.visibility = View.GONE
                     }
 
-                    emPresence.setPresenceData(item.toProfile())
+                    emPresence.setUserAvatarData(item.toProfile())
                     var title  = item.nickname ?: item.userId
 
                     EaseIM.getUserProvider()?.getSyncUser(item.userId)?.let {
-                        emPresence.setPresenceData(it)
+                        emPresence.setUserAvatarData(it)
                         title = it.getRemarkOrName()
                     }
 

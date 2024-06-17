@@ -63,7 +63,7 @@ open class EaseChatThreadMemberActivity:EaseBaseActivity<EaseActivityThreadMembe
         deleteDialog = SimpleListSheetDialog(
             context = this@EaseChatThreadMemberActivity,
             itemList = menu,
-            object : SimpleListSheetItemClickListener {
+            itemListener = object : SimpleListSheetItemClickListener {
                 override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
                     when(menu.menuId){
                         R.id.thread_member_remove -> {

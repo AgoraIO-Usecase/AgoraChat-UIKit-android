@@ -174,16 +174,6 @@
     <string name="ease_data_format_today">hh:mm aa</string>
     <string name="ease_loading">Loading…</string>
 
-    <!--presence-->
-    <string name="ease_presence_online">在线</string>
-    <string name="ease_presence_busy">忙碌</string>
-    <string name="ease_presence_do_not_disturb">请勿打扰</string>
-    <string name="ease_presence_leave">离开</string>
-    <string name="ease_presence_offline">离线</string>
-    <string name="ease_presence_custom">自定义状态</string>
-    <string name="ease_presence_status">状态</string>
-    <string name="ease_presence_done">完成</string>
-
     <!--contact-->
     <string name="ease_contact_title">联系人</string>
     <string name="ease_delete_contact">删除联系人</string>
@@ -296,5 +286,7 @@
     <string name="thread_member">话题成员</string>
     <string name="thread_leave">离开话题</string>
     <string name="thread_destroy">销毁话题</string>
+
+    <string name="alert_during_typing">对方正在输入中…</string>
 
 </resources>

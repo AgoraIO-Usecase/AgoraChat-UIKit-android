@@ -38,7 +38,6 @@ import com.hyphenate.easeui.common.suspends.deleteMessage
 import com.hyphenate.easeui.common.utils.createExpressionMessage
 import com.hyphenate.easeui.feature.chat.enums.EaseLoadDataType
 import com.hyphenate.easeui.feature.chat.forward.helper.EaseChatMessageMultiSelectHelper
-import com.hyphenate.easeui.repository.EasePresenceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -52,7 +51,6 @@ open class EaseChatViewModel: EaseBaseViewModel<IHandleChatResultView>(), IChatV
     private var _loadDataType: EaseLoadDataType? = null
     private var _parentId: String? = null
     private val chatRepository by lazy { EaseChatManagerRepository() }
-    private val presenceRepository by lazy { EasePresenceRepository() }
 
     override fun setupWithToUser(
         toChatUsername: String?,
@@ -636,20 +634,6 @@ open class EaseChatViewModel: EaseBaseViewModel<IHandleChatResultView>(), IChatV
         message?.setAttribute(EaseConstant.TRANSLATION_STATUS,false)
         ChatClient.getInstance().chatManager().updateMessage(message).apply {
             if (this) view?.onHideTranslationMessage(message)
-        }
-    }
-
-    override fun fetchChatPresence(userIds: MutableList<String>) {
-        viewModelScope.launch {
-            flow {
-                emit(presenceRepository.fetchPresenceStatus(userIds))
-            }
-                .catchChatException { e->
-                    view?.onFetchChatPresenceFail(e.errorCode, e.description)
-                }
-                .collect {
-                    view?.onFetchChatPresenceSuccess(it)
-                }
         }
     }
 

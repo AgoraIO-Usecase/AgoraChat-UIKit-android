@@ -78,9 +78,4 @@ interface IContactListRequest : IAttachView {
      */
     fun cancelSilentForConversation(conversationId: String,conversationType:ChatConversationType)
 
-    /**
-     * fetch the current user status of a specified user
-     * @param userIds
-     */
-    fun fetchChatPresence(userIds:MutableList<String>)
 }

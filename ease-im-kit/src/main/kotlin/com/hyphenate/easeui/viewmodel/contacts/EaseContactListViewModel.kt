@@ -19,7 +19,6 @@ import com.hyphenate.easeui.model.EaseUser
 import com.hyphenate.easeui.model.setUserInitialLetter
 import com.hyphenate.easeui.repository.EaseContactListRepository
 import com.hyphenate.easeui.repository.EaseConversationRepository
-import com.hyphenate.easeui.repository.EasePresenceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapConcat
@@ -34,7 +33,6 @@ open class EaseContactListViewModel(
 
     val repository:EaseContactListRepository = EaseContactListRepository(chatContactManager)
     private val convRepository: EaseConversationRepository = EaseConversationRepository()
-    private val presenceRepository by lazy { EasePresenceRepository() }
 
     override fun loadData(fetchServerData: Boolean){
         viewModelScope.launch {
@@ -255,20 +253,6 @@ open class EaseContactListViewModel(
                         ChatLog.d(TAG, "cancelSilentForContactSuccess")
                         view?.cancelSilentForContactSuccess()
                     }
-                }
-        }
-    }
-
-    override fun fetchChatPresence(userIds: MutableList<String>) {
-        viewModelScope.launch {
-            flow {
-                emit(presenceRepository.fetchPresenceStatus(userIds))
-            }
-                .catchChatException { e->
-                    view?.fetchChatPresenceFail(e.errorCode, e.description)
-                }
-                .collect {
-                    view?.fetchChatPresenceSuccess(it)
                 }
         }
     }

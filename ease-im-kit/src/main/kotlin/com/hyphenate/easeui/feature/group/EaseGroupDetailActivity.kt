@@ -42,7 +42,6 @@ import com.hyphenate.easeui.interfaces.EaseGroupListener
 import com.hyphenate.easeui.interfaces.OnMenuItemClickListener
 import com.hyphenate.easeui.interfaces.SimpleListSheetItemClickListener
 import com.hyphenate.easeui.model.EaseEvent
-import com.hyphenate.easeui.model.EaseGroupProfile
 import com.hyphenate.easeui.model.EaseMenuItem
 import com.hyphenate.easeui.provider.getSyncProfile
 import com.hyphenate.easeui.viewmodel.group.EaseGroupViewModel
@@ -373,7 +372,7 @@ open class EaseGroupDetailActivity:EaseBaseActivity<EaseLayoutGroupDetailsBindin
         dialog = SimpleListSheetDialog(
             context = context,
             itemList = getBottomSheetMenu(),
-            object : SimpleListSheetItemClickListener {
+            itemListener = object : SimpleListSheetItemClickListener {
                 override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
                     simpleMenuItemClickListener(position, menu)
                     dialog?.dismiss()

@@ -824,7 +824,6 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
 
     /**  PresenceListener  */
     override fun onPresenceUpdated(presences: MutableList<ChatPresence>?) {
-        defaultPresencesEvent(presences)
         chatPresenceListener.let {
             try {
                 for (conversationListener in it) {
@@ -1113,18 +1112,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         }
     }
 
-    private fun defaultPresencesEvent(presences: MutableList<ChatPresence>?){
-        val enablePresences = EaseIM.getConfig()?.presencesConfig?.enablePresences ?: false
-        if (enablePresences){
-            presences?.forEach { presence->
-                EaseIM.getCache().insertPresences(presence.publisher,presence)
-                EaseIM.getContext()?.let {
-                    EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name)
-                        .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.UPDATE.name, EaseEvent.TYPE.PRESENCE))
-                }
-            }
-        }
-    }
+
 
     @Synchronized
     internal fun callbackEvent(function: String, errorCode: Int, errorMessage: String?) {

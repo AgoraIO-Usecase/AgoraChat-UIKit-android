@@ -50,7 +50,7 @@ open class EaseSelectContactViewHolder(
 
                 cbSelect.isChecked = checkedList.isNotEmpty() && isContains(checkedList,item.userId)
 
-                emPresence.setPresenceData(item.toProfile())
+                emPresence.setUserAvatarData(item.toProfile())
                 tvName.text = item.nickname ?: item.userId
 
                 letterHeader.visibility = View.GONE

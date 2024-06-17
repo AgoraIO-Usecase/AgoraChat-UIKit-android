@@ -22,7 +22,7 @@ import com.hyphenate.easeui.R
  * }
  * })
  */
-public open class EaseAlertDialog @JvmOverloads constructor(context: Context, themeResId: Int = 0) :
+open class EaseAlertDialog @JvmOverloads constructor(context: Context, themeResId: Int = 0) :
     Dialog(context, themeResId) {
     //Controller
     private val mAlert: AlertController

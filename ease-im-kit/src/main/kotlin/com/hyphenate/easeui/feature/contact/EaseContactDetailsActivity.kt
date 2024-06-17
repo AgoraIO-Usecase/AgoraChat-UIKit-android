@@ -18,13 +18,11 @@ import com.hyphenate.easeui.feature.chat.activities.EaseChatActivity
 import com.hyphenate.easeui.base.EaseBaseActivity
 import com.hyphenate.easeui.common.ChatConversationType
 import com.hyphenate.easeui.common.ChatLog
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.ChatSilentModeResult
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.dialog.CustomDialog
 import com.hyphenate.easeui.common.extensions.dpToPx
 import com.hyphenate.easeui.common.extensions.mainScope
-import com.hyphenate.easeui.common.extensions.toProfile
 import com.hyphenate.easeui.configs.EaseBottomMenuConfig
 import com.hyphenate.easeui.configs.EaseDetailMenuConfig
 import com.hyphenate.easeui.common.dialog.SimpleListSheetDialog
@@ -95,10 +93,6 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
     open fun initData(){
         contactViewModel = ViewModelProvider(this)[EaseContactListViewModel::class.java]
         contactViewModel?.attachView(this)
-
-        user?.let {
-            contactViewModel?.fetchChatPresence(mutableListOf(it.userId))
-        }
     }
 
     private fun initSwitch(){
@@ -127,7 +121,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
 
         user?.let {
             EaseIM.getUserProvider()?.getUser(it.userId)?.let { profile->
-                binding.epPresence.setPresenceData(profile)
+                binding.epPresence.setUserAvatarData(profile)
                 binding.tvName.text = profile.getRemarkOrName()
                 binding.tvNumber.text = profile.id
             }
@@ -187,21 +181,6 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.REMOVE.name).register(this) {
             if (it.isContactChange && it.message == user?.userId && !mContext.isFinishing) {
                 finish()
-            }
-        }
-
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
-            if (it.isPresenceChange ) {
-                updatePresence()
-            }
-        }
-    }
-
-    private fun updatePresence(){
-        val map = EaseIM.getCache().getPresenceInfo
-        user?.let { user->
-            map.let {
-                binding.epPresence.setPresenceData(user.toProfile(),it[user.userId])
             }
         }
     }
@@ -315,7 +294,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
         dialog = SimpleListSheetDialog(
             context = context,
             itemList = menu,
-            object : SimpleListSheetItemClickListener{
+            itemListener = object : SimpleListSheetItemClickListener{
                 override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
                     simpleSheetMenuItemClick(position, menu)
                 }
@@ -402,15 +381,6 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
             return true
         }
         return false
-    }
-
-    override fun fetchChatPresenceSuccess(presence: MutableList<ChatPresence>) {
-        ChatLog.e(TAG,"fetchChatPresenceSuccess $presence")
-        updatePresence()
-    }
-
-    override fun fetchChatPresenceFail(code: Int, error: String) {
-        ChatLog.e(TAG,"fetchChatPresenceFail $code $error")
     }
 
     companion object {

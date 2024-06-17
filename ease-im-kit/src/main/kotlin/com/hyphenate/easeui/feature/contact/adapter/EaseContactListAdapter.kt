@@ -3,7 +3,6 @@ package com.hyphenate.easeui.feature.contact.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.enums.EaseListViewType
 import com.hyphenate.easeui.feature.contact.viewholders.ContactViewHolder
 import com.hyphenate.easeui.feature.contact.item.EaseUserContactItem
@@ -18,7 +17,7 @@ open class EaseContactListAdapter(
 ): EaseBaseRecyclerViewAdapter<EaseUser>() {
     private var itemClickListener: OnUserListItemClickListener? = null
     private var selectedListener: OnContactSelectListener? = null
-    private var userPresence: ConcurrentHashMap<String, ChatPresence>? = null
+    private var userAvatarInfo: ConcurrentHashMap<String, Int>? = null
     private var isShowInitLetter:Boolean = true
     private var selectedMember:MutableList<String> = mutableListOf()
 
@@ -33,8 +32,8 @@ open class EaseContactListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder<EaseUser>, position: Int) {
         if ((holder.itemView) is EaseUserContactItem){
-            userPresence?.let {
-                ((holder.itemView) as EaseUserContactItem).setUserPresences(it)
+            userAvatarInfo?.let {
+                ((holder.itemView) as EaseUserContactItem).setUserAvatarInfo(it)
             }
         }
         if (holder is ContactViewHolder){
@@ -63,8 +62,8 @@ open class EaseContactListAdapter(
         notifyDataSetChanged()
     }
 
-    fun setUserPresences(userPresence: ConcurrentHashMap<String, ChatPresence>?) {
-        this.userPresence = userPresence
+    fun setUserAvatarInfo(info: ConcurrentHashMap<String, Int>?) {
+        this.userAvatarInfo = info
         notifyDataSetChanged()
     }
 

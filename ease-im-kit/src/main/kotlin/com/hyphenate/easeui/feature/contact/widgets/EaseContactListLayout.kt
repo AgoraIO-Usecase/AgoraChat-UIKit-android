@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hyphenate.easeui.R
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.feature.contact.adapter.EaseContactListAdapter
 import com.hyphenate.easeui.common.enums.EaseListViewType
 import com.hyphenate.easeui.common.RefreshHeader
@@ -266,8 +265,8 @@ class EaseContactListLayout@JvmOverloads constructor(
         loadContactListener?.loadContactListFail(code, error)
     }
 
-    override fun setPresence(presence: ConcurrentHashMap<String, ChatPresence>?) {
-        listAdapter?.setUserPresences(presence)
+    override fun setUserAvatarInfo(info: ConcurrentHashMap<String, Int>?) {
+        listAdapter?.setUserAvatarInfo(info)
     }
 
     override fun fetchUserInfoByUserSuccess(users: List<EaseUser>?) {

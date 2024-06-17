@@ -5,21 +5,24 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
-import com.hyphenate.easeui.common.ChatPresence
+import com.hyphenate.easeui.common.extensions.dpToPx
 import com.hyphenate.easeui.common.extensions.toProfile
+import com.hyphenate.easeui.configs.setAvatarStyle
+import com.hyphenate.easeui.configs.setStatusStyle
 import com.hyphenate.easeui.databinding.EaseLayoutContactItemBinding
 import com.hyphenate.easeui.interfaces.OnUserListItemClickListener
 import com.hyphenate.easeui.model.EaseUser
 import com.hyphenate.easeui.provider.getSyncUser
-import com.hyphenate.easeui.widget.EasePresenceView
+import com.hyphenate.easeui.widget.EaseCustomAvatarView
 import java.util.concurrent.ConcurrentHashMap
 
 class EaseUserContactItem: ConstraintLayout, View.OnClickListener {
 
     val mViewBinding = EaseLayoutContactItemBinding.inflate(LayoutInflater.from(context))
-    private var userPresence: ConcurrentHashMap<String, ChatPresence>? = null
+    private var userAvatarInfo: ConcurrentHashMap<String, Int>? = null
     private var listener:OnUserListItemClickListener?=null
     private var user: EaseUser? = null
     private var position : Int = 0
@@ -37,13 +40,23 @@ class EaseUserContactItem: ConstraintLayout, View.OnClickListener {
     }
 
     fun initView(context: Context, attrs: AttributeSet?){
-
+        mViewBinding.let {
+            EaseIM.getConfig()?.avatarConfig?.setAvatarStyle(it.emPresence.getUserAvatar())
+            EaseIM.getConfig()?.avatarConfig?.setStatusStyle(it.emPresence.getStatusView(),2.dpToPx(context),
+                ContextCompat.getColor(context, R.color.ease_color_background))
+            it.emPresence.setPresenceStatusMargin(end = -2, bottom = -2)
+            it.emPresence.setPresenceStatusSize(resources.getDimensionPixelSize(R.dimen.ease_contact_list_status_icon_size))
+            val layoutParams = it.emPresence.getUserAvatar().layoutParams
+            layoutParams.width = 40.dpToPx(context)
+            layoutParams.height = 40.dpToPx(context)
+            it.emPresence.getUserAvatar().layoutParams = layoutParams
+        }
     }
 
     private fun initListener(){
         mViewBinding.itemLayout.setOnClickListener(this)
         mViewBinding.emPresence.setOnPresenceClickListener(object :
-            EasePresenceView.OnPresenceClickListener{
+            EaseCustomAvatarView.OnPresenceClickListener{
                 override fun onPresenceAvatarClick(v: View) {
                     listener?.onAvatarClick(v,position)
                 }
@@ -55,19 +68,19 @@ class EaseUserContactItem: ConstraintLayout, View.OnClickListener {
         this.position = position
 
         mViewBinding.let {
-            it.emPresence.setPresenceData(user?.toProfile())
+            it.emPresence.setUserAvatarData(user?.toProfile())
             it.tvName.text = user?.toProfile()?.getRemarkOrName()
 
-            userPresence?.let { presence->
+            userAvatarInfo?.let { presence->
                 user?.let {user->
-                    mViewBinding.emPresence.setPresenceData(user.toProfile(),presence[user.userId])
+                    mViewBinding.emPresence.setUserAvatarData(user.toProfile(),presence[user.userId])
                 }
             }
 
             // Set custom data provided by user
             if (!isGroupMember) {
                 EaseIM.getUserProvider()?.getSyncUser(user?.userId)?.let { profile ->
-                    it.emPresence.setPresenceData(profile)
+                    it.emPresence.setUserAvatarData(profile)
                     it.tvName.text = profile.getRemarkOrName()
                 }
             }
@@ -75,9 +88,9 @@ class EaseUserContactItem: ConstraintLayout, View.OnClickListener {
         }
     }
 
-    fun setUserPresences(userPresence: ConcurrentHashMap<String, ChatPresence>?) {
-        userPresence?.let {
-            this.userPresence = it
+    fun setUserAvatarInfo(info: ConcurrentHashMap<String, Int>?) {
+        info?.let {
+            this.userAvatarInfo = it
         }
     }
 

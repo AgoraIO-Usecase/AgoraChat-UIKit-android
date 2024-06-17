@@ -6,18 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import coil.imageLoader
 import coil.load
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.extensions.dpToPx
-import com.hyphenate.easeui.common.utils.EasePresenceUtil
 import com.hyphenate.easeui.common.extensions.loadAvatar
 import com.hyphenate.easeui.configs.setAvatarStyle
 import com.hyphenate.easeui.databinding.EasePresenceViewBinding
 import com.hyphenate.easeui.model.EaseProfile
 
-class EasePresenceView : ConstraintLayout{
+class EaseCustomAvatarView : ConstraintLayout{
     private val mViewBinding = EasePresenceViewBinding.inflate(LayoutInflater.from(context))
 
     constructor(context: Context) : this(context, null)
@@ -76,20 +75,32 @@ class EasePresenceView : ConstraintLayout{
         return mViewBinding.ivPresence
     }
 
-    fun setPresenceData(profile: EaseProfile?, presence: ChatPresence? = null) {
+    fun setUserAvatarData(profile: EaseProfile?, @DrawableRes icon: Int? = null) {
         mViewBinding.ivUserAvatar.loadAvatar(profile)
-        presence?.let {
-            mViewBinding.ivPresence.setImageResource(EasePresenceUtil.getPresenceIcon(context, it))
+        icon?.let {
+            mViewBinding.ivPresence.setImageResource(icon)
         }
     }
 
-    fun setPresenceData(@DrawableRes avatar: Int?,nickname: String?,presence: ChatPresence? = null){
+    fun setUserAvatarData(profile: EaseProfile?, icon: String?) {
+        mViewBinding.ivUserAvatar.loadAvatar(profile)
+        icon?.let {
+            mViewBinding.ivPresence.load(data=icon){
+                this.listener(
+                    onError = { _,_->  mViewBinding.ivPresence.visibility = GONE},
+                    onCancel = { mViewBinding.ivPresence.visibility = GONE }
+                )
+            }
+        }
+    }
+
+    fun setUserAvatarData(@DrawableRes avatar: Int?, nickname: String?, @DrawableRes icon: Int? = null){
         mViewBinding.ivUserAvatar.load(avatar) {
             placeholder(R.drawable.ease_default_avatar)
             error(R.drawable.ease_default_avatar)
         }
-        presence?.let {
-            mViewBinding.ivPresence.setImageResource(EasePresenceUtil.getPresenceIcon(context, it))
+        icon?.let {
+            mViewBinding.ivPresence.setImageResource(icon)
         }
     }
 

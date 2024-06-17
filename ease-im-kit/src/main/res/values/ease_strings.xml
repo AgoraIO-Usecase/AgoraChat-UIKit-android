@@ -175,16 +175,6 @@
     <string name="ease_data_format_today">hh:mm aa</string>
     <string name="ease_loading">Loading…</string>
 
-    <!--presence-->
-    <string name="ease_presence_online">Online</string>
-    <string name="ease_presence_busy">Busy</string>
-    <string name="ease_presence_do_not_disturb">Do not Disturb</string>
-    <string name="ease_presence_leave">Leave</string>
-    <string name="ease_presence_offline">Offline</string>
-    <string name="ease_presence_custom">Custom Status</string>
-    <string name="ease_presence_status">Status</string>
-    <string name="ease_presence_done">Done</string>
-
     <!--contact-->
     <string name="ease_contact_title">Contacts</string>
     <string name="ease_delete_contact">Delete Contact</string>
@@ -296,5 +286,7 @@
     <string name="thread_member">thread member</string>
     <string name="thread_leave">leave thread</string>
     <string name="thread_destroy">destroy thread</string>
+
+    <string name="alert_during_typing">Typing…</string>
 
 </resources>

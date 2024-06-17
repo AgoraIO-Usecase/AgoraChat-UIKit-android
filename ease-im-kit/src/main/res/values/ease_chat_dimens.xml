@@ -6,6 +6,7 @@
 
     <dimen name="ease_title_bar_icon_size">@dimen/ease_size_32</dimen>
     <dimen name="ease_title_bar_status_icon_size">@dimen/ease_size_12</dimen>
+    <dimen name="ease_contact_list_status_icon_size">@dimen/ease_size_14</dimen>
     <dimen name="ease_contact_status_icon_size">@dimen/ease_size_26</dimen>
 
     <dimen name="ease_chat_row_file_bubble_max_width">240dp</dimen>

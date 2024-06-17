@@ -58,12 +58,12 @@ class EaseGroupMemberListAdapter(
             mViewBinding.let {
                 val header = item?.initialLetter
                 it.header.visibility = View.GONE
-                it.emPresence.setPresenceData(user?.toProfile())
+                it.emPresence.setUserAvatarData(user?.toProfile())
                 it.tvName.text = user?.nickname ?: user?.userId
 
                 groupId?.let { id ->
                     EaseProfile.getGroupMember(groupId, user?.userId)?.let { profile ->
-                        it.emPresence.setPresenceData(profile)
+                        it.emPresence.setUserAvatarData(profile)
                         it.tvName.text = profile.getRemarkOrName()
                     }
                 }

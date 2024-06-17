@@ -17,8 +17,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <TextView
+        android:id="@+id/tvTitle"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/ivSheetTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/ease_bottom_sheet_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
         app:layout_constraintBottom_toBottomOf="@+id/line"
         android:id="@+id/rlSheetList"
         android:layout_width="match_parent"

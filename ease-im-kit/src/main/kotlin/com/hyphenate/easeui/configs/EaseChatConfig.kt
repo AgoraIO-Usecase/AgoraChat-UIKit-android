@@ -54,6 +54,8 @@ class EaseChatConfig {
      */
     var enableChatThreadMessage: Boolean = false
 
+    var enableChatTyping: Boolean = false
+
     /**
      * Set the time period within which messages can be recalled, in milliseconds
      */

@@ -15,8 +15,6 @@ class EaseIMCache {
     private val messageUserMap: ConcurrentMap<String, EaseProfile> = ConcurrentHashMap()
     private val mutedConvMap: MutableMap<String, Long> = HashMap()
 
-    private val presencesMap: ConcurrentHashMap<String, ChatPresence> = ConcurrentHashMap()
-
     companion object {
         private const val TAG = "EaseIMCache"
     }
@@ -113,31 +111,12 @@ class EaseIMCache {
         EasePreferenceManager.getInstance().setMuteMap(ChatClient.getInstance().currentUser, mutedConvMap)
     }
 
-    @Synchronized
-    fun insertPresences(userId: String?,chatPresence: ChatPresence){
-        presencesMap.let { presence->
-            userId?.let {
-                presence[it] = chatPresence
-            }
-        }
-    }
-
-    fun getUserPresence(userId: String):ChatPresence?{
-        if (presencesMap.size > 0 && presencesMap.containsKey(userId)){
-            return presencesMap[userId]
-        }
-        return null
-    }
-
-    var getPresenceInfo:ConcurrentHashMap<String, ChatPresence> = presencesMap
-
     fun clear(type: EaseCacheType?) {
         if (type == null || type == EaseCacheType.ALL) {
             userMap.clear()
             groupMap.clear()
             messageUserMap.clear()
             mutedConvMap.clear()
-            presencesMap.clear()
         } else {
             when (type) {
                 EaseCacheType.CONTACT -> userMap.clear()

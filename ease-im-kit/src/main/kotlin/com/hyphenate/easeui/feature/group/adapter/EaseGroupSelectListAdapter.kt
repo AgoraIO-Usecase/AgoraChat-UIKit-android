@@ -99,7 +99,7 @@ class EaseGroupSelectListAdapter(
                         selectedListener?.onContactSelectedChanged(view,checkedList)
                     }
 
-                    emPresence.setPresenceData(item.toProfile())
+                    emPresence.setUserAvatarData(item.toProfile())
                     tvName.text = item.getRemarkOrName()
 
                     letterHeader.visibility = View.GONE

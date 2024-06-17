@@ -214,19 +214,6 @@ interface IHandleChatResultView : IControlDataView {
     fun onTranslationMessageFail(code: Int, error: String){}
 
     /**
-     * fetch the current user status of a specified user success.
-     * @param presence
-     */
-    fun onFetchChatPresenceSuccess(presence:MutableList<ChatPresence>){}
-
-    /**
-     * fetch the current user status of a specified user fail.
-     * @param code  error code.
-     * @param error error message.
-     */
-    fun onFetchChatPresenceFail(code: Int, error: String){}
-
-    /**
      * Message forwarded successfully.
      * @param message The forwarded message.
      */

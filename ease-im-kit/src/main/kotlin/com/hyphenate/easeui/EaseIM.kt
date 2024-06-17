@@ -248,17 +248,6 @@ object EaseIM {
         return client.getCustomActivityRoute()
     }
 
-    /**
-     * Get presence info cache
-     */
-    fun getPresenceInfo():MutableMap<String,ChatPresence>{
-        return getCache().getPresenceInfo
-    }
-
-    fun getUserPresence(userId:String):ChatPresence?{
-        return getCache().getUserPresence(userId)
-    }
-
     fun checkMutedConversationList(userId:String):Boolean{
         return getCache().getMutedConversationList().containsKey(userId)
     }

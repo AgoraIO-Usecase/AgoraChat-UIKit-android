@@ -106,6 +106,13 @@
         <item name="android:text">@string/ease_sheet_cancel</item>
     </style>
 
+    <style name="ease_bottom_sheet_dialog_title">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Large</item>
+        <item name="android:textColor">@color/ease_color_on_background_low</item>
+        <item name="android:layout_marginBottom">@dimen/ease_size_8</item>
+        <item name="android:layout_marginTop">@dimen/ease_size_10</item>
+    </style>
+
     <style name="ease_bottom_sheet_dialog_item">
         <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
         <item name="android:textColor">@color/ease_bottom_sheet_item_text_color</item>

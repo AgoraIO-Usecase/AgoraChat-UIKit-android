@@ -1,6 +1,5 @@
 package com.hyphenate.easeui.feature.contact.interfaces
 
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.ChatSilentModeResult
 import com.hyphenate.easeui.common.interfaces.IControlDataView
 import com.hyphenate.easeui.model.EaseUser
@@ -123,16 +122,4 @@ interface IEaseContactResultView: IControlDataView {
      */
     fun cancelSilentForContactFail(code: Int, error: String?){}
 
-    /**
-     * fetch the current user status of a specified user success.
-     * @param presence
-     */
-    fun fetchChatPresenceSuccess(presence:MutableList<ChatPresence>){}
-
-    /**
-     * fetch the current user status of a specified user fail.
-     * @param code  error code.
-     * @param error error message.
-     */
-    fun fetchChatPresenceFail(code: Int, error: String){}
 }

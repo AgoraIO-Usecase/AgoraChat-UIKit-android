@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.hyphenate.easeui.widget.EasePresenceView
+            <com.hyphenate.easeui.widget.EaseCustomAvatarView
                 android:id="@+id/ep_presence"
                 android:layout_marginTop="20dp"
                 app:layout_constraintTop_toTopOf="parent"
