@@ -36,6 +36,7 @@ class EaseSearchActivity:EaseBaseActivity<EaseActivitySearchLayoutBinding>(),
                     EaseSearchType.SELECT_USER.ordinal -> { EaseSearchType.SELECT_USER }
                     EaseSearchType.CONVERSATION.ordinal -> { EaseSearchType.CONVERSATION }
                     EaseSearchType.MESSAGE.ordinal -> { EaseSearchType.MESSAGE}
+                    EaseSearchType.BLOCK_USER.ordinal -> { EaseSearchType.BLOCK_USER}
                     else -> { EaseSearchType.CONVERSATION}
                 }
             }
@@ -115,6 +116,25 @@ class EaseSearchActivity:EaseBaseActivity<EaseActivitySearchLayoutBinding>(),
                     .showRightCancel(true)
                     .build()
             }
+            EaseSearchType.BLOCK_USER -> {
+                EaseSearchUserFragment.Builder()
+                    .setSearchBlockUser(true)
+                    .setItemClickListener(object : OnSearchUserItemClickListener{
+                        override fun onSearchItemClick(view: View?, position: Int, user: EaseUser) {
+                            Intent().apply {
+                                putExtra(Constant.KEY_USER, user)
+                                setResult(RESULT_OK, this)
+                                finish()
+                            }
+                        }
+                    })
+                    .showRightCancel(true)
+                    .setOnCancelListener(object : EaseSearchUserFragment.OnCancelClickListener{
+                        override fun onCancelClick(view: View) {
+                            finish()
+                        }
+                    }).build()
+            }
             else -> {
                 EaseSearchConversationFragment()
             }
@@ -178,5 +198,6 @@ enum class EaseSearchType{
     USER,
     SELECT_USER,
     CONVERSATION,
-    MESSAGE
+    MESSAGE,
+    BLOCK_USER,
 }

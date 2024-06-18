@@ -97,49 +97,75 @@ open class EaseContactListViewModel(
         }
     }
 
-    override fun getBlackListFromServer(){
+    override fun fetchBlockListFromServer(){
         viewModelScope.launch {
             flow {
-                emit(repository.getBlackListFromServer())
+                emit(repository.getBlockListFromServer())
             }
             .catchChatException { e ->
-                view?.getBlackListFromServerFail(e.errorCode,e.description)
+                view?.fetchBlockListFromServerFail(e.errorCode,e.description)
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
             .collect{
-                if (it != null) {
-                    view?.getBlackListFromServerSuccess(it)
+                val data = it
+                data?.map {
+                    it.setUserInitialLetter()
+                }
+                data?.let {
+                    val sortedList = ContactSortedHelper.sortedList(it)
+                    view?.fetchBlockListFromServerSuccess(sortedList.toMutableList())
                 }
             }
         }
     }
 
-    override fun addUserToBlackList(userList:MutableList<String>){
+    override fun getBlockListFromLocal() {
         viewModelScope.launch {
             flow {
-                emit(repository.addUserToBlackList(userList))
+                emit(repository.getBlockListFromLocal())
+            }.catchChatException { e ->
+                view?.getBlockListFromLocalFail(e.errorCode,e.description)
             }
-            .catchChatException { e ->
-                view?.addUserToBlackListFail(e.errorCode,e.description)
-            }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), ChatError.GENERAL_ERROR)
-            .collectWithCheckErrorCode {
-                view?.addUserToBlackListSuccess()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
+            .collect{
+                val data = it
+                data?.map {
+                    it.setUserInitialLetter()
+                }
+                data?.let {
+                    val sortedList = ContactSortedHelper.sortedList(it)
+                    view?.getBlockListFromLocalSuccess(sortedList.toMutableList())
+                }
             }
         }
     }
 
-    override fun removeUserFromBlackList(userName: String){
+    override fun addUserToBlockList(userList:MutableList<String>){
         viewModelScope.launch {
             flow {
-                emit(repository.removeUserFromBlackList(userName))
+                emit(repository.addUserToBlockList(userList))
             }
             .catchChatException { e ->
-                view?.removeUserFromBlackListFail(e.errorCode,e.description)
+                view?.addUserToBlockListFail(e.errorCode,e.description)
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), ChatError.GENERAL_ERROR)
             .collectWithCheckErrorCode {
-                view?.removeUserFromBlackListSuccess()
+                view?.addUserToBlockListSuccess()
+            }
+        }
+    }
+
+    override fun removeUserFromBlockList(userName: String){
+        viewModelScope.launch {
+            flow {
+                emit(repository.removeUserFromBlockList(userName))
+            }
+            .catchChatException { e ->
+                view?.removeUserFromBlockListFail(e.errorCode,e.description)
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), ChatError.GENERAL_ERROR)
+            .collectWithCheckErrorCode {
+                view?.removeUserFromBlockListSuccess()
             }
         }
     }

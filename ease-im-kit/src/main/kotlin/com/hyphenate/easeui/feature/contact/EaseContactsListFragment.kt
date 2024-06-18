@@ -52,7 +52,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
     private var contactSelectedListener:OnContactSelectedListener?=null
     private var backPressListener: View.OnClickListener? = null
     private var viewType: EaseListViewType? = EaseListViewType.LIST_CONTACT
-    private var isSideBarVisible:Boolean? = true
     private var headerList:List<EaseCustomHeaderItem>? = null
     private var searchType: EaseSearchType? = null
     private var selectedMembers:MutableList<String> = mutableListOf()
@@ -132,11 +131,11 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
                 getString(Constant.KEY_SEARCH_TYPE)?.let {
                     searchType = EaseSearchType.valueOf(it)
                 }
+
+                listContact.setListViewType(viewType)
+                val isShowSidebar = getBoolean(Constant.KEY_SIDEBAR_VISIBLE,true)
+                listContact.setSideBarVisible(isShowSidebar)
             }
-        }
-        binding?.run {
-            listContact.setListViewType(viewType)
-            listContact.setSideBarVisible(isSideBarVisible)
         }
     }
 
@@ -237,7 +236,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
                 refreshData()
             }
         }
-
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(viewLifecycleOwner) {
             if (it.isNotifyChange) {
                 refreshRequest()
@@ -322,10 +320,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
         this.contactSelectedListener = listener
     }
 
-    private fun setShowSideBar(isShowSidebar:Boolean){
-        this.isSideBarVisible = isShowSidebar
-    }
-
     private fun updateRequestCount(){
         mContext.mainScope().launch {
             headerList?.map {
@@ -338,6 +332,23 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
             }
             headerAdapter?.setData(headerList?.toMutableList())
         }
+    }
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        item?.let {
+            when(it.itemId) {
+                R.id.action_add_contact -> {
+                    dialogController.showAddContactDialog { content ->
+                        if (content.isNotEmpty()) {
+                            contactViewModel.addContact(content)
+                        }
+                    }
+                    return true
+                }
+                else -> {}
+            }
+        }
+        return false
     }
 
     override fun onDestroyView() {
@@ -356,7 +367,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
         private var contactSelectedListener:OnContactSelectedListener?=null
         private var backPressListener: View.OnClickListener? = null
         private var viewType: EaseListViewType? = EaseListViewType.LIST_CONTACT
-        private var isSideBarVisible:Boolean = true
         private var headerList:List<EaseCustomHeaderItem>? = mutableListOf()
 
         /**
@@ -474,7 +484,7 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
          * @return
          */
         fun setSideBarVisible(isVisible:Boolean):Builder{
-            this.isSideBarVisible = isVisible
+            bundle.putBoolean(Constant.KEY_SIDEBAR_VISIBLE,true)
             return this
         }
 
@@ -560,7 +570,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
             fragment.setOnItemLongClickListener(itemLongClickListener)
             fragment.setHeaderItemList(headerList)
             fragment.setOnContactSelectedListener(contactSelectedListener)
-            fragment.setShowSideBar(isSideBarVisible)
             return fragment
         }
     }
@@ -576,23 +585,7 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
         const val KEY_SHOW_ITEM_HEADER = "key_show_item_header"
         const val KEY_SELECT_USER = "select_user"
         const val KEY_USER = "user"
-    }
-
-    override fun onMenuItemClick(item: MenuItem?): Boolean {
-        item?.let {
-            when(it.itemId) {
-                R.id.action_add_contact -> {
-                    dialogController.showAddContactDialog { content ->
-                        if (content.isNotEmpty()) {
-                            contactViewModel.addContact(content)
-                        }
-                    }
-                    return true
-                }
-                else -> {}
-            }
-        }
-        return false
+        const val KEY_SIDEBAR_VISIBLE = "key_side_bar_visible"
     }
 
 }

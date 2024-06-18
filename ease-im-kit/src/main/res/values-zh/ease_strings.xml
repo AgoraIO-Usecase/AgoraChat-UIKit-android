@@ -289,4 +289,8 @@
 
     <string name="alert_during_typing">对方正在输入中…</string>
 
+    <string name="ease_block_title">黑名单（%1$d）</string>
+    <string name="ease_switch_block_title">拉黑</string>
+    <string name="ease_search_block_user">搜索</string>
+
 </resources>

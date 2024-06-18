@@ -38,6 +38,11 @@ class EaseChatConfig {
     var targetTranslationLanguage: String = "zh"
 
     /**
+     * Open Application first load block list from server.
+     */
+    var isLoadBlockListFromServer: Boolean = false
+
+    /**
      * The config that whether to show unread notification in chat activity.
      * If true:
      * 1、When the message item is not visible, the message read ack will not be sent.

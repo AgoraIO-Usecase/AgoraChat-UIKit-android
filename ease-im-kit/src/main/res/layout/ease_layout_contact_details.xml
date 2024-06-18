@@ -110,27 +110,27 @@
                 app:layout_constraintTop_toBottomOf="@+id/function_layout"
                 app:switchItemTitle="@string/ease_message_no_disturbance"
                 style="@style/ease_contact_detail_switch_item"
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                />
-
-            <com.hyphenate.easeui.widget.EaseSwitchItemView
-                android:id="@+id/sw_item_black"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/switch_item_disturb"
-                app:switchItemTitle="拉黑"
-                style="@style/ease_contact_detail_switch_item"
+                app:switchItemClickable="false"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 />
 
             <com.hyphenate.easeui.widget.EaseArrowItemView
                 android:id="@+id/item_clear"
-                app:layout_constraintTop_toBottomOf="@+id/sw_item_black"
+                app:layout_constraintTop_toBottomOf="@+id/switch_item_disturb"
                 app:arrowItemTitle="@string/ease_clear_history"
                 style="@style/ease_contact_detail_arrow_item"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"/>
+
+            <com.hyphenate.easeui.widget.EaseSwitchItemView
+                android:id="@+id/switch_item_black"
+                app:layout_constraintTop_toBottomOf="@+id/item_clear"
+                app:switchItemTitle="@string/ease_switch_block_title"
+                app:switchItemClickable="false"
+                style="@style/ease_contact_detail_switch_item"
+                android:layout_width="match_parent"
+                android:layout_height="54dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

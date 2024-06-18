@@ -22,6 +22,7 @@ open class EaseSearchUserFragment: EaseBaseSearchFragment<EaseUser>(),IEaseSearc
     private var data:MutableList<EaseUser> = mutableListOf()
     private var onCancelListener:OnCancelClickListener?=null
     private var itemClickListener: OnSearchUserItemClickListener? = null
+    private var isSearchBlockUser:Boolean = false
 
     override fun initViewModel() {
         super.initViewModel()
@@ -33,6 +34,7 @@ open class EaseSearchUserFragment: EaseBaseSearchFragment<EaseUser>(),IEaseSearc
         super.initView(savedInstanceState)
 
         arguments?.run {
+            isSearchBlockUser = this.getBoolean(Constant.KEY_IS_SEARCH_BLOCK,false)
             binding?.run {
                 tvRight.visibility = if (getBoolean(Constant.KEY_SHOW_RIGHT_CANCEL, false)) View.VISIBLE else View.GONE
             }
@@ -59,7 +61,11 @@ open class EaseSearchUserFragment: EaseBaseSearchFragment<EaseUser>(),IEaseSearc
                 (mListAdapter as EaseSearchUserAdapter).searchText(query)
             }
             query.let { content->
-                searchViewModel?.searchUser(content)
+                if (isSearchBlockUser){
+                    searchViewModel?.searchBlockUser(content)
+                }else{
+                    searchViewModel?.searchUser(content)
+                }
             }
         }
     }
@@ -84,6 +90,14 @@ open class EaseSearchUserFragment: EaseBaseSearchFragment<EaseUser>(),IEaseSearc
     }
 
     override fun searchSuccess(result: Any) {
+        finishRefresh()
+        if (result is MutableList<*>) {
+            this.data = result as MutableList<EaseUser>
+            mListAdapter.setData(result)
+        }
+    }
+
+    override fun searchBlockUserSuccess(result: Any) {
         finishRefresh()
         if (result is MutableList<*>) {
             this.data = result as MutableList<EaseUser>
@@ -130,6 +144,11 @@ open class EaseSearchUserFragment: EaseBaseSearchFragment<EaseUser>(),IEaseSearc
             return this
         }
 
+        fun setSearchBlockUser(isSearchBlockUser: Boolean): Builder{
+            bundle.putBoolean(Constant.KEY_IS_SEARCH_BLOCK, isSearchBlockUser)
+            return this
+        }
+
         fun build(): EaseSearchUserFragment {
             val fragment =
                 if (customFragment != null) customFragment else EaseSearchUserFragment()
@@ -142,6 +161,7 @@ open class EaseSearchUserFragment: EaseBaseSearchFragment<EaseUser>(),IEaseSearc
 
     private object Constant {
         const val KEY_SHOW_RIGHT_CANCEL = "key_show_right_cancel"
+        const val KEY_IS_SEARCH_BLOCK = "key_is_search_block"
     }
 
 }

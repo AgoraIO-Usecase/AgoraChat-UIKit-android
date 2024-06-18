@@ -91,5 +91,8 @@
         <!-- Chat search message result activity -->
         <activity android:name=".feature.chat.activities.EaseMessageSearchResultActivity"
             android:exported="false"/>
+        <activity android:name=".feature.contact.EaseBlockListActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
     </application>
 </manifest>

@@ -78,12 +78,15 @@ suspend fun ChatContactManager.removeContact(userName:String, keepConversation: 
  * Suspend method for [ChatContactManager.getBlackListFromServer(userName)]
  * @return List<EaseUser> User Information List
  */
-suspend fun ChatContactManager.fetchBlackListFromServer(): MutableList<String>{
+suspend fun ChatContactManager.fetchBlackListFromServer(): MutableList<EaseUser>{
     return suspendCoroutine{ continuation ->
         asyncGetBlackListFromServer(ValueCallbackImpl(
             onSuccess = { value ->
                 value?.let {
-                    continuation.resume(it.toMutableList())
+                    val list = it.map { id ->
+                        EaseIM.getUserProvider()?.getSyncUser(id)?.toUser() ?: EaseUser(id)
+                    }.toMutableList()
+                    continuation.resume(list)
                 }
             },
             onError = {code,message-> continuation.resumeWithException(ChatException(code, message))}
@@ -150,6 +153,29 @@ suspend fun ChatContactManager.searchContact(query:String):MutableList<EaseUser>
         val localContact = contactsFromLocal
         val resultList = mutableListOf<EaseUser>()
         localContact.forEach{
+            val userInfo = EaseIM.getCache().getUser(it)
+            if (userInfo == null){
+                if (it.contains(query)){
+                    resultList.add(EaseUser(it))
+                }
+            }else{
+                userInfo.let { user->
+                    val nickname = user.getRemarkOrName()
+                    if (nickname.contains(query)){
+                        resultList.add(user.toUser())
+                    }
+                }
+            }
+        }
+        continuation.resume(resultList)
+    }
+}
+
+suspend fun ChatContactManager.searchBlockContact(query:String):MutableList<EaseUser>{
+    return suspendCoroutine{ continuation ->
+        val localBlockContact = blackListUsernames
+        val resultList = mutableListOf<EaseUser>()
+        localBlockContact.forEach{
             val userInfo = EaseIM.getCache().getUser(it)
             if (userInfo == null){
                 if (it.contains(query)){

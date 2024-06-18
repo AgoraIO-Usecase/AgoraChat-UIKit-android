@@ -37,34 +37,44 @@ interface IEaseContactResultView: IControlDataView {
     fun deleteContactFail(code: Int, error: String){}
 
     /**
-     * Get black list from server successfully.
+     * Fetch block list from server successfully.
      */
-    fun getBlackListFromServerSuccess(list: MutableList<String>){}
+    fun fetchBlockListFromServerSuccess(list: MutableList<EaseUser>){}
 
     /**
-     * Get black list from server failed.
+     * Fetch block list from server failed.
      */
-    fun getBlackListFromServerFail(code: Int, error: String){}
+    fun fetchBlockListFromServerFail(code: Int, error: String){}
 
     /**
-     * Add user to blacklist successfully.
+     * Get block list from local successfully.
      */
-    fun addUserToBlackListSuccess(){}
+    fun getBlockListFromLocalSuccess(list: MutableList<EaseUser>){}
 
     /**
-     * Add user to blacklist failed.
+     * Get block list from local failed.
      */
-    fun addUserToBlackListFail(code: Int, error: String){}
+    fun getBlockListFromLocalFail(code: Int, error: String){}
 
     /**
-     * Remove user from blacklist successfully.
+     * Add user to blocklist successfully.
      */
-    fun removeUserFromBlackListSuccess(){}
+    fun addUserToBlockListSuccess(){}
 
     /**
-     * Remove user from blacklist failed.
+     * Add user to blocklist failed.
      */
-    fun removeUserFromBlackListFail(code: Int, error: String){}
+    fun addUserToBlockListFail(code: Int, error: String){}
+
+    /**
+     * Remove user from blocklist successfully.
+     */
+    fun removeUserFromBlockListSuccess(){}
+
+    /**
+     * Remove user from blocklist failed.
+     */
+    fun removeUserFromBlockListFail(code: Int, error: String){}
 
     /**
      * Accept invitation successfully.
