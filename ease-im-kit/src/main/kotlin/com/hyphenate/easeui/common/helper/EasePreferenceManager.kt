@@ -63,15 +63,20 @@ class EasePreferenceManager @SuppressLint("CommitPrefEdits") private constructor
      * Set whether the conversation list has been loaded from the server
      */
     internal fun setLoadedConversationsFromServer(value: Boolean) {
-        editor?.putBoolean(KEY_LOADED_CONVS_FROM_SERVER, value)
-        editor?.commit()
+        EaseIM.getCurrentUser()?.let {
+            editor?.putBoolean(KEY_LOADED_CONVS_FROM_SERVER+it.id, value)
+            editor?.commit()
+        }
     }
 
     /**
      * Get whether the conversation list has been loaded from the server
      */
     internal fun isLoadedConversationsFromServer(): Boolean {
-        return mSharedPreferences?.getBoolean(KEY_LOADED_CONVS_FROM_SERVER, false) ?: false
+        EaseIM.getCurrentUser()?.let {
+            return mSharedPreferences?.getBoolean(KEY_LOADED_CONVS_FROM_SERVER+it.id, false) ?: false
+        }
+        return false
     }
 
 
@@ -176,7 +181,7 @@ class EasePreferenceManager @SuppressLint("CommitPrefEdits") private constructor
     companion object {
         private const val KEY_AT_GROUPS = "AT_GROUPS"
         private const val MUTE_DATA_KEY = "mute_data_key"
-        private const val KEY_LOADED_CONVS_FROM_SERVER = "key_loaded_convs_from_server"
+        private const val KEY_LOADED_CONVS_FROM_SERVER = "key_loaded_convs_from_server_"
         private const val KEY_LOADED_CONTACT_FROM_SERVER = "key_loaded_contact_from_server"
         private const val KEY_LOADED_GROUP_MEMBER_FROM_SERVER = "key_loaded_group_member_from_server"
 
