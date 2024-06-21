@@ -471,6 +471,16 @@ class EaseConversationListLayout @JvmOverloads constructor(
         binding.refreshLayout.finishRefresh()
     }
 
+    override fun loadLocalConversationListFinished(list: List<EaseConversation>) {
+        if (list.isNotEmpty()){
+            listAdapter?.setData(list.toMutableList())
+            conversationChangeListener?.notifyAllChange()
+            // Notify to load conversation successfully
+            EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD + EaseEvent.TYPE.CONVERSATION)
+                .post(lifecycleScope, EaseEvent(EaseEvent.EVENT.ADD + EaseEvent.TYPE.CONVERSATION, EaseEvent.TYPE.CONVERSATION))
+        }
+    }
+
     override fun sortConversationListFinish(conversations: List<EaseConversation>) {
         listAdapter?.setData(conversations.toMutableList())
     }
