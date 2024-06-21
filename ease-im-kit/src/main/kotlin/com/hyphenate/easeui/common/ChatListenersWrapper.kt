@@ -849,6 +849,18 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         }
     }
 
+    override fun onMemberJoined(roomId: String?, participant: String?, ext: String?) {
+        chatRoomChangeListener.let {
+            try {
+                for (chatroomListener in it) {
+                    chatroomListener.onMemberJoined(roomId,participant,ext)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     override fun onMemberExited(roomId: String?, roomName: String?, participant: String?) {
         chatRoomChangeListener.let {
             try {
