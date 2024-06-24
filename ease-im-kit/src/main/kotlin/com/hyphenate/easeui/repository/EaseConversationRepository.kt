@@ -129,7 +129,7 @@ class EaseConversationRepository(
     suspend fun makeSilentForConversation(conversationId: String,conversationType:ChatConversationType) =
         withContext(Dispatchers.IO) {
             val result = pushManager.setSilentModeForConversation(conversationId, conversationType,
-                ChatSilentModeParam(ChatSilentModelType.REMIND_TYPE).setRemindType(ChatPushRemindType.NONE))
+                ChatSilentModeParam(ChatSilentModelType.REMIND_TYPE).setRemindType(ChatPushRemindType.MENTION_ONLY))
             EaseIM.getCache().setMutedConversation(conversationId)
             result
         }
