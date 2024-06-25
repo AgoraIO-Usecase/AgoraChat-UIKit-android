@@ -22,6 +22,7 @@ import com.hyphenate.easeui.feature.chat.viewholders.EaseChatRowViewHolder
 import com.hyphenate.easeui.feature.chat.viewholders.EaseChatViewHolderFactory
 import com.hyphenate.easeui.feature.chat.viewholders.EaseMessageViewType
 import com.hyphenate.easeui.feature.thread.interfaces.OnMessageChatThreadClickListener
+import com.hyphenate.easeui.interfaces.UrlPreviewStatusCallback
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowText
 
@@ -35,6 +36,7 @@ open class EaseMessagesAdapter(
     private var itemClickListener: OnMessageListItemClickListener? = null
     private var replyViewClickListener: OnMessageReplyViewClickListener? = null
     private var threadViewEventListener: OnMessageChatThreadClickListener? = null
+    private var urlPreviewDownLoadListener: UrlPreviewStatusCallback? = null
     private var highlightPosition = -1
     private var colorAnimation: ValueAnimator? = null
 
@@ -64,6 +66,7 @@ open class EaseMessagesAdapter(
             (holder.itemView as? EaseChatRowText)?.let {
                 addMessageReplyView(it, getItem(position))
                 addMessageTranslationView(it,getItem(position))
+                addMessageUrlPreview(it,getItem(position))
             }
             addMessageReactionView(holder.itemView as EaseChatRow, getItem(position))
             addMessageThreadRegionView(holder.itemView as EaseChatRow, getItem(position))
@@ -98,6 +101,10 @@ open class EaseMessagesAdapter(
 
     private fun addMessageTranslationView(view: EaseChatRowText, message: ChatMessage?){
         EaseChatAddExtendFunctionViewController.addTranslationViewToMessage(view, message)
+    }
+
+    private fun addMessageUrlPreview(view: EaseChatRowText, message: ChatMessage?){
+        EaseChatAddExtendFunctionViewController.addUrlPreviewToMessage(view, message,urlPreviewDownLoadListener)
     }
 
     /**
@@ -176,5 +183,9 @@ open class EaseMessagesAdapter(
 
     fun setOnMessageReplyViewClickListener(listener: OnMessageReplyViewClickListener?) {
         this.replyViewClickListener = listener
+    }
+
+    fun setDownLoadUrlPreviewHtmlListener(callback: UrlPreviewStatusCallback){
+        this.urlPreviewDownLoadListener = callback
     }
 }

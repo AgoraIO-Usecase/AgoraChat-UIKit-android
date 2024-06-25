@@ -293,4 +293,6 @@
     <string name="ease_switch_block_title">Block</string>
     <string name="ease_search_block_user">Search</string>
 
+    <string name="ease_url_preview_parsing">Parsing…</string>
+
 </resources>

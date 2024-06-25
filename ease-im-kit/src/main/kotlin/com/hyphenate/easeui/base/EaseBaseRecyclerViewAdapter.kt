@@ -9,7 +9,6 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.hyphenate.easeui.R
-import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.interfaces.OnItemClickListener
 import com.hyphenate.easeui.interfaces.OnItemLongClickListener
 
@@ -317,6 +316,15 @@ abstract class EaseBaseRecyclerViewAdapter<T> :
                 mData?.clear()
                 notifyDataSetChanged()
             }
+        }
+    }
+
+    /**
+     * update position data
+     */
+    fun changeData(position: Int,item: T){
+        synchronized(EaseBaseRecyclerViewAdapter::class.java) {
+            mData?.set(position, item)
         }
     }
 

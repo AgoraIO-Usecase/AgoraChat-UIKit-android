@@ -390,20 +390,21 @@
         <item name="android:autoLink">web</item>
         <item name="android:gravity">center|start</item>
         <item name="android:lineSpacingExtra">@dimen/ease_size_2</item>
-        <item name="android:maxWidth">225.0dip</item>
+        <item name="android:maxWidth">225dp</item>
         <item name="android:minHeight">@dimen/ease_size_22</item>
         <item name="android:layout_marginStart">@dimen/ease_size_12</item>
         <item name="android:layout_marginEnd">@dimen/ease_size_12</item>
         <item name="android:layout_marginTop">@dimen/ease_size_7</item>
-        <item name="android:textColorLink">@color/ease_chat_row_text_content_link_color</item>
     </style>
 
     <style name="ease_chat_row_receive_text_content_style" parent="ease_chat_row_text_content_style">
         <item name="android:textColor">@color/ease_chat_row_receive_text_content_color</item>
+        <item name="android:textColorLink">@color/ease_color_primary</item>
     </style>
 
     <style name="ease_chat_row_send_text_content_style" parent="ease_chat_row_text_content_style">
         <item name="android:textColor">@color/ease_chat_row_send_text_content_color</item>
+        <item name="android:textColorLink">@color/ease_chat_row_send_text_content_color</item>
     </style>
 
     <style name="ease_chat_row_edit_label_style">
@@ -974,9 +975,15 @@
 
     <style name="ease_chat_row_send_bottom_bubble_style" parent="ease_chat_row_send_top_bubble_style"/>
 
-    <style name="ease_chat_row_receive_bubble_bottom_style" parent="ease_chat_row_receive_top_bubble_style"/>
+    <style name="ease_chat_row_receive_bubble_bottom_style" parent="ease_chat_row_receive_top_bubble_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:maxWidth">249dp</item>
+    </style>
 
-    <style name="ease_chat_row_send_bubble_bottom_style" parent="ease_chat_row_receive_bubble_bottom_style"/>
+    <style name="ease_chat_row_send_bubble_bottom_style" parent="ease_chat_row_receive_bubble_bottom_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:maxWidth">249dp</item>
+    </style>
 
     <!-- Reaction -->
     <style name="ease_chat_message_menu_reaction_icon_style" parent="ease_chat_emoji_item_icon">
@@ -1084,7 +1091,7 @@
         <item name="android:paddingEnd">@dimen/ease_size_12</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">@dimen/ease_size_8</item>
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 

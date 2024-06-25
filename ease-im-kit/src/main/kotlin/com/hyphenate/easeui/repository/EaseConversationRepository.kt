@@ -42,7 +42,7 @@ class EaseConversationRepository(
      */
     suspend fun loadData(): List<EaseConversation> =
         withContext(Dispatchers.IO) {
-            val hasLoaded: Boolean = EasePreferenceManager.getInstance().isLoadedConversationsFromServer() ?: false
+            val hasLoaded: Boolean = EasePreferenceManager.getInstance().isLoadedConversationsFromServer()
             if (hasLoaded) {
                 if (EaseIM.DEBUG) {
                     ChatLog.d(TAG, "loadData from local db")

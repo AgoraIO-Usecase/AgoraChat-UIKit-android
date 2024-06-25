@@ -293,4 +293,6 @@
     <string name="ease_switch_block_title">拉黑</string>
     <string name="ease_search_block_user">搜索</string>
 
+    <string name="ease_url_preview_parsing">解析中…</string>
+
 </resources>

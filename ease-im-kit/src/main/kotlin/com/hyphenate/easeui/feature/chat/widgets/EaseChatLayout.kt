@@ -30,7 +30,6 @@ import com.hyphenate.easeui.common.ChatMessageBody
 import com.hyphenate.easeui.common.ChatMessageDirection
 import com.hyphenate.easeui.common.ChatMessageReactionChange
 import com.hyphenate.easeui.common.ChatMessageType
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.ChatRecallMessageInfo
 import com.hyphenate.easeui.common.ChatTextMessageBody
 import com.hyphenate.easeui.common.ChatThread
@@ -376,6 +375,7 @@ class EaseChatLayout @JvmOverloads constructor(
         ) {
             messageModified?.let {
                 if (it.conversationId() == conversationId) {
+                    EaseIM.getCache().cleanUrlPreviewInfo(it.msgId)
                     chatBinding.layoutChatMessage.refreshMessage(it)
                 }
             }

@@ -103,4 +103,6 @@
     <item name="thread_more_leave" type="id"/>
     <item name="thread_more_destroy" type="id"/>
 
+    <item name="ease_url_preview" type="id"/>
+
 </resources>

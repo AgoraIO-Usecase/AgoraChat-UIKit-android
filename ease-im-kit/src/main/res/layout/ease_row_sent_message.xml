@@ -66,6 +66,7 @@
                 style="@style/ease_chat_row_send_bubble_bottom_style"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_edit"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 

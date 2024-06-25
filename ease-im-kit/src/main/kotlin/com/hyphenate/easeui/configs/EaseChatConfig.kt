@@ -43,6 +43,27 @@ class EaseChatConfig {
     var isLoadBlockListFromServer: Boolean = false
 
     /**
+     * The config that whether to enable the function of url preview.
+     */
+    var enableUrlPreview: Boolean = true
+
+    /**
+     * Open Graph 协议的正则表达式模式
+     */
+    var titleOGPattern: String = "<meta property=\"og:title\" content=\"(.*?)\"\\s*/?>"
+    var descriptionOGPattern: String = "<meta property=\"og:description\" content=\"(.*?)\"\\s*/?>"
+    var imageOGPattern: String = "<meta property=\"og:image\" content=\"(.*?)\"\\s*/?>"
+
+    /**
+     *  非 Open Graph 协议的正则表达式模式
+     */
+    var titlePattern: String = "<title>(.*?)</title>"
+    var descriptionPattern: String = "<meta\\s+name=\"description\"\\s+content=\"(.*?)\"\\s*/?>"
+    var imagePattern: String = "<img[^>]*src=[^>]*>"
+
+    var imageSrcPattern: String = "<link\\s+rel=\"image_src\"\\s+href=\"(http[^\"]*)\"\\s*/?>"
+
+    /**
      * The config that whether to show unread notification in chat activity.
      * If true:
      * 1、When the message item is not visible, the message read ack will not be sent.
@@ -59,7 +80,7 @@ class EaseChatConfig {
      */
     var enableChatThreadMessage: Boolean = false
 
-    var enableChatTyping: Boolean = false
+    var enableChatTyping: Boolean = true
 
     /**
      * Set the time period within which messages can be recalled, in milliseconds

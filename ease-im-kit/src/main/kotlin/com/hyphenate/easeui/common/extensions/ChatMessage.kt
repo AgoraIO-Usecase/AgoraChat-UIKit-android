@@ -23,6 +23,10 @@ import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.EaseConstant.MESSAGE_EXT_USER_INFO_AVATAR_KEY
 import com.hyphenate.easeui.common.EaseConstant.MESSAGE_EXT_USER_INFO_NICKNAME_KEY
 import com.hyphenate.easeui.common.EaseConstant.MESSAGE_EXT_USER_INFO_REMARK_KEY
+import com.hyphenate.easeui.common.EaseConstant.MESSAGE_URL_PREVIEW_DESCRIPTION
+import com.hyphenate.easeui.common.EaseConstant.MESSAGE_URL_PREVIEW_IMAGE_URL
+import com.hyphenate.easeui.common.EaseConstant.MESSAGE_URL_PREVIEW_TITLE
+import com.hyphenate.easeui.common.EaseConstant.MESSAGE_URL_PREVIEW_URL
 import com.hyphenate.easeui.common.helper.DateFormatHelper
 import com.hyphenate.easeui.common.impl.CallbackImpl
 import com.hyphenate.easeui.common.impl.OnError
@@ -30,6 +34,7 @@ import com.hyphenate.easeui.common.impl.OnProgress
 import com.hyphenate.easeui.common.impl.OnSuccess
 import com.hyphenate.easeui.configs.EaseDateFormatConfig
 import com.hyphenate.easeui.feature.invitation.enums.InviteMessageStatus
+import com.hyphenate.easeui.model.EasePreview
 import com.hyphenate.easeui.model.EaseProfile
 import com.hyphenate.easeui.model.EaseSize
 import com.hyphenate.easeui.provider.getSyncUser
@@ -566,4 +571,35 @@ internal fun ChatMessage.isReplyMessage(jsonResult: (JSONObject) -> Unit = {}): 
 
 internal fun ChatMessage.hasThreadChat(): Boolean {
     return chatThread != null
+}
+
+fun ChatMessage.isUrlPreviewMessage():Boolean{
+   return attributes.containsKey(EaseConstant.MESSAGE_URL_PREVIEW)
+}
+
+fun ChatMessage.parseUrlPreview():EasePreview?{
+    EaseIM.getConfig()?.chatConfig?.enableUrlPreview?.let {
+        if (!it) {
+            return null
+        }
+    }
+    var preview:EasePreview? = null
+    if (isUrlPreviewMessage()){
+        try {
+            getJSONObjectAttribute(EaseConstant.MESSAGE_URL_PREVIEW)?.let { info ->
+                preview = EasePreview(
+                    url = info.optString(MESSAGE_URL_PREVIEW_URL),
+                    title = info.optString(MESSAGE_URL_PREVIEW_TITLE),
+                    description = info.optString(MESSAGE_URL_PREVIEW_DESCRIPTION),
+                    imageURL = info.optString(MESSAGE_URL_PREVIEW_IMAGE_URL)
+                )
+                preview?.let {
+                    EaseIM.getCache().saveUrlPreviewInfo(msgId,it)
+                }
+            }
+        } catch (e: ChatException) {
+           ChatLog.e("ChatMessage","parse message error ${e.message}")
+        }
+    }
+    return preview
 }

@@ -945,27 +945,30 @@ EaseIM.setUserProfileProvider(object : EaseUserProfileProvider {
 UIKit 提供了接口 `EaseIM.setGroupMemberProfileProvider` 进行联系人信息的提供。
 `EaseGroupMemberProfileProvider` 接口如下：
 ```kotlin
-interface EaseGroupMemberProfileProvider {
+interface EaseGroupProfileProvider {
     // 同步获取群成员信息
-    fun getMemberProfile(groupId: String?, username: String?): EaseProfile?
+    fun getGroup(id: String?): EaseGroupProfile?
 
     // 异步获取群成员信息
-    fun fetchMembers(members: Map<String, List<String>>, onValueSuccess: OnValueSuccess<Map<String, EaseProfile>>)
+    fun fetchGroups(groupIds: List<String>, onValueSuccess: OnValueSuccess<List<EaseGroupProfile>>)
 }
 ```
 用法如下：
 ```kotlin
-EaseIM.setGroupMemberProfileProvider(object : EaseGroupMemberProfileProvider {
+EaseIM.setGroupProfileProvider(object : EaseGroupProfileProvider {
     // 同步获取会话信息
-    override fun getMemberProfile(groupId: String?, username: String?): EaseProfile? {
-        return getLocalGroupMemberInfo(groupId, username)
+    override fun getGroup(id: String?): EaseGroupProfile? {
+      ChatClient.getInstance().groupManager().getGroup(id)?.let {
+        return EaseGroupProfile(it.groupId, it.groupName, it.extension)
+      }
+      return null
     }
 
-    override fun fetchMembers(
-        members: Map<String, List<String>>,
-        onValueSuccess: OnValueSuccess<Map<String, EaseProfile>>
+    override fun fetchGroups(
+      groupIds: List<String>,
+      onValueSuccess: OnValueSuccess<List<EaseGroupProfile>>
     ) {
-        fetchGroupMemberInfoFromServer(members, onValueSuccess)
+  
     }
 
 })
@@ -983,9 +986,11 @@ EaseIM.setGroupMemberProfileProvider(object : EaseGroupMemberProfileProvider {
 
 ```kotlin
 // 更新当前用户信息
-EaseIM.updateCurrentUser(currentUserProfile)
+EaseIM.updateCurrentUser()
 // 更新用户信息
-EaseIM.updateUsersInfo(userProfileList)
+EaseIM.updateUsersInfo()
+// 更新群组信息
+EaseIM.updateGroupInfo()
 ```
 
 ## UIKit对明暗主题的支持

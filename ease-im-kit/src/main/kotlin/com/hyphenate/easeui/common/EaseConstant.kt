@@ -76,5 +76,12 @@ object EaseConstant {
     const val THREAD_TOPIC_MESSAGE_ID = "ease_thread_topic_msg_id"
     const val THREAD_MESSAGE_ID = "ease_thread_msg_id"
     const val THREAD_NOTIFICATION_TYPE = "ease_thread_notification_type"
+
+    //url preview
+    const val MESSAGE_URL_PREVIEW = "ease_chat_uikit_text_url_preview"
+    const val MESSAGE_URL_PREVIEW_URL = "url"
+    const val MESSAGE_URL_PREVIEW_TITLE = "title"
+    const val MESSAGE_URL_PREVIEW_DESCRIPTION = "description"
+    const val MESSAGE_URL_PREVIEW_IMAGE_URL = "imageUrl"
 }
 

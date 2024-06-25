@@ -150,7 +150,9 @@ open class EaseBlockListFragment: EaseBaseFragment<FragmentBlockListLayoutBindin
 
             listAdapter?.setOnUserListItemClickListener(object : OnUserListItemClickListener{
                 override fun onUserListItemClick(v: View?, position: Int, user: EaseUser?) {
-                    userListItemClickListener?.onUserListItemClick(v, position, user)
+                    userListItemClickListener?.onUserListItemClick(v, position, user) ?:kotlin.run {
+                        defaultOnItemClickEvent(v, position, user)
+                    }
                 }
             })
 
@@ -246,6 +248,13 @@ open class EaseBlockListFragment: EaseBaseFragment<FragmentBlockListLayoutBindin
     }
 
     open fun defaultOnLongItemClickListener(view:View?, position:Int){
+
+    }
+
+    open fun defaultOnItemClickEvent(v: View?, position: Int, user: EaseUser?){
+        user?.let {
+            startActivity(EaseContactDetailsActivity.createIntent(mContext,it))
+        }
 
     }
 

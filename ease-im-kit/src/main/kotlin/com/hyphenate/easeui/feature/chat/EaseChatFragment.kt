@@ -688,6 +688,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     }
 
     override fun onModifyMessageSuccess(messageModified: ChatMessage?) {
+        EaseIM.getCache().cleanUrlPreviewInfo(messageModified?.msgId)
         modifyMessageListener?.onModifyMessageSuccess(messageModified)
     }
 
