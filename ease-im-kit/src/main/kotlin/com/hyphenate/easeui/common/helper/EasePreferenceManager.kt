@@ -74,7 +74,7 @@ class EasePreferenceManager @SuppressLint("CommitPrefEdits") private constructor
      */
     internal fun isLoadedConversationsFromServer(): Boolean {
         EaseIM.getCurrentUser()?.let {
-            mSharedPreferences?.getBoolean(KEY_LOADED_CONVS_FROM_SERVER+it.id, false) ?: false
+            return mSharedPreferences?.getBoolean(KEY_LOADED_CONVS_FROM_SERVER+it.id, false) ?: false
         }
         return false
     }

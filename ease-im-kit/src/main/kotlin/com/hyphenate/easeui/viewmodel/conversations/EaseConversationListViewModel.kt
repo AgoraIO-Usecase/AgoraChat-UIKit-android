@@ -34,7 +34,7 @@ open class EaseConversationListViewModel(
             .catchChatException { e ->
                 view?.loadConversationListFail(e.errorCode, e.description)
                 val localData = chatManager.allConversationsBySort?.filter {
-                        it.conversationId() != EaseConstant.DEFAULT_SYSTEM_MESSAGE_ID && it.allMessages.isNotEmpty()
+                    it.conversationId() != EaseConstant.DEFAULT_SYSTEM_MESSAGE_ID && it.allMessages.isNotEmpty()
                 }?.map { it.parse() } ?: listOf()
                 view?.loadLocalConversationListFinished(localData)
             }
