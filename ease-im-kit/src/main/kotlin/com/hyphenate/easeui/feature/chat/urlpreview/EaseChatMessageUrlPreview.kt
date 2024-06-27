@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.style.URLSpan
 import android.util.AttributeSet
+import android.view.View
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.toSpannable
@@ -22,7 +23,7 @@ import com.hyphenate.easeui.interfaces.UrlPreviewStatusCallback
 import com.hyphenate.easeui.model.EasePreview
 import com.hyphenate.easeui.widget.EaseImageView
 
-class EaseChatMessageUrlPreview(
+class EaseChatMessageUrlPreview @JvmOverloads constructor(
     var isSender:Boolean? = null,
     private val context: Context,
     attrs: AttributeSet? = null,
@@ -35,6 +36,7 @@ class EaseChatMessageUrlPreview(
     private val tvPreviewContent: TextView by lazy { findViewById(R.id.tv_describe) }
     private val tvUrl: TextView by lazy { findViewById(R.id.tv_url) }
     private val layout: ConstraintLayout by lazy { findViewById(R.id.describe_layout) }
+    private val divider: View by lazy { findViewById(R.id.v_divider) }
 
     init {
         initAttrs(context, attrs)
@@ -75,10 +77,12 @@ class EaseChatMessageUrlPreview(
 
     fun showImage(){
         ivIcon.visibility = VISIBLE
+        divider.visibility = GONE
     }
 
     fun hideImage(){
         ivIcon.visibility = GONE
+        divider.visibility = VISIBLE
     }
 
     fun checkPreview(message: ChatMessage?,statusCallback: UrlPreviewStatusCallback? = null){
@@ -131,8 +135,12 @@ class EaseChatMessageUrlPreview(
                 statusCallback?.onParseFile() ?:kotlin.run { hideAllView() }
             }else{
                 ep.description?.let { des->
-                    tvPreviewContent.text = des
-                    tvPreviewContent.visibility = VISIBLE
+                    if ( des.isEmpty() ){
+                        tvPreviewContent.visibility = GONE
+                    }else{
+                        tvPreviewContent.text = des
+                        tvPreviewContent.visibility = VISIBLE
+                    }
                 }?:kotlin.run {
                     tvPreviewContent.visibility = GONE
                 }

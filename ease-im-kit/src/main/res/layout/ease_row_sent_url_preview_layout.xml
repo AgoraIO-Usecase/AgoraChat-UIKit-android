@@ -10,7 +10,7 @@
         android:id="@+id/tv_url"
         android:visibility="gone"
         android:autoLink="web"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/v_divider"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -81,5 +81,15 @@
             tools:text="Real-Time Voice and Video Engagement" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/v_divider"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/ease_size_12"
+        android:layout_marginEnd="@dimen/ease_size_12"
+        style="@style/ease_chat_pin_message_sent_divider_style" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
