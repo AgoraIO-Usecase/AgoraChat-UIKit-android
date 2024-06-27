@@ -292,7 +292,6 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     }
 
     override fun onMessageChanged(message: ChatMessage?, change: Any?) {
-        super.onMessageChanged(message, change)
         chatMessageListener.let {
             try {
                 for (messageListener in it) {
@@ -922,7 +921,6 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         conversationId: String?,
         type: ChatConversationType?
     ) {
-        super.onConversationEvent(event, conversationId, type)
         chatMultiDeviceListener.let {
             try {
                 for (emMultiDeviceListener in it) {
@@ -935,7 +933,6 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     }
 
     override fun onMessageRemoved(conversationId: String?, deviceId: String?) {
-        super.onMessageRemoved(conversationId, deviceId)
         chatMultiDeviceListener.let {
             try {
                 for (emMultiDeviceListener in it) {
@@ -948,7 +945,6 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     }
 
     override fun onChatThreadEvent(event: Int, target: String?, usernames: MutableList<String>?) {
-        super.onChatThreadEvent(event, target, usernames)
         chatMultiDeviceListener.let {
             try {
                 for (emMultiDeviceListener in it) {
