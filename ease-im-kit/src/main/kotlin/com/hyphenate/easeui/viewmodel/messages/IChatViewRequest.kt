@@ -245,4 +245,22 @@ interface IChatViewRequest: IAttachView {
      */
     fun getInProgressMessages()
 
+    /**
+     * pin message
+     * @param message
+     */
+    fun pinMessage(message:ChatMessage?)
+
+    /**
+     * pin message
+     * @param message
+     */
+    fun unPinMessage(message:ChatMessage?)
+
+    /**
+     * fetch pin message from server
+     * @param conversationId
+     */
+    fun fetchPinMessageFromServer(conversationId:String?)
+
 }

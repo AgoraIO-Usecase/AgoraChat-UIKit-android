@@ -660,6 +660,48 @@ open class EaseChatViewModel: EaseBaseViewModel<IHandleChatResultView>(), IChatV
         }
     }
 
+    override fun pinMessage(message: ChatMessage?) {
+        viewModelScope.launch {
+            flow {
+                emit(chatRepository.pinMessage(message))
+            }
+                .catchChatException { e ->
+                    view?.onPinMessageFail(e.errorCode, e.description)
+                }
+                .collect {
+                    view?.onPinMessageSuccess(message)
+                }
+        }
+    }
+
+    override fun unPinMessage(message: ChatMessage?) {
+        viewModelScope.launch {
+            flow {
+                emit(chatRepository.unPinMessage(message))
+            }
+                .catchChatException { e ->
+                    view?.onUnPinMessageFail(e.errorCode, e.description)
+                }
+                .collect {
+                    view?.onUnPinMessageSuccess(message)
+                }
+        }
+    }
+
+    override fun fetchPinMessageFromServer(conversationId: String?) {
+        viewModelScope.launch {
+            flow {
+                emit(chatRepository.fetchPinMessageFromService(conversationId))
+            }
+                .catchChatException { e ->
+                    view?.onFetchPinMessageFromServerFail(e.errorCode, e.description)
+                }
+                .collect {
+                    view?.onFetchPinMessageFromServerSuccess(it)
+                }
+        }
+    }
+
     private inline fun safeInConvScope(scope: (ChatConversation)->Unit) {
         if (_conversation == null) {
             inMainScope {

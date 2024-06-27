@@ -8,7 +8,6 @@ import com.hyphenate.easeui.databinding.EaseLayoutInvitationItemBinding
 import com.hyphenate.easeui.feature.invitation.holder.EaseNewRequestsViewHolder
 
 class EaseRequestAdapter: EaseBaseRecyclerViewAdapter<ChatMessage>() {
-    protected var mItemSubViewListener: OnItemSubViewClickListener? = null
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<ChatMessage> {
         return EaseNewRequestsViewHolder(
@@ -24,11 +23,4 @@ class EaseRequestAdapter: EaseBaseRecyclerViewAdapter<ChatMessage>() {
         super.onBindViewHolder(holder, position)
     }
 
-    /**
-     * set item sub view click
-     * @param mItemSubViewListener
-     */
-    fun setOnItemSubViewClickListener(mItemSubViewListener: OnItemSubViewClickListener?) {
-        this.mItemSubViewListener = mItemSubViewListener
-    }
 }

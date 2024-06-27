@@ -23,6 +23,7 @@ abstract class EaseBaseRecyclerViewAdapter<T> :
     EaseBaseAdapter<EaseBaseRecyclerViewAdapter.ViewHolder<T>>() {
     protected var mOnItemClickListener: OnItemClickListener? = null
     protected var mOnItemLongClickListener: OnItemLongClickListener? = null
+    protected var mItemSubViewListener: OnItemSubViewClickListener? = null
     var mContext: Context? = null
     var mData: MutableList<T>? = null
     private var isHideEmptyView = false
@@ -241,6 +242,25 @@ abstract class EaseBaseRecyclerViewAdapter<T> :
         notifyDataSetChanged()
     }
 
+
+    /**
+     * Add a single piece of data
+     * @param position
+     * @param item
+     */
+    fun addData(position: Int, item: T) {
+        synchronized(EaseBaseRecyclerViewAdapter::class.java) {
+            if (mData == null) {
+                mData = ArrayList()
+            }
+            if (position >= 0){
+                mData?.add(position,item)
+                notifyItemInserted(position)
+            }
+        }
+
+    }
+
     /**
      * Add more data
      * @param data
@@ -342,6 +362,14 @@ abstract class EaseBaseRecyclerViewAdapter<T> :
      */
     fun setOnItemLongClickListener(longClickListener: OnItemLongClickListener?) {
         mOnItemLongClickListener = longClickListener
+    }
+
+    /**
+     * set item sub view click
+     * @param mItemSubViewListener
+     */
+    fun setOnItemSubViewClickListener(mItemSubViewListener: OnItemSubViewClickListener?) {
+        this.mItemSubViewListener = mItemSubViewListener
     }
 
     abstract class ViewHolder<T>(itemView: View ?= null, binding: ViewBinding? = null) : RecyclerView.ViewHolder(itemView ?: binding?.root!!) {

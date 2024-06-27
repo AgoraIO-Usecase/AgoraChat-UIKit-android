@@ -5,6 +5,14 @@
     tools:ignore="MissingDefaultResource">
 
     <item
+        android:id="@+id/chat_menu_pin"
+        android:icon="@drawable/ease_icon_pin_message"
+        android:title="@string/menu_thread_topic"
+        android:visible="true"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/chat_menu_topic"
         android:icon="@drawable/ease_icon_thread_topic"
         android:title="@string/menu_thread_topic"

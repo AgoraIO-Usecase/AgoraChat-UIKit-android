@@ -60,6 +60,8 @@
     <item name="action_chat_forward" type="id"/>
     <!--multi select-->
     <item name="action_chat_multi_select" type="id"/>
+    <!--pin message-->
+    <item name="action_chat_pin_message" type="id"/>
 
 
     <!-- message -->

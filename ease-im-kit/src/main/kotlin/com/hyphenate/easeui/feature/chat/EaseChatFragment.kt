@@ -301,6 +301,9 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         if (chatType != EaseChatType.GROUP_CHAT || isThread || EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage == false){
             binding?.titleBar?.setMenuIconVisible(R.id.chat_menu_topic,false)
         }
+        if (chatType != EaseChatType.GROUP_CHAT || isThread || EaseIM.getConfig()?.chatConfig?.enableChatPingMessage == false){
+            binding?.titleBar?.setMenuIconVisible(R.id.chat_menu_pin,false)
+        }
     }
 
     private fun setMenuItemClickListener() {
@@ -313,6 +316,10 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         when(item.itemId) {
             R.id.chat_menu_topic -> {
                 EaseChatThreadListActivity.actionStart(mContext,conversationId)
+                return true
+            }
+            R.id.chat_menu_pin -> {
+                binding?.layoutChat?.initPinView()
                 return true
             }
             else -> return false

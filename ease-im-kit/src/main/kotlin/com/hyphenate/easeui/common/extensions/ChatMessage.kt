@@ -2,6 +2,7 @@ package com.hyphenate.easeui.common.extensions
 
 import android.content.Context
 import android.net.Uri
+import android.text.TextUtils
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
@@ -214,6 +215,39 @@ internal fun ChatMessage.createUnsentMessage(isReceive: Boolean = false): ChatMe
     msgNotification.msgTime = msgTime
     msgNotification.chatType = chatType
     msgNotification.setLocalTime(localTime())
+    msgNotification.setAttribute(EaseConstant.MESSAGE_TYPE_RECALL, true)
+    msgNotification.setStatus(ChatMessageStatus.SUCCESS)
+    msgNotification.setIsChatThreadMessage(isChatThreadMessage)
+    return msgNotification
+}
+
+/**
+ * Create a local message when pin message.
+ */
+internal fun ChatMessage.createNotifyPinMessage(operationUser: String?): ChatMessage {
+    val userInfo = EaseIM.getUserProvider()?.getSyncUser(operationUser)
+
+    val msgNotification = ChatMessage.createReceiveMessage(ChatMessageType.TXT)
+    var content:String
+    content = if (pinnedInfo() == null || TextUtils.isEmpty(pinnedInfo().operatorId())) {
+        "${userInfo?.getRemarkOrName()} removed a pin message"
+    } else {
+        "${userInfo?.getRemarkOrName()} pinned a message"
+    }
+    operationUser?.let {
+        if (TextUtils.equals(it, ChatClient.getInstance().currentUser)) {
+            content = content.replace(it, "You")
+        }
+    }
+    val txtBody = ChatTextMessageBody(content)
+    msgNotification.addBody(txtBody)
+    msgNotification.from = from
+    msgNotification.to = to
+    msgNotification.msgTime = msgTime
+    msgNotification.chatType = chatType
+    msgNotification.isUnread = false
+    msgNotification.msgTime = System.currentTimeMillis()
+    msgNotification.setLocalTime(System.currentTimeMillis())
     msgNotification.setAttribute(EaseConstant.MESSAGE_TYPE_RECALL, true)
     msgNotification.setStatus(ChatMessageStatus.SUCCESS)
     msgNotification.setIsChatThreadMessage(isChatThreadMessage)

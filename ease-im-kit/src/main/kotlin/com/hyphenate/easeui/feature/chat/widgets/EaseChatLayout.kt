@@ -18,6 +18,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.hyphenate.chat.EMMessagePinInfo
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
@@ -52,6 +53,7 @@ import com.hyphenate.easeui.feature.chat.controllers.EaseChatMessageReplyControl
 import com.hyphenate.easeui.feature.chat.controllers.EaseChatMessageReportController
 import com.hyphenate.easeui.feature.chat.controllers.EaseChatMessageTranslationController
 import com.hyphenate.easeui.feature.chat.controllers.EaseChatNotificationController
+import com.hyphenate.easeui.feature.chat.controllers.EaseChatPinMessageController
 import com.hyphenate.easeui.feature.chat.enums.getConversationType
 import com.hyphenate.easeui.feature.chat.forward.EaseMessageForwardDialogFragment
 import com.hyphenate.easeui.feature.chat.interfaces.ChatInputMenuListener
@@ -159,6 +161,10 @@ class EaseChatLayout @JvmOverloads constructor(
      */
     val chatNotificationController: EaseChatNotificationController by lazy {
         EaseChatNotificationController(chatBinding, conversationId, viewModel)
+    }
+
+    val chatPinMessageController:EaseChatPinMessageController by lazy {
+        EaseChatPinMessageController(mContext,this@EaseChatLayout, conversationId, viewModel)
     }
 
     /**
@@ -340,6 +346,11 @@ class EaseChatLayout @JvmOverloads constructor(
                             isRefresh = true
                         }
                     }
+                    val pinMessage:ChatMessage? = ChatClient.getInstance().chatManager().getMessage(message.recallMessageId)
+                    val isPined: Boolean = pinMessage?.pinnedInfo() == null || pinMessage.pinnedInfo().operatorId().isEmpty()
+                    if (isPined){
+                        chatPinMessageController.removeData(pinMessage)
+                    }
                 }
             }
             if (isRefresh) {
@@ -378,6 +389,20 @@ class EaseChatLayout @JvmOverloads constructor(
                     EaseIM.getCache().cleanUrlPreviewInfo(it.msgId)
                     chatBinding.layoutChatMessage.refreshMessage(it)
                 }
+            }
+        }
+
+        override fun onMessagePinChanged(
+            messageId: String?,
+            conversationId: String?,
+            pinOperation: EMMessagePinInfo.PinOperation?,
+            pinInfo: EMMessagePinInfo?
+        ) {
+            val message = ChatClient.getInstance().chatManager().getMessage(messageId)
+            message?.let{
+                chatPinMessageController.updatePinMessage(it,pinInfo?.operatorId())
+            }?:kotlin.run{
+                chatPinMessageController.fetchPinnedMessagesFromServer()
             }
         }
     }
@@ -629,6 +654,9 @@ class EaseChatLayout @JvmOverloads constructor(
                         R.id.action_chat_multi_select -> {
                             messageMultipleSelectController.showMultipleSelectStyle(message)
                         }
+                        R.id.action_chat_pin_message -> {
+                            chatPinMessageController.pinMessage(message,true)
+                        }
 
                         else -> {}
                     }
@@ -675,6 +703,10 @@ class EaseChatLayout @JvmOverloads constructor(
         }
         EaseAtMessageHelper.get().setupWithConversation(conversationId)
         initTypingHandler()
+        if (chatType != EaseChatType.SINGLE_CHAT){
+            chatPinMessageController.fetchPinnedMessagesFromServer()
+            chatPinMessageController.initPinInfoView()
+        }
     }
 
     fun loadData(msgId: String? = "", pageSize: Int = 10) {
@@ -1153,6 +1185,38 @@ class EaseChatLayout @JvmOverloads constructor(
         }
         listener?.onSendCombineError(message, code, error)
         listener?.onError(code, error)
+    }
+
+    override fun onPinMessageSuccess(message:ChatMessage?) {
+        chatPinMessageController.updatePinMessage(message,EaseIM.getCurrentUser()?.id)
+    }
+
+    override fun onPinMessageFail(code: Int, error: String?) {
+        ChatLog.e(TAG,"onPinMessageFail $code $error")
+    }
+
+    override fun onUnPinMessageSuccess(message: ChatMessage?) {
+        chatPinMessageController.updatePinMessage(message,EaseIM.getCurrentUser()?.id)
+    }
+
+    override fun onUnPinMessageFail(code: Int, error: String?) {
+        ChatLog.e(TAG,"onUnPinMessageFail $code $error")
+    }
+
+    override fun onFetchPinMessageFromServerSuccess(value: MutableList<ChatMessage>?) {
+        if (value.isNullOrEmpty()){
+            chatPinMessageController.hidePinInfoView()
+        }else{
+            chatPinMessageController.setData(value)
+        }
+    }
+
+    fun initPinView(){
+        chatPinMessageController.setPinInfoView()
+    }
+
+    override fun onFetchPinMessageFromServerFail(code: Int, error: String?) {
+        ChatLog.e(TAG,"onFetchPinMessageFromServerFail $code $error")
     }
 
     override fun clearMenu() {

@@ -1,6 +1,7 @@
 package com.hyphenate.easeui.common
 
 import com.hyphenate.EMChatThreadChangeListener
+import com.hyphenate.chat.EMMessagePinInfo
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.CONTACT_ACCEPT
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.CONTACT_REMOVE
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_CREATE
@@ -384,6 +385,23 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
             try {
                 for (messageListener in it) {
                     messageListener.onReadAckForGroupMessageUpdated()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun onMessagePinChanged(
+        messageId: String?,
+        conversationId: String?,
+        pinOperation: EMMessagePinInfo.PinOperation?,
+        pinInfo: EMMessagePinInfo?
+    ) {
+        chatMessageListener.let {
+            try {
+                for (messageListener in it) {
+                    messageListener.onMessagePinChanged(messageId, conversationId, pinOperation, pinInfo)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

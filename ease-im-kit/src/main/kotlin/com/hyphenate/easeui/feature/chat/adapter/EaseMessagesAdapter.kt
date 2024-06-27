@@ -73,7 +73,7 @@ open class EaseMessagesAdapter(
         }
 
         if (position == highlightPosition) {
-            val outLayout: View = holder.itemView.findViewById(R.id.cl_bubble_out)
+            val outLayout: View? = holder.itemView.findViewById(R.id.cl_bubble_out)
             outLayout?.let { startAnimator(it) } ?: startAnimator(holder.itemView)
             highlightPosition = -1
         }

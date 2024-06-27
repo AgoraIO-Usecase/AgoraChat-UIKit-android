@@ -80,7 +80,15 @@ class EaseChatConfig {
      */
     var enableChatThreadMessage: Boolean = false
 
+    /**
+     * The config that whether to enable the function of typing message.
+     */
     var enableChatTyping: Boolean = true
+
+    /**
+     * The config that whether to enable the function of pin message.
+     */
+    var enableChatPingMessage: Boolean = true
 
     /**
      * Set the time period within which messages can be recalled, in milliseconds

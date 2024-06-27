@@ -75,6 +75,7 @@
     <string name="ease_action_hide_translation">Hide translation</string>
     <string name="ease_action_multi_select">Select</string>
     <string name="ease_action_thread">Create a Thread</string>
+    <string name="ease_action_pin">Pin</string>
 
     <!-- chat record -->
     <string name="ease_chat_record_voice_record">Tap to Record</string>
@@ -294,5 +295,9 @@
     <string name="ease_search_block_user">Search</string>
 
     <string name="ease_url_preview_parsing">Parsing…</string>
+
+    <string name="pin_info_view_text">Pin Message</string>
+    <string name="ease_pin_list_item_delete">Delete</string>
+    <string name="ease_pin_list_item_confirm_delete">Confirm</string>
 
 </resources>

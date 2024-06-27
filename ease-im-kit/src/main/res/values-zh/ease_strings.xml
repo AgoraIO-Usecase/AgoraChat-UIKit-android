@@ -74,6 +74,7 @@
     <string name="ease_action_hide_translation">隐藏翻译</string>
     <string name="ease_action_multi_select">多选</string>
     <string name="ease_action_thread">创建话题</string>
+    <string name="ease_action_pin">置顶</string>
 
     <!-- chat record -->
     <string name="ease_chat_record_voice_record">点击录音</string>
@@ -294,5 +295,9 @@
     <string name="ease_search_block_user">搜索</string>
 
     <string name="ease_url_preview_parsing">解析中…</string>
+
+    <string name="pin_info_view_text">Pin Message</string>
+    <string name="ease_pin_list_item_delete">删除</string>
+    <string name="ease_pin_list_item_confirm_delete">确认删除</string>
 
 </resources>
