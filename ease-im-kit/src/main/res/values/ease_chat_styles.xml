@@ -775,11 +775,13 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">left|center_vertical</item>
-        <item name="android:textColor">@color/ease_color_text_secondary</item>
+        <item name="android:textColor">@color/ease_color_text_on_container</item>
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="ease_chat_row_receive_user_card_contact_id_style" parent="ease_chat_row_user_card_contact_id_style"/>
+    <style name="ease_chat_row_receive_user_card_contact_id_style" parent="ease_chat_row_user_card_contact_id_style">
+        <item name="android:textColor">@color/ease_color_on_background_low</item>
+    </style>
 
     <style name="ease_chat_row_user_card_contact_line_style">
         <item name="android:layout_width">@dimen/ease_size_0</item>

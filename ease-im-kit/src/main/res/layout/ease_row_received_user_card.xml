@@ -56,6 +56,7 @@
 
             <TextView
                 android:id="@+id/user_id"
+                app:layout_goneMarginStart="@dimen/ease_size_12"
                 app:layout_constraintTop_toBottomOf="@id/user_nick_name"
                 app:layout_constraintStart_toStartOf="@id/user_nick_name"
                 app:layout_constraintBottom_toBottomOf="@id/head_Image_view"
