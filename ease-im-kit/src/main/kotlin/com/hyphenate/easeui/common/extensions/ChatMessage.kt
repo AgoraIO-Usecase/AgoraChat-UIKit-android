@@ -230,9 +230,9 @@ internal fun ChatMessage.createNotifyPinMessage(operationUser: String?): ChatMes
     val msgNotification = ChatMessage.createReceiveMessage(ChatMessageType.TXT)
     var content:String
     content = if (pinnedInfo() == null || TextUtils.isEmpty(pinnedInfo().operatorId())) {
-        "${userInfo?.getRemarkOrName()} removed a pin message"
+        "${userInfo?.getRemarkOrName()?:operationUser} removed a pin message"
     } else {
-        "${userInfo?.getRemarkOrName()} pinned a message"
+        "${userInfo?.getRemarkOrName()?:operationUser} pinned a message"
     }
     operationUser?.let {
         if (TextUtils.equals(it, ChatClient.getInstance().currentUser)) {

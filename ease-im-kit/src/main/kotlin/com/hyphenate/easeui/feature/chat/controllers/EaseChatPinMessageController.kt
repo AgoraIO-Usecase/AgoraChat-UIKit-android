@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter
 import com.hyphenate.easeui.common.ChatClient
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.extensions.createNotifyPinMessage
 import com.hyphenate.easeui.common.extensions.dpToPx
@@ -105,7 +106,7 @@ class EaseChatPinMessageController(
     fun updatePinMessage(message:ChatMessage?,operationUser:String?){
         CoroutineScope(Dispatchers.Main).launch {
             val isPined: Boolean = message?.pinnedInfo() == null || message.pinnedInfo().operatorId().isEmpty()
-            context.showToast(if (isPined) "unpin success" else "pin success")
+            ChatLog.d("updatePinMessage",if (isPined) "unpin success" else "pin success")
             if (isPined) {
                 removeData(message)
             } else {
