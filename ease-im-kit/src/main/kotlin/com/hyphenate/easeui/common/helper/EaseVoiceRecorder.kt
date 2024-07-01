@@ -71,7 +71,7 @@ class EaseVoiceRecorder(
                 }
             }
         } catch (e: IOException) {
-            ChatLog.e("voice", "prepare() failed")
+            ChatLog.e("voice", "prepare() failed ${e.message}")
             errorListener?.onError(EaseError.EASE_RECORD_ERROR, e.message)
         }
         Thread {
@@ -101,6 +101,12 @@ class EaseVoiceRecorder(
             } else {
                 val conversation = ChatClient.getInstance().chatManager().getConversation(conversationId)
                 if (conversation != null) {
+                    if (conversation.messageAttachmentPath.isNotEmpty()){
+                        val file = File(conversation.messageAttachmentPath)
+                        if (!file.exists()){
+                            file.mkdirs()
+                        }
+                    }
                     conversation.messageAttachmentPath + "/" + voiceFileName
                 } else {
                     ChatPathUtils.getInstance().voicePath.toString() + "/" + voiceFileName
