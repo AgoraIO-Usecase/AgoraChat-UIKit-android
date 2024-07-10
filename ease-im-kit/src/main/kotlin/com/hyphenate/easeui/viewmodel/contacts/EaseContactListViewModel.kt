@@ -217,8 +217,8 @@ open class EaseContactListViewModel(
         }
     }
 
-    override fun fetchContactInfo(contactList: List<EaseUser>) {
-        val requestList = contactList.filter { user ->
+    override fun fetchContactInfo(contactList: List<EaseUser>?) {
+        val requestList = contactList?.filter { user ->
             val u = EaseIM.getCache().getUser(user.userId) ?: return@filter true
             u.avatar.isNullOrEmpty() || u.name.isNullOrEmpty()
         }

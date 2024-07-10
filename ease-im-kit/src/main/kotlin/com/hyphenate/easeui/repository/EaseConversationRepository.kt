@@ -1,5 +1,6 @@
 package com.hyphenate.easeui.repository
 
+import android.util.Log
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatConversationType
@@ -209,6 +210,9 @@ class EaseConversationRepository(
                 }.map {
                     it.conversationId
                 }
+            userList.map {
+                Log.e("apex","fetchConvUserInfo 2 $it")
+            }
             EaseIM.getUserProvider()?.fetchUsersBySuspend(userList)
         }
 }

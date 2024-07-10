@@ -92,7 +92,7 @@ class EaseChatPinMessageListViewGroup @JvmOverloads constructor(
         return super.dispatchTouchEvent(event)
     }
 
-    fun setData(data: MutableList<ChatMessage>?) {
+    private fun setData(data: MutableList<ChatMessage>?) {
         data?.let {
             tvCount?.text = "${it.size} Pin Message"
             adapter?.setData(it)

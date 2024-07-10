@@ -153,12 +153,10 @@ open class EaseConversationListViewModel(
             .catchChatException {  }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
             .collect {
-                if (it != null) {
-                    it?.forEach { item ->
-                        EaseIM.getCache().insertGroup(item.id, item)
-                    }
-                    view?.fetchConversationInfoByUserSuccess(it)
+                it?.forEach { item ->
+                    EaseIM.getCache().insertGroup(item.id, item)
                 }
+                view?.fetchConversationInfoByUserSuccess(it)
             }
         }
     }
@@ -171,12 +169,10 @@ open class EaseConversationListViewModel(
                 .catchChatException {  }
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
                 .collect {
-                    if (it != null) {
-                        it?.forEach { item ->
-                            EaseIM.getCache().insertUser(item)
-                        }
-                        view?.fetchConversationInfoByUserSuccess(it)
+                    it?.forEach { item ->
+                        EaseIM.getCache().insertUser(item)
                     }
+                    view?.fetchConversationInfoByUserSuccess(it)
                 }
         }
     }

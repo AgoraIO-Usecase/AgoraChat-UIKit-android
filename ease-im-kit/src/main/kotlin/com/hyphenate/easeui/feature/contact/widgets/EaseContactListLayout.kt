@@ -139,7 +139,7 @@ class EaseContactListLayout@JvmOverloads constructor(
                         index in firstVisibleItemPosition..lastVisibleItemPosition
                     }
                     if (!visibleList.isNullOrEmpty()) {
-                        contactViewModel?.fetchContactInfo(visibleList)
+                        fetchContactInfo(visibleList)
                     }
                 }
             }
@@ -161,6 +161,10 @@ class EaseContactListLayout@JvmOverloads constructor(
 
     fun loadContactData(fetchServerData: Boolean) {
         contactViewModel?.loadData(fetchServerData)
+    }
+
+    fun fetchContactInfo(visibleList:List<EaseUser>?){
+        contactViewModel?.fetchContactInfo(visibleList)
     }
 
     override fun setViewModel(viewModel: IContactListRequest?) {
@@ -199,7 +203,7 @@ class EaseContactListLayout@JvmOverloads constructor(
         when(viewType){
             EaseListViewType.LIST_CONTACT -> {  loadContactData(true) }
             EaseListViewType.LIST_SELECT_CONTACT -> { loadContactData(false) }
-            else -> {}
+            else -> { loadContactData(false) }
         }
     }
 

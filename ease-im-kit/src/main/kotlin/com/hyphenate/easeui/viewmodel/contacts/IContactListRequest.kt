@@ -71,7 +71,7 @@ interface IContactListRequest : IAttachView {
     /**
      * Fetch contact information from user.
      */
-    fun fetchContactInfo(contactList: List<EaseUser>)
+    fun fetchContactInfo(contactList: List<EaseUser>?)
 
     /**
      * Set the DND of the conversation.

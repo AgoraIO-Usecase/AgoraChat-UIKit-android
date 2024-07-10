@@ -369,13 +369,11 @@
     <style name="ease_chat_row_receive_bubble_style" parent="ease_chat_row_bubble_style">
         <item name="android:layout_marginStart">@dimen/ease_size_10</item>
         <item name="android:background">@drawable/ease_chat_row_receive_bubble_bg</item>
-        <item name="android:paddingStart">@dimen/ease_size_5</item>
     </style>
 
     <style name="ease_chat_row_send_bubble_style" parent="ease_chat_row_bubble_style">
         <item name="android:layout_marginEnd">@dimen/ease_size_10</item>
         <item name="android:background">@drawable/ease_chat_row_sent_bubble_bg</item>
-        <item name="android:paddingEnd">@dimen/ease_size_5</item>
     </style>
 
     <style name="ease_chat_row_receive_file_bubble_style" parent="ease_chat_row_receive_bubble_style">

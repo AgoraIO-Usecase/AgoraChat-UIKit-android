@@ -18,6 +18,7 @@ import com.hyphenate.easeui.common.ChatMultiDeviceListener
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.databinding.FragmentConversationListLayoutBinding
+import com.hyphenate.easeui.feature.contact.interfaces.OnLoadConversationListener
 import com.hyphenate.easeui.feature.conversation.adapter.EaseConversationListAdapter
 import com.hyphenate.easeui.feature.conversation.controllers.EaseConvDialogController
 import com.hyphenate.easeui.feature.conversation.interfaces.OnConversationListChangeListener
@@ -33,6 +34,7 @@ import com.hyphenate.easeui.interfaces.OnItemClickListener
 import com.hyphenate.easeui.interfaces.OnItemDataClickListener
 import com.hyphenate.easeui.interfaces.OnItemLongClickListener
 import com.hyphenate.easeui.interfaces.OnMenuItemClickListener
+import com.hyphenate.easeui.model.EaseConversation
 import com.hyphenate.easeui.model.EaseEvent
 import com.hyphenate.easeui.model.EaseMenuItem
 import com.hyphenate.easeui.model.getChatType
@@ -40,7 +42,7 @@ import com.hyphenate.easeui.viewmodel.contacts.EaseContactListViewModel
 
 open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationListLayoutBinding>(),
     OnItemClickListener, OnItemLongClickListener, OnMenuItemClickListener,
-    Toolbar.OnMenuItemClickListener {
+    Toolbar.OnMenuItemClickListener, OnLoadConversationListener {
 
     private val dialogController by lazy { EaseConvDialogController(mContext, this) }
     private val contactViewModel by lazy { ViewModelProvider(this)[EaseContactListViewModel::class.java] }
@@ -139,6 +141,7 @@ open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationLi
         binding?.listConversation?.setOnItemLongClickListener(this)
         binding?.listConversation?.setOnMenuItemClickListener(this)
         binding?.titleConversations?.setOnMenuItemClickListener(this)
+        binding?.listConversation?.setLoadConversationListener(this)
         EaseIM.addContactListener(contactListener)
         EaseIM.addConversationListener(conversationListener)
         EaseIM.addGroupChangeListener(groupChangeListener)
@@ -244,6 +247,10 @@ open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationLi
 
     override fun onItemLongClick(view: View?, position: Int): Boolean {
         return itemLongClickListener?.onItemLongClick(view, position) ?: false
+    }
+
+    override fun loadConversationListSuccess(userList: List<EaseConversation>) {
+
     }
 
     override fun onMenuItemClick(item: EaseMenuItem?, position: Int): Boolean {

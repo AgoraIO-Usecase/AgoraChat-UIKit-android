@@ -25,6 +25,7 @@ class EaseChatPinMessageController(
     private val viewModel: IChatViewRequest?
 ) {
     private var pinMessageListView: EaseChatPinMessageListViewGroup? = null
+    private var pinMessageMap: MutableMap<String,ChatMessage> = mutableMapOf()
     private val pinMessages: MutableList<ChatMessage> = mutableListOf()
     private var isShowPinView = false
 
@@ -131,27 +132,40 @@ class EaseChatPinMessageController(
 
     fun setData(messages:MutableList<ChatMessage>?){
         pinMessages.clear()
-        if (!messages.isNullOrEmpty()) {
-            pinMessages.addAll(0, messages)
+        messages?.let {
+            it.map { msg->
+                pinMessageMap[msg.msgId] = msg
+            }
+            val list = sortedByMapValue()
+            pinMessages.addAll(0,list)
+            pinMessageListView?.show(pinMessages)
         }
     }
 
+    private fun sortedByMapValue():MutableList<ChatMessage>{
+        val list = pinMessageMap.values.toMutableList()
+        return list.sortedByDescending { sortMsg-> sortMsg.pinnedInfo().pinTime() }.toMutableList()
+    }
+
     fun addData(message: ChatMessage?) {
-        if (message != null) {
-            pinMessages.add(0, message)
-            pinMessageListView?.addData(message)
+        pinMessages.clear()
+        message?.let {
+            pinMessageMap[message.msgId] = it
+            val list = sortedByMapValue()
+            pinMessages.addAll(0,list)
+            pinMessageListView?.show(pinMessages)
         }
     }
 
     fun removeData(message: ChatMessage?) {
-        if (message != null) {
-            for (i in pinMessages.indices) {
-                if (pinMessages[i].msgId.equals(message.msgId)) {
-                    pinMessages.remove(message)
-                    break
-                }
+        pinMessages.clear()
+        message?.let {
+            if (pinMessageMap.containsKey(it.msgId)){
+                pinMessageMap.remove(it.msgId)
             }
-            pinMessageListView?.removeData(message)
+            val list = sortedByMapValue()
+            pinMessages.addAll(0,list)
+            pinMessageListView?.removeData(it)
         }
     }
 

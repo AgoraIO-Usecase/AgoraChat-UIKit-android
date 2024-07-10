@@ -113,10 +113,9 @@ open class EaseContactListRepository(
     /**
      * Fetch user information from user.
      */
-    suspend fun fetchContactInfo(contactList: List<EaseUser>) =
+    suspend fun fetchContactInfo(contactList: List<EaseUser>?) =
         withContext(Dispatchers.IO) {
-            val userList = contactList
-                .map { it.userId }
+            val userList = contactList?.map { it.userId }
             EaseIM.getUserProvider()?.fetchUsersBySuspend(userList)
         }
 }

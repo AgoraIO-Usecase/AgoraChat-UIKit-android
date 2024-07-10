@@ -136,6 +136,8 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
                 val isShowSidebar = getBoolean(Constant.KEY_SIDEBAR_VISIBLE,true)
                 listContact.setSideBarVisible(isShowSidebar)
             }
+        }?:kotlin.run {
+            refreshData()
         }
     }
 
@@ -225,7 +227,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
     }
 
     override fun initData() {
-        super.initData()
         EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.REMOVE.name).register(viewLifecycleOwner) { event ->
             if (event.isContactChange) {
                 refreshData()
@@ -241,7 +242,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
                 refreshRequest()
             }
         }
-
     }
 
     private fun refreshData() {
@@ -271,6 +271,9 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
         }
     }
 
+    fun fetchContactInfo(visibleList:List<EaseUser>?){
+        binding?.listContact?.fetchContactInfo(visibleList)
+    }
 
     override fun loadContactListSuccess(userList: MutableList<EaseUser>) {
 

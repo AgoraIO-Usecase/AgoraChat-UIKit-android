@@ -26,11 +26,13 @@ interface EaseUserProfileProvider {
 /**
  * Suspended function for fetching user information.
  */
-suspend fun EaseUserProfileProvider.fetchUsersBySuspend(userIds: List<String>): List<EaseProfile> {
+suspend fun EaseUserProfileProvider.fetchUsersBySuspend(userIds: List<String>?): List<EaseProfile> {
     return suspendCoroutine { continuation ->
-        fetchUsers(userIds, onValueSuccess = { map ->
-            continuation.resume(map)
-        })
+        userIds?.let {
+            fetchUsers(it, onValueSuccess = { map ->
+                continuation.resume(map)
+            })
+        }
     }
 }
 

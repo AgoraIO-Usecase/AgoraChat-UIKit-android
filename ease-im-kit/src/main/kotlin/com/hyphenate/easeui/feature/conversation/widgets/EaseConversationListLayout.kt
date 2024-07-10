@@ -23,6 +23,7 @@ import com.hyphenate.easeui.common.impl.OnItemClickListenerImpl
 import com.hyphenate.easeui.common.impl.OnItemLongClickListenerImpl
 import com.hyphenate.easeui.common.impl.OnMenuItemClickListenerImpl
 import com.hyphenate.easeui.databinding.EaseConversationListBinding
+import com.hyphenate.easeui.feature.contact.interfaces.OnLoadConversationListener
 import com.hyphenate.easeui.feature.conversation.adapter.EaseConversationListAdapter
 import com.hyphenate.easeui.feature.conversation.config.EaseConvItemConfig
 import com.hyphenate.easeui.feature.conversation.interfaces.IConvItemStyle
@@ -90,6 +91,13 @@ class EaseConversationListLayout @JvmOverloads constructor(
     private var conversationChangeListener: OnConversationListChangeListener? = null
 
     private var listViewModel: IConversationListRequest? = null
+
+    /**
+     * Conversation list load listener.
+     */
+    private var conversationLoadListener: OnLoadConversationListener? = null
+
+    val conversationList: RecyclerView get() = binding.rvList
 
     /**
      * Concat adapter
@@ -299,6 +307,14 @@ class EaseConversationListLayout @JvmOverloads constructor(
         listViewModel?.loadData()
     }
 
+    fun fetchConvUserInfo(visibleList:List<EaseConversation>){
+        listViewModel?.fetchConvUserInfo(visibleList)
+    }
+
+    override fun setLoadConversationListener(listener: OnLoadConversationListener) {
+       this.conversationLoadListener = listener
+    }
+
     /**
      * Notify data changed
      */
@@ -465,10 +481,12 @@ class EaseConversationListLayout @JvmOverloads constructor(
         // Notify to load conversation successfully
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD + EaseEvent.TYPE.CONVERSATION)
             .post(lifecycleScope, EaseEvent(EaseEvent.EVENT.ADD + EaseEvent.TYPE.CONVERSATION, EaseEvent.TYPE.CONVERSATION))
+        conversationLoadListener?.loadConversationListSuccess(list)
     }
 
     override fun loadConversationListFail(code: Int, error: String) {
         binding.refreshLayout.finishRefresh()
+        conversationLoadListener?.loadConversationListFail(code,error)
     }
 
     override fun loadLocalConversationListFinished(list: List<EaseConversation>) {
@@ -478,11 +496,13 @@ class EaseConversationListLayout @JvmOverloads constructor(
             // Notify to load conversation successfully
             EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD + EaseEvent.TYPE.CONVERSATION)
                 .post(lifecycleScope, EaseEvent(EaseEvent.EVENT.ADD + EaseEvent.TYPE.CONVERSATION, EaseEvent.TYPE.CONVERSATION))
+            conversationLoadListener?.loadConversationListSuccess(list)
         }
     }
 
     override fun sortConversationListFinish(conversations: List<EaseConversation>) {
         listAdapter?.setData(conversations.toMutableList())
+        conversationLoadListener?.loadConversationListSuccess(conversations)
     }
 
     override fun makeConversionReadSuccess(position: Int, conversation: EaseConversation) {

@@ -328,7 +328,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
 
     private fun defaultSkipLogic() {
         if (chatType == EaseChatType.SINGLE_CHAT) {
-            startActivity(EaseContactDetailsActivity.createIntent(mContext
+            startActivity(EaseContactCheckActivity.createIntent(mContext
                 , EaseIM.getCache().getUser(conversationId!!)?.toUser() ?: EaseUser(conversationId!!)))
         } else if (chatType == EaseChatType.GROUP_CHAT){
             if (!isThread){
