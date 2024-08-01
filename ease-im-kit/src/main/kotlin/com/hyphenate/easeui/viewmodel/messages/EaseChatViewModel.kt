@@ -35,10 +35,12 @@ import com.hyphenate.easeui.repository.EaseChatManagerRepository
 import com.hyphenate.easeui.common.enums.EaseReplyMap
 import com.hyphenate.easeui.common.extensions.send
 import com.hyphenate.easeui.common.suspends.deleteMessage
+import com.hyphenate.easeui.common.utils.EaseImageUtils
 import com.hyphenate.easeui.common.utils.createExpressionMessage
 import com.hyphenate.easeui.feature.chat.enums.EaseLoadDataType
 import com.hyphenate.easeui.feature.chat.forward.helper.EaseChatMessageMultiSelectHelper
 import com.hyphenate.easeui.repository.EasePresenceRepository
+import com.hyphenate.util.ImageUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -185,9 +187,17 @@ open class EaseChatViewModel: EaseBaseViewModel<IHandleChatResultView>(), IChatV
     }
 
     override fun sendImageMessage(imageUri: Uri?, sendOriginalImage: Boolean) {
+
         safeInConvScope {
+            //Compatible with web and does not support heif image terminal
+            //convert heif format to jpeg general image format
+            val uri = EaseImageUtils.handleImageHeifToJpeg(
+                EaseIM.getContext(),
+                imageUri,
+                it.messageAttachmentPath
+            )
             val message =
-                ChatMessage.createImageSendMessage(imageUri, sendOriginalImage, it.conversationId())
+                ChatMessage.createImageSendMessage(uri, sendOriginalImage, it.conversationId())
             sendMessage(message)
         }
     }
