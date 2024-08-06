@@ -1,4 +1,4 @@
-package com.hyphenate.easeui.feature.group.fragment
+package com.hyphenate.easeui.feature.group.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,11 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hyphenate.chat.EMGroup
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.base.EaseBaseFragment
-import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatGroup
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.EaseConstant
@@ -49,7 +47,7 @@ open class EaseGroupListFragment: EaseBaseFragment<EaseFragmentGroupListBinding>
             refreshData()
         }
 
-        override fun onSpecificationChanged(group: EMGroup?) {
+        override fun onSpecificationChanged(group: ChatGroup?) {
             refreshData()
         }
 

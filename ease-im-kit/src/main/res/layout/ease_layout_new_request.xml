@@ -13,7 +13,6 @@
         android:layout_height="@dimen/ease_toolbar_height"
         app:titleBarDisplayHomeAsUpEnabled="true"
         app:titleBarTitle="@string/ease_new_invitation"
-        app:titleBarMenu="@menu/menu_new_request_add_contact"
         app:titleBarMenuIconTint="@color/ease_color_on_background"/>
 
     <com.hyphenate.easeui.widget.RefreshLayout

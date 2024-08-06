@@ -309,20 +309,20 @@ open class EaseGroupViewModel(
     }
 
 
-    override fun deleteConversation(conversationId: String?) {
+    override fun clearConversationMessage(conversationId: String?) {
         viewModelScope.launch {
             ChatClient.getInstance().chatManager().getConversation(conversationId,ChatConversationType.GroupChat)?.parse()?.let {
                 flow {
-                    emit(convRepository.deleteConversation(it))
+                    emit(convRepository.clearConversationMessage(it))
                 }
                     .catchChatException { e ->
-                        view?.deleteConversationByGroupFail(e.errorCode,e.description)
+                        view?.clearConversationByGroupFail(e.errorCode,e.description)
                     }
                     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), ChatError.GENERAL_ERROR)
                     .collectWithCheckErrorCode {
-                        view?.deleteConversationByGroupSuccess(conversationId)
+                        view?.clearConversationByGroupSuccess(conversationId)
                     }
-            } ?: view?.deleteConversationByGroupFail(ChatError.INVALID_PARAM,"conversation is null")
+            } ?: view?.clearConversationByGroupFail(ChatError.INVALID_PARAM,"conversation is null")
         }
     }
 

@@ -1,7 +1,7 @@
 package com.hyphenate.easeui.common.suspends
 
-import com.hyphenate.EMCallBack
-import com.hyphenate.EMValueCallBack
+import com.hyphenate.easeui.common.ChatCallback
+import com.hyphenate.easeui.common.ChatValueCallback
 import com.hyphenate.easeui.common.ChatConversation
 import com.hyphenate.easeui.common.ChatConversationType
 import com.hyphenate.easeui.common.ChatCursorResult
@@ -405,7 +405,7 @@ suspend fun ChatManager.searchMessage(
 suspend fun ChatManager.pinChatMessage(messageId: String?):Int{
     return suspendCoroutine { continuation ->
         messageId?.let {
-            asyncPinMessage(it,object: EMCallBack{
+            asyncPinMessage(it,object: ChatCallback{
 
                 override fun onSuccess() {
                     continuation.resume(ChatError.EM_NO_ERROR)
@@ -424,7 +424,7 @@ suspend fun ChatManager.pinChatMessage(messageId: String?):Int{
 suspend fun ChatManager.unPinChatMessage(messageId: String?):Int{
     return suspendCoroutine { continuation ->
         messageId?.let {
-            asyncUnPinMessage(it,object: EMCallBack{
+            asyncUnPinMessage(it,object: ChatCallback{
 
                 override fun onSuccess() {
                     continuation.resume(ChatError.EM_NO_ERROR)
@@ -443,7 +443,7 @@ suspend fun ChatManager.unPinChatMessage(messageId: String?):Int{
 suspend fun ChatManager.fetchPinChatMessageFromServer(conversationId:String?):MutableList<ChatMessage>?{
     return suspendCoroutine { continuation ->
         conversationId?.let {
-            asyncGetPinnedMessagesFromServer(it,object : EMValueCallBack<MutableList<ChatMessage>>{
+            asyncGetPinnedMessagesFromServer(it,object : ChatValueCallback<MutableList<ChatMessage>>{
                 override fun onSuccess(value: MutableList<ChatMessage>?) {
                     continuation.resume(value)
                 }

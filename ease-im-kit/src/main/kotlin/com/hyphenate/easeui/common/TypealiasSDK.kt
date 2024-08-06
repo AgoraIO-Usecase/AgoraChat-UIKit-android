@@ -37,6 +37,9 @@ typealias ChatGroupOptions = com.hyphenate.chat.EMGroupOptions
 typealias ChatShareFile = com.hyphenate.chat.EMMucSharedFile
 typealias ChatGroupReadAck = com.hyphenate.chat.EMGroupReadAck
 
+//Contact
+typealias ChatContact = com.hyphenate.chat.EMContact
+
 // utils
 typealias ChatImageUtils = com.hyphenate.util.ImageUtils
 typealias ChatPathUtils = com.hyphenate.util.PathUtil
@@ -86,6 +89,10 @@ typealias ChatPresence = com.hyphenate.chat.EMPresence
 // thread
 typealias ChatThread = com.hyphenate.chat.EMChatThread
 typealias ChatThreadEvent = com.hyphenate.chat.EMChatThreadEvent
+
+// pin
+typealias ChatMessagePinInfo = com.hyphenate.chat.EMMessagePinInfo
+typealias ChatMessagePinOperation = com.hyphenate.chat.EMMessagePinInfo.PinOperation
 
 // push
 typealias ChatPushHelper = com.hyphenate.push.EMPushHelper

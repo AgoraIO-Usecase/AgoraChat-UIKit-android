@@ -19,6 +19,7 @@ class EaseNewChatBottomSheetFragment: EaseContainChildBottomSheetFragment() {
                 .useTitleBar(true)
                 .setTitleBarTitle(getString(R.string.ease_chat_new_conversation))
                 .useSearchBar(true)
+                .setDefaultMenuVisible(false)
                 .enableTitleBarPressBack(true)
                 .setTitleBarBackPressListener {
                     hide()

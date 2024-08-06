@@ -2,7 +2,6 @@ package com.hyphenate.easeui.feature.conversation.interfaces
 
 import com.hyphenate.easeui.feature.conversation.adapter.EaseConversationListAdapter
 import com.hyphenate.easeui.common.interfaces.IRecyclerView
-import com.hyphenate.easeui.feature.contact.interfaces.OnLoadConversationListener
 import com.hyphenate.easeui.model.EaseConversation
 import com.hyphenate.easeui.viewmodel.conversations.IConversationListRequest
 

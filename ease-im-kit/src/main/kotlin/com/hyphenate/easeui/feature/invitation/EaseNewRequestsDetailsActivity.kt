@@ -5,17 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import coil.load
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.base.EaseBaseActivity
-import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.hasRoute
 import com.hyphenate.easeui.databinding.EaseLayoutNewRequestDetailsBinding
 import com.hyphenate.easeui.feature.contact.interfaces.IEaseContactResultView
-import com.hyphenate.easeui.model.EaseEvent
 import com.hyphenate.easeui.model.EaseUser
 import com.hyphenate.easeui.model.getNickname
 import com.hyphenate.easeui.viewmodel.contacts.EaseContactListViewModel
@@ -71,9 +68,7 @@ class EaseNewRequestsDetailsActivity: EaseBaseActivity<EaseLayoutNewRequestDetai
         }
     }
 
-    override fun addContactSuccess() {
-        EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.ADD.name)
-            .post(lifecycleScope, EaseEvent(EaseEvent.EVENT.ADD.name, EaseEvent.TYPE.CONTACT))
+    override fun addContactSuccess(userId: String) {
         finish()
     }
 

@@ -23,7 +23,7 @@ import com.hyphenate.easeui.common.impl.OnItemClickListenerImpl
 import com.hyphenate.easeui.common.impl.OnItemLongClickListenerImpl
 import com.hyphenate.easeui.common.impl.OnMenuItemClickListenerImpl
 import com.hyphenate.easeui.databinding.EaseConversationListBinding
-import com.hyphenate.easeui.feature.contact.interfaces.OnLoadConversationListener
+import com.hyphenate.easeui.feature.conversation.interfaces.OnLoadConversationListener
 import com.hyphenate.easeui.feature.conversation.adapter.EaseConversationListAdapter
 import com.hyphenate.easeui.feature.conversation.config.EaseConvItemConfig
 import com.hyphenate.easeui.feature.conversation.interfaces.IConvItemStyle
@@ -478,26 +478,16 @@ class EaseConversationListLayout @JvmOverloads constructor(
         binding.refreshLayout.finishRefresh()
         listAdapter?.setData(list.toMutableList())
         conversationChangeListener?.notifyAllChange()
+        conversationLoadListener?.loadConversationListSuccess(list)
         // Notify to load conversation successfully
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD + EaseEvent.TYPE.CONVERSATION)
             .post(lifecycleScope, EaseEvent(EaseEvent.EVENT.ADD + EaseEvent.TYPE.CONVERSATION, EaseEvent.TYPE.CONVERSATION))
-        conversationLoadListener?.loadConversationListSuccess(list)
+
     }
 
     override fun loadConversationListFail(code: Int, error: String) {
         binding.refreshLayout.finishRefresh()
         conversationLoadListener?.loadConversationListFail(code,error)
-    }
-
-    override fun loadLocalConversationListFinished(list: List<EaseConversation>) {
-        if (list.isNotEmpty()){
-            listAdapter?.setData(list.toMutableList())
-            conversationChangeListener?.notifyAllChange()
-            // Notify to load conversation successfully
-            EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD + EaseEvent.TYPE.CONVERSATION)
-                .post(lifecycleScope, EaseEvent(EaseEvent.EVENT.ADD + EaseEvent.TYPE.CONVERSATION, EaseEvent.TYPE.CONVERSATION))
-            conversationLoadListener?.loadConversationListSuccess(list)
-        }
     }
 
     override fun sortConversationListFinish(conversations: List<EaseConversation>) {

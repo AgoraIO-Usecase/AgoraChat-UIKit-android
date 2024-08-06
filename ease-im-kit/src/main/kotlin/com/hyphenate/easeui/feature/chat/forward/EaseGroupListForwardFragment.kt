@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.hyphenate.easeui.feature.chat.forward.adapter.EaseGroupListForwardAdapter
 import com.hyphenate.easeui.feature.group.adapter.EaseGroupListAdapter
-import com.hyphenate.easeui.feature.group.fragment.EaseGroupListFragment
+import com.hyphenate.easeui.feature.group.fragments.EaseGroupListFragment
 import com.hyphenate.easeui.interfaces.OnForwardClickListener
 
 class EaseGroupListForwardFragment: EaseGroupListFragment() {

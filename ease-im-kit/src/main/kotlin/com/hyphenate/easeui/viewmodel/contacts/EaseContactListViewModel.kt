@@ -7,14 +7,16 @@ import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatContactManager
 import com.hyphenate.easeui.common.ChatConversationType
 import com.hyphenate.easeui.common.ChatError
+import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatLog
+import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.collectWithCheckErrorCode
 import com.hyphenate.easeui.common.extensions.parse
 import com.hyphenate.easeui.common.extensions.toUser
 import com.hyphenate.easeui.common.helper.ContactSortedHelper
-import com.hyphenate.easeui.common.helper.EasePreferenceManager
 import com.hyphenate.easeui.feature.contact.interfaces.IEaseContactResultView
+import com.hyphenate.easeui.model.EaseEvent
 import com.hyphenate.easeui.model.EaseUser
 import com.hyphenate.easeui.model.setUserInitialLetter
 import com.hyphenate.easeui.repository.EaseContactListRepository
@@ -36,13 +38,20 @@ open class EaseContactListViewModel(
 
     override fun loadData(fetchServerData: Boolean){
         viewModelScope.launch {
-            if (fetchServerData || !EasePreferenceManager.getInstance().isLoadedContactFromServer()) {
+            if (fetchServerData) {
                 flow {
-                    emit(repository.loadLocalContact())
+                    try {
+                        emit(repository.loadData())
+                    } catch (e:ChatException){
+                        emit(Result.failure<ChatException>(e))
+                        inMainScope{
+                            view?.loadContactListFail(e.errorCode, e.description)
+                        }
+                    }
                 }
                 .flatMapConcat {
                     flow {
-                        emit(repository.loadData())
+                        emit(repository.loadLocalContact())
                     }
                 }
             } else {
@@ -55,14 +64,15 @@ open class EaseContactListViewModel(
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
             .collect {
+                var sortedList = mutableListOf<EaseUser>()
                 val data = it
                 data?.map {
                     it.setUserInitialLetter()
                 }
                 data?.let {
-                    val sortedList = ContactSortedHelper.sortedList(it)
-                    view?.loadContactListSuccess(sortedList.toMutableList())
+                    sortedList = ContactSortedHelper.sortedList(it).toMutableList()
                 }
+                view?.loadContactListSuccess(sortedList)
             }
         }
     }
@@ -75,9 +85,11 @@ open class EaseContactListViewModel(
             .catchChatException { e ->
                 view?.addContactFail(e.errorCode,e.description)
             }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), ChatError.GENERAL_ERROR)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), userName)
             .collectWithCheckErrorCode {
-                view?.addContactSuccess()
+                EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.ADD.name)
+                    .post(viewModelScope, EaseEvent(EaseEvent.EVENT.ADD.name, EaseEvent.TYPE.CONTACT))
+                view?.addContactSuccess(it)
             }
         }
     }
@@ -200,20 +212,20 @@ open class EaseContactListViewModel(
         }
     }
 
-    override fun deleteConversation(conversationId: String?) {
+    override fun clearConversationMessage(conversationId: String?) {
         viewModelScope.launch {
             ChatClient.getInstance().chatManager().getConversation(conversationId)?.parse()?.let {
                 flow {
-                    emit(convRepository.deleteConversation(it))
+                    emit(convRepository.clearConversationMessage(it))
                 }
                 .catchChatException { e ->
-                    view?.deleteConversationFail(e.errorCode,e.description)
+                    view?.clearConversationFail(e.errorCode,e.description)
                 }
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), ChatError.GENERAL_ERROR)
                 .collectWithCheckErrorCode {
-                    view?.deleteConversationSuccess(conversationId)
+                    view?.clearConversationSuccess(conversationId)
                 }
-            } ?: view?.deleteConversationFail(ChatError.INVALID_PARAM,"conversation is null")
+            } ?: view?.clearConversationFail(ChatError.INVALID_PARAM,"conversation is null")
         }
     }
 

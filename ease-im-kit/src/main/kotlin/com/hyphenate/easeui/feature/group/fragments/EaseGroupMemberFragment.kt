@@ -1,6 +1,7 @@
-package com.hyphenate.easeui.feature.group.fragment
+package com.hyphenate.easeui.feature.group.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,7 +40,7 @@ open class EaseGroupMemberFragment:EaseBaseListFragment<EaseUser>(),IEaseGroupRe
             groupId = arguments?.getString(EaseConstant.EXTRA_CONVERSATION_ID) ?: ""
         }
         super.initView(savedInstanceState)
-
+        setSearchViewVisible(false)
         groupId?.let {
             currentGroup = ChatClient.getInstance().groupManager().getGroup(it)
         }
@@ -60,7 +61,7 @@ open class EaseGroupMemberFragment:EaseBaseListFragment<EaseUser>(),IEaseGroupRe
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                     val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
                     val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-                    val visibleList = mListAdapter?.mData?.filterIndexed { index, _ ->
+                    val visibleList = mListAdapter.mData?.filterIndexed { index, _ ->
                         index in firstVisibleItemPosition..lastVisibleItemPosition
                     }
                     groupId?.let { id ->
@@ -109,15 +110,19 @@ open class EaseGroupMemberFragment:EaseBaseListFragment<EaseUser>(),IEaseGroupRe
     }
 
     override fun fetchGroupMemberSuccess(user: List<EaseUser>) {
-        val data = user.toMutableList()
+        sortedList = user.toMutableList()
         finishRefresh()
         groupId?.let {
             val ownerInfo = currentGroup?.getOwnerInfo()
-            ownerInfo?.let { o->
-                o.setUserInitialLetter()
+            ownerInfo?.let {
+                it.setUserInitialLetter()
+                it.let { it1 ->
+                    if (!sortedList.contains(it1)){
+                        sortedList.add(it1)
+                    }
+                }
             }
-            ownerInfo?.let { it1 -> data.add(it1) }
-            sortedList = ContactSortedHelper.sortedList(data).toMutableList()
+            sortedList = ContactSortedHelper.sortedList(sortedList).toMutableList()
             mListAdapter.setData(sortedList)
             listener?.onGroupMemberLoadSuccess(sortedList)
         }
@@ -130,8 +135,11 @@ open class EaseGroupMemberFragment:EaseBaseListFragment<EaseUser>(),IEaseGroupRe
 
     override fun onItemClick(view: View?, position: Int) {
         sortedList.let {
-            if (EaseIM.getCurrentUser()?.id != it[position].userId){
-                listener?.onGroupMemberListItemClick(view,it[position])
+            ChatLog.d(TAG,"onItemClick data size ${it.size} - position:$position")
+            if (it.isNotEmpty() && it.size > position){
+                if (EaseIM.getCurrentUser()?.id != it[position].userId){
+                    listener?.onGroupMemberListItemClick(view,it[position])
+                }
             }
         }
     }
@@ -141,10 +149,21 @@ open class EaseGroupMemberFragment:EaseBaseListFragment<EaseUser>(),IEaseGroupRe
     }
 
     override fun loadLocalMemberSuccess(members: List<EaseUser>) {
+        sortedList = members.toMutableList()
         finishRefresh()
         groupId?.let {
-            mListAdapter.setData(members.toMutableList())
-            listener?.onGroupMemberLoadSuccess(members.toMutableList())
+            val ownerInfo = currentGroup?.getOwnerInfo()
+            ownerInfo?.let {
+                it.setUserInitialLetter()
+                it.let { it1 ->
+                    if (!sortedList.contains(it1)){
+                        sortedList.add(it1)
+                    }
+                }
+            }
+            sortedList = ContactSortedHelper.sortedList(sortedList).toMutableList()
+            mListAdapter.setData(sortedList)
+            listener?.onGroupMemberLoadSuccess(sortedList)
         }
     }
 

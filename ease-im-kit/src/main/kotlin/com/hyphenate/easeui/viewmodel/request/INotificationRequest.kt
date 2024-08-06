@@ -6,7 +6,7 @@ import com.hyphenate.easeui.viewmodel.IAttachView
 
 interface INotificationRequest : IAttachView {
 
-    fun getAllMessage()
+    fun loadMoreMessage(startMsgId:String?="",limit:Int)
 
     fun fetchProfileInfo(members: List<String>?)
 
@@ -15,5 +15,8 @@ interface INotificationRequest : IAttachView {
     fun refuseInvite(context: Context,msg:ChatMessage)
 
     fun removeInviteMsg(msg: ChatMessage)
+
+    fun loadLocalData()
+
 
 }

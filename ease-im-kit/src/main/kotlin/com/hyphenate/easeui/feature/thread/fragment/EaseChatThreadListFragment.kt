@@ -188,7 +188,7 @@ open class EaseChatThreadListFragment: EaseBaseFragment<EaseFragmentThreadListBi
 
     private fun updateTitle(){
         if (adapter?.mData == null){
-            binding?.titleContact?.setTitle(resources.getString(R.string.ease_thread_list_title))
+            binding?.titleContact?.setTitle(resources.getString(R.string.ease_thread_list_title,""))
         }else{
             data.let {
                 val count = "(${it.size})"

@@ -5,16 +5,17 @@ import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.viewmodel.EaseBaseViewModel
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
+import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatManager
-import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.collectWithCheckErrorCode
-import com.hyphenate.easeui.common.extensions.parse
 import com.hyphenate.easeui.feature.conversation.interfaces.IEaseConvListResultView
 import com.hyphenate.easeui.model.EaseConversation
 import com.hyphenate.easeui.repository.EaseConversationRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -29,14 +30,21 @@ open class EaseConversationListViewModel(
     override fun loadData() {
         viewModelScope.launch {
             flow {
-                emit(repository.loadData())
+                try {
+                    emit(repository.loadData())
+                } catch (e:ChatException){
+                    emit(Result.failure<ChatException>(e))
+                    inMainScope{
+                        view?.loadConversationListFail(e.errorCode, e.description)
+                    }
+                }
+            }.flatMapConcat {
+                flow {
+                    emit(repository.loadLocalConversation())
+                }
             }
             .catchChatException { e ->
                 view?.loadConversationListFail(e.errorCode, e.description)
-                val localData = chatManager.allConversationsBySort?.filter {
-                    it.conversationId() != EaseConstant.DEFAULT_SYSTEM_MESSAGE_ID && it.allMessages.isNotEmpty()
-                }?.map { it.parse() } ?: listOf()
-                view?.loadLocalConversationListFinished(localData)
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
             .collect {
@@ -174,6 +182,12 @@ open class EaseConversationListViewModel(
                     }
                     view?.fetchConversationInfoByUserSuccess(it)
                 }
+        }
+    }
+
+    private fun inMainScope(scope: ()->Unit) {
+        viewModelScope.launch(context = Dispatchers.Main) {
+            scope()
         }
     }
 

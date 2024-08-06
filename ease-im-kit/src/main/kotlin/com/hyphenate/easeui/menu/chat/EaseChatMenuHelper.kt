@@ -75,7 +75,7 @@ class EaseChatMenuHelper: EaseMenuHelper() {
             if (it.status() == ChatMessageStatus.SUCCESS && it.direct() === ChatMessageDirection.SEND) {
                 findItemVisible(R.id.action_chat_recall, canRecallMessage(it))
             }
-            if (it.status() == ChatMessageStatus.SUCCESS && it.from != ChatClient.getInstance().currentUser)
+            if (it.status() == ChatMessageStatus.SUCCESS)
                 findItemVisible(R.id.action_chat_report, true)
             if (type == ChatMessageType.TXT) findItemVisible(R.id.action_chat_copy, true)
             if (it.chatType === ChatType.GroupChat && !it.isChatThreadMessage && it.chatThread == null) {
@@ -217,7 +217,7 @@ class EaseChatMenuHelper: EaseMenuHelper() {
         val MENU_TITLES = intArrayOf(
             R.string.ease_action_copy,
             R.string.ease_action_reply,
-            R.string.ease_action_unsent,
+            R.string.ease_action_recall,
             R.string.ease_action_edit,
             R.string.ease_action_translation,
             R.string.ease_action_report,

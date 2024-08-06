@@ -3,7 +3,6 @@
     <string name="ease_search_text_hint">Search</string>
     <string name="ease_sheet_cancel">Cancel</string>
 
-
     <!-- dialog -->
     <string name="ease_dialog_black_title">Confirm Block?</string>
     <string name="ease_dialog_black">After confirming the blocking, you will not be able to receive any messages from the other party.</string>
@@ -68,7 +67,6 @@
     <string name="ease_action_forward">Forward</string>
     <string name="ease_action_recall">Recall</string>
     <string name="ease_action_delete">Delete</string>
-    <string name="ease_action_unsent">Unsend</string>
     <string name="ease_action_edit">Edit</string>
     <string name="ease_action_report">Report</string>
     <string name="ease_action_translation">Translate</string>
@@ -297,7 +295,7 @@
     <string name="ease_url_preview_parsing">Parsing…</string>
 
     <string name="pin_info_view_text">Pin Message</string>
-    <string name="ease_pin_list_item_delete">Delete</string>
+    <string name="ease_pin_list_item_delete">Remove</string>
     <string name="ease_pin_list_item_confirm_delete">Confirm</string>
 
 </resources>

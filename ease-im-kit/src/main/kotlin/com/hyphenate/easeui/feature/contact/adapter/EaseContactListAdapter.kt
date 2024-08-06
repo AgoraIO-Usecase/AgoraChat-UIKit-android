@@ -6,7 +6,7 @@ import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter
 import com.hyphenate.easeui.common.enums.EaseListViewType
 import com.hyphenate.easeui.feature.contact.viewholders.ContactViewHolder
 import com.hyphenate.easeui.feature.contact.item.EaseUserContactItem
-import com.hyphenate.easeui.feature.group.viewholder.EaseSelectContactViewHolder
+import com.hyphenate.easeui.feature.group.viewholders.EaseSelectContactViewHolder
 import com.hyphenate.easeui.feature.search.interfaces.OnContactSelectListener
 import com.hyphenate.easeui.interfaces.OnUserListItemClickListener
 import com.hyphenate.easeui.model.EaseUser

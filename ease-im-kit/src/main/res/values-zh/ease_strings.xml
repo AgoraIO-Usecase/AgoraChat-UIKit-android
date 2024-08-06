@@ -67,7 +67,6 @@
     <string name="ease_action_forward">转发</string>
     <string name="ease_action_recall">撤回</string>
     <string name="ease_action_delete">删除</string>
-    <string name="ease_action_unsent">撤回</string>
     <string name="ease_action_edit">编辑</string>
     <string name="ease_action_report">举报</string>
     <string name="ease_action_translation">翻译</string>

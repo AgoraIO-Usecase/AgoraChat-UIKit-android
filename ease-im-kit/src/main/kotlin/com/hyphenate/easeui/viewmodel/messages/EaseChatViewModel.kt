@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatCallback
-import com.hyphenate.easeui.viewmodel.EaseBaseViewModel
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatCmdMessageBody
 import com.hyphenate.easeui.common.ChatConversation
@@ -20,24 +19,25 @@ import com.hyphenate.easeui.common.ChatMessageType
 import com.hyphenate.easeui.common.ChatTextMessageBody
 import com.hyphenate.easeui.common.ChatType
 import com.hyphenate.easeui.common.EaseConstant
+import com.hyphenate.easeui.common.enums.EaseReplyMap
 import com.hyphenate.easeui.common.extensions.addUserInfo
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.createUnsentMessage
 import com.hyphenate.easeui.common.extensions.isChatroom
 import com.hyphenate.easeui.common.extensions.isGroupChat
+import com.hyphenate.easeui.common.extensions.send
 import com.hyphenate.easeui.common.helper.EaseAtMessageHelper
 import com.hyphenate.easeui.common.impl.CallbackImpl
+import com.hyphenate.easeui.common.suspends.deleteMessage
 import com.hyphenate.easeui.common.utils.EaseFileUtils
+import com.hyphenate.easeui.common.utils.createExpressionMessage
 import com.hyphenate.easeui.feature.chat.enums.EaseChatType
+import com.hyphenate.easeui.feature.chat.enums.EaseLoadDataType
 import com.hyphenate.easeui.feature.chat.enums.getConversationType
+import com.hyphenate.easeui.feature.chat.forward.helper.EaseChatMessageMultiSelectHelper
 import com.hyphenate.easeui.feature.chat.interfaces.IHandleChatResultView
 import com.hyphenate.easeui.repository.EaseChatManagerRepository
-import com.hyphenate.easeui.common.enums.EaseReplyMap
-import com.hyphenate.easeui.common.extensions.send
-import com.hyphenate.easeui.common.suspends.deleteMessage
-import com.hyphenate.easeui.common.utils.createExpressionMessage
-import com.hyphenate.easeui.feature.chat.enums.EaseLoadDataType
-import com.hyphenate.easeui.feature.chat.forward.helper.EaseChatMessageMultiSelectHelper
+import com.hyphenate.easeui.viewmodel.EaseBaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -723,4 +723,5 @@ open class EaseChatViewModel: EaseBaseViewModel<IHandleChatResultView>(), IChatV
     companion object {
         private val TAG = EaseChatViewModel::class.java.simpleName
     }
+
 }

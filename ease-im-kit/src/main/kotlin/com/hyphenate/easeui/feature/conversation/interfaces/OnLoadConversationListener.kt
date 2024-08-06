@@ -1,4 +1,4 @@
-package com.hyphenate.easeui.feature.contact.interfaces
+package com.hyphenate.easeui.feature.conversation.interfaces
 
 import com.hyphenate.easeui.model.EaseConversation
 

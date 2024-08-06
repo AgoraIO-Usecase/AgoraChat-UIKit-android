@@ -1,4 +1,4 @@
-package com.hyphenate.easeui.feature.group.fragment
+package com.hyphenate.easeui.feature.group.fragments
 
 import android.os.Bundle
 import android.view.View
@@ -8,10 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.base.EaseBaseListFragment
 import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.helper.SidebarHelper
 import com.hyphenate.easeui.feature.group.adapter.EaseGroupSelectListAdapter
 import com.hyphenate.easeui.feature.group.interfaces.IEaseGroupResultView
+import com.hyphenate.easeui.feature.group.interfaces.ISearchResultListener
 import com.hyphenate.easeui.interfaces.OnContactSelectedListener
 import com.hyphenate.easeui.model.EaseProfile
 import com.hyphenate.easeui.model.EaseUser
@@ -20,7 +22,7 @@ import com.hyphenate.easeui.viewmodel.group.IGroupRequest
 import com.hyphenate.easeui.widget.EaseSidebar
 
 open class EaseGroupRemoveMemberFragment : EaseBaseListFragment<EaseUser>(), IEaseGroupResultView,
-    OnContactSelectedListener {
+    OnContactSelectedListener, ISearchResultListener {
     private val memberSelectAdapter: EaseGroupSelectListAdapter by lazy { EaseGroupSelectListAdapter(groupId) }
     private var listener:OnContactSelectedListener?=null
     private var groupId:String?=null
@@ -55,6 +57,10 @@ open class EaseGroupRemoveMemberFragment : EaseBaseListFragment<EaseUser>(), IEa
 
     fun setMemberList(members: MutableList<String>){
         memberSelectAdapter.setGroupMemberList(members)
+    }
+
+    fun addSelectList(members: MutableList<String>){
+        memberSelectAdapter.addSelectList(members)
     }
 
     open fun loadData(){
@@ -94,7 +100,7 @@ open class EaseGroupRemoveMemberFragment : EaseBaseListFragment<EaseUser>(), IEa
     override fun initListener() {
         super.initListener()
         memberSelectAdapter.setCheckBoxSelectListener(this)
-
+        setSearchResultListener(this)
         binding?.rvList?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 // When scroll to bottom, load more data
@@ -119,6 +125,14 @@ open class EaseGroupRemoveMemberFragment : EaseBaseListFragment<EaseUser>(), IEa
         })
     }
 
+    override fun onSearchResultListener(selectMembers: MutableList<String>) {
+        ChatLog.d(TAG,"onSearchResultListener $selectMembers")
+        if (selectMembers.isNotEmpty()){
+            memberSelectAdapter.addSelectList(selectMembers)
+            listener?.onSearchSelectedResult(selectMembers)
+        }
+    }
+
     override fun onContactSelectedChanged(v: View, selectedMembers: MutableList<String>) {
         listener?.onContactSelectedChanged(v, selectedMembers)
     }
@@ -135,11 +149,12 @@ open class EaseGroupRemoveMemberFragment : EaseBaseListFragment<EaseUser>(), IEa
     }
 
     override fun fetchMemberInfoSuccess(members: Map<String, EaseProfile>?) {
-        super.fetchMemberInfoSuccess(members)
+        finishRefresh()
         mListAdapter.notifyDataSetChanged()
     }
 
     override fun fetchMemberInfoFail(code: Int, error: String) {
-        super.fetchMemberInfoFail(code, error)
+        finishRefresh()
     }
+
 }

@@ -1,6 +1,5 @@
 package com.hyphenate.easeui.common.helper
 
-import com.hyphenate.chat.EMMessage
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
@@ -9,6 +8,7 @@ import com.hyphenate.easeui.common.ChatMessageStatus
 import com.hyphenate.easeui.common.ChatMessageType
 import com.hyphenate.easeui.common.ChatTextMessageBody
 import com.hyphenate.easeui.common.ChatThreadEvent
+import com.hyphenate.easeui.common.ChatType
 import com.hyphenate.easeui.common.EaseConstant
 
 object EaseThreadNotifyHelper {
@@ -16,7 +16,7 @@ object EaseThreadNotifyHelper {
         event?.let {
             var content = ""
             val message = ChatMessage.createReceiveMessage(ChatMessageType.TXT)
-            message.chatType = EMMessage.ChatType.GroupChat
+            message.chatType = ChatType.GroupChat
             message.from = it.from
             message.to = it.chatThread.parentId
             message.msgId = it.chatThread.chatThreadId

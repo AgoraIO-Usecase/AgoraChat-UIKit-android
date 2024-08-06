@@ -36,7 +36,7 @@ class EaseChatPinTextMessageViewHolder(
                 val sdf = SimpleDateFormat("MM-dd, HH:mm")
                 sdf.timeZone = TimeZone.getTimeZone("GMT+8")
                 pinTime?.let {
-                    val formattedDate = sdf.format(Date(pinTime))
+                    val formattedDate = sdf.format(Date(it))
                     tvTime.text = formattedDate
                 }
 

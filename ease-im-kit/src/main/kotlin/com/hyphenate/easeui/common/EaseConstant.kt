@@ -27,6 +27,7 @@ object EaseConstant {
     const val MESSAGE_ATTR_EXPRESSION_ID = "em_expression_id"
 
     const val MESSAGE_TYPE_RECALL = "message_recall"
+    const val MESSAGE_TYPE_CONTACT_NOTIFY = "message_contact_notify"
 
     // reply
     const val QUOTE_MSG_ID = "msgID"
@@ -52,6 +53,8 @@ object EaseConstant {
     // event
     const val EVENT_UPDATE_GROUP_NAME = "event_update_group_name"
     const val EVENT_UPDATE_GROUP_DESCRIPTION = "event_update_group_description"
+    const val EVENT_UPDATE_GROUP_OWNER = "event_update_group_owner"
+    const val EVENT_REMOVE_GROUP_MEMBER = "event_remove_group_member"
 
     const val SYSTEM_MESSAGE_FROM = "from"
     const val SYSTEM_MESSAGE_REASON = "reason"

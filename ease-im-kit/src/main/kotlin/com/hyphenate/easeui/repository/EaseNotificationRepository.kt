@@ -26,6 +26,11 @@ class EaseNotificationRepository(
             notificationMsgManager.getAllSystemMessage()
         }
 
+    suspend fun loadMoreMessage(startMsgId:String?,limit:Int):List<ChatMessage> =
+        withContext(Dispatchers.IO){
+            notificationMsgManager.loadMoreMessage(startMsgId,limit)
+        }
+
     suspend fun fetchProfileInfo(members: List<String>?) =
         withContext(Dispatchers.IO){
             if (members.isNullOrEmpty()) {

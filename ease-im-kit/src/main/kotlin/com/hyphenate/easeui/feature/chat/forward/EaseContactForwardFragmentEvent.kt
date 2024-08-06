@@ -8,7 +8,7 @@ import com.hyphenate.easeui.feature.chat.forward.dialog.EaseSearchForwardUserDia
 import com.hyphenate.easeui.feature.contact.EaseContactsListFragment
 import com.hyphenate.easeui.interfaces.OnForwardClickListener
 
-class EaseContactForwardFragment: EaseContactsListFragment() {
+class EaseContactForwardFragmentEvent: EaseContactsListFragment() {
     private var forwardClickListener: OnForwardClickListener? = null
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -29,13 +29,13 @@ class EaseContactForwardFragment: EaseContactsListFragment() {
             EaseSearchForwardUserDialogFragment().apply {
                 setOnForwardClickListener(object : OnForwardClickListener {
                     override fun onForwardClick(view: View?, id: String, chatType: ChatType) {
-                        (this@EaseContactForwardFragment.binding?.listContact?.getListAdapter() as? EaseContactForwardAdapter)
+                        (this@EaseContactForwardFragmentEvent.binding?.listContact?.getListAdapter() as? EaseContactForwardAdapter)
                             ?.setSentUserList(listOf(id))
                     }
                 })
-                setSentUserList((this@EaseContactForwardFragment.binding?.listContact?.getListAdapter()
+                setSentUserList((this@EaseContactForwardFragmentEvent.binding?.listContact?.getListAdapter()
                         as? EaseContactForwardAdapter)?.getSentUserList())
-                show(this@EaseContactForwardFragment.childFragmentManager, "search_forward_user")
+                show(this@EaseContactForwardFragmentEvent.childFragmentManager, "search_forward_user")
             }
         }
     }

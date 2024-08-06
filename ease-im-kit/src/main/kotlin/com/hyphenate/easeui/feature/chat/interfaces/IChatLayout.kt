@@ -231,4 +231,9 @@ interface IChatLayout {
      */
     fun setOnChatFinishListener(listener: OnChatFinishListener?)
 
+    /**
+     * Set multiple select remove message listener
+     */
+    fun setMultipleSelectRemoveMsgListener(listener: OnMultipleSelectRemoveMsgListener){}
+
 }

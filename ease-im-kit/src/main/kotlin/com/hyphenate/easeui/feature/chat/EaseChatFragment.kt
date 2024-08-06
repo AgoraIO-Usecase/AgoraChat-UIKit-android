@@ -16,7 +16,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.hyphenate.chat.EMChatThreadEvent
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_DESTROY
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_LEAVE
@@ -26,6 +25,7 @@ import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatThread
 import com.hyphenate.easeui.common.ChatThreadChangeListener
+import com.hyphenate.easeui.common.ChatThreadEvent
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.enums.EaseChatFinishReason
@@ -37,7 +37,6 @@ import com.hyphenate.easeui.common.helper.EaseThreadNotifyHelper
 import com.hyphenate.easeui.configs.setAvatarStyle
 import com.hyphenate.easeui.configs.setStatusStyle
 import com.hyphenate.easeui.databinding.EaseFragmentChatBinding
-import com.hyphenate.easeui.feature.contact.EaseContactDetailsActivity
 import com.hyphenate.easeui.feature.group.EaseGroupDetailActivity
 import com.hyphenate.easeui.feature.chat.adapter.EaseMessagesAdapter
 import com.hyphenate.easeui.feature.chat.controllers.EaseChatAttachmentController
@@ -54,6 +53,7 @@ import com.hyphenate.easeui.feature.chat.interfaces.OnMessageForwardCallback
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageItemClickListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageSendCallback
 import com.hyphenate.easeui.feature.chat.interfaces.OnModifyMessageListener
+import com.hyphenate.easeui.feature.chat.interfaces.OnMultipleSelectRemoveMsgListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnPeerTypingListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnReactionMessageListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnReportMessageListener
@@ -80,7 +80,7 @@ import com.hyphenate.easeui.provider.getSyncUser
 open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChatLayoutListener,
     OnMenuChangeListener, OnWillSendMessageListener, OnModifyMessageListener, OnReportMessageListener,
     OnChatFinishListener, OnTranslationMessageListener, OnMessageChatThreadClickListener,
-    ChatThreadChangeListener,IActivityBackPressed {
+    ChatThreadChangeListener,IActivityBackPressed, OnMultipleSelectRemoveMsgListener {
     private var backPressListener: View.OnClickListener? = null
     private var extendMenuItemClickListener: OnChatExtendMenuItemClickListener? = null
     private var chatInputChangeListener: OnChatInputChangeListener? = null
@@ -384,6 +384,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
                 it.setOnChatFinishListener(this)
                 it.setOnTranslationMessageListener(this)
                 it.setOnMessageThreadViewClickListener(this)
+                it.setMultipleSelectRemoveMsgListener(this)
             }
             root.titleBar.let {
                 it.setLogoClickListener {
@@ -563,7 +564,18 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
                     .post(lifecycleScope, EaseEvent(EaseEvent.EVENT.UPDATE.name, EaseEvent.TYPE.CONVERSATION, conversationId))
                 mContext.finish()
             }
+            EaseChatFinishReason.onGroupUserRemoved -> {
+                mContext.finish()
+            }
             else -> {}
+        }
+    }
+
+    override fun multipleSelectRemoveMsgSuccess() {
+        if (binding?.layoutChat?.messageMultipleSelectController?.isInMultipleSelectStyle == true) {
+            binding?.layoutChat?.messageMultipleSelectController?.cancelMultiSelectStyle(binding?.titleBar?.getToolBar()) {
+                cancelMultipleSelectStyle()
+            }
         }
     }
 
@@ -667,6 +679,11 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     }
 
     override fun onSendCombineSuccess(message: ChatMessage?) {
+        if (binding?.layoutChat?.messageMultipleSelectController?.isInMultipleSelectStyle == true) {
+            binding?.layoutChat?.messageMultipleSelectController?.cancelMultiSelectStyle(binding?.titleBar?.getToolBar()) {
+                cancelMultipleSelectStyle()
+            }
+        }
         sendCombineMessageCallback?.onSendCombineSuccess(message)
     }
 
@@ -768,7 +785,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         }
     }
 
-    override fun onChatThreadCreated(event: EMChatThreadEvent?) {
+    override fun onChatThreadCreated(event: ChatThreadEvent?) {
         EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage?.let {
             if (!it) {
                 return
@@ -782,7 +799,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         }
     }
 
-    override fun onChatThreadUpdated(event: EMChatThreadEvent?) {
+    override fun onChatThreadUpdated(event: ChatThreadEvent?) {
         EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage?.let {
             if (!it) {
                 return
@@ -795,7 +812,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         }
     }
 
-    override fun onChatThreadDestroyed(event: EMChatThreadEvent?) {
+    override fun onChatThreadDestroyed(event: ChatThreadEvent?) {
         EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage?.let {
             if (!it) {
                 return
@@ -809,7 +826,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         }
     }
 
-    override fun onChatThreadUserRemoved(event: EMChatThreadEvent?) {
+    override fun onChatThreadUserRemoved(event: ChatThreadEvent?) {
         EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage?.let {
             if (!it) {
                 return

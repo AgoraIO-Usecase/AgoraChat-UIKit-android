@@ -19,7 +19,7 @@ import com.hyphenate.easeui.widget.EaseImageView
 
 class CustomDialog(
     context: Context,
-    private val title: String,
+    private val title: String = "",
     private val subtitle: String = "",
     private val isEditTextMode: Boolean,
     private val inputHint: String = "",
@@ -51,6 +51,7 @@ class CustomDialog(
 
         titleTextView.text = title
         subtitleTextView.text = subtitle
+        editText.hint = inputHint
 
         leftButtonText?.let {
             leftButton.text = it
@@ -61,6 +62,8 @@ class CustomDialog(
 
         if (subtitle.isEmpty()){
             subtitleTextView.visibility = View.GONE
+        }else{
+            subtitleTextView.visibility = View.VISIBLE
         }
 
         if (isEditTextMode) {

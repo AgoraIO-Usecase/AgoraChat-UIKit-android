@@ -249,7 +249,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
 
             },
             onRightButtonClickListener = {
-                contactViewModel?.deleteConversation(user?.userId)
+                contactViewModel?.clearConversationMessage(user?.userId)
             }
         )
         clearDialog.show()
@@ -371,12 +371,12 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
         ChatLog.e(TAG,"removeUserFromBlockListFail $code $error")
     }
 
-    override fun deleteConversationSuccess(conversationId: String?) {
+    override fun clearConversationSuccess(conversationId: String?) {
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.REMOVE.name)
             .post(lifecycleScope, EaseEvent(EaseEvent.EVENT.REMOVE.name, EaseEvent.TYPE.CONVERSATION, conversationId))
     }
 
-    override fun deleteConversationFail(code: Int, error: String?) {
+    override fun clearConversationFail(code: Int, error: String?) {
         ChatLog.e(TAG,"deleteConversationFail $code $error")
     }
 

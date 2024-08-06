@@ -12,7 +12,6 @@
         app:titleBarReplaceActionBar="false"
         app:titleBarTitle="@string/ease_conversation_title"
         app:titleBarTitleCenter="true"
-        app:titleBarMenu="@menu/menu_conversation_actions"
         app:titleBarSubtitleTextColor="@color/ease_color_text_secondary"
         app:titleBarTitleTextColor="@color/ease_color_on_background_low"
         app:titleBarMenuIconTint="@color/ease_color_on_background_low"

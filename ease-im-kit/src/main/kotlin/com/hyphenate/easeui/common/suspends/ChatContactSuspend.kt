@@ -24,10 +24,9 @@ suspend fun ChatContactManager.fetchContactsFromServer():List<EaseUser>{
     return suspendCoroutine{ continuation ->
         asyncGetAllContactsFromServer(ValueCallbackImpl(
                onSuccess = { value ->
-                   EasePreferenceManager.getInstance().setLoadedContactFromServer(true)
                    value?.let {
-                       val list = it.map { id ->
-                           EaseIM.getUserProvider()?.getSyncUser(id)?.toUser() ?: EaseUser(id)
+                       val list = it.map { contact ->
+                           EaseIM.getUserProvider()?.getSyncUser(contact)?.toUser() ?: EaseUser(contact)
                        }
                        continuation.resume(list)
                    }
@@ -41,11 +40,11 @@ suspend fun ChatContactManager.fetchContactsFromServer():List<EaseUser>{
  * Suspend method for [ChatContactManager.addNewContact(userName,reason)]
  * @return [ChatError] The result of the request.
  */
-suspend fun ChatContactManager.addNewContact(userName:String, reason:String?): Int{
+suspend fun ChatContactManager.addNewContact(userName:String, reason:String?): String{
     return suspendCoroutine{ continuation ->
         asyncAddContact(userName,reason, CallbackImpl(
             function = EaseConstant.API_ASYNC_ADD_CONTACT,
-            onSuccess = { continuation.resume(ChatError.EM_NO_ERROR) },
+            onSuccess = { continuation.resume(userName) },
             onError = { code,message-> continuation.resumeWithException(ChatException(code, message))}
         ))
     }

@@ -51,7 +51,6 @@ import com.hyphenate.easeui.viewmodel.messages.EaseMessageListViewModel
 import com.hyphenate.easeui.viewmodel.messages.IChatMessageListRequest
 import com.hyphenate.easeui.widget.EaseImageView.ShapeType
 import com.hyphenate.easeui.widget.RefreshLayout
-import com.hyphenate.util.EMLog
 import kotlinx.coroutines.launch
 
 class EaseChatMessageListLayout @JvmOverloads constructor(
@@ -262,7 +261,7 @@ class EaseChatMessageListLayout @JvmOverloads constructor(
                 }
 
                 override fun onSendAckError(message: ChatMessage?, code: Int, errorMsg: String?) {
-                    EMLog.e(TAG, "onSendAckError: $code, $errorMsg")
+                    ChatLog.e(TAG, "onSendAckError: $code, $errorMsg")
                     messageAckSendCallback?.onSendAckError(message, code, errorMsg)
                 }
             })

@@ -642,4 +642,11 @@ class EaseTitleBar @JvmOverloads constructor(
         setMenuTitleColor(menuTitleColor)
     }
 
+    fun hideDefaultMenu(){
+        toolbar.menu?.forEach { item ->
+            item.icon = null
+            item.isEnabled = false
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.hyphenate.easeui.feature.group.fragment
+package com.hyphenate.easeui.feature.group.fragments
 
 import android.os.Bundle
 import android.view.View
@@ -10,11 +10,13 @@ import com.hyphenate.easeui.base.EaseBaseListFragment
 import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatGroup
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.helper.SidebarHelper
 import com.hyphenate.easeui.feature.contact.interfaces.IEaseContactResultView
 import com.hyphenate.easeui.feature.group.adapter.EaseGroupSelectListAdapter
 import com.hyphenate.easeui.feature.group.interfaces.IEaseGroupResultView
+import com.hyphenate.easeui.feature.group.interfaces.ISearchResultListener
 import com.hyphenate.easeui.interfaces.OnContactSelectedListener
 import com.hyphenate.easeui.model.EaseUser
 import com.hyphenate.easeui.viewmodel.contacts.EaseContactListViewModel
@@ -22,7 +24,7 @@ import com.hyphenate.easeui.viewmodel.contacts.IContactListRequest
 import com.hyphenate.easeui.widget.EaseSidebar
 
 open class EaseGroupAddMemberFragment: EaseBaseListFragment<EaseUser>()
-    ,IEaseContactResultView,IEaseGroupResultView, OnContactSelectedListener {
+    ,IEaseContactResultView,IEaseGroupResultView, OnContactSelectedListener, ISearchResultListener {
     private val memberSelectAdapter: EaseGroupSelectListAdapter by lazy { EaseGroupSelectListAdapter(groupId) }
     private var groupId:String?=null
     private var currentGroup:ChatGroup?=null
@@ -65,7 +67,7 @@ open class EaseGroupAddMemberFragment: EaseBaseListFragment<EaseUser>()
     override fun initListener() {
         super.initListener()
         memberSelectAdapter.setCheckBoxSelectListener(this)
-
+        setSearchResultListener(this)
         binding?.rvList?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 // When scroll to bottom, load more data
@@ -91,6 +93,10 @@ open class EaseGroupAddMemberFragment: EaseBaseListFragment<EaseUser>()
 
     fun setMemberList(members: MutableList<String>){
         memberSelectAdapter.setGroupMemberList(members)
+    }
+
+    fun addSelectMember(members: MutableList<String>){
+        memberSelectAdapter.addSelectList(members)
     }
 
     fun setSideBar(sidebar:EaseSidebar){
@@ -127,8 +133,12 @@ open class EaseGroupAddMemberFragment: EaseBaseListFragment<EaseUser>()
         finishRefresh()
     }
 
-    override fun fetchGroupMemberFail(code: Int, error: String) {
-        finishRefresh()
+    override fun onSearchResultListener(selectMembers: MutableList<String>) {
+        ChatLog.d(TAG,"onSearchResultListener $selectMembers")
+        if (selectMembers.isNotEmpty()){
+            memberSelectAdapter.addSelectList(selectMembers)
+            listener?.onSearchSelectedResult(selectMembers)
+        }
     }
 
     override fun onContactSelectedChanged(v: View, selectedMembers: MutableList<String>) {
@@ -144,5 +154,6 @@ open class EaseGroupAddMemberFragment: EaseBaseListFragment<EaseUser>()
             memberSelectAdapter.notifyDataSetChanged()
         }
     }
+
 
 }

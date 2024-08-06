@@ -19,7 +19,7 @@ interface IEaseContactResultView: IControlDataView {
     /**
      * Add contact successfully.
      */
-    fun addContactSuccess(){}
+    fun addContactSuccess(userId: String) {}
 
     /**
      * Add contact failed.
@@ -97,14 +97,14 @@ interface IEaseContactResultView: IControlDataView {
     fun declineInvitationFail(code: Int, error: String){}
 
     /**
-     * Delete conversation successfully.
+     * Clear conversation successfully.
      */
-    fun deleteConversationSuccess(conversationId: String?){}
+    fun clearConversationSuccess(conversationId: String?){}
 
     /**
-     * Delete conversation failed.
+     * Clear conversation failed.
      */
-    fun deleteConversationFail(code: Int, error: String?){}
+    fun clearConversationFail(code: Int, error: String?){}
 
 
     /**

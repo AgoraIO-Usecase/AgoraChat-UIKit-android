@@ -8,7 +8,7 @@ import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.extensions.isOwner
 import com.hyphenate.easeui.common.extensions.toUser
-import com.hyphenate.easeui.feature.group.fragment.EaseGroupMemberFragment
+import com.hyphenate.easeui.feature.group.fragments.EaseGroupMemberFragment
 import com.hyphenate.easeui.feature.thread.interfaces.IChatThreadResultView
 import com.hyphenate.easeui.feature.thread.interfaces.OnThreadMemberItemClickListener
 import com.hyphenate.easeui.model.EaseProfile

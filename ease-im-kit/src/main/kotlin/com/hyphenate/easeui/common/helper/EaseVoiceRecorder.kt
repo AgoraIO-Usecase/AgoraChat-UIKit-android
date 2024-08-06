@@ -97,22 +97,22 @@ class EaseVoiceRecorder(
 
     private fun getVoiceFilePath(conversationId: String?): String {
         return if (conversationId == null) {
-                ChatPathUtils.getInstance().voicePath.toString() + "/" + voiceFileName
-            } else {
-                val conversation = ChatClient.getInstance().chatManager().getConversation(conversationId)
-                if (conversation != null) {
-                    if (conversation.messageAttachmentPath.isNotEmpty()){
-                        val file = File(conversation.messageAttachmentPath)
-                        if (!file.exists()){
-                            file.mkdirs()
-                        }
+            ChatPathUtils.getInstance().voicePath.toString() + "/" + voiceFileName
+        } else {
+            val conversation = ChatClient.getInstance().chatManager().getConversation(conversationId)
+            if (conversation != null) {
+                if (conversation.messageAttachmentPath.isNotEmpty()){
+                    val file = File(conversation.messageAttachmentPath)
+                    if (!file.exists()){
+                        file.mkdirs()
                     }
-                    conversation.messageAttachmentPath + "/" + voiceFileName
-                } else {
-                    ChatPathUtils.getInstance().voicePath.toString() + "/" + voiceFileName
                 }
+                conversation.messageAttachmentPath + "/" + voiceFileName
+            } else {
+                ChatPathUtils.getInstance().voicePath.toString() + "/" + voiceFileName
             }
         }
+    }
 
     /**
      * stop the recoding

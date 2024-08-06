@@ -225,8 +225,7 @@ internal abstract class VersionedGestureDetector {
         const val LOG_TAG = "VersionedGestureDetector"
         fun newInstance(context: Context?, listener: OnGestureListener?): VersionedGestureDetector {
             val sdkVersion = Build.VERSION.SDK_INT
-            var detector: VersionedGestureDetector? = null
-            detector = if (sdkVersion < VERSION_CODES.ECLAIR) {
+            val detector: VersionedGestureDetector = if (sdkVersion < VERSION_CODES.ECLAIR) {
                 CupcakeDetector(context)
             } else if (sdkVersion < VERSION_CODES.FROYO) {
                 EclairDetector(context)

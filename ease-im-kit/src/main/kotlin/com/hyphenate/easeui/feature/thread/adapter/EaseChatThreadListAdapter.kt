@@ -1,6 +1,5 @@
 package com.hyphenate.easeui.feature.thread.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter

@@ -18,7 +18,6 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.hyphenate.chat.EMMessagePinInfo
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
@@ -29,6 +28,8 @@ import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageBody
 import com.hyphenate.easeui.common.ChatMessageDirection
+import com.hyphenate.easeui.common.ChatMessagePinInfo
+import com.hyphenate.easeui.common.ChatMessagePinOperation
 import com.hyphenate.easeui.common.ChatMessageReactionChange
 import com.hyphenate.easeui.common.ChatMessageType
 import com.hyphenate.easeui.common.ChatRecallMessageInfo
@@ -69,6 +70,7 @@ import com.hyphenate.easeui.feature.chat.interfaces.OnMessageAckSendCallback
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageListItemClickListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageListTouchListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnModifyMessageListener
+import com.hyphenate.easeui.feature.chat.interfaces.OnMultipleSelectRemoveMsgListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnReactionMessageListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnRecallMessageResultListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnReportMessageListener
@@ -264,7 +266,12 @@ class EaseChatLayout @JvmOverloads constructor(
     /**
      * listener for chat thread view click listener
      */
-    private var threadViewClickListener:OnMessageChatThreadClickListener? = null
+    private var threadViewClickListener: OnMessageChatThreadClickListener? = null
+
+    /**
+     * listener for multiple select view remove message listener
+     */
+    private var multipleSelectRemoveMsgListener: OnMultipleSelectRemoveMsgListener? = null
 
     private val chatMessageListener = object : EaseMessageListener() {
         override fun onMessageReceived(messages: MutableList<ChatMessage>?) {
@@ -395,8 +402,8 @@ class EaseChatLayout @JvmOverloads constructor(
         override fun onMessagePinChanged(
             messageId: String?,
             conversationId: String?,
-            pinOperation: EMMessagePinInfo.PinOperation?,
-            pinInfo: EMMessagePinInfo?
+            pinOperation: ChatMessagePinOperation?,
+            pinInfo: ChatMessagePinInfo?
         ) {
             val message = ChatClient.getInstance().chatManager().getMessage(messageId)
             message?.let{
@@ -982,6 +989,10 @@ class EaseChatLayout @JvmOverloads constructor(
         this.finishListener = listener
     }
 
+    override fun setMultipleSelectRemoveMsgListener(listener: OnMultipleSelectRemoveMsgListener) {
+        this.multipleSelectRemoveMsgListener = listener
+    }
+
     override fun ackConversationReadSuccess() {
 
     }
@@ -1029,13 +1040,14 @@ class EaseChatLayout @JvmOverloads constructor(
     }
 
     override fun deleteMessageListSuccess() {
+        multipleSelectRemoveMsgListener?.multipleSelectRemoveMsgSuccess()
         messageMultipleSelectController.clearSelectedMessages()
         chatBinding.layoutChatMessage.refreshMessages()
         sendChatUpdateEvent()
     }
 
     override fun deleteMessageListFail(code: Int, errorMsg: String?) {
-
+        multipleSelectRemoveMsgListener?.multipleSelectRemoveMsgFail(code, errorMsg)
     }
 
     override fun recallMessageFinish(originalMessage: ChatMessage?, notification: ChatMessage?) {

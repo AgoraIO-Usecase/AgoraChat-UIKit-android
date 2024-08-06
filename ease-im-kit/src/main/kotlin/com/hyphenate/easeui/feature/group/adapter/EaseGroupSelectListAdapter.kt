@@ -59,6 +59,17 @@ class EaseGroupSelectListAdapter(
         notifyDataSetChanged()
     }
 
+    fun addSelectList(list: MutableList<String>){
+        if (list.isNotEmpty()){
+            list.forEach { id ->
+                if (!checkedList.contains(id)){
+                    checkedList.add(id)
+                }
+            }
+        }
+        notifyDataSetChanged()
+    }
+
     fun resetSelect(){
         checkedList.clear()
         notifyDataSetChanged()

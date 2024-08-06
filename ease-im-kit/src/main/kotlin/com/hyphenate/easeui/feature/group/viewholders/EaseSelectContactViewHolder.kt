@@ -1,4 +1,4 @@
-package com.hyphenate.easeui.feature.group.viewholder
+package com.hyphenate.easeui.feature.group.viewholders
 
 import android.text.TextUtils
 import android.view.View

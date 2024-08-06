@@ -47,7 +47,7 @@ open class EaseContactListRepository(
     /**
      * Add a Contact
      */
-    suspend fun addContact(userName:String,reason:String?=""):Int =
+    suspend fun addContact(userName:String,reason:String?=""):String =
         withContext(Dispatchers.IO){
             chatContactManager.addNewContact(userName = userName,reason = reason)
         }

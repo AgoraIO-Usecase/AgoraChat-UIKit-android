@@ -253,20 +253,6 @@ object EaseIM {
     }
 
     /**
-     * Is loaded contact data from server
-     */
-    fun isLoadedContactFromServer():Boolean{
-        return EasePreferenceManager.getInstance().isLoadedContactFromServer()
-    }
-
-    /**
-     * Set loaded contact data from server tag
-     */
-    fun setLoadedContactFromServer(){
-        EasePreferenceManager.getInstance().setLoadedContactFromServer(true)
-    }
-
-    /**
      * Add Connection Listener
      */
     fun addConnectionListener(connectListener:EaseConnectionListener){

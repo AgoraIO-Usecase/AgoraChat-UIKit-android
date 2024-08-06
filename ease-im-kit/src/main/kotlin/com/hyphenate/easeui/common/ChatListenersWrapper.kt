@@ -1,24 +1,20 @@
 package com.hyphenate.easeui.common
 
-import com.hyphenate.EMChatThreadChangeListener
-import com.hyphenate.chat.EMMessagePinInfo
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.CONTACT_ACCEPT
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.CONTACT_REMOVE
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_CREATE
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_DESTROY
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_JOIN
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_LEAVE
+import com.hyphenate.EMMultiDeviceListener.CONTACT_ACCEPT
+import com.hyphenate.EMMultiDeviceListener.CONTACT_REMOVE
+import com.hyphenate.EMMultiDeviceListener.GROUP_CREATE
+import com.hyphenate.EMMultiDeviceListener.GROUP_DESTROY
+import com.hyphenate.EMMultiDeviceListener.GROUP_JOIN
+import com.hyphenate.EMMultiDeviceListener.GROUP_LEAVE
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.bus.EaseFlowBus
-import com.hyphenate.easeui.common.ChatLoginExtensionInfo
-import com.hyphenate.easeui.common.ChatRecallMessageInfo
 import com.hyphenate.easeui.common.extensions.createUnsentMessage
 import com.hyphenate.easeui.common.extensions.getUserInfo
 import com.hyphenate.easeui.common.extensions.isGroupChat
 import com.hyphenate.easeui.common.extensions.mainScope
 import com.hyphenate.easeui.common.helper.EaseAtMessageHelper
-import com.hyphenate.easeui.feature.invitation.helper.EaseNotificationMsgManager
 import com.hyphenate.easeui.feature.invitation.enums.InviteMessageStatus
+import com.hyphenate.easeui.feature.invitation.helper.EaseNotificationMsgManager
 import com.hyphenate.easeui.feature.invitation.helper.RequestMsgHelper
 import com.hyphenate.easeui.interfaces.OnEventResultListener
 import com.hyphenate.easeui.model.EaseEvent
@@ -29,8 +25,8 @@ import java.util.Collections
 
 
 internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListener, ChatGroupChangeListener,
-    ChatContactListener, ChatConversationListener, ChatPresenceListener, ChatRoomChangeListener,
-    ChatMultiDeviceListener, EMChatThreadChangeListener {
+    ChatContactListener, ChatConversationListener, ChatPresenceListener,
+    ChatMultiDeviceListener, ChatThreadChangeListener {
 
     private val chatConnectionListener = Collections.synchronizedList(mutableListOf<ChatConnectionListener>())
     private val chatMessageListener = Collections.synchronizedList(mutableListOf<ChatMessageListener>())
@@ -50,7 +46,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         ChatClient.getInstance().groupManager().addGroupChangeListener(this)
         ChatClient.getInstance().contactManager().setContactListener(this)
         ChatClient.getInstance().presenceManager().addListener(this)
-        ChatClient.getInstance().chatroomManager().addChatRoomChangeListener(this)
+        ChatClient.getInstance().chatroomManager().addChatRoomChangeListener(chatroomListener)
         ChatClient.getInstance().addMultiDeviceListener(this)
         ChatClient.getInstance().chatThreadManager().addChatThreadChangeListener(this)
     }
@@ -62,7 +58,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         ChatClient.getInstance().groupManager().removeGroupChangeListener(this)
         ChatClient.getInstance().contactManager().removeContactListener(this)
         ChatClient.getInstance().presenceManager().removeListener(this)
-        ChatClient.getInstance().chatroomManager().removeChatRoomListener(this)
+        ChatClient.getInstance().chatroomManager().removeChatRoomListener(chatroomListener)
         ChatClient.getInstance().removeMultiDeviceListener(this)
         ChatClient.getInstance().chatThreadManager().removeChatThreadChangeListener(this)
 
@@ -394,8 +390,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onMessagePinChanged(
         messageId: String?,
         conversationId: String?,
-        pinOperation: EMMessagePinInfo.PinOperation?,
-        pinInfo: EMMessagePinInfo?
+        pinOperation: ChatMessagePinOperation?,
+        pinInfo: ChatMessagePinInfo?
     ) {
         chatMessageListener.let {
             try {
@@ -853,58 +849,173 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     }
 
     /**  ChatRoomChangeListener  */
-    override fun onChatRoomDestroyed(roomId: String?, roomName: String?) {
-        chatRoomChangeListener.let {
-            try {
-                for (chatroomListener in it) {
-                    chatroomListener.onChatRoomDestroyed(roomId,roomName)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
+    private val chatroomListener by lazy { object : ChatRoomChangeListener{
 
-    override fun onMemberJoined(roomId: String?, participant: String?, ext: String?) {
-        chatRoomChangeListener.let {
-            try {
-                for (chatroomListener in it) {
-                    chatroomListener.onMemberJoined(roomId,participant,ext)
+        override fun onChatRoomDestroyed(roomId: String?, roomName: String?) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onChatRoomDestroyed(roomId,roomName)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
-    }
 
-    override fun onMemberExited(roomId: String?, roomName: String?, participant: String?) {
-        chatRoomChangeListener.let {
-            try {
-                for (chatroomListener in it) {
-                    chatroomListener.onMemberExited(roomId,roomName,participant)
+        override fun onMemberJoined(roomId: String?, participant: String?) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onMemberJoined(roomId,participant)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
-    }
 
-    override fun onRemovedFromChatRoom(
-        reason: Int,
-        roomId: String?,
-        roomName: String?,
-        participant: String?
-    ) {
-        chatRoomChangeListener.let {
-            try {
-                for (chatroomListener in it) {
-                    chatroomListener.onRemovedFromChatRoom(reason,roomId,roomName,participant)
+        override fun onMemberExited(roomId: String?, roomName: String?, participant: String?) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onMemberExited(roomId,roomName,participant)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
-    }
+
+        override fun onRemovedFromChatRoom(
+            reason: Int,
+            roomId: String?,
+            roomName: String?,
+            participant: String?
+        ) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onRemovedFromChatRoom(reason,roomId,roomName,participant)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onMuteListAdded(
+            chatRoomId: String?,
+            mutes: MutableList<String>?,
+            expireTime: Long
+        ) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onMuteListAdded(chatRoomId, mutes, expireTime)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onMuteListRemoved(chatRoomId: String?, mutes: MutableList<String>?) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onMuteListRemoved(chatRoomId, mutes)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onWhiteListAdded(chatRoomId: String?, whitelist: MutableList<String>?) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onWhiteListAdded(chatRoomId, whitelist)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onWhiteListRemoved(chatRoomId: String?, whitelist: MutableList<String>?) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onWhiteListRemoved(chatRoomId, whitelist)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onAllMemberMuteStateChanged(chatRoomId: String?, isMuted: Boolean) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onAllMemberMuteStateChanged(chatRoomId, isMuted)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onAdminAdded(chatRoomId: String?, admin: String?) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onAdminAdded(chatRoomId, admin)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onAdminRemoved(chatRoomId: String?, admin: String?) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onAdminRemoved(chatRoomId, admin)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onOwnerChanged(chatRoomId: String?, newOwner: String?, oldOwner: String?) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onOwnerChanged(chatRoomId, newOwner, oldOwner)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onAnnouncementChanged(chatRoomId: String?, announcement: String?) {
+            chatRoomChangeListener.let {
+                try {
+                    for (chatroomListener in it) {
+                        chatroomListener.onAnnouncementChanged(chatRoomId, announcement)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }}
 
     /**  MultiDeviceListener  */
     override fun onContactEvent(event: Int, target: String?, ext: String?) {
@@ -1026,7 +1137,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         val useDefaultContactSystemMsg = EaseIM.getConfig()?.systemMsgConfig?.useDefaultContactSystemMsg ?: false
         if (useDefaultContactSystemMsg){
             var isExist = false
-            val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllMessage()
+            val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllNotifyMessage()
             allRequestMessage.map {msg->
                 if (msg.ext()[EaseConstant.SYSTEM_MESSAGE_FROM] == username){
                     isExist = true
@@ -1056,7 +1167,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     private fun deleteDefaultContactAgreedMsg(username: String?){
         val useDefaultContactSystemMsg = EaseIM.getConfig()?.systemMsgConfig?.useDefaultContactSystemMsg ?: false
         if (useDefaultContactSystemMsg){
-            val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllMessage()
+            val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllNotifyMessage()
             allRequestMessage.map {msg->
                 if (msg.ext()[EaseConstant.SYSTEM_MESSAGE_FROM] == username &&
                     msg.ext()[EaseConstant.SYSTEM_MESSAGE_STATUS] == InviteMessageStatus.AGREED.name
@@ -1077,7 +1188,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         if (useDefaultMultiDeviceContactEvent){
             when(event){
                 CONTACT_REMOVE -> {
-                    val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllMessage()
+                    val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllNotifyMessage()
                     allRequestMessage.map {msg->
                         if (msg.ext()[EaseConstant.SYSTEM_MESSAGE_FROM] == target &&
                             msg.ext()[EaseConstant.SYSTEM_MESSAGE_STATUS] == InviteMessageStatus.AGREED.name

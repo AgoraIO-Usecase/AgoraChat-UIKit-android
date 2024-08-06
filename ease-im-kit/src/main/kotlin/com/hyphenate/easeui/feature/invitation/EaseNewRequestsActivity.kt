@@ -3,6 +3,8 @@ package com.hyphenate.easeui.feature.invitation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
@@ -34,14 +36,15 @@ import com.hyphenate.easeui.viewmodel.contacts.IContactListRequest
 import com.hyphenate.easeui.viewmodel.request.EaseNotificationViewModel
 import com.hyphenate.easeui.viewmodel.request.INotificationRequest
 
+
 open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBinding>(),
     IEaseNotificationResultView,IEaseContactResultView,
     EaseBaseRecyclerViewAdapter.OnItemSubViewClickListener {
     private var listAdapter: EaseRequestAdapter? = null
     private var noticeViewModel: INotificationRequest? = null
     private var contactViewModel: IContactListRequest? = null
-    private var mData: List<ChatMessage> = mutableListOf()
-    private var isFirst:Boolean = true
+    private var isFirstLoadData = false
+    private var startMsgId = ""
 
     private val contactListener = object : EaseContactListener() {
 
@@ -74,13 +77,8 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
     }
 
     open fun initView(){
-
-        noticeViewModel = ViewModelProvider(this)[EaseNotificationViewModel::class.java]
-        noticeViewModel?.attachView(this)
-
-        contactViewModel = ViewModelProvider(this)[EaseContactListViewModel::class.java]
-        contactViewModel?.attachView(this)
-
+        initNoticeViewModel()
+        initContactViewModel()
         binding.let {
             it.rvList.layoutManager = LinearLayoutManager(this)
             listAdapter = EaseRequestAdapter()
@@ -96,11 +94,50 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
                 it.refreshLayout.setRefreshHeader(RefreshHeader(this))
             }
         }
+        defaultMenu()
+    }
+
+    private fun initNoticeViewModel(){
+        noticeViewModel = ViewModelProvider(this)[EaseNotificationViewModel::class.java]
+        noticeViewModel?.attachView(this)
+    }
+
+    private fun initContactViewModel(){
+        contactViewModel = ViewModelProvider(this)[EaseContactListViewModel::class.java]
+        contactViewModel?.attachView(this)
+    }
+
+    fun setContactViewModel(viewModel: IContactListRequest?) {
+        this.contactViewModel = viewModel
+        this.contactViewModel?.attachView(this)
     }
 
     open fun initData(){
-        refreshData()
+        loadMoreData()
         initEventBus()
+    }
+
+    private fun fetchFirstVisibleData(){
+        (binding.rvList.layoutManager as? LinearLayoutManager)?.let { manager->
+            Handler(Looper.getMainLooper()).post{
+                val firstVisibleItemPosition = manager.findFirstVisibleItemPosition()
+                val lastVisibleItemPosition = manager.findLastVisibleItemPosition()
+                val idList = mutableListOf<String>()
+                listAdapter?.mData?.filterIndexed { index, _ ->
+                    index in firstVisibleItemPosition..lastVisibleItemPosition
+                }?.filter{ conv ->
+                    val u = EaseIM.getCache().getUser(conv.conversationId())
+                    (u == null) && (u?.name.isNullOrEmpty() || u?.avatar.isNullOrEmpty())
+                }?.map { msg->
+                    if (msg.ext().containsKey(EaseConstant.SYSTEM_MESSAGE_FROM)){
+                        idList.add(msg.getStringAttribute(EaseConstant.SYSTEM_MESSAGE_FROM))
+                    }
+                }
+                idList.let {
+                    noticeViewModel?.fetchProfileInfo(it)
+                }
+            }
+        }
     }
 
     private fun initEventBus(){
@@ -117,6 +154,10 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
         }
     }
 
+    open fun defaultMenu(){
+        binding.titleBar.inflateMenu(R.menu.menu_new_request_add_contact)
+    }
+
     fun initListener(){
         EaseIM.addContactListener(contactListener)
         binding.titleBar.setNavigationOnClickListener {
@@ -125,6 +166,9 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
         listAdapter?.setOnItemSubViewClickListener(this)
         binding.refreshLayout.setOnRefreshListener{
             refreshData()
+        }
+        binding.refreshLayout.setOnLoadMoreListener {
+            loadMoreData(startMsgId)
         }
         binding.titleBar.setOnMenuItemClickListener {
             when(it.itemId){
@@ -137,36 +181,6 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
         }
 
         binding.rvList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (isFirst && dy == 0){
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-                    val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-                    listAdapter?.mData?.let {
-                        if (it.isEmpty()) return
-                    }
-                    val visibleList = listAdapter?.mData?.filterIndexed { index, _ ->
-                        if (firstVisibleItemPosition == 0 && lastVisibleItemPosition == 0 && index == 0){
-                            true
-                        }else{
-                            index in firstVisibleItemPosition..lastVisibleItemPosition
-                        }
-                    }
-                    val idList = mutableListOf<String>()
-                    visibleList?.forEach { msg->
-                        if (msg.ext().containsKey(EaseConstant.SYSTEM_MESSAGE_FROM)){
-                            idList.add(msg.getStringAttribute(EaseConstant.SYSTEM_MESSAGE_FROM))
-                        }
-                    }
-                    if (idList.isEmpty()){
-                        return
-                    }
-                    noticeViewModel?.fetchProfileInfo(idList)
-                    isFirst = false
-                }
-
-            }
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 // When scroll to bottom, load more data
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -192,13 +206,20 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
     }
 
     open fun refreshData(){
-        noticeViewModel?.getAllMessage()
+        startMsgId = ""
+        noticeViewModel?.loadLocalData()
+    }
+
+    private fun loadMoreData(startMsgId: String? = ""){
+        noticeViewModel?.loadMoreMessage(startMsgId,limit)
     }
 
     private fun showAddContactDialog(){
         val contactDialog = CustomDialog(
             context = this@EaseNewRequestsActivity,
-            title = resources.getString(R.string.ease_contact_add_dialog_title),
+            title = getString(R.string.ease_conv_action_add_contact),
+            subtitle = getString(R.string.ease_conv_dialog_add_contact),
+            inputHint = getString(R.string.ease_dialog_edit_input_id_hint),
             isEditTextMode = true,
             onInputModeConfirmListener = {
                 contactViewModel?.addContact(it)
@@ -207,14 +228,54 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
         contactDialog.show()
     }
 
-    override fun getAllMessageSuccess(msgList: List<ChatMessage>) {
-        mData = msgList
+    override fun getLocalMessageSuccess(msgList: List<ChatMessage>) {
         finishRefresh()
         listAdapter?.setData(msgList.toMutableList())
+
+        if (msgList.isNotEmpty()){
+            startMsgId = msgList.last().msgId
+        }
+
+        listAdapter?.let {
+            (binding.rvList.layoutManager as? LinearLayoutManager)?.let{ layoutManager ->
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                val visibleItemCount = lastVisibleItemPosition - firstVisibleItemPosition + 1
+
+                // 减去 ItemDecoration 的数量
+                val itemDecorationCount = binding.rvList.itemDecorationCount
+                val adjustedVisibleItemCount = visibleItemCount - itemDecorationCount
+
+                if (it.itemCount < adjustedVisibleItemCount){
+                    val visibleList = listAdapter?.mData?.filterIndexed { index, _ ->
+                        index in firstVisibleItemPosition..lastVisibleItemPosition
+                    }
+                    val idList = mutableListOf<String>()
+                    visibleList?.forEach { msg->
+                        if (msg.ext().containsKey(EaseConstant.SYSTEM_MESSAGE_FROM)){
+                            idList.add(msg.getStringAttribute(EaseConstant.SYSTEM_MESSAGE_FROM))
+                        }
+                    }
+                    noticeViewModel?.fetchProfileInfo(idList)
+                }
+            }
+        }
     }
 
-    override fun getAllMessageFail(code: Int, error: String) {
+    override fun getLocalMessageFail(code: Int, error: String) {
         finishRefresh()
+    }
+
+    override fun loadMoreMessageSuccess(msgList: List<ChatMessage>) {
+        finishLoadMore()
+        if (msgList.isNotEmpty()){
+            startMsgId = msgList.last().msgId
+            listAdapter?.addData(msgList.toMutableList())
+        }
+        if (!isFirstLoadData){
+            fetchFirstVisibleData()
+            isFirstLoadData = true
+        }
     }
 
     override fun fetchProfileSuccess(members: Map<String, EaseProfile>?) {
@@ -223,7 +284,7 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
         refreshData()
     }
 
-    override fun addContactSuccess() {
+    override fun addContactSuccess(userId: String) {
 
     }
 
@@ -263,6 +324,12 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
         }
     }
 
+    fun finishLoadMore(){
+        if (binding.refreshLayout.isLoading){
+            binding.refreshLayout.finishLoadMore()
+        }
+    }
+
     open fun updateNotifyCount(){
         val useDefaultContactSystemMsg = EaseIM.getConfig()?.systemMsgConfig?.useDefaultContactSystemMsg ?: false
         if (useDefaultContactSystemMsg){
@@ -273,6 +340,7 @@ open class EaseNewRequestsActivity : EaseBaseActivity<EaseLayoutNewRequestBindin
 
     companion object {
         private const val TAG = "EaseNewRequestsActivity"
+        private const val limit = 10
         fun createIntent(
             context: Context,
         ): Intent {

@@ -66,7 +66,7 @@ interface IContactListRequest : IAttachView {
      * Clears all the messages of the specified conversation.
      * @param conversationId The conversation ID.
      */
-    fun deleteConversation(conversationId: String?)
+    fun clearConversationMessage(conversationId: String?)
 
     /**
      * Fetch contact information from user.

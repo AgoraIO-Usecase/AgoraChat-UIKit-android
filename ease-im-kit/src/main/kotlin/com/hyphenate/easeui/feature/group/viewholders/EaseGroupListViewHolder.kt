@@ -1,4 +1,4 @@
-package com.hyphenate.easeui.feature.group.holder
+package com.hyphenate.easeui.feature.group.viewholders
 
 import android.graphics.drawable.Drawable
 import androidx.viewbinding.ViewBinding
@@ -6,7 +6,6 @@ import coil.load
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter
-import com.hyphenate.easeui.common.ChatConversationType
 import com.hyphenate.easeui.common.ChatGroup
 import com.hyphenate.easeui.configs.setAvatarStyle
 import com.hyphenate.easeui.databinding.EaseLayoutGroupListItemBinding

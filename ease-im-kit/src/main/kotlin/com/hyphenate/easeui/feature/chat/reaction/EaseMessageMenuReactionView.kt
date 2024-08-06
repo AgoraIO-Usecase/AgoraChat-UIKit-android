@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.feature.chat.enums.EaseReactionType
 import com.hyphenate.easeui.feature.chat.reaction.adapter.EaseMessageReactionAdapter
@@ -18,7 +19,6 @@ import com.hyphenate.easeui.menu.chat.EaseChatMenuHelper
 import com.hyphenate.easeui.model.EaseReaction
 import com.hyphenate.easeui.viewmodel.reaction.EaseChatReactionViewModel
 import com.hyphenate.easeui.viewmodel.reaction.IChatReactionRequest
-import com.hyphenate.util.EMLog
 
 class EaseMessageMenuReactionView @JvmOverloads constructor(
     private val context: Context,
@@ -48,7 +48,7 @@ class EaseMessageMenuReactionView @JvmOverloads constructor(
                             } else {
                                 addReaction(identityCode)
                             }
-                        } ?: EMLog.e("EaseMessageMenuReactionView", "identityCode is null")
+                        } ?: ChatLog.e("EaseMessageMenuReactionView", "identityCode is null")
                     } else if (it.type == EaseReactionType.ADD) {
                         showMoreReactions(view)
                     }
@@ -125,7 +125,7 @@ class EaseMessageMenuReactionView @JvmOverloads constructor(
 
     override fun addReactionFail(messageId: String, errorCode: Int, errorMsg: String?) {
         super.addReactionFail(messageId, errorCode, errorMsg)
-        EMLog.e("EaseMessageMenuReactionView", "addReactionFail: $errorCode $errorMsg")
+        ChatLog.e("EaseMessageMenuReactionView", "addReactionFail: $errorCode $errorMsg")
         reactionErrorListener?.onError(messageId, errorCode, errorMsg)
     }
 
@@ -137,7 +137,7 @@ class EaseMessageMenuReactionView @JvmOverloads constructor(
 
     override fun removeReactionFail(messageId: String, errorCode: Int, errorMsg: String?) {
         super.removeReactionFail(messageId, errorCode, errorMsg)
-        EMLog.e("EaseMessageMenuReactionView", "removeReactionFail: $errorCode $errorMsg")
+        ChatLog.e("EaseMessageMenuReactionView", "removeReactionFail: $errorCode $errorMsg")
         reactionErrorListener?.onError(messageId, errorCode, errorMsg)
     }
 }

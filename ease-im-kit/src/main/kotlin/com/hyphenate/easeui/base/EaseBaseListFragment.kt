@@ -1,9 +1,14 @@
 package com.hyphenate.easeui.base
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isNotEmpty
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
@@ -11,6 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hyphenate.easeui.common.RefreshHeader
 import com.hyphenate.easeui.databinding.EaseFragmentBaseListBinding
+import com.hyphenate.easeui.feature.group.interfaces.ISearchResultListener
+import com.hyphenate.easeui.feature.search.EaseSearchActivity
+import com.hyphenate.easeui.feature.search.EaseSearchType
 import com.hyphenate.easeui.interfaces.OnItemClickListener
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import kotlinx.coroutines.launch
@@ -20,6 +28,16 @@ abstract class EaseBaseListFragment<T>:EaseBaseFragment<EaseFragmentBaseListBind
     var mRecyclerView: RecyclerView? = null
     lateinit var mListAdapter: EaseBaseRecyclerViewAdapter<T>
     protected lateinit var concatAdapter: ConcatAdapter
+    private var searchResultListener: ISearchResultListener? = null
+
+    companion object{
+        const val KEY_USER = "user"
+        const val KEY_SELECT_USER = "select_user"
+    }
+
+    private val returnSearchClickResult: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result -> onClickResult(result) }
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
@@ -56,6 +74,24 @@ abstract class EaseBaseListFragment<T>:EaseBaseFragment<EaseFragmentBaseListBind
         srlContactRefresh.setOnRefreshListener {
             refreshData()
         }
+        binding?.searchBar?.setOnClickListener {
+            returnSearchClickResult.launch(
+                EaseSearchActivity.createIntent(
+                    context = mContext,
+                    searchType = EaseSearchType.SELECT_USER
+                )
+            )
+        }
+    }
+
+    private fun onClickResult(result: ActivityResult) {
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.getStringArrayListExtra(KEY_SELECT_USER)?.let { selectMembers->
+                if (selectMembers.isNotEmpty()){
+                    searchResultListener?.onSearchResultListener(selectMembers.toMutableList())
+                }
+            }
+        }
     }
 
     override fun initData() {
@@ -63,6 +99,17 @@ abstract class EaseBaseListFragment<T>:EaseBaseFragment<EaseFragmentBaseListBind
         mRecyclerView?.adapter = concatAdapter
     }
 
+    fun setSearchViewVisible(visible: Boolean){
+        if (visible){
+            binding?.searchBar?.visibility = View.VISIBLE
+        }else{
+            binding?.searchBar?.visibility = View.GONE
+        }
+    }
+
+    fun setSearchResultListener(listener: ISearchResultListener){
+        this.searchResultListener = listener
+    }
 
     /**
      * Can add header adapters

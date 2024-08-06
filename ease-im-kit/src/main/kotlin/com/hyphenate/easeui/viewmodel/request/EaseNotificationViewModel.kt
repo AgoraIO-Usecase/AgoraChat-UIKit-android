@@ -24,20 +24,37 @@ class EaseNotificationViewModel (
 
     private val repository: EaseNotificationRepository = EaseNotificationRepository()
 
-    override fun getAllMessage() {
+    override fun loadMoreMessage(startMsgId:String?,limit:Int) {
         viewModelScope.launch {
             flow {
-                emit(repository.getAllMessage())
+                emit(repository.loadMoreMessage(startMsgId,limit))
             }
             .catchChatException { e ->
-                view?.getAllMessageFail(e.errorCode, e.description)
+                view?.loadMoreMessageFail(e.errorCode, e.description)
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
             .collect {
                 if (it != null) {
-                    view?.getAllMessageSuccess(it)
+                    view?.loadMoreMessageSuccess(it)
                 }
             }
+        }
+    }
+
+    override fun loadLocalData() {
+        viewModelScope.launch {
+            flow {
+                emit(repository.getAllMessage())
+            }
+                .catchChatException { e ->
+                    view?.getLocalMessageFail(e.errorCode, e.description)
+                }
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
+                .collect {
+                    if (it != null) {
+                        view?.getLocalMessageSuccess(it)
+                    }
+                }
         }
     }
 

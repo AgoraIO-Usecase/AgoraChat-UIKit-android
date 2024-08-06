@@ -55,6 +55,6 @@ interface IContactListLayout : IRecyclerView {
      * @param listener
      * @return
      */
-    fun setLoadContactListener(listener: OnLoadContactListener)
+    fun setLoadContactListener(listener: OnContactEventListener)
 
 }
