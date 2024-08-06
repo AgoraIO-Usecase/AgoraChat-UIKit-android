@@ -42,9 +42,16 @@ import com.hyphenate.easeui.common.extensions.getScreenInfo
 import com.hyphenate.easeui.common.extensions.mainScope
 import com.hyphenate.easeui.common.utils.EaseFileUtils.isFileExistByUri
 import com.hyphenate.easeui.common.utils.EaseFileUtils.takePersistableUriPermission
+import com.hyphenate.util.EMLog
+import com.hyphenate.util.UriUtils
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.UUID
 
 object EaseImageUtils : ChatImageUtils() {
+    private val TAG = javaClass.simpleName
     fun getImagePath(remoteUrl: String): String {
         val imageName = remoteUrl.substring(remoteUrl.lastIndexOf("/") + 1, remoteUrl.length)
         val path = ChatPathUtils.getInstance().imagePath.toString() + "/" + imageName
@@ -440,5 +447,59 @@ object EaseImageUtils : ChatImageUtils() {
         roundedDrawable.cornerRadius = cornerRadius
         roundedDrawable.setAntiAlias(true)
         return roundedDrawable
+    }
+
+    @Throws(IOException::class)
+    fun imageToJpeg(context: Context?, srcImg: Uri?, destFile: File?): Uri? {
+        val bitmap: Bitmap?
+        val filePath = EaseFileUtils.getFilePath(context, srcImg)
+        bitmap = if (!TextUtils.isEmpty(filePath) && File(filePath).exists()) {
+            BitmapFactory.decodeFile(filePath, null)
+        } else {
+            getBitmapByUri(context, srcImg, null)
+        }
+        if (null != bitmap && null != destFile) {
+            if (destFile.exists()) {
+                destFile.delete()
+            }
+            val out = FileOutputStream(destFile)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            out.flush()
+            out.close()
+            return Uri.fromFile(destFile)
+        }
+        return srcImg
+    }
+
+    fun handleImageHeifToJpeg(context: Context?, imageUri: Uri?,destPath:String): Uri? {
+        try {
+            val options: BitmapFactory.Options
+            val filePath = EaseFileUtils.getFilePath(context, imageUri)
+            options = if (!TextUtils.isEmpty(filePath) && File(filePath).exists()) {
+                getBitmapOptions(filePath)
+            } else {
+                getBitmapOptions(context, imageUri)
+            }
+            if ("image/heif".equals(options.outMimeType, ignoreCase = true)) {
+                val fileNameByUri = UriUtils.getFileNameByUri(context, imageUri)
+                val nameWithoutExtension = removeLastExtension(fileNameByUri)
+                return imageToJpeg(context, imageUri, File(destPath,"$nameWithoutExtension.jpeg"))
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            EMLog.e(TAG,"handleImageHeifToJpeg:" + e.message)
+        }
+        EMLog.d(TAG,"handleImageHeifToJpeg:imageUri=$imageUri")
+        return imageUri
+    }
+
+    fun removeLastExtension(str: String): String? {
+        if (TextUtils.isEmpty(str)) {
+            return UUID.randomUUID().toString()
+        }
+        val lastDotIndex = str.lastIndexOf('.')
+        return if (lastDotIndex == -1) {
+            str // 如果没有找到.，返回原字符串
+        } else str.substring(0, lastDotIndex)
     }
 }
