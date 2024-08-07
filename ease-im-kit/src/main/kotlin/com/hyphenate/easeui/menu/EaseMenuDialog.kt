@@ -21,8 +21,6 @@ open class EaseMenuDialog
     private var showCancelButton: Boolean = true
     private val itemModels = ArrayList<EaseMenuItem>()
     private val itemMap: MutableMap<Int?, EaseMenuItem?> = HashMap()
-
-
     private var itemClickListener: OnMenuItemClickListener? = null
     private var dismissListener: OnMenuDismissListener? = null
 
@@ -152,6 +150,12 @@ open class EaseMenuDialog
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         dismissListener?.onDismiss()
+    }
+
+    override fun onDestroyView() {
+        dismissListener = null
+        itemClickListener = null
+        super.onDestroyView()
     }
 
     /**

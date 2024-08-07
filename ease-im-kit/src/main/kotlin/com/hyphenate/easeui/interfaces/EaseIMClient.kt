@@ -284,4 +284,9 @@ interface EaseIMClient {
      */
     fun removeThreadChangeListener(listener:ChatThreadChangeListener){}
 
+    /**
+     * release global listener
+     */
+    fun releaseGlobalListener(){}
+
 }

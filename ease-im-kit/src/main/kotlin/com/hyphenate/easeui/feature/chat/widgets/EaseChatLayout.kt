@@ -444,6 +444,7 @@ class EaseChatLayout @JvmOverloads constructor(
             override fun onBubbleLongClick(v: View?, message: ChatMessage?): Boolean {
                 if (listener?.onBubbleLongClick(v, message) == true) return true
                 chatBinding.layoutMenu.hideSoftKeyboard()
+                ChatLog.e("LeakCanary","initMenuWithMessage")
                 menuHelper.initMenu(v)
                 menuHelper.initMenuWithMessage(message)
                 setMenuItemClickListener(message)
@@ -675,16 +676,19 @@ class EaseChatLayout @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
         EaseIM.removeChatMessageListener(chatMessageListener)
         EaseIM.removeConversationListener(conversationListener)
         groupChangeListener?.let { EaseIM.removeGroupChangeListener(it) }
         chatRoomListener?.let { EaseIM.removeChatRoomChangeListener(it) }
         typingHandler?.removeCallbacksAndMessages(null)
+        menuHelper.setOnMenuChangeListener(null)
+        menuHelper.dismiss()
+        menuHelper.release()
         if (isGroupConv()) {
             EaseAtMessageHelper.get().removeAtMeGroup(conversationId)
             EaseAtMessageHelper.get().cleanToAtUserList()
         }
+        super.onDetachedFromWindow()
     }
 
     fun init(conversationId: String?, chatType: EaseChatType?, loadDataType: EaseLoadDataType = EaseLoadDataType.LOCAL) {

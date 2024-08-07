@@ -297,4 +297,10 @@ class EaseContactListLayout@JvmOverloads constructor(
             }
         }
     }
+
+    override fun onDetachedFromWindow() {
+        itemLongClickListener = null
+        contactViewModel?.detachView()
+        super.onDetachedFromWindow()
+    }
 }

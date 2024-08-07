@@ -60,6 +60,10 @@ object EaseIM {
         return client.isInited()
     }
 
+    fun releaseGlobalListener(){
+        client.releaseGlobalListener()
+    }
+
     /**
      * Temp for test.
      */

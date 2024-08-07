@@ -538,9 +538,10 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        binding?.layoutChat?.chatInputMenu?.setCustomExtendMenu(null)
         EaseIM.removeMultiDeviceListener(multiDeviceListener)
         EaseIM.removeThreadChangeListener(this)
+        super.onDestroyView()
     }
 
     fun selectPicFromLocal() {

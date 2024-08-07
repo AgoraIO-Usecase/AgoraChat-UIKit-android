@@ -197,6 +197,9 @@ class EaseConversationListLayout @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        menuHelper.setOnMenuDismissListener(null)
+        menuHelper.dismiss()
+        menuHelper.clear()
         EaseIM.removeChatMessageListener(chatMessageListener)
     }
     private fun showDefaultMenu(view: View?, position: Int) {

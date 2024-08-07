@@ -43,4 +43,9 @@ class EaseContactForwardFragmentEvent: EaseContactsListFragment() {
     fun setOnForwardClickListener(listener: OnForwardClickListener?){
         this.forwardClickListener = listener
     }
+
+    override fun onDestroyView() {
+        forwardClickListener = null
+        super.onDestroyView()
+    }
 }
