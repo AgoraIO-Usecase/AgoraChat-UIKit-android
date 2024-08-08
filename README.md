@@ -61,7 +61,7 @@ dependencyResolutionManagement {
 
 ```kotlin
 
-implementation("io.hyphenate:ease-chat-kit:4.5.0")
+implementation("io.hyphenate:ease-chat-kit:4.8.1")
 
 ```
 
@@ -129,7 +129,7 @@ implementation(project(mapOf("path" to ":ease-chat-kit")))
     │   ├── contact                                // 联系人列表功能模块
     │   │   ├── adapter                               // 联系人列表功能模块的适配器文件夹
     │   │   │   └── EaseContactListAdapter              // 联系人列表功能模块的联系人列表适配器
-    │   │   ├── viewholders                           // 联系人列表功能模块的联系人相关 ViewHolder
+    │   │   ├── viewholders                           // 联系人列表功能模块的相关 ViewHolder
     │   │   ├── widgets                               // 联系人列表功能模块的自定义 View
     │   │   └── EaseContactsListFragment              // UIKit内提供的联系人列表 Fragment
     │   └── group                                  // 群组功能模块
@@ -170,6 +170,7 @@ val options = ChatOptions()
 options.appKey = "[Your appkey]"
 EaseIM.init(this, options)
 ```
+
 ### 登录
 ```kotlin
 val user = EaseProfile(userName, nickname, avatarUrl)
@@ -181,6 +182,7 @@ EaseIM.login(user, token
     }
 )
 ```
+
 ### 退出登录
 ```kotlin
 EaseIM.logout(unbindDeviceToken
@@ -942,8 +944,8 @@ EaseIM.setUserProfileProvider(object : EaseUserProfileProvider {
 
 ### 群组成员信息提供
 
-UIKit 提供了接口 `EaseIM.setGroupMemberProfileProvider` 进行联系人信息的提供。
-`EaseGroupMemberProfileProvider` 接口如下：
+UIKit 提供了接口 `EaseIM.setGroupProfileProvider` 进行联系人信息的提供。
+`EaseGroupProfileProvider` 接口如下：
 ```kotlin
 interface EaseGroupProfileProvider {
     // 同步获取群成员信息
@@ -956,7 +958,7 @@ interface EaseGroupProfileProvider {
 用法如下：
 ```kotlin
 EaseIM.setGroupProfileProvider(object : EaseGroupProfileProvider {
-    // 同步获取会话信息
+  
     override fun getGroup(id: String?): EaseGroupProfile? {
       ChatClient.getInstance().groupManager().getGroup(id)?.let {
         return EaseGroupProfile(it.groupId, it.groupName, it.extension)
@@ -970,7 +972,6 @@ EaseIM.setGroupProfileProvider(object : EaseGroupProfileProvider {
     ) {
   
     }
-
 })
 
 ```
