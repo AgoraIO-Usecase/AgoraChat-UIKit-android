@@ -3,6 +3,8 @@ package com.hyphenate.easeui.repository
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatContactManager
+import com.hyphenate.easeui.common.ChatError
+import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.extensions.toUser
 import com.hyphenate.easeui.common.suspends.acceptContactInvitation
 import com.hyphenate.easeui.common.suspends.addNewContact
@@ -116,6 +118,9 @@ open class EaseContactListRepository(
     suspend fun fetchContactInfo(contactList: List<EaseUser>?) =
         withContext(Dispatchers.IO) {
             val userList = contactList?.map { it.userId }
+            if (contactList.isNullOrEmpty()) {
+                throw ChatException(ChatError.INVALID_PARAM, "contactList is null or empty.")
+            }
             EaseIM.getUserProvider()?.fetchUsersBySuspend(userList)
         }
 }

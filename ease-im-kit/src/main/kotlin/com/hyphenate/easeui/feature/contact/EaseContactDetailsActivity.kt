@@ -93,7 +93,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
         contactViewModel?.attachView(this)
 
         contactViewModel?.let {
-            val isLoad = EaseIM.getConfig()?.chatConfig?.isLoadBlockListFromServer?: false
+            val isLoad = EaseIM.isLoadBlockListFromServer?: false
             if (!isLoad){
                 it.fetchBlockListFromServer()
             }else{
@@ -340,12 +340,12 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
     }
 
     override fun fetchBlockListFromServerSuccess(list: MutableList<EaseUser>) {
-        EaseIM.getConfig()?.chatConfig?.isLoadBlockListFromServer = true
+        EaseIM.isLoadBlockListFromServer = true
         updateBlockSwitch(list)
     }
 
     override fun fetchBlockListFromServerFail(code: Int, error: String) {
-        EaseIM.getConfig()?.chatConfig?.isLoadBlockListFromServer = true
+        EaseIM.isLoadBlockListFromServer = true
     }
 
     override fun getBlockListFromLocalSuccess(list: MutableList<EaseUser>) {

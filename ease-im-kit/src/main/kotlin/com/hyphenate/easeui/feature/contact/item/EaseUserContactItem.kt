@@ -73,7 +73,8 @@ class EaseUserContactItem: ConstraintLayout, View.OnClickListener {
 
             userAvatarInfo?.let { presence->
                 user?.let {user->
-                    mViewBinding.emPresence.setUserAvatarData(user.toProfile(),presence[user.userId])
+                    mViewBinding.emPresence.setUserAvatarData(user.toProfile())
+                    mViewBinding.emPresence.setUserStatusData(presence[user.userId])
                 }
             }
 

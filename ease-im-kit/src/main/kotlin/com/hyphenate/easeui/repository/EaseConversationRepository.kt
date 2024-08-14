@@ -4,6 +4,7 @@ import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatConversationType
 import com.hyphenate.easeui.common.ChatError
+import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatManager
 import com.hyphenate.easeui.common.ChatPushManager
@@ -220,6 +221,9 @@ class EaseConversationRepository(
                 }.map {
                     it.conversationId
                 }
+            if (userList.isEmpty()) {
+                throw ChatException(ChatError.INVALID_PARAM, "userList is empty.")
+            }
             EaseIM.getUserProvider()?.fetchUsersBySuspend(userList)
         }
 

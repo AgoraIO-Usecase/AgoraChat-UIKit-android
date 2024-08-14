@@ -75,8 +75,11 @@ class EaseCustomAvatarView : ConstraintLayout{
         return mViewBinding.ivPresence
     }
 
-    fun setUserAvatarData(profile: EaseProfile?, @DrawableRes icon: Int? = null) {
+    fun setUserAvatarData(profile: EaseProfile?) {
         mViewBinding.ivUserAvatar.loadAvatar(profile)
+    }
+
+    fun setUserStatusData(@DrawableRes icon: Int? = null){
         icon?.let {
             mViewBinding.ivPresence.setImageResource(icon)
         }

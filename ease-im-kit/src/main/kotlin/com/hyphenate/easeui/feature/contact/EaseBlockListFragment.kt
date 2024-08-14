@@ -170,7 +170,7 @@ open class EaseBlockListFragment: EaseBaseFragment<FragmentBlockListLayoutBindin
     }
 
     fun loadData(){
-        val isLoad = EaseIM.getConfig()?.chatConfig?.isLoadBlockListFromServer?: false
+        val isLoad = EaseIM.isLoadBlockListFromServer?: false
         if (!isLoad){
             contactViewModel.fetchBlockListFromServer()
         }else{
@@ -219,7 +219,7 @@ open class EaseBlockListFragment: EaseBaseFragment<FragmentBlockListLayoutBindin
     }
 
     override fun fetchBlockListFromServerSuccess(list: MutableList<EaseUser>) {
-        EaseIM.getConfig()?.chatConfig?.isLoadBlockListFromServer = true
+        EaseIM.isLoadBlockListFromServer = true
         binding?.refreshLayout?.finishRefresh()
         listAdapter?.setData(list.toMutableList())
         data = list

@@ -6,7 +6,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
@@ -249,11 +248,11 @@ open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationLi
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         EaseIM.removeContactListener(contactListener)
         EaseIM.removeConversationListener(conversationListener)
         EaseIM.removeGroupChangeListener(groupChangeListener)
         EaseIM.removeMultiDeviceListener(multiDeviceListener)
+        super.onDestroyView()
     }
 
     override fun onItemClick(view: View?, position: Int) {

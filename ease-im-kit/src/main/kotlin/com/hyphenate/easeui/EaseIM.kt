@@ -37,6 +37,11 @@ object EaseIM {
     // Whether the debug mode is open in EaseIM.
     const val DEBUG: Boolean = true
 
+    /**
+     * Open Application first load block list from server.
+     */
+    var isLoadBlockListFromServer: Boolean? = false
+
     private val client: EaseIMClient by lazy {
         EaseIMClientImpl()
     }

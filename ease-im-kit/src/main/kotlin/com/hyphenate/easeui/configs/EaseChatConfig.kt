@@ -38,11 +38,6 @@ class EaseChatConfig {
     var targetTranslationLanguage: String = "zh"
 
     /**
-     * Open Application first load block list from server.
-     */
-    var isLoadBlockListFromServer: Boolean = false
-
-    /**
      * The config that whether to enable the function of url preview.
      */
     var enableUrlPreview: Boolean = true
