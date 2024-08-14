@@ -1,25 +1,83 @@
-# 单群聊 UIKit
+# Chat UIKit Readme
 
-单群聊 UIKit，是基于环信 IM SDK 的一款 UI 组件库，它提供了一些通用的 UI 组件，例如‘会话列表’、‘聊天界面’和‘联系人列表’等，开发者可根据实际业务需求通过该组件库快速地搭建自定义 IM 应用。单群聊 UIKit 中的组件在实现 UI 功能的同时，调用 IM SDK 相应的接口实现 IM 相关逻辑和数据的处理，因而开发者在 UIKit 时只需关注自身业务或个性化扩展即可。
+_English | [中文](README.zh.md)_
 
-# 导入`单群聊 UIKit `
+This guide gives a comprehensive overview into chat_uikit. The new chat_uikit is intended to provide developers with an efficient, plug-and-play, and highly customizable UI component library, helping you build complete and elegant IM applications that can easily satisfy most instant messaging scenarios. Please download the demo to try it out.
 
-## 开发环境要求
+This guide provides an overview and usage examples of the chat_uikit framework in Android development, and presents various components and functions of this UIKit, giving developers a good understanding of how chat_uikit works and how to use it efficiently.
 
-- Android Studio Flamingo | 2022.2.1 及以上
-- Gradle 8.0 及以上
-- targetVersion 26 及以上
-- Android SDK API 21 及以上
-- JDK 17 及以上
+## Table of contents
 
-## 集成`单群聊 UIKit`
+- [Chat UIKit Readme](#chat-uikit-readme)
+  - [Table of contents](#table-of-contents)
+  - [Product Experience](#product-experience)
+  - [Development Environment](#development-environment)
+  - [Installation](#installation)
+    - [Integrate with Gradle](#integrate-with-gradle)
+      - [Gradle before 7.0](#gradle-before-70)
+      - [Gradle later than 7.0](#gradle-later-than-70)
+    - [Module remote dependency](#module-remote-dependency)
+    - [Integrate with the Module source code](#integrate-with-the-module-source-code)
+    - [Prevent code obfuscation](#prevent-code-obfuscation)
+  - [Basic project structure of chat\_uikit](#basic-project-structure-of-chat_uikit)
+  - [Permission requirements](#permission-requirements)
+  - [Initialize and log in to the UIKit](#initialize-and-log-in-to-the-uikit)
+    - [Initialize the UIKit](#initialize-the-uikit)
+    - [Log in to the UIKit](#log-in-to-the-uikit)
+    - [Log out of the UIKit](#log-out-of-the-uikit)
+  - [Create pages](#create-pages)
+    - [Create the chat page](#create-the-chat-page)
+      - [EaseChatActivity](#easechatactivity)
+      - [EaseChatFragment](#easechatfragment)
+    - [Create the conversation list page](#create-the-conversation-list-page)
+    - [Create the contact list page](#create-the-contact-list-page)
+  - [Advanced customization](#advanced-customization)
+    - [Chat page](#chat-page)
+      - [Customize with EaseChatFragment.Builder](#customize-with-easechatfragmentbuilder)
+      - [Add a custom message layout](#add-a-custom-message-layout)
+      - [Customize settings by inheriting EaseChatFragment](#customize-settings-by-inheriting-easechatfragment)
+    - [Conversation list page](#conversation-list-page)
+      - [Customize settings with EaseConversationListFragment.Builder](#customize-settings-with-easeconversationlistfragmentbuilder)
+      - [Add a custom conversation layout](#add-a-custom-conversation-layout)
+      - [Create a CustomConversationListFragment by inheriting EaseConversationListFragment](#create-a-customconversationlistfragment-by-inheriting-easeconversationlistfragment)
+    - [Contact list page](#contact-list-page)
+      - [Customize settings with EaseContactsListFragment.Builder](#customize-settings-with-easecontactslistfragmentbuilder)
+      - [Add a custom contact layout](#add-a-custom-contact-layout)
+  - [Global configurations](#global-configurations)
+  - [User information](#user-information)
+    - [Information of the current login user](#information-of-the-current-login-user)
+    - [User information providing](#user-information-providing)
+    - [Group information providing](#group-information-providing)
+    - [UIKit information processing logic](#uikit-information-processing-logic)
+    - [Update information cached in UIKit](#update-information-cached-in-uikit)
+  - [Support for dark and light themes](#support-for-dark-and-light-themes)
 
-单群聊 UIKit 支持 Gradle 接入和 Module 源码集成。
 
-### Gradle 接入集成
+## Product Experience
 
-#### Gradle 7.0 之前
-在项目根目录的 build.gradle 或者 build.gradle.kts 文件中添加 MavenCentral 远程仓库。
+In this project, there is a best-practice demonstration project in the `app` folder for you to build your own business capabilities.
+
+If you want to experience the functions of chat_uikit, you can scan the following QR code to try the demo.
+
+![Demo](./image/demo.png)
+
+## Development Environment
+
+- Android Studio Flamingo | 2022.2.1 or later
+- Gradle 8.0 or later
+- TargetVersion 26 or later
+- Android SDK API 21 or later
+- JDK 17 or later
+
+## Installation
+
+The UIKit can be integrated with Gradle and module source code.
+
+### Integrate with Gradle
+
+#### Gradle before 7.0
+
+Add the Maven remote repository in `build.gradle` or `build.gradle.kts` in the root directory of the project.
 
 ```kotlin
 buildscript {
@@ -36,8 +94,9 @@ allprojects {
 }
 ```
 
-#### Gradle 7.0 之后
-在项目根目录的 settings.gradle 或者 settings.gradle.kts 文件中检查并添加 MavenCentral 远程仓库。
+#### Gradle later than 7.0
+
+Add the Maven remote repository in `settings.gradle` or `settings.gradle.kts` in the root directory of the project.
 
 ```kotlin
 pluginManagement {
@@ -55,9 +114,9 @@ dependencyResolutionManagement {
 }
 ```
 
-### Module 远程依赖
+### Module remote dependency
 
-在 app 项目 build.gradle.kts 中添加以下依赖
+Add the following dependency to `build.gradle.kts` of the app project:
 
 ```kotlin
 
@@ -65,83 +124,92 @@ implementation("io.hyphenate:ease-chat-kit:4.8.1")
 
 ```
 
-### Module 源码集成
+### Integrate with the Module source code
 
-从 github 获取 [Chat UIKit](https://github.com/easemob/chatuikit-android) 源码，按照下面的方式集成：
+Acquire the Chat UIKit source code from the [GitHub repository](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-android/tree/dev-2) and integrate it in the following way:
 
-1. 在根目录 settings.gradle.kts 文件（/Gradle Scripts/settings.gradle.kts(Project Settings)）中添加如下代码：
-
-```kotlin
-include(":ease-chat-kit")
-project(":ease-chat-kit").projectDir = File("../chatuikit-android/ease-im-kit")
-```
-
-2. 在 build.gradle.kts 文件（/Gradle Scripts/build.gradle(Module: app)）中添加如下代码：
+1. Add the following code in the `settings.gradle.kts` file (/Gradle Scripts/settings.gradle.kts(Project Settings)) in the root directory.
 
 ```kotlin
-//chatuikit-android
-implementation(project(mapOf("path" to ":ease-chat-kit")))
+include(":chat-uikit")
+project(":chat-uikit").projectDir = File("../chatuikit-android/ease-im-kit")
 ```
 
-### 防止代码混淆
+2. Add the following code in `build.gradle.kts` (/Gradle Scripts/build.gradle(Module: app)).
 
-在 app/proguard-rules.pro 文件中添加如下行，防止代码混淆：
+```kotlin
+//chat-uikit
+implementation(project(mapOf("path" to ":chat-uikit")))
+```
+
+### Prevent code obfuscation
+
+Add the following lines to `app/proguard-rules.pro` to prevent code obfuscation.
 
 ```kotlin
 -keep class com.hyphenate.** {*;}
 -dontwarn  com.hyphenate.**
 ```
 
-## UIKit 基本项目结构
+## Basic project structure of chat_uikit
 
 ```
-└── easeui
-    ├── EaseIM                                   // UIKit SDK 入口
-    ├── EaseIMConfig                             // UIKit SDK 配置类
-    ├── feature                                  // UIKit 功能模块
-    │   ├── chat                                   // 聊天功能模块
-    │   │   ├── activities                            // 聊天功能模块的 Activity 文件夹
-    │   │   │   └── EaseChatActivity                    // UIKit内置的聊天界面
-    │   │   ├── adapter                               // 聊天功能模块的适配器文件夹
-    │   │   │   └── EaseMessagesAdapter                 // 聊天功能模块的消息列表适配器
-    │   │   ├── reply                                 // 聊天功能模块的回复功能相关
-    │   │   ├── report                                // 聊天功能模块的举报消息功能相关
-    │   │   ├── chathistory                           // 聊天功能模块的消息历史功能相关
-    │   │   ├── forward                               // 聊天功能模块的消息转发功能相关
-    │   │   ├── reaction                              // 聊天功能模块的消息 Reaction 功能相关
-    │   │   ├── search                                // 聊天功能模块的搜索消息功能相关
-    │   │   ├── translation                           // 聊天功能模块的消息翻译功能相关
-    │   │   ├── viewholders                           // 聊天功能模块的消息类型 ViewHolder
-    │   │   ├── widgets                               // 聊天功能模块的自定义 View
-    │   │   └── EaseChatFragment                      // UIKit内提供的聊天 Fragment
-    │   ├── conversation                           // 会话列表功能模块
-    │   │   ├── adapter                               // 会话列表功能模块的适配器文件夹
-    │   │   │   └── EaseConversationListAdapter         // 会话列表功能模块的会话列表适配器
-    │   │   ├── viewholders                           // 会话列表功能模块的会话类型 ViewHolder
-    │   │   ├── widgets                               // 会话列表功能模块的自定义 View
-    │   │   └── EaseConversationListFragment          // UIKit内提供的会话列表 Fragment
-    │   ├── thread                                 // 子区功能模块
-    │   │   ├── adapter                               // 子区功能模块的适配器文件夹
-    │   │   │   └── EaseChatThreadListAdapter           // 子区功能模块的子区列表适配器
-    │   │   ├── viewholder                            // 子区列表功能模块的子区列表类型 ViewHolder
-    │   │   ├── widgets                               // 子区列表功能模块的自定义 View
-    │   │   └── EaseChatThreadActivity                // UIKit内提供的子区聊天页面
-    │   ├── contact                                // 联系人列表功能模块
-    │   │   ├── adapter                               // 联系人列表功能模块的适配器文件夹
-    │   │   │   └── EaseContactListAdapter              // 联系人列表功能模块的联系人列表适配器
-    │   │   ├── viewholders                           // 联系人列表功能模块的相关 ViewHolder
-    │   │   ├── widgets                               // 联系人列表功能模块的自定义 View
-    │   │   └── EaseContactsListFragment              // UIKit内提供的联系人列表 Fragment
-    │   └── group                                  // 群组功能模块
-    ├── repository                               // UIKit SDK 数据仓库
+└── uikit
+    ├── EaseIM                                   // UIKit SDK entry
+    ├── EaseIMConfig                             // UIKit SDK configuration class
+    ├── feature                                  // UIKit function module
+    │   ├── chat                                   // Chat module
+    │   │   ├── activities                            // Activity folder
+    │   │   │   └── EaseChatActivity                  // Chat page built in the UIKit
+    │   │   ├── adapter                               // Adapter folder of the chat module
+    │   │   │   └── EaseMessagesAdapter               // Message list adapter
+    │   │   ├── controllers                           // Controller of all functions of the chat module
+    │   │   ├── pin                                   // Message pinning
+    │   │   ├── urlpreview                            // URL preview
+    │   │   ├── reply                                 // Message reply
+    │   │   ├── report                                // Message reporting
+    │   │   ├── chathistory                           // Chat history
+    │   │   ├── forward                               // Message forwarding
+    │   │   ├── reaction                              // Message reaction
+    │   │   ├── search                                // Message search
+    │   │   ├── translation                           // Message translation
+    │   │   ├── viewholders                           // Message type ViewHolder
+    │   │   ├── widgets                               // Custom view of the chat module
+    │   │   └── EaseChatFragment                      // Chat fragment built in the UIKit
+    │   ├── conversation                           // Conversation list module
+    │   │   ├── adapter                               // Adapter folder
+    │   │   │   └── EaseConversationListAdapter       // Conversation list adapter
+    │   │   ├── viewholders                           // Conversation ViewHolder
+    │   │   ├── widgets                               // Custom view of the conversation list module
+    │   │   └── EaseConversationListFragment          // Conversation list fragment built in the UIKit
+    │   ├── thread                                 // Message thread module
+    │   │   ├── adapter                               // Adapter folder
+    │   │   │   └── EaseChatThreadListAdapter         // Message thread list adapter
+    │   │   ├── viewholder                            // Message thread ViewHolder 
+    │   │   ├── widgets                               // Custom view of the message thread module
+    │   │   └── EaseChatThreadActivity               // Thread chat page within the UIKit
+    │   ├── contact                               // Contact list module
+    │   │   ├── adapter                               // Contact list adapter folder 
+    │   │   │   └── EaseContactListAdapter            // Contact list adapter
+    │   │   ├── viewholders                           // Contact ViewHolder
+    │   │   ├── widgets                               // Custom view of the contact list module
+    │   │   └── EaseContactsListFragment              // Contact list fragment built in the UIKit
+    │   └── group                                 // Group module
+    │       ├── fragments                             // Group fragment
+    │       ├── adapter                               // Adapter folder 
+    │       │   └── EaseGroupListAdapter                // Group list adapter
+    │       ├── viewholders                           // ViewHolder   Message ViewHolder
+    │       └── EaseGroupListActivity                 // Group list UI built in the UIKit
+    ├── repository                               // UIKit SDK data repository
     ├── viewmodel                                // UIKit SDK ViewModel
     ├── provider                                 // UIKit SDK Provider
-    ├── common                                   // UIKit SDK 公共类
-    ├── interfaces                               // UIKit SDK 接口类
-    └── widget                                   // UIKit SDK 自定义 View
+    ├── common                                   // Public class of UIKit SDK
+    ├── interfaces                               // API class of UIKit SDK
+    └── widget                                   // Custom view of UIKit SDK
 ```
 
-## 权限要求
+## Permission requirements
+
 ```xml
 <!-- IM SDK required start -->
 <uses-permission android:name="android.permission.INTERNET" />
@@ -161,17 +229,19 @@ implementation(project(mapOf("path" to ":ease-chat-kit")))
 <!-- IM UIKit required end -->
 ```
 
-## 初始化及登录`单群聊 UIKit`
+## Initialize and log in to the UIKit
 
-### 初始化
-使用单群聊 UIKit 需要进行初始化，示例代码如下：
+### Initialize the UIKit
+
+You need to initialize the UIKit before using it:
+
 ```kotlin
 val options = ChatOptions()
 options.appKey = "[Your appkey]"
 EaseIM.init(this, options)
 ```
+### Log in to the UIKit
 
-### 登录
 ```kotlin
 val user = EaseProfile(userName, nickname, avatarUrl)
 EaseIM.login(user, token
@@ -183,7 +253,8 @@ EaseIM.login(user, token
 )
 ```
 
-### 退出登录
+### Log out of the UIKit
+
 ```kotlin
 EaseIM.logout(unbindDeviceToken
     , onSuccess = {
@@ -194,28 +265,33 @@ EaseIM.logout(unbindDeviceToken
 )
 ```
 
-# 快速搭建
-## 快速创建聊天页面
+## Create pages
 
-### 使用 EaseChatActivity
-单群聊 UIKit 提供了 EaseChatActivity 页面，调用 EaseChatActivity#actionStart 方法即可，示例代码如下：
+### Create the chat page
+
+#### EaseChatActivity
+
+The UIKit provides the `EaseChatActivity` page. You can call the `EaseChatActivity#actionStart` method to create the chat page.
 
 ```kotlin
 // conversationId: 1v1 is peer's userID, group chat is groupID
 // chatType can be EaseChatType#SINGLE_CHAT, EaseChatType#GROUP_CHAT
 EaseChatActivity.actionStart(mContext, conversationId, chatType)
 ```
-EaseChatActivity 页面主要进行了权限的请求，比如相机权限，语音权限等。
 
-### 使用 EaseChatFragment
-开发者也可以使用 UIKit 提供的 EaseChatFragment 创建聊天页面，示例代码如下：
+The EaseChatActivity page requests permissions, like camera permissions and voice permissions.
+
+#### EaseChatFragment
+
+Alternatively, you can create the chat page with `EaseChatFragment`:
+
 ```kotlin
 class ChatActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
         // conversationID: 1v1 is peer's userID, group chat is groupID
-        // chatType can be EaseChatType#SINGLE_CHAT, EaseChatType#GROUP_CHAT
+        // chatType can be ChatType#SINGLE_CHAT, ChatType#GROUP_CHAT
         EaseChatFragment.Builder(conversationId, chatType)
                         .build()?.let { fragment ->
                             supportFragmentManager.beginTransaction()
@@ -225,11 +301,9 @@ class ChatActivity: AppCompatActivity() {
 }
 ```
 
-## 快速创建会话列表页面
+### Create the conversation list page
 
-UIKit 提供了 EaseConversationListFragment ，添加到 Activity 中即可使用。
-
-示例如下：
+UIKit provides `EaseConversationListFragment`.  You can create the conversation list page by adding `EaseConversationListFragment` to the `Activity`.
 
 ```kotlin
 class ConversationListActivity: AppCompatActivity() {
@@ -246,11 +320,9 @@ class ConversationListActivity: AppCompatActivity() {
 }
 ```
 
-## 快速创建联系人列表页面
+### Create the contact list page
 
-UIKit 提供了 EaseContactsListFragment ，添加到 Activity 中即可使用。
-
-示例如下：
+UIKit provides `EaseContactsListFragment`. You can create the contact list page by adding `EaseContactsListFragment` to the `Activity`.
 
 ```kotlin
 class ContactListActivity: AppCompatActivity() {
@@ -267,16 +339,19 @@ class ContactListActivity: AppCompatActivity() {
 }
 ```
 
-# 高级定制
+## Advanced customization
 
-## 聊天页面相关
-### 通过 EaseChatFragment.Builder 自定义设置
+### Chat page
 
-EaseChatFragment 提供了 Builder 构建方式，方便开发者进行一些自定义设置，目前提供的设置项如下：
+#### Customize with EaseChatFragment.Builder
+
+EaseChatFragment allows you to custom settings shown below with Builder:
+
+EaseChatFragment
 
 ```kotlin
 // conversationID: 1v1 is peer's userID, group chat is groupID
-// easeChatType: SINGLE_CHAT, GROUP_CHAT, CHATROOM
+// easeChatType: SINGLE_CHAT, GROUP_CHAT
 EaseChatFragment.Builder(conversationID, easeChatType)
         .useTitleBar(true)
         .setTitleBarTitle("title")
@@ -316,70 +391,70 @@ EaseChatFragment.Builder(conversationID, easeChatType)
         .build()
 ```
 
-EaseChatFragment#Builder 提供的方法解释：
+EaseChatFragment#Builder provides the following methods:
 
-| 方法                                   | 说明                                                         |
+| Method                                 | Description                                                         |
 | -------------------------------------- | ---------------------------------------------------- |
-| useTitleBar()                          | 是否使用默认的标题栏（EaseTitleBar）。<br/> - true：是。 <br/> - (默认) false: 否。        |
-| setTitleBarTitle()                     | 设置标题栏的标题。                                        |
-| setTitleBarSubTitle()                  | 设置标题栏的子标题。                                       |
-| enableTitleBarPressBack()              | 设置是否支持显示返回按钮。<br/> - true：是。 <br/> - (默认) false: 否。                 |
-| setTitleBarBackPressListener(）        | 设置点击标题栏返回按钮的监听事件。                          | 
-| setSearchMessageId(）                  | 设置搜索消息 ID，聊天将标识为 EaseLoadDataType.SEARCH      |
-| getHistoryMessageFromServerOrLocal(）  | 设置优先从服务器还是本地获取消息。                          |
-| setOnChatExtendMenuItemClickListener() | 设置扩展功能的条目点击事件监听。                             |
-| setOnChatInputChangeListener()         | 设置菜单中文本变化的监听。                                   |
-| setOnMessageItemClickListener()        | 设置消息条目的点击事件监听，包括气泡区域及头像的点击及长按事件。 |
-| setOnMessageSendCallback()             | 设置发送消息的结果回调监听。                                   |
-| setOnWillSendMessageListener()         | 设置发送消息前添加消息扩展属性的回调。                       |
-| setOnChatRecordTouchListener()         | 设置录音按钮的触摸事件回调。                                 |
-| setOnMessageForwardCallback()          | 设置消息转发的结果回调。                                 |
-| setOnSendCombineMessageCallback()      | 设置合并消息发送的结果回调。                                 |
-| setOnReactionMessageListener()         | 设置操作消息 Reaction 的结果回调。                                 |
-| setOnModifyMessageListener()           | 设置编辑消息的结果回调监听。                                 |
-| setOnReportMessageListener()           | 设置举报消息的结果回调监听。                                 |
-| setOnTranslationMessageListener()      | 设置消息翻译的结果回调监听。                                 |
-| setMsgTimeTextColor()                  | 设置时间线文本的颜色。                                        |
-| setMsgTimeTextSize()                   | 设置时间线文本的字体大小。                                  |
-| setReceivedMsgBubbleBackground()       | 设置接收消息气泡区域的背景。                            |
-| setSentBubbleBackground()              | 设置发送消息气泡区域的背景。                              |
-| showNickname()                         | 是否显示昵称。<br/> - true：是。 <br/> - (默认) false: 否。                                  |
-| hideReceiverAvatar()                   | 设置不展示接收方头像，默认展示接收方头像。                     |
-| hideSenderAvatar()                     | 设置不展示发送方头像，默认展示发送方头像。                    |
-| setChatBackground()                    | 设置聊天列表区域的背景。                                      |
-| setChatInputMenuBackground()           | 设置菜单区域的背景。                                        |
-| setChatInputMenuHint()                 | 设置菜单区域输入文本框的提示文字。                            |
-| sendMessageByOriginalImage()           | 设置图片消息是否发送原图。<br/> - true：是。 <br/> - (默认) false: 否。                      |
-| setThreadMessage()                     | 设置当前会话是否是子区会话。<br/> - true：是。 <br/> - (默认) false: 否。                      |
-| setTargetTranslationList()             | 设置翻译目标语言列表。需要开通消息翻译功能。                       |
-| setEmptyLayout()                       | 设置聊天列表的空白页面。                                     |
-| setCustomAdapter()                     | 设置自定义的适配器，默认为 EaseMessageAdapter。               |
-| setCustomFragment()                    | 设置自定义聊天 Fragment，需要继承自 EaseChatFragment。         |
+| useTitleBar()                          | Sets to use the default title bar (EaseTitleBar):<br/> - true: Yes <br/> - (Default) false: No        |
+| setTitleBarTitle()                     | Sets the title of the title bar.                                       |
+| setTitleBarSubTitle()                  | Sets the sub-title of the title bar.                                       |
+| enableTitleBarPressBack()              | Sets whether to show the back button in the title bar: <br/> - true: Yes <br/> - (Default) false: No           |
+| setTitleBarBackPressListener()         | Sets the event that occurs when clicking the the back button in the title bar.                           |
+| setSearchMessageId()                   | Sets the message ID for search. If a match is found, EaseChatFragment will display the target message as well as 10 messages following it.       |
+| getHistoryMessageFromServerOrLocal()   | Sets whether to preferentially get messages from the server or local storage.                           |
+| setOnChatExtendMenuItemClickListener() | Sets the listener for chat extension items.                            |
+| setOnChatInputChangeListener()         | Sets the listener for text changes on the menu.                                   |
+| setOnMessageItemClickListener()        | Sets the listener for item click events, like the click and long press events of a message cell and avatar. |
+| setOnMessageSendCallback()             | Sets the message sending result callback.                                   |
+| setOnWillSendMessageListener()         | Sets the listener for adding message extension attributes before sending a message.                      |
+| setOnChatRecordTouchListener()         | Sets the recording button touch event.                                 |
+| setOnMessageForwardCallback()          | Sets the message forwarding result callback.                                |
+| setOnSendCombineMessageCallback()      | Sets the result callback of sending a combined message.                                 |
+| setOnReactionMessageListener()         | Sets the listener for message Reaction operation result.                                |
+| setOnModifyMessageListener()           | Sets the listener for message edit result.                                 |
+| setOnReportMessageListener()           | Sets the listener for message reporting result.                                |
+| setOnTranslationMessageListener()      | Sets the listener for message translation result.                                 |
+| setMsgTimeTextColor()                  | Sets the color of the timeline.      |
+| setMsgTimeTextSize()                   | Sets the font size of the timeline text.                                 |
+| setReceivedMsgBubbleBackground()       | Sets the background color of the received message cell.                         |
+| setSentBubbleBackground()              | Sets the background color of the sent message cell.                             |
+| showNickname()                         | Sets whether to display the nickname: <br/> - true: Yes <br/> - (Default) false: No                                  |
+| hideReceiverAvatar()                   | Sets to hide the recipient avatar. By default, the recipient avatar is displayed.   |
+| hideSenderAvatar()                     | Sets to hide the sender avatar. By default, the sender avatar is displayed.                   |
+| setChatBackground()                    | Sets the background of the chat list section.                                     |
+| setChatInputMenuBackground()           | Sets the background of the input bar.                                        |
+| setChatInputMenuHint()                 | Sets the hint in the text box in the input bar.                           |
+| sendMessageByOriginalImage()           | Sets whether to send the original image for an image message: <br/> - true: Yes <br/> - (Default) false: No                   |
+| setThreadMessage()                     | Sets whether to set the current conversation as a thread conversation: <br/> - true: Yes <br/> - (Default) false: No                      |
+| setTargetTranslationList()             | Sets the list of target languages for translation. You need to enable the translation function before calling this method.                        |
+| setEmptyLayout()                       | Sets the empty page for the chat list.                                    |
+| setCustomAdapter()                     | Sets a custom adapter. By default, EaseMessageAdapter is used.  |
+| setCustomFragment()                    | Sets the custom chat fragment by inheriting EaseChatFragment.         |
 
-### 添加自定义消息布局
+#### Add a custom message layout
 
-开发者可以继承 EaseMessageAdapter ， EaseChatRowViewHolder 和 EaseChatRow 实现自己的 CustomMessageAdapter ，CustomChatTypeViewViewHolder 和 CustomTypeChatRow ，然后将 CustomMessageAdapter 设置到 EaseChatFragment#Builder#setCustomAdapter 中。
+You can create a CustomMessageAdapter, CustomChatTypeViewViewHolder, and CustomTypeChatRow by inheriting EaseMessageAdapter, EaseChatRowViewHolder, and EaseChatRow, and then set CustomMessageAdapter to EaseChatFragment#Builder#setCustomAdapter.
 
-（1）创建自定义适配器 CustomMessageAdapter 继承自 EaseMessageAdapter，重写 getViewHolder 和 getItemNotEmptyViewType 方法。
+(1) You can create a CustomMessageAdapter by inheriting EaseMessageAdapter and overwrite `getViewHolder` and `getItemNotEmptyViewType` methods.
 
 ```kotlin
 class CustomMessageAdapter: EaseMessagesAdapter() {
 
     override fun getItemNotEmptyViewType(position: Int): Int {
-        // 根据消息类型设置自己的 itemViewType。
-        // 如果要使用默认的，返回 super.getItemNotEmptyViewType(position) 即可。
+        // Set your own itemViewType by message type.
+        // To use the default message type, return super.getItemNotEmptyViewType(position).
         return CUSTOM_YOUR_MESSAGE_TYPE
     }
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<EaseMessage> {
-        // 根据返回的 viewType 返回对应的 ViewHolder。
-        // 返回自定义的 ViewHolder 或者 使用默认的 super.getViewHolder(parent, viewType)
+        // Return the ViewHolder for the returned viewType.
+        // Return the custom ViewHolder or use the default super.getViewHolder(parent, viewType).
         return CUSTOM_VIEW_HOLDER()
     }
 }
 ```
 
-（2）创建 CustomTypeChatRow ，继承自 EaseChatRow。
+(2) Create a CustomTypeChatRow by inheriting EaseChatRow.
 
 ```kotlin
 class CustomTypeChatRow(
@@ -403,7 +478,7 @@ class CustomTypeChatRow(
 }
 ```
 
-（3）创建 CustomChatTypeViewViewHolder ，继承自 EaseChatRowViewHolder。
+（3）Create a CustomChatTypeViewViewHolder by inheriting EaseChatRowViewHolder.
 
 ```kotlin
 class CustomChatTypeViewViewHolder(
@@ -417,13 +492,13 @@ class CustomChatTypeViewViewHolder(
 }
 ```
 
-（4）完善 CustomMessageAdapter。
+（4）Make improvement to CustomMessageAdapter.
 
 ```kotlin
 class CustomMessageAdapter: EaseMessagesAdapter() {
 
     override fun getItemNotEmptyViewType(position: Int): Int {
-        // 根据消息类型设置自己的 itemViewType。
+        // Set your own itemViewType by message type.
         mData?.get(position)?.getMessage()?.let { msg ->
             msg.getStringAttribute("type", null)?.let { type ->
                 if (type == CUSTOM_TYPE) {
@@ -435,18 +510,18 @@ class CustomMessageAdapter: EaseMessagesAdapter() {
                 }
             }
         }
-        // 如果要使用默认的，返回 super.getItemNotEmptyViewType(position) 即可。
+        // If the default message type is used, return super.getItemNotEmptyViewType(position).
         return super.getItemNotEmptyViewType(position)
     }
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<EaseMessage> {
-        // 根据返回的 viewType 返回对应的 ViewHolder。
+        // Return ViewHolder for the returned viewType. 
         if (viewType == VIEW_TYPE_MESSAGE_CUSTOM_VIEW_ME || viewType == VIEW_TYPE_MESSAGE_CUSTOM_VIEW_OTHER) {
             CustomChatTypeViewViewHolder(
                 CustomTypeChatRow(parent.context, isSender = viewType == VIEW_TYPE_MESSAGE_CUSTOM_VIEW_ME)
             )
         }
-        // 返回自定义的 ViewHolder 或者 使用默认的 super.getViewHolder(parent, viewType)
+        // Return the custom ViewHolder or use the default super.getViewHolder(parent, viewType).
         return super.getViewHolder(parent, viewType)
     }
 
@@ -458,88 +533,88 @@ class CustomMessageAdapter: EaseMessagesAdapter() {
 }
 ```
 
-（5）添加 CustomMessageAdapter 到 EaseChatFragment#Builder。
+（5）Add CustomMessageAdapter in EaseChatFragment#Builder.
 
 ```kotlin
 builder.setCustomAdapter(CustomMessageAdapter())
 ```
 
-### 通过继承 EaseChatFragment 进行自定义设置
+#### Customize settings by inheriting EaseChatFragment
 
-创建自定义 CustomChatFragment，继承自 EaseChatFragment，并设置到 EaseChatFragment#Builder 中。
+Create a CustomChatFragment by inheriting EaseChatFragment and set it in EaseChatFragment#Builder.
 
 ```kotlin
 builder.setCustomFragment(customChatFragment)
 ```
 
-（1）列表控件相关功能设置
+(1) Set the functions of the list control
 
-获取 `EaseChatMessageListLayout` 对象：
+Get the `EaseChatMessageListLayout` object:
 
 ```kotlin
 val chatMessageListLayout:EaseChatMessageListLayout? = binding?.layoutChat?.chatMessageListLayout
 ```
 
-EaseChatMessageListLayout 提供了如下方法：
+EaseChatMessageListLayout provides the following methods:
 
-| 方法                        | 说明                                                         |
+| Method                       | Description                                                        |
 | ------------------------------ | ---------------------------------------------------- |
-| setViewModel()              | UIKit 中提供了默认的实现 EaseMessageListViewModel，开发者可以继承 IChatMessageListRequest 添加自己的数据逻辑。 |
-| setMessagesAdapter()        | 设置消息列表的适配器，需要是 EaseMessagesAdapter 的子类。                                         |
-| getMessagesAdapter()        | 返回消息列表的适配器。                                         |
-| addHeaderAdapter()          | 添加消息列表的头布局的适配器。                                |
-| addFooterAdapter()          | 添加消息列表的尾布局的适配器。                                 |
-| removeAdapter()             | 移除指定适配器。                                              |
-| addItemDecoration()         | 添加消息列表的装饰器。                                        |
-| removeItemDecoration()      | 移除消息列表的装饰器。                                        |
-| setAvatarDefaultSrc()       | 设置条目的默认头像。                                         |
-| setAvatarShapeType()        | 设置头像的样式，分为默认样式，圆形和矩形三种样式。   |
-| showNickname()              | 是否展示条目的昵称，EaseChatFragment#Builder 也提供了此功能的设置方法。 |
-| setItemSenderBackground()   | 设置发送方的背景，EaseChatFragment#Builder 也提供了此功能的设置方法。 |
-| setItemReceiverBackground() | 设置接收方的背景，EaseChatFragment#Builder 也提供了此功能的设置方法。 |
-| setItemTextSize()           | 设置文本消息的字体大小。                                       |
-| setItemTextColor()          | 设置文本消息的字体颜色。                                       |
-| setTimeTextSize()           | 设置时间线文本的字体大小，EaseChatFragment#Builder 也提供了此功能的设置方法。 |
-| setTimeTextColor()          | 设置时间线文本的颜色，EaseChatFragment#Builder 也提供了此功能的设置方法。 |
-| setTimeBackground()         | 设置时间线的背景。                                             |
-| hideChatReceiveAvatar()     | 不展示接收方头像，默认为展示，EaseChatFragment#Builder 也提供了此功能的设置方法。 |
-| hideChatSendAvatar()        | 不展示发送方头像，默认为展示，EaseChatFragment#Builder 也提供了此功能的设置方法。 |
-| setOnChatErrorListener()    | 设置发送消息时的错误回调，EaseChatFragment#Builder 也提供了此功能的设置方法。 |
+| setViewModel()              | UIKit provides EaseMessageListViewModel. You can add your own data logic by inheriting IChatMessageListRequest. |
+| setMessagesAdapter()        | Sets the message list adapter that is a subclass of EaseMessagesAdapter.    |
+| getMessagesAdapter()        | Returns the message list adapter.                                      |
+| addHeaderAdapter()          | Adds the adapter of the header adapter of the message list.     |
+| addFooterAdapter()          | Adds the adapter of the foot adapter of the message list.                                 |
+| removeAdapter()             | Removes a specific adapter.                                              |
+| addItemDecoration()         | Adds the decorator of the message list.                                     |
+| removeItemDecoration()      | Removes the decorator of the message list.                                        |
+| setAvatarDefaultSrc()       | Sets the default avatar of an item.                                        |
+| setAvatarShapeType()        | Sets the avatar style: default style, round, and rectangular.  |
+| showNickname()              | Sets whether to display the nickname of the item. Also, EaseChatFragment#Builder provides the method for this function.  |
+| setItemSenderBackground()   | Sets the background of the sender. Also, EaseChatFragment#Builder provides the method for this function. |
+| setItemReceiverBackground() | Sets the background of the recipient. Also, EaseChatFragment#Builder provides a method for this function. |
+| setItemTextSize()           | Sets the font size of the text message.                                       |
+| setItemTextColor()          | Sets the font color of the text message.                                       |
+| setTimeTextSize()           | Sets the font size of the timeline text. Also, EaseChatFragment#Builder provides a method for this function. |
+| setTimeTextColor()          | Sets the color of the timeline text. Also, EaseChatFragment#Builder provides a method for this function. |
+| setTimeBackground()         | Sets the background of the timeline.                                             |
+| hideChatReceiveAvatar()     | Sets not to display the recipient's avatar. Also, EaseChatFragment#Builder provides a method for this function.  |
+| hideChatSendAvatar()        | Sets not to display the sender's avatar. Also, EaseChatFragment#Builder provides a method for this function. |
+| setOnChatErrorListener()    | Sets the error listener for sending a message. Also, EaseChatFragment#Builder provides a method for this function. |
 
-（2）扩展功能设置
+（2）Set extension functions
 
 ```kotlin
 val chatExtendMenu: IChatExtendMenu? = binding?.layoutChat?.chatInputMenu?.chatExtendMenu
 ```
 
-拿到 chatExtendMenu 对象后，可以对于扩展功能可以进行添加，移除，排序以及处理扩展功能的点击事件等。
+When getting the chatExtendMenu object, you can add, remove, and order extension functions and handle click events of these functions.
 
-IChatExtendMenu 提供的方法解释：
+IChatExtendMenu provides the following methods:
 
-| 方法                                    | 说明                                                 |
+| Method                                    | Description                                                 |
 | -------------------------------------- | ---------------------------------------------------- |
-| clear()            | 清除所有的扩展菜单项   |
-| setMenuOrder()     | 对指定的菜单项进行排序 |
-| registerMenuItem() | 添加新的菜单项         |
+| clear()            | Clears all extension menu items.   |
+| setMenuOrder()     | Order a specific menu item.|
+| registerMenuItem() | Add a new menu item.         |
 
-- 监听扩展条目点击事件
+- Listen for the extension item click event.
 
-开发者可以 EaseChatFragment#Builder#setOnChatExtendMenuItemClickListener 进行监听，也可以在自定义的 Fragment 中 重写 onChatExtendMenuItemClick 方法。
+You can use EaseChatFragment#Builder#setOnChatExtendMenuItemClickListener for listening for click events of extension items, or overwrite the onChatExtendMenuItemClick method in your custom fragment.
 
 ```kotlin
 override fun onChatExtendMenuItemClick(view: View?, itemId: Int): Boolean {
     if(itemId == CUSTOM_YOUR_EXTEND_MENU_ID) {
-        // 处理你自己的点击事件逻辑
-        // 如果要消费点击事件需要返回 true
+        // Handle your own click event logic.
+        // To consume click events, you need to return `true`. 
         return true
     }
     return super.onChatExtendMenuItemClick(view, itemId)
 }
 ```
 
-（3）长按菜单功能设置
+（3）Set menu items upon long press.
 
-- 增加自定义菜单条目
+- Add custom menu items.
 
 ```kotlin
 binding?.let {
@@ -547,89 +622,89 @@ binding?.let {
 }
 ```
 
-EaseChatLayout 提供的长按菜单方法
+EaseChatLayout provides the following method that can be called upon long press
 
-| 方法                                | 说明                                                         |
+| Method                               | Description                                                        |
 | -------------------------------------- | ---------------------------------------------------- |
-| clearMenu()                         | 清除菜单项。                                                  |
-| addItemMenu()                       | 添加新的菜单项。                                               |
-| findItemVisible()                   | 通过指定 itemId 设置菜单项的可见性。                           |
-| setOnMenuChangeListener()           | 设置菜单项的点击事件监听，EaseChatFragment 中已经设置此监听。  |
+| clearMenu()                         | Clears menu items.      |
+| addItemMenu()                       | Adds a new menu item.        |
+| findItemVisible()                   | Sets whether a menu item is visible by itemId.     |
+| setOnMenuChangeListener()           | Sets a listener for click events of menu items. This listener is already set in EaseChatFragment.  |
 
-- 处理菜单的事件
-  在自定义的 Fragment 中重写以下方法：
+- Handle events relating to the menu.
+  Overwrite the following method in a custom fragment:
 
 ```kotlin
 override fun onPreMenu(helper: EaseChatMenuHelper?, message: ChatMessage?) {
-    // 菜单展示前的回调事件，可以通过 helper 对象在这里设置菜单条目是否展示。
+    // Callback event that occurs before the menu is displayed. Here you can set whether to display menu items by using the helper object.
 }
 
 override fun onMenuItemClick(item: EaseMenuItem?, message: ChatMessage?): Boolean {
-    // 如果要拦截某个点击事件，需要设置返回 true。
+    // If you want to intercept a certain event, you need to set to return `true`.
     return false
 }
 
 override fun onDismiss() {
-    // 可以在这里处理快捷菜单的隐藏事件。
+    // You can handle the shortcut menu hiding event here.
 }
 ```
 
-（4）设置输入菜单相关属性
+(4) Set the properties of the input menu.
 
-- 获取 EaseChatInputMenu 对象
+- Get the EaseChatInputMenu object.
 
 ```kotlin
 val chatInputMenu: EaseChatInputMenu? = binding?.layoutChat?.chatInputMenu
 ```
 
-EaseChatInputMenu 提供了如下方法：
+EaseChatInputMenu provides the following methods:
 
-| 方法                       | 说明                                                         |
+| Method                      | Description                                                        |
 | -------------------------- | ------------------------------------------------------------ |
-| setCustomPrimaryMenu()     | 设置自定义的菜单项，支持 View 和 Fragment 两种方式           |
-| setCustomEmojiconMenu()    | 设置自定义的表情功能，支持 View 和 Fragment 两种方式         |
-| setCustomExtendMenu()      | 设置自定义的扩展功能，支持 View ，Dialog 和 Fragment 三种方式 |
-| setCustomTopExtendMenu()   | 设置自定义的菜单顶部布局，支持 View ，Fragment 两种方式 |
-| hideExtendContainer()      | 隐藏扩展区域，包括表情区域和扩展功能区域                     |
-| hideInputMenu()            | 隐藏除了菜单顶部区域外的区域                     |
-| showEmojiconMenu()         | 展示表情功能区域                                             |
-| showExtendMenu()           | 展示扩展功能区域                                             |
-| showTopExtendMenu()        | 展示顶部扩展功能区域                                          |
-| setChatInputMenuListener() | 设置输入菜单监听                                             |
-| chatPrimaryMenu           | 获取菜单项接口                                               |
-| chatEmojiMenu             | 获取表情功能菜单接口                                         |
-| chatExtendMenu            | 获取扩展功能接口                                             |
-| chatTopExtendMenu        | 获取顶部扩展功能接口                                             |
+| setCustomPrimaryMenu()     | Sets a custom menu item, via View or Fragment.        |
+| setCustomEmojiconMenu()    | Sets a custom emoji, via View or Fragment         |
+| setCustomExtendMenu()      | Sets a custom extension function, via View, Dialog, or Fragment.|
+| setCustomTopExtendMenu()   | Sets a custom top layout of the menu, via View or Fragment. |
+| hideExtendContainer()      | Hides the extension area, including the emoji area and extension function area.   |
+| hideInputMenu()            | Hides the areas except the top area of the menu.                    |
+| showEmojiconMenu()         | Displays the emoji function area.                                          |
+| showExtendMenu()           | Displays the extension function area.                                          |
+| showTopExtendMenu()        | Displays the top extension function area.                                        |
+| setChatInputMenuListener() | Sets the input menu listener.                                           |
+| chatPrimaryMenu            | Gets menu items.                                            |
+| chatEmojiMenu              | Gets the emoji function menu.                                      |
+| chatExtendMenu             | Gets the extension function.                                           |
+| chatTopExtendMenu          | Gets the top extension function.                                          |
 
-- 获取菜单项对象
+- Gets the menu item object.
 
 ```kotlin
 val primaryMenu: IChatPrimaryMenu? = binding?.layoutChat?.chatInputMenu?.chatPrimaryMenu
 ```
 
-IChatPrimaryMenu 提供了如下方法：
+IChatPrimaryMenu provides the following methods:
 
-| 方法                | 说明                                      |
+| Method                | Description                                      |
 | ------------------- | ----------------------------------------- |
-| onTextInsert()      | 在光标处插入文本                          |
-| editText            | 获取菜单输入框对象                        |
-| setMenuBackground() | 设置菜单的背景                            |
+| onTextInsert()      | Inserts texts at the cursor position.                       |
+| editText            | Gets the input box object of the menu.     |
+| setMenuBackground() | Sets the background of the menu.                       |
 
-- 获取表情菜单对象
+- Gets the emoji menu object.
 
 ```kotlin
 val emojiconMenu: IChatEmojiconMenu? = binding?.layoutChat?.chatInputMenu?.chatEmojiMenu
 ```
 
-IChatEmojiconMenu 提供了如下方法：
+IChatEmojiconMenu provides the following methods:
 
-| 方法                  | 说明               |
+| Method                | Description           |
 | --------------------- | ------------------ |
-| addEmojiconGroup()    | 添加自定义表情     |
-| removeEmojiconGroup() | 移除指定的表情组   |
-| setTabBarVisibility() | 设置 TabBar 可见性 |
+| addEmojiconGroup()    | Adds a custom emoji group.     |
+| removeEmojiconGroup() | Removes a emoji group.   |
+| setTabBarVisibility() | Sets the visibility of TabBar. |
 
-添加自定义表情
+Add custom emojis:
 
 ```kotlin
 binding?.let {
@@ -637,11 +712,11 @@ binding?.let {
 }
 ```
 
-## 会话列表页面相关
+### Conversation list page
 
-### 通过 EaseConversationListFragment.Builder 自定义设置
+#### Customize settings with EaseConversationListFragment.Builder
 
-EaseConversationListFragment 提供了 Builder 构建方式，方便开发者进行一些自定义设置，目前提供的设置项如下：
+EaseConversationListFragment allows you to customize settings shown below with Builder.
 
 ```kotlin
 EaseConversationListFragment.Builder()
@@ -660,103 +735,103 @@ EaseConversationListFragment.Builder()
     .build()
 ```
 
-EaseConversationListFragment#Builder 提供的方法解释：
+EaseConversationListFragment#Builder provides the following methods:
 
-| 方法                             | 说明                                                         |
+| Method                            | Description                                                         |
 | -------------------------------- | ------------------------------------------------------------ |
-| useTitleBar()                      | 是否使用默认的标题栏（EaseTitleBar）。<br/> - true：是。 <br/> - (默认) false: 否。           |
-| setTitleBarTitle()                 | 设置标题栏的标题。                                            |
-| enableTitleBarPressBack()          | 设置是否支持显示返回按钮，默认为不显示返回按钮。<br/> - true：是。 <br/> - (默认) false: 否。              |
-| setTitleBarBackPressListener(）    | 设置点击标题栏返回按钮的监听器。                               |
-| setItemClickListener(）          | 设置条目点击事件监听器。                                       |
-| setOnItemLongClickListener(）    | 设置条目长按事件监听器。                                       |
-| setOnMenuItemClickListener(）    | 设置条目菜单点击事件监听器。                                       |
-| setConversationChangeListener(） | 设置会话变化的监听器。                                        |
-| setEmptyLayout(）                | 设置会话列表的空白页面。                                       |
-| setCustomAdapter(）              | 设置自定义的适配器，默认为 EaseConversationListAdapter。       |
-| setCustomFragment(）             | 设置自定义聊天 Fragment，需要继承自 EaseConversationListFragment。 |
+| useTitleBar()                      | Sets whether to use the default title bar (EaseTitleBar): <br/> - true: Yes<br/> -(Default) false: No           |
+| setTitleBarTitle()                 | Sets the title of the title bar.                                           |
+| enableTitleBarPressBack()          | Sets whether to display the back button: <br/> - true: Yes<br/> -(Default) false: No |
+| setTitleBarBackPressListener()     | Sets the listener for the click of the back button in the title bar.    |
+| setItemClickListener()             | Sets the item click event listener.                                       |
+| setOnItemLongClickListener()       | Sets the item long-pressing event listener.    |
+| setOnMenuItemClickListener()       | Sets the item click event listener.    |
+| setConversationChangeListener()    | Sets the conversation change listener.    |
+| setEmptyLayout()                   | Sets a blank page.        |
+| setCustomAdapter()                 | Sets a custom conversation list adapter by inheriting EaseConversationListAdapter.   |
+| setCustomFragment()                | Sets a custom chat fragment by inheriting EaseConversationListFragment.  |
 
-### 添加自定义会话布局
+#### Add a custom conversation layout
 
-开发者可以继承 EaseConversationListAdapter 实现自己的 CustomConversationListAdapter ，然后将 CustomConversationListAdapter 设置到 EaseConversationListFragment#Builder#setCustomAdapter 中。
+You can add a CustomConversationListAdapter by inheriting EaseConversationListAdapter and set CustomConversationListAdapter to EaseConversationListFragment#Builder#setCustomAdapter.
 
-（1）创建自定义适配器 CustomConversationListAdapter ，继承自 EaseConversationListAdapter ，重写 getViewHolder 和 getItemNotEmptyViewType 方法。
+(1) Create a CustomConversationListAdapter by inheriting EaseConversationListAdapter, and overwrite the getViewHolder and getItemNotEmptyViewType methods.
 
 ```kotlin
 class CustomConversationListAdapter : EaseConversationListAdapter() {
     override fun getItemNotEmptyViewType(position: Int): Int {
-        // 根据消息类型设置自定义 itemViewType。
-        // 如果使用默认的 itemViewTyp，返回 super.getItemNotEmptyViewType(position) 即可。
+        // Set a custom itemViewType by message type.
+        // If the default itemViewTyp is used, return super.getItemNotEmptyViewType(position).
         return CUSTOM_YOUR_CONVERSATION_TYPE
     }
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<EaseConversation> {
-        // 根据返回的 viewType 返回对应的 ViewHolder。
-        // 返回自定义的 ViewHolder 或者使用默认的 super.getViewHolder(parent, viewType)
+        // Return the ViewHolder by reference to the returned viewType.
+        // Return the custom ViewHolder or use the default super.getViewHolder(parent, viewType).
         return CUSTOM_YOUR_VIEW_HOLDER()
     }
 }
 ```
 
-（2）添加 CustomConversationListAdapter 到 EaseConversationListFragment#Builder。
+（2）Add CustomConversationListAdapter in EaseConversationListFragment#Builder.
 
 ```kotlin
 builder.setCustomAdapter(customConversationListAdapter);
 ```
 
-### 通过继承 EaseConversationListFragment 进行自定义设置
+#### Create a CustomConversationListFragment by inheriting EaseConversationListFragment
 
-创建自定义 CustomConversationListFragment ，继承自 EaseConversationListFragment ，并设置到 EaseConversationListFragment#Builder 中。
+Create a CustomConversationListFragment by inheriting EaseConversationListFragment and set it to EaseConversationListFragment#Builder.
 
 ```kotlin
 builder.setCustomFragment(customConversationListFragment);
 ```
 
-开发者可以通过在 CustomConversationListFragment 中获取到 EaseConversationListLayout 对象，可以进行更加细致的自定义设置。
+You can gets the EaseConversationListLayout object from CustomConversationListFragment and configure custom settings.
 
-EaseConversationListLayout 提供的方法解释：
+EaseConversationListLayout provides the following methods:
 
-| 方法                                    | 说明                                                             |
+| Method                                   | Description                                                            |
 | -------------------------------------- | ---------------------------------------------------------------- |
-| setViewModel()                    | UIKit 中提供了默认的实现 EaseConversationListViewModel，开发者可以继承 IConversationListRequest 添加自己的数据逻辑。 |
-| setListAdapter()                  | 设置自定义会话列表适配器。                                    |
-| getListAdapter()                  | 获取会话列表适配器。                                           |
-| getItem()                         | 获取指定位置的数据。                                          |
-| makeConversionRead()              | 将指定位置的会话置为已读。                                     |
-| makeConversationTop()             | 将指定位置的会话置顶。                                      |
-| cancelConversationTop()           | 取消指定位置的置顶操作。                                      |
-| deleteConversation()              | 删除置顶位置的会话。                                           |
-| setOnConversationChangeListener() | 设置会话变化的监听，EaseConversationListFragment#Builder 提供了相应的设置方法。 |
-| addHeaderAdapter()                | 添加会话列表的头布局的适配器。                                |
-| addFooterAdapter()                | 添加会话列表的尾布局的适配器。                                 |
-| removeAdapter()                   | 移除指定适配器。                                              |
-| addItemDecoration()               | 添加会话列表的装饰器。                                        |
-| removeItemDecoration()            | 移除会话列表的装饰器。                                        |
-| setOnItemClickListener()          | 设置会话列表的条目点击监听，EaseConversationListFragment#Builder 提供了相应的设置方法。 |
-| setOnItemLongClickListener()      | 设置会话列表的条目长按监听。                                   |
-| setItemBackGround()               | 设置条目的背景。                                               |
-| setItemHeight()                   | 设置条目的高度。                                               |
-| setAvatarDefaultSrc()             | 设置条目的默认头像。                                          |
-| setAvatarSize()                   | 设置条目头像的大小。                                           |
-| setAvatarShapeType()              | 设置条目头像的样式，分为默认 ImageView 样式，圆形和矩形三种样式。 |
-| setAvatarRadius()                 | 设置条目头像的圆角半径，样式设置为矩形时有效。                 |
-| setAvatarBorderWidth()            | 设置条目头像边框的宽度。                                      |
-| setAvatarBorderColor()            | 设置条目头像边框的颜色。                                      |
-| setNameTextSize()                | 设置会话条目标题的文字大小。                                   |
-| setNameTextColor()               | 设置会话条目标题的文字颜色。                                   |
-| setMessageTextSize()              | 设置会话条目内容的文字大小。                                  |
-| setMessageTextColor()             | 设置会话条目内容的文字颜色。                                   |
-| setDateTextSize()                 | 设置会话条目日期的文字大小。                                   |
-| setDateTextColor()                | 设置会话条目日期的文字颜色。                                  |
-| clearMenu()                       | 清除长按菜单项。                                              |
-| addItemMenu()                     | 添加长按菜单项。                                              |
-| findItemVisible()                 | 设置指定菜单项是否可见。                                     |
+| setViewModel()                    | UIKit provides the EaseConversationListViewModel. You can inherit IConversationListRequest and then add your own data logic. |
+| setListAdapter()                  | Sets a custom conversation list adapter.    |
+| getListAdapter()                  | Gets a conversation list adapter.     |
+| getItem()                         | Gets the data at the specific position.     |
+| makeConversionRead()              | Sets a conversation as read.     |
+| makeConversationTop()             | Pins a conversation.  |
+| cancelConversationTop()           | Unpins a conversation.  |
+| deleteConversation()              | Deletes a pinned conversation.                                          |
+| setOnConversationChangeListener() | Sets a conversation change listener. Also, EaseConversationListFragment#Builder provides a method to set the listener. |
+| addHeaderAdapter()                | Adds an adapter for the header layout of the conversation list.     |
+| addFooterAdapter()                | Adds an adapter for the footer layout of the conversation list.     |
+| removeAdapter()                   | Removes an adapter.                                              |
+| addItemDecoration()               | Adds a conversation list decorator.                                       |
+| removeItemDecoration()            | Removes a conversation list decorator.                                         |
+| setOnItemClickListener()          | Sets an item click listener. Also, EaseConversationListFragment#Builder provides a method to set the listener. |
+| setOnItemLongClickListener()      | Sets an item long-press listener.                                   |
+| setItemBackGround()               | Sets the item background.                                               |
+| setItemHeight()                   | Sets the item height.                                               |
+| setAvatarDefaultSrc()             | Sets the default item avatar.                                         |
+| setAvatarSize()                   | Sets the size of the item avatar.                                           |
+| setAvatarShapeType()              | Sets the item avatar style: default ImageView style, round, and rectangular.  |
+| setAvatarRadius()                 | Sets the border radius of the item avatar. This setting is valid only for a rectangular avatar.    |
+| setAvatarBorderWidth()            | Sets the width of the item avatar frame.                                     |
+| setAvatarBorderColor()            | Sets the color of the item avatar frame.                                     |
+| setNameTextSize()                 | Sets the font size of the conversation item title.                                   |
+| setNameTextColor()                | Sets the text color of the conversation item title.                                  |
+| setMessageTextSize()              | Sets the font size of message texts in the conversation item.                                  |
+| setMessageTextColor()             | Sets the color of message texts in the conversation item.                                  |
+| setDateTextSize()                 | Sets the font size of the conversation item date.                                 |
+| setDateTextColor()                | Sets the text color of the conversation item date.                                  |
+| clearMenu()                       | Clears menu items that appear when long pressing a conversation item. |
+| addItemMenu()                     | Adds a menu item that appears when long pressing a conversation item.     |
+| findItemVisible()                 | Sets whether a menu item is visible.  |
 
-## 联系人列表页面相关
+### Contact list page
 
-#### 通过 EaseContactsListFragment.Builder 自定义设置
+#### Customize settings with EaseContactsListFragment.Builder
 
-EaseContactsListFragment 提供了 Builder 构建方式，方便开发者进行一些自定义设置，目前提供的设置项如下：
+EaseContactsListFragment allows you to customize the settings shown below with Builder:
 
 ```kotlin
 EaseContactsListFragment.Builder()
@@ -768,6 +843,7 @@ EaseContactsListFragment.Builder()
   .setSearchType(EaseSearchType.USER)
   .setListViewType(EaseListViewType.VIEW_TYPE_LIST_CONTACT)
   .setSideBarVisible(true)
+  .setDefaultMenuVisible(true)
   .setHeaderItemVisible(true)
   .setHeaderItemList(mutableListOf<EaseCustomHeaderItem>())
   .setOnHeaderItemClickListener(OnHeaderItemClickListener)
@@ -780,76 +856,78 @@ EaseContactsListFragment.Builder()
   .build()
 ```
 
-EaseContactsListFragment#Builder 提供的方法解释：
+EaseContactsListFragment#Builder provides the following methods:
 
-| 方法                               | 说明                                                                                            |
-|----------------------------------|-----------------------------------------------------------------------------------------------|
-| useTitleBar()                    | 是否使用默认的标题栏（EaseTitleBar）。<br/> - true：是。 <br/> - (默认) false: 否。                               |
-| setTitleBarTitle()               | 设置标题栏的标题。                                                                                     |
-| enableTitleBarPressBack()        | 设置是否支持显示返回按钮，默认为不显示返回按钮。<br/> - true：是。 <br/> - (默认) false: 否。                                |
-| setTitleBarBackPressListener()   | 设置点击标题栏返回按钮的监听器。                                                                              |
-| useSearchBar()                   | 设置是否使用搜索栏   默认为不显示。<br/> - true：是。 <br/> - (默认) false: 否。                                     |
-| setSearchType()                  | 设置搜索类型 EaseSearchType  <br/> - USER <br/> - SELECT_USER <br/> - CONVERSATION                              |
-| setListViewType()                | 设置列表类型 EaseListViewType <br/> - LIST_CONTACT(默认 联系人列表) <br/> - LIST_SELECT_CONTACT (带checkbox的联系人列表) |
-| setSideBarVisible()              | 设置是否显示首字母索引工具栏。   默认为显示工具栏。<br/> - (默认) true：是。 <br/> - false: 否。                             |
-| setHeaderItemVisible()           | 设置是否显示列表头部布局。                                                                                 |
-| setHeaderItemList()              | 设置列表头部Item数据对象列表。                                                                             |
-| setOnHeaderItemClickListener()   | 设置列表头部Item点击事件。                                                                               |
-| setOnUserListItemClickListener() | 设置列表条目点击事件。                                                                                   |
-| setOnItemLongClickListener()     | 设置条目长按事件监听器。                                                                                  |
-| setOnContactSelectedListener()   | 设置条目选中事件监听器。                                                                                  |
-| setEmptyLayout()                 | 设置会话列表的空白页面。                                                                                  |
-| setCustomAdapter()               | 设置自定义的适配器，默认为 EaseConversationListAdapter。                                                    |
-| setCustomFragment()              | 设置自定义聊天 Fragment，需要继承自 EaseConversationListFragment。                                          |
+| Method                              | Description                                                                                                  |
+|----------------------------------|------------------------------------------------------------------------------------------------------|
+| useTitleBar()                    | Whether to use the default title bar (EaseTitleBar): <br/> - true: Yes <br/> - (Default) false: No                                 |
+| setTitleBarTitle()               | Sets the title in the title bar.   |
+| enableTitleBarPressBack()        | Sets whether to display the back button: <br/> - true: Yes <br/> - (Default) false: No                                     |
+| setTitleBarBackPressListener()   | Sets the listener for the click of the back button of the title bar.     |
+| useSearchBar()                   | Sets whether to use the search bar: <br/> - true: Yes <br/> - (Default) false: No                                            |
+| setSearchType()                  | Sets the search type EaseSearchType: <br/> - USER  <br/> - SELECT_USER <br/> - CONVERSATION                      |
+| setListViewType()                | Sets the contact list type EaseListViewType <br/> - LIST_CONTACT (contact list by default) <br/> - LIST_SELECT_CONTACT (contact list with checkboxes) |
+| setSideBarVisible()              | Sets whether to display the initial index toolbar <br/> - (Default) true: Yes <br/> - false: No                                   |
+| setDefaultMenuVisible()          | Sets whether to show the default menu: <br/> - (Default) true: Yes  <br/> - false: No                                            |
+| setHeaderItemVisible()           | Sets whether to show the contact list header layout: <br/> - true: Yes  <br/> - (Default) false: No                                 |
+| setHeaderItemList()              | Sets the data object list of the header item of the contact list.     |
+| setOnHeaderItemClickListener()   | Sets the click event listener for a header item of the contact list.      |
+| setOnUserListItemClickListener() | Sets the contact click event listener.     |
+| setOnItemLongClickListener()     | Sets the contact item long-press event listener.  |
+| setOnContactSelectedListener()   | Sets the contact item selection event listener.   |
+| setEmptyLayout()                 | Sets the blank page.    |
+| setCustomAdapter()               | Sets a custom adapter by inheriting EaseContactListAdapter.     |
+| setCustomFragment()              | Sets a custom chat fragment by inheriting EaseContactListFragment.       |
 
-#### 添加自定义联系人布局
+#### Add a custom contact layout
 
-开发者可以继承 EaseContactListAdapter 实现自己的 CustomContactListAdapter ，然后将 CustomContactListAdapter 设置到 EaseContactsListFragment#Builder#setCustomAdapter 中。
+You can create a CustomContactListAdapter by inheriting EaseContactListAdapter and set CustomContactListAdapter in  EaseContactsListFragment#Builder#setCustomAdapter.
 
-（1）创建自定义适配器 CustomContactListAdapter ，继承自 EaseContactListAdapter ，重写 getViewHolder 和 getItemNotEmptyViewType 方法。
+(1) Create a CustomContactListAdapter by inheriting EaseContactListAdapter to overwrite getViewHolder and getItemNotEmptyViewType methods.
 
 ```kotlin
 class CustomContactListAdapter : EaseContactListAdapter() {
     override fun getItemNotEmptyViewType(position: Int): Int {
-        // 根据消息类型设置自定义 itemViewType。
-        // 如果使用默认的 itemViewTyp，返回 super.getItemNotEmptyViewType(position) 即可。
+        //Set a custom itemViewType by message type.
+        // If the default itemViewTyp is used, return super.getItemNotEmptyViewType(position).
         return CUSTOM_YOUR_CONTACT_TYPE
     }
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<EaseUser> {
-        // 根据返回的 viewType 返回对应的 ViewHolder。
-        // 返回自定义的 ViewHolder 或者使用默认的 super.getViewHolder(parent, viewType)
+        // Return ViewHolder by reference to the returned viewType. 
+        // Return the custom ViewHolder or use the default super.getViewHolder(parent, viewType)
         return CUSTOM_YOUR_VIEW_HOLDER()
     }
 }
 ```
 
-（2）添加 CustomContactListAdapter 到 EaseContactsListFragment#Builder。
+(2) Add CustomContactListAdapter to EaseContactsListFragment#Builder.
 
 ```kotlin
 builder.setCustomAdapter(CustomContactListAdapter)
 ```
 
-开发者可以通过在 CustomContactListFragment 中获取到 EaseContactsListFragment 对象，可以进行更加细致的自定义设置。
+You can get the EaseContactsListFragment object from CustomContactListFragment and configure specific custom settings.
 
-EaseContactListLayout 提供的方法解释：
+EaseContactListLayout provides the following methods:
 
-| 方法                                    | 说明                                                             |
+| Method                                  | Description                                                           |
 | -------------------------------------- | ---------------------------------------------------------------- |
-| setViewModel()                    | UIKit 中提供了默认的实现 EaseConversationListViewModel，开发者可以继承 IConversationListRequest 添加自己的数据逻辑。 |
-| setListAdapter()                  | 设置自定义会话列表适配器。                                    |
-| getListAdapter()                  | 获取会话列表适配器。                                           |
-| getItem()                         | 获取指定位置的数据。                                          |
-| addHeaderAdapter()                | 添加会话列表的头布局的适配器。                                |
-| addFooterAdapter()                | 添加会话列表的尾布局的适配器。                                 |
-| removeAdapter()                   | 移除指定适配器。                                              |
-| addItemDecoration()               | 添加会话列表的装饰器。                                        |
-| removeItemDecoration()            | 移除会话列表的装饰器。                                        |
-| setOnItemClickListener()          | 设置会话列表的条目点击监听，EaseConversationListFragment#Builder 提供了相应的设置方法。 |
-| setOnItemLongClickListener()      | 设置会话列表的条目长按监听。                                   |
+| setViewModel()                    | The UIKit provides EaseContactListViewModel. You can inherit IConversationListRequest to add your own data logic. |
+| setListAdapter()                  | Sets a custom contact list adapter.                                    |
+| getListAdapter()                  | Gets the contact list adapter.                                         |
+| getItem()                         | Gets the data at a specific location.      |
+| addHeaderAdapter()                | Adds the header layout adapter for the contact list.    |
+| addFooterAdapter()                | Adds the footer layout adapter for the contact list.   |
+| removeAdapter()                   | Removes an adapter.                                            |
+| addItemDecoration()               | Adds a contact list decorator.                                        |
+| removeItemDecoration()            | Removes a contact list decorator.                                       |
+| setOnItemClickListener()          | Sets the contact item click listener. Also, EaseContactListFragment#Builder provides the method to set the listener. |
+| setOnItemLongClickListener()      | Sets the item long-pressing listener.                                  |
 
-## UIKit 提供的全局配置
-单群聊 UIKit 提供了一些全局配置，可以在初始化时进行设置，示例代码如下：
+## Global configurations
+
+The UIKit provides global configurations which can be set during the initialization:
 
 ```kotlin
 val avatarConfig = EaseAvatarConfig()
@@ -859,74 +937,79 @@ val config = EaseIMConfig(avatarConfig = avatarConfig)
 EaseIM.init(this, options, config)
 ```
 
-EaseAvatarConfig 提供的配置项解释：
+EaseAvatarConfig provides the following properties:
 
-| 属性                                    | 说明                                                             |
+| Property                                  | Description                                                             |
 | -------------------------------------- | ---------------------------------------------------------------- |
-| avatarShape                            | 头像样式，有默认，圆形和矩形三种样式，默认样式为默认。                    |
-| avatarRadius                           | 头像圆角半径，仅在头像样式设置为矩形后有效。                            |
-| avatarBorderColor                      | 头像边框的颜色。                                                    |
-| avatarBorderWidth                      | 头像边框的宽度。                                                    |
+| avatarShape                            | The avatar style: default style, round, and rectangular.                    |
+| avatarRadius                           | The border radius of the avatar. This property is valid only for a rectangular avatar.                           |
+| avatarBorderColor                      | The color of the avatar frame.                                                   |
+| avatarBorderWidth                      | The width of the avatar frame.                                                   |
 
 
-EaseChatConfig 提供的配置项解释：
+EaseChatConfig provides the following properties:
 
-| 属性                                    | 说明                                                             |
+| Property                                  | Description                                                          |
 | -------------------------------------- | ---------------------------------------------------------------- |
-| enableReplyMessage                     | 消息回复功能是否可用，默认为可用。                                     |
-| enableModifyMessageAfterSent           | 消息编辑功能是否可用，默认为可用。                                     |
-| timePeriodCanRecallMessage             | 设置消息可撤回的时间，默认为2分钟。                                    |
+| enableReplyMessage                     | Whether to enable the message reply function: <br/> - (Default) true： Yes  <br/> - false： No  |
+| enableModifyMessageAfterSent           | Whether to enable the message edit function: <br/> - (Default) true： Yes  <br/> - false： No   |
+| timePeriodCanRecallMessage             | The message recall duration, which is 2 minutes by default. |
 
 
-EaseDateFormatConfig 提供的配置项解释：
+EaseDateFormatConfig provides the following properties:
 
-| 属性                                    | 说明                                                             |
+| Property                                 | Description                                                            |
 | -------------------------------------- | ---------------------------------------------------------------- |
-| convTodayFormat                       | 会话列表当天日期格式，英文环境默认为："HH:mm"                            |
-| convOtherDayFormat                    | 会话列表其他日期的格式，英文环境默认为： "MMM dd"                        |
-| convOtherYearFormat                   | 会话列表其他年日期的格式，英文环境默认为： "MMM dd, yyyy"                |
+| convTodayFormat                       | The date format of the current day on the conversation list. The default format is "HH:mm" in the English context.    |
+| convOtherDayFormat                    | The date format of other dates than of the current day on the conversation list. The default format is "HH:mm" in the English context.   |
+| convOtherYearFormat                   | The date format of other years than this year on the conversation list. The default format is "MMM dd, yyyy" in the English context.    |
 
 
-EaseSystemMsgConfig 提供的配置项解释：
+EaseSystemMsgConfig provides the following property:
 
-| 属性                                    | 说明                                                             |
+| Property                                    | Description                                                           |
 | -------------------------------------- | ---------------------------------------------------------------- |
-| useDefaultContactInvitedSystemMsg      | 是否启用系统消息功能，默认为启用。                                       |
+| useDefaultContactInvitedSystemMsg      | Whether to enable the system message function: <br/> (Default) - true： Yes  <br/> - false： No                                        |
 
 
-EaseMultiDeviceEventConfig 提供的配置项解释：
+EaseMultiDeviceEventConfig provides the following properties:
 
-| 属性                                   | 说明                |
+| Property                                    | Description            |
 |--------------------------------------|-------------------|
-| useDefaultMultiDeviceContactEvent    | 是否启用默认的多设备联系人事件处理 |
-| useDefaultMultiDeviceGroupEvent      | 是否启用默认的多设备群组事件处理  |
+| useDefaultMultiDeviceContactEvent    | Whether to enable the default multi-device contact event processing：<br/> (Default) - true： Yes  <br/> - false： No |
+| useDefaultMultiDeviceGroupEvent      | Whether to enable the default multi-device group event processing：<br/> (Default) - true： Yes  <br/> - false： No|
 
-## UIKit 用户信息相关
+## User information
 
-UIKit 中多个地方用到用户信息，而这些用户信息需要开发者进行提供，本节将逐步介绍开发者如何提供给 UIKit 用户信息。
+User information is used in many places in UIKit and needs to be provided by developers. This section describes how developers provide user information to UIKit.
 
-### 当前登录用户信息
+### Information of the current login user
 
-用户调用登录接口 `EaseIM.login` 时需要传入一个 `EaseProfile` 的对象，包含 `id`, `name` 和 `avatar` 三个属性。`id` 是必须设置的参数，`name` 和 `avatar` 将用于当前用户昵称和头像的展示。并在发送消息时，将`name` 和 `avatar`属性设置到消息的`ext`中，方便其他用户进行展示。
-如果登录时没有传入 `name` 和 `avatar` 属性，可以在登录后，调用 `EaseIM.updateCurrentUser` 对当前用户的信息进行更新。
+During a call to the login API `EaseIM.login`, the user needs to pass in an `EaseProfile` object. This object contains the following attributes:
+- `id`: The user ID. This parameter is required.
+- `name` and `avatar`: Used to display the nickname and avatar of the current user. When sending a message, you can set the two parameters to the `ext` field of the message to allow other users to present the two parameters. If you fail to pass in the two parameters during login, you can call `EaseIM.updateCurrentUser` to update the current user's information after login.
 
-### 联系人信息提供
+### User information providing
 
-UIKit 提供了接口 `EaseIM.setUserProfileProvider` 进行联系人信息的提供。
-`EaseUserProfileProvider` 接口如下：
+UIKit provides `EaseIM.setUserProfileProvider` to provide user information.
+
+`EaseUserProfileProvider` API is as follows:
+
 ```kotlin
 interface EaseUserProfileProvider {
-    // 同步获取联系人信息
+    // Gets user information synchronously
     fun getUser(userId: String?): EaseProfile?
 
-    // 异步获取联系人信息
+    // Gets user information asynchronously
     fun fetchUsers(userIds: List<String>, onValueSuccess: OnValueSuccess<List<EaseProfile>>)
 }
 ```
-用法如下：
+
+This API is used as follows:
+
 ```kotlin
 EaseIM.setUserProfileProvider(object : EaseUserProfileProvider {
-    // 同步获取用户信息
+    // Gets user information synchronously
     override fun getUser(userId: String?): EaseProfile? {
         return getLocalUserInfo(userId)
     }
@@ -942,24 +1025,28 @@ EaseIM.setUserProfileProvider(object : EaseUserProfileProvider {
 
 ```
 
-### 群组成员信息提供
+### Group information providing
 
-UIKit 提供了接口 `EaseIM.setGroupProfileProvider` 进行联系人信息的提供。
-`EaseGroupProfileProvider` 接口如下：
+UIKit provides the `EaseIM.setGroupProfileProvider` to provide the user information.
+
+`EaseGroupProfileProvider` is as follows:
+
 ```kotlin
 interface EaseGroupProfileProvider {
-    // 同步获取群成员信息
-    fun getGroup(id: String?): EaseGroupProfile?
+    // Gets user information synchronously
+    fun getGroup(userId: String?): EaseGroupProfile?
 
-    // 异步获取群成员信息
-    fun fetchGroups(groupIds: List<String>, onValueSuccess: OnValueSuccess<List<EaseGroupProfile>>)
+    // Gets user information asynchronously
+    fun fetchGroups(userIds: List<String>, onValueSuccess: OnValueSuccess<List<EaseGroupProfile>>)
 }
 ```
-用法如下：
+
+This API is used as follows:
+
 ```kotlin
 EaseIM.setGroupProfileProvider(object : EaseGroupProfileProvider {
-  
-    override fun getGroup(id: String?): EaseGroupProfile? {
+    // Gets group information synchronously
+    override fun getGroup(groupId: String?): EaseGroupProfile? {
       ChatClient.getInstance().groupManager().getGroup(id)?.let {
         return EaseGroupProfile(it.groupId, it.groupName, it.extension)
       }
@@ -972,28 +1059,31 @@ EaseIM.setGroupProfileProvider(object : EaseGroupProfileProvider {
     ) {
   
     }
+
 })
 
 ```
 
-### UIKit 信息处理逻辑
-- 1、如果信息已经缓存到内存，当页面需要显示信息时，UIKit 会首先从内存中查询获取到缓存数据并进行页面的渲染。如果缓存没有，则进入下一步。
-- 2、UIKit 调用 provider 同步方法从应用本地获取信息，开发者可以从应用本地的数据库或者内存中获取并提供对应信息。UIKit获取到信息后进行页面的渲染。同时，对获取到的信息进行缓存。
-- 3、如果同步方法获取数据为空，当列表页面停止滑动的时候，UIKit 会将当前页面可见的条目所需的信息，在排除缓存和同步方法提供的数据后，通过 provider 提供的异步方法返给开发者，开发者从服务器获取对应的信息后，通过 `onValueSuccess` 提供给 UIKit。UIKit 收到数据后，会对列表进行刷新并更新对应的数据。
+### UIKit information processing logic
 
-### 更新 UIKit 缓存信息
+- Step 1: If the information has been cached in the memory, when information needs to be presented on pages, the UIKit will first retrieve the cached data from the memory and render the page. If no information is cached, proceed to step 2.
+- Step 2. UIKit calls the provider synchronization method to obtain information locally from the application. Developers can obtain and provide the related information from the application's local database or memory. After the information is obtained, UIKit renders the page, while caching the information.
+- Step 3. If the data obtained by the synchronization method is empty, when the list page stops sliding, UIKit will return the information required for the items visible on the current page through the asynchronous method provided by the provider after excluding cache and data provided by the synchronization method. After obtaining the corresponding information from the server, the developer provides it to UIKit through `onValueSuccess`. The UIKit refreshes the list and updates the corresponding data when receiving the data.
 
-因为 UIKit 会对信息进行缓存，如果用户的信息发生改变，可以通过 UIKit 提供的 update 方法对缓存信息进行更新。
+### Update information cached in UIKit
+
+As information is cached in the UIKit, the UIKit will update the cached information via the `update` methods if the user information is changed.
 
 ```kotlin
-// 更新当前用户信息
-EaseIM.updateCurrentUser()
-// 更新用户信息
-EaseIM.updateUsersInfo()
-// 更新群组信息
-EaseIM.updateGroupInfo()
+// First call EaseIM.getCache().getUser ｜ EaseIM.getCache().getGroup to get the local cached object, and then call the update methods:
+// Updates current user information  user: EaseProfile
+EaseIM.updateCurrentUser(user)
+// Updates user information in batches  list: List<EaseProfile>
+EaseIM.updateUsersInfo(list)
+// Updates group information in batches  groups: List<EaseGroupProfile>
+EaseIM.updateGroupInfo(groups)
 ```
 
-## UIKit对明暗主题的支持
+## Support for dark and light themes
 
-UIKit 对明暗主题进行了支持，会随系统设置明暗主题进行对应的颜色变化。如果要修改对应的颜色变化，可以在app module中新建 `values-night` 文件夹，并复制 `ease_colors.xml` 到文件夹中，然后对其中的基础颜色修改，在暗色主题下，对应的颜色也会被修改。
+UIKit supports both light and dark themes, with the theme colors changing with the system theme. To adjust the theme colors, you can create a new `values-night` folder in the app module, copy `ease_colors.xml` to this folder, and then modify the basic colors in it. Under the dark theme, the corresponding colors will also be changed.
