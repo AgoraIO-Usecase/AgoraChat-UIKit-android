@@ -38,7 +38,8 @@ class EaseChatPinMessageController(
         pinMessageListView?.visibility = RelativeLayout.GONE
         chatLayout.addView(pinMessageListView, layoutParams)
         chatLayout.post {
-            pinMessageListView?.setConstraintLayoutMaxHeight( chatLayout.height - 100.dpToPx(context) )
+            val maxH = (chatLayout.height * 3/4) - 100.dpToPx(context)
+            pinMessageListView?.setConstraintLayoutMaxHeight( maxH )
         }
 
         initListener()

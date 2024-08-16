@@ -444,7 +444,6 @@ class EaseChatLayout @JvmOverloads constructor(
             override fun onBubbleLongClick(v: View?, message: ChatMessage?): Boolean {
                 if (listener?.onBubbleLongClick(v, message) == true) return true
                 chatBinding.layoutMenu.hideSoftKeyboard()
-                ChatLog.e("LeakCanary","initMenuWithMessage")
                 menuHelper.initMenu(v)
                 menuHelper.initMenuWithMessage(message)
                 setMenuItemClickListener(message)

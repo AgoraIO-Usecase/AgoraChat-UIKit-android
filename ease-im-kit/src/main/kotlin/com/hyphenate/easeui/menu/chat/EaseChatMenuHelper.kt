@@ -204,6 +204,11 @@ class EaseChatMenuHelper: EaseMenuHelper() {
 
     }
 
+    override fun release(){
+        message = null
+       super.release()
+    }
+
     companion object {
         val MENU_ITEM_IDS = intArrayOf(
             R.id.action_chat_copy,
