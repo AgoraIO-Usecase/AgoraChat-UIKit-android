@@ -96,6 +96,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     private var messageForwardCallback: OnMessageForwardCallback? = null
     private var sendCombineMessageCallback: OnSendCombineMessageCallback? = null
 
+    private var menuDialog:EaseChatExtendMenuDialog? = null
     private var messagesAdapter: EaseMessagesAdapter? = null
     var conversationId: String? = null
     var chatType: EaseChatType? = null
@@ -366,9 +367,9 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     }
 
     private fun setCustomExtendView() {
-        val dialog = EaseChatExtendMenuDialog(mContext)
-        dialog.init()
-        binding?.layoutChat?.chatInputMenu?.setCustomExtendMenu(dialog)
+        menuDialog = EaseChatExtendMenuDialog(mContext)
+        menuDialog?.init()
+        binding?.layoutChat?.chatInputMenu?.setCustomExtendMenu(menuDialog)
     }
 
     override fun initListener() {
@@ -539,6 +540,8 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
 
     override fun onDestroyView() {
         binding?.layoutChat?.chatInputMenu?.setCustomExtendMenu(null)
+        menuDialog?.unregisterListener()
+        menuDialog = null
         EaseIM.removeMultiDeviceListener(multiDeviceListener)
         EaseIM.removeThreadChangeListener(this)
         super.onDestroyView()

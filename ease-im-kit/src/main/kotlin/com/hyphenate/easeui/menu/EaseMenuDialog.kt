@@ -152,10 +152,9 @@ open class EaseMenuDialog
         dismissListener?.onDismiss()
     }
 
-    override fun onDestroyView() {
+    fun unregisterListener(){
         dismissListener = null
         itemClickListener = null
-        super.onDestroyView()
     }
 
     /**

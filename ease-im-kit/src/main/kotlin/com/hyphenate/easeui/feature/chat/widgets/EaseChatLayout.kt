@@ -682,6 +682,7 @@ class EaseChatLayout @JvmOverloads constructor(
         chatRoomListener?.let { EaseIM.removeChatRoomChangeListener(it) }
         typingHandler?.removeCallbacksAndMessages(null)
         menuHelper.setOnMenuChangeListener(null)
+        menuHelper.setOnMenuItemClickListener(null)
         menuHelper.dismiss()
         menuHelper.release()
         if (isGroupConv()) {
