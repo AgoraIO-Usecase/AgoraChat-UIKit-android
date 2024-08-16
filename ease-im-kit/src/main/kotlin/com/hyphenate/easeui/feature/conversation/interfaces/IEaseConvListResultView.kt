@@ -20,11 +20,6 @@ interface IEaseConvListResultView: IControlDataView {
     fun loadConversationListFail(code: Int, error: String)
 
     /**
-     * Load local conversation finished
-     */
-    fun loadLocalConversationListFinished(list: List<EaseConversation>)
-
-    /**
      * Sort conversation list successfully.
      */
     fun sortConversationListFinish(conversations: List<EaseConversation>)

@@ -48,7 +48,6 @@
                 android:paddingTop="13dp"
                 android:paddingBottom="13dp"
                 android:paddingStart="16dp"
-                android:hint="@string/ease_dialog_edit_input_id_hint"
                 style="@style/ease_dialog_edit_view"
                 android:visibility="visible"
                 android:inputType="text"/>

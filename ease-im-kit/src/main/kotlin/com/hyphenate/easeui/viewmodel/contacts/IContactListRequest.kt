@@ -26,22 +26,27 @@ interface IContactListRequest : IAttachView {
     fun deleteContact(userName:String,keepConversation:Boolean?)
 
     /**
-     * Gets the blocklist from the server.
+     * Fetch the blocklist from the server.
      */
-     fun getBlackListFromServer()
+     fun fetchBlockListFromServer()
+
+    /**
+     * Gets the blocklist from the local.
+     */
+     fun getBlockListFromLocal()
 
     /**
      * Adds the user to blocklist.
      * You can send message to the user in the blocklist, but you can not receive the message sent by the user in the blocklist.
      * @param userList  The user list to be blocked.
      */
-     fun addUserToBlackList(userList:MutableList<String>)
+     fun addUserToBlockList(userList:MutableList<String>)
 
     /**
      * Removes the contact from the blocklist.
      * @param userName  The user to be removed from the blocklist.
      */
-     fun removeUserFromBlackList(userName:String)
+     fun removeUserFromBlockList(userName:String)
 
     /**
      * Accepts a friend invitation。
@@ -61,12 +66,12 @@ interface IContactListRequest : IAttachView {
      * Clears all the messages of the specified conversation.
      * @param conversationId The conversation ID.
      */
-    fun deleteConversation(conversationId: String?)
+    fun clearConversationMessage(conversationId: String?)
 
     /**
      * Fetch contact information from user.
      */
-    fun fetchContactInfo(contactList: List<EaseUser>)
+    fun fetchContactInfo(contactList: List<EaseUser>?)
 
     /**
      * Set the DND of the conversation.
@@ -78,9 +83,4 @@ interface IContactListRequest : IAttachView {
      */
     fun cancelSilentForConversation(conversationId: String,conversationType:ChatConversationType)
 
-    /**
-     * fetch the current user status of a specified user
-     * @param userIds
-     */
-    fun fetchChatPresence(userIds:MutableList<String>)
 }

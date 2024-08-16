@@ -7,19 +7,20 @@ import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatContactManager
 import com.hyphenate.easeui.common.ChatConversationType
 import com.hyphenate.easeui.common.ChatError
+import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatLog
+import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.catchChatException
 import com.hyphenate.easeui.common.extensions.collectWithCheckErrorCode
 import com.hyphenate.easeui.common.extensions.parse
 import com.hyphenate.easeui.common.extensions.toUser
 import com.hyphenate.easeui.common.helper.ContactSortedHelper
-import com.hyphenate.easeui.common.helper.EasePreferenceManager
 import com.hyphenate.easeui.feature.contact.interfaces.IEaseContactResultView
+import com.hyphenate.easeui.model.EaseEvent
 import com.hyphenate.easeui.model.EaseUser
 import com.hyphenate.easeui.model.setUserInitialLetter
 import com.hyphenate.easeui.repository.EaseContactListRepository
 import com.hyphenate.easeui.repository.EaseConversationRepository
-import com.hyphenate.easeui.repository.EasePresenceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapConcat
@@ -34,17 +35,23 @@ open class EaseContactListViewModel(
 
     val repository:EaseContactListRepository = EaseContactListRepository(chatContactManager)
     private val convRepository: EaseConversationRepository = EaseConversationRepository()
-    private val presenceRepository by lazy { EasePresenceRepository() }
 
     override fun loadData(fetchServerData: Boolean){
         viewModelScope.launch {
-            if (fetchServerData || !EasePreferenceManager.getInstance().isLoadedContactFromServer()) {
+            if (fetchServerData) {
                 flow {
-                    emit(repository.loadLocalContact())
+                    try {
+                        emit(repository.loadData())
+                    } catch (e:ChatException){
+                        emit(Result.failure<ChatException>(e))
+                        inMainScope{
+                            view?.loadContactListFail(e.errorCode, e.description)
+                        }
+                    }
                 }
                 .flatMapConcat {
                     flow {
-                        emit(repository.loadData())
+                        emit(repository.loadLocalContact())
                     }
                 }
             } else {
@@ -57,14 +64,15 @@ open class EaseContactListViewModel(
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
             .collect {
+                var sortedList = mutableListOf<EaseUser>()
                 val data = it
                 data?.map {
                     it.setUserInitialLetter()
                 }
                 data?.let {
-                    val sortedList = ContactSortedHelper.sortedList(it)
-                    view?.loadContactListSuccess(sortedList.toMutableList())
+                    sortedList = ContactSortedHelper.sortedList(it).toMutableList()
                 }
+                view?.loadContactListSuccess(sortedList)
             }
         }
     }
@@ -77,9 +85,11 @@ open class EaseContactListViewModel(
             .catchChatException { e ->
                 view?.addContactFail(e.errorCode,e.description)
             }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), ChatError.GENERAL_ERROR)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), userName)
             .collectWithCheckErrorCode {
-                view?.addContactSuccess()
+                EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.ADD.name)
+                    .post(viewModelScope, EaseEvent(EaseEvent.EVENT.ADD.name, EaseEvent.TYPE.CONTACT))
+                view?.addContactSuccess(it)
             }
         }
     }
@@ -99,49 +109,75 @@ open class EaseContactListViewModel(
         }
     }
 
-    override fun getBlackListFromServer(){
+    override fun fetchBlockListFromServer(){
         viewModelScope.launch {
             flow {
-                emit(repository.getBlackListFromServer())
+                emit(repository.getBlockListFromServer())
             }
             .catchChatException { e ->
-                view?.getBlackListFromServerFail(e.errorCode,e.description)
+                view?.fetchBlockListFromServerFail(e.errorCode,e.description)
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
             .collect{
-                if (it != null) {
-                    view?.getBlackListFromServerSuccess(it)
+                val data = it
+                data?.map {
+                    it.setUserInitialLetter()
+                }
+                data?.let {
+                    val sortedList = ContactSortedHelper.sortedList(it)
+                    view?.fetchBlockListFromServerSuccess(sortedList.toMutableList())
                 }
             }
         }
     }
 
-    override fun addUserToBlackList(userList:MutableList<String>){
+    override fun getBlockListFromLocal() {
         viewModelScope.launch {
             flow {
-                emit(repository.addUserToBlackList(userList))
+                emit(repository.getBlockListFromLocal())
+            }.catchChatException { e ->
+                view?.getBlockListFromLocalFail(e.errorCode,e.description)
             }
-            .catchChatException { e ->
-                view?.addUserToBlackListFail(e.errorCode,e.description)
-            }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), ChatError.GENERAL_ERROR)
-            .collectWithCheckErrorCode {
-                view?.addUserToBlackListSuccess()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
+            .collect{
+                val data = it
+                data?.map {
+                    it.setUserInitialLetter()
+                }
+                data?.let {
+                    val sortedList = ContactSortedHelper.sortedList(it)
+                    view?.getBlockListFromLocalSuccess(sortedList.toMutableList())
+                }
             }
         }
     }
 
-    override fun removeUserFromBlackList(userName: String){
+    override fun addUserToBlockList(userList:MutableList<String>){
         viewModelScope.launch {
             flow {
-                emit(repository.removeUserFromBlackList(userName))
+                emit(repository.addUserToBlockList(userList))
             }
             .catchChatException { e ->
-                view?.removeUserFromBlackListFail(e.errorCode,e.description)
+                view?.addUserToBlockListFail(e.errorCode,e.description)
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), ChatError.GENERAL_ERROR)
             .collectWithCheckErrorCode {
-                view?.removeUserFromBlackListSuccess()
+                view?.addUserToBlockListSuccess()
+            }
+        }
+    }
+
+    override fun removeUserFromBlockList(userName: String){
+        viewModelScope.launch {
+            flow {
+                emit(repository.removeUserFromBlockList(userName))
+            }
+            .catchChatException { e ->
+                view?.removeUserFromBlockListFail(e.errorCode,e.description)
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), ChatError.GENERAL_ERROR)
+            .collectWithCheckErrorCode {
+                view?.removeUserFromBlockListSuccess()
             }
         }
     }
@@ -176,25 +212,25 @@ open class EaseContactListViewModel(
         }
     }
 
-    override fun deleteConversation(conversationId: String?) {
+    override fun clearConversationMessage(conversationId: String?) {
         viewModelScope.launch {
             ChatClient.getInstance().chatManager().getConversation(conversationId)?.parse()?.let {
                 flow {
-                    emit(convRepository.deleteConversation(it))
+                    emit(convRepository.clearConversationMessage(it))
                 }
                 .catchChatException { e ->
-                    view?.deleteConversationFail(e.errorCode,e.description)
+                    view?.clearConversationFail(e.errorCode,e.description)
                 }
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), ChatError.GENERAL_ERROR)
                 .collectWithCheckErrorCode {
-                    view?.deleteConversationSuccess(conversationId)
+                    view?.clearConversationSuccess(conversationId)
                 }
-            } ?: view?.deleteConversationFail(ChatError.INVALID_PARAM,"conversation is null")
+            } ?: view?.clearConversationFail(ChatError.INVALID_PARAM,"conversation is null")
         }
     }
 
-    override fun fetchContactInfo(contactList: List<EaseUser>) {
-        val requestList = contactList.filter { user ->
+    override fun fetchContactInfo(contactList: List<EaseUser>?) {
+        val requestList = contactList?.filter { user ->
             val u = EaseIM.getCache().getUser(user.userId) ?: return@filter true
             u.avatar.isNullOrEmpty() || u.name.isNullOrEmpty()
         }
@@ -255,20 +291,6 @@ open class EaseContactListViewModel(
                         ChatLog.d(TAG, "cancelSilentForContactSuccess")
                         view?.cancelSilentForContactSuccess()
                     }
-                }
-        }
-    }
-
-    override fun fetchChatPresence(userIds: MutableList<String>) {
-        viewModelScope.launch {
-            flow {
-                emit(presenceRepository.fetchPresenceStatus(userIds))
-            }
-                .catchChatException { e->
-                    view?.fetchChatPresenceFail(e.errorCode, e.description)
-                }
-                .collect {
-                    view?.fetchChatPresenceSuccess(it)
                 }
         }
     }

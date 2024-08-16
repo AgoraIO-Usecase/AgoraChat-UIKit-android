@@ -37,6 +37,21 @@ open class EaseSearchViewModel(
         }
     }
 
+    override fun searchBlockUser(query: String) {
+        viewModelScope.launch {
+            flow {
+                emit(repository.searchBlockUser(query))
+            }
+                .catchChatException { }
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis), null)
+                .collect {
+                    if (it != null) {
+                        view?.searchBlockUserSuccess(it)
+                    }
+                }
+        }
+    }
+
     override fun searchConversation(query: String) {
         viewModelScope.launch {
             flow {

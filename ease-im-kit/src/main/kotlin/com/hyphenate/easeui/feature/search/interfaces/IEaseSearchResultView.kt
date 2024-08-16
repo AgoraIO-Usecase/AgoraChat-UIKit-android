@@ -4,4 +4,5 @@ import com.hyphenate.easeui.common.interfaces.IControlDataView
 
 interface IEaseSearchResultView: IControlDataView {
     fun searchSuccess(result: Any)
+    fun searchBlockUserSuccess(result: Any){}
 }

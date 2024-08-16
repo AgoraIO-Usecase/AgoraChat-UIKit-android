@@ -10,7 +10,6 @@
         android:id="@+id/title_contact"
         app:titleBarTitle="@string/ease_contact_title"
         app:titleBarTitleCenter="true"
-        app:titleBarMenu="@menu/menu_new_request_add_contact"
         app:titleTextColor="@color/ease_color_on_background_low"
         app:titleBarMenuIconTint="@color/ease_color_on_background_low"
         app:titleBarMenuTitleColor="@color/ease_color_on_background_low"

@@ -194,10 +194,10 @@ class EaseGroupRepository(
     suspend fun fetchMemberInfo(groupId: String?, members: List<String>?) =
         withContext(Dispatchers.IO) {
             if (groupId.isNullOrEmpty()) {
-                throw ChatException(ChatError.INVALID_PARAM, "groupId is null.")
+                throw ChatException(ChatError.INVALID_PARAM, "groupId is null or empty.")
             }
             if (members.isNullOrEmpty()) {
-                throw ChatException(ChatError.INVALID_PARAM, "members is null.")
+                throw ChatException(ChatError.INVALID_PARAM, "members is null or empty.")
             }
             val data = members.filter {
                     EaseProfile.getGroupMember(groupId,it) == null

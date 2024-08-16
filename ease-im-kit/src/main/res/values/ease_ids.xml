@@ -40,8 +40,6 @@
     <item name="action_chat_delete" type="id"/>
     <!--recall-->
     <item name="action_chat_recall" type="id"/>
-    <!--unsent-->
-    <item name="action_chat_unsent" type="id"/>
     <!--quote-->
     <item name="action_chat_quote" type="id" />
     <!--select-->
@@ -60,6 +58,8 @@
     <item name="action_chat_forward" type="id"/>
     <!--multi select-->
     <item name="action_chat_multi_select" type="id"/>
+    <!--pin message-->
+    <item name="action_chat_pin_message" type="id"/>
 
 
     <!-- message -->
@@ -102,5 +102,7 @@
     <item name="thread_more_member" type="id"/>
     <item name="thread_more_leave" type="id"/>
     <item name="thread_more_destroy" type="id"/>
+
+    <item name="ease_url_preview" type="id"/>
 
 </resources>

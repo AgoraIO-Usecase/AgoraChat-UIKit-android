@@ -111,4 +111,9 @@
         <attr name="ease_chat_message_translation_is_sender" format="boolean" />
         <attr name="ease_chat_message_translation_is_history" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="EaseChatMessageUrlPreview">
+        <!-- whether is sender -->
+        <attr name="ease_chat_message_preview_is_sender" format="boolean" />
+    </declare-styleable>
 </resources>

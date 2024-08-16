@@ -70,9 +70,9 @@ class HorizontalPageLayoutManager(rows: Int, columns: Int) : RecyclerView.Layout
     }
 
     private val usableWidth: Int
-        private get() = width - paddingLeft - paddingRight
+        get() = width - paddingLeft - paddingRight
     private val usableHeight: Int
-        private get() = height - paddingTop - paddingBottom
+        get() = height - paddingTop - paddingBottom
 
     override fun onMeasure(
         recycler: RecyclerView.Recycler,
@@ -261,9 +261,9 @@ class HorizontalPageLayoutManager(rows: Int, columns: Int) : RecyclerView.Layout
     }
 
     override fun isPageLast(position: Int): Boolean {
-        var position = position
-        position++
-        return position % onePageSize == 0
+        var index = position
+        index++
+        return index % onePageSize == 0
     }
 
     override fun computeHorizontalScrollRange(state: RecyclerView.State): Int {

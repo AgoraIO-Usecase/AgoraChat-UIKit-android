@@ -224,6 +224,7 @@ class EaseChatMessageListScrollAndDataController(
         context.mainScope().launch {
             val position = adapter.data?.indexOfLast { it.msgId == message.msgId } ?: -1
             if (position != -1) {
+                adapter.changeData(position,message)
                 adapter.notifyItemChanged(position, 0)
             }
         }

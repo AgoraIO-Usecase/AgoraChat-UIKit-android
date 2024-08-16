@@ -1,6 +1,5 @@
 package com.hyphenate.easeui.feature.contact.interfaces
 
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.ChatSilentModeResult
 import com.hyphenate.easeui.common.interfaces.IControlDataView
 import com.hyphenate.easeui.model.EaseUser
@@ -20,7 +19,7 @@ interface IEaseContactResultView: IControlDataView {
     /**
      * Add contact successfully.
      */
-    fun addContactSuccess(){}
+    fun addContactSuccess(userId: String) {}
 
     /**
      * Add contact failed.
@@ -38,34 +37,44 @@ interface IEaseContactResultView: IControlDataView {
     fun deleteContactFail(code: Int, error: String){}
 
     /**
-     * Get black list from server successfully.
+     * Fetch block list from server successfully.
      */
-    fun getBlackListFromServerSuccess(list: MutableList<String>){}
+    fun fetchBlockListFromServerSuccess(list: MutableList<EaseUser>){}
 
     /**
-     * Get black list from server failed.
+     * Fetch block list from server failed.
      */
-    fun getBlackListFromServerFail(code: Int, error: String){}
+    fun fetchBlockListFromServerFail(code: Int, error: String){}
 
     /**
-     * Add user to blacklist successfully.
+     * Get block list from local successfully.
      */
-    fun addUserToBlackListSuccess(){}
+    fun getBlockListFromLocalSuccess(list: MutableList<EaseUser>){}
 
     /**
-     * Add user to blacklist failed.
+     * Get block list from local failed.
      */
-    fun addUserToBlackListFail(code: Int, error: String){}
+    fun getBlockListFromLocalFail(code: Int, error: String){}
 
     /**
-     * Remove user from blacklist successfully.
+     * Add user to blocklist successfully.
      */
-    fun removeUserFromBlackListSuccess(){}
+    fun addUserToBlockListSuccess(){}
 
     /**
-     * Remove user from blacklist failed.
+     * Add user to blocklist failed.
      */
-    fun removeUserFromBlackListFail(code: Int, error: String){}
+    fun addUserToBlockListFail(code: Int, error: String){}
+
+    /**
+     * Remove user from blocklist successfully.
+     */
+    fun removeUserFromBlockListSuccess(){}
+
+    /**
+     * Remove user from blocklist failed.
+     */
+    fun removeUserFromBlockListFail(code: Int, error: String){}
 
     /**
      * Accept invitation successfully.
@@ -88,14 +97,14 @@ interface IEaseContactResultView: IControlDataView {
     fun declineInvitationFail(code: Int, error: String){}
 
     /**
-     * Delete conversation successfully.
+     * Clear conversation successfully.
      */
-    fun deleteConversationSuccess(conversationId: String?){}
+    fun clearConversationSuccess(conversationId: String?){}
 
     /**
-     * Delete conversation failed.
+     * Clear conversation failed.
      */
-    fun deleteConversationFail(code: Int, error: String?){}
+    fun clearConversationFail(code: Int, error: String?){}
 
 
     /**
@@ -123,16 +132,4 @@ interface IEaseContactResultView: IControlDataView {
      */
     fun cancelSilentForContactFail(code: Int, error: String?){}
 
-    /**
-     * fetch the current user status of a specified user success.
-     * @param presence
-     */
-    fun fetchChatPresenceSuccess(presence:MutableList<ChatPresence>){}
-
-    /**
-     * fetch the current user status of a specified user fail.
-     * @param code  error code.
-     * @param error error message.
-     */
-    fun fetchChatPresenceFail(code: Int, error: String){}
 }

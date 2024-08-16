@@ -123,9 +123,11 @@ object EaseChatViewHolderFactory {
                 message.getBooleanAttribute(EaseConstant.THREAD_NOTIFICATION_TYPE, false)
             val isRecallMessage: Boolean =
                 message.getBooleanAttribute(EaseConstant.MESSAGE_TYPE_RECALL, false)
+            val isContactNotify: Boolean =
+                message.getBooleanAttribute(EaseConstant.MESSAGE_TYPE_CONTACT_NOTIFY, false)
             if (isThreadNotify) {
                 EaseMessageViewType.VIEW_TYPE_MESSAGE_CHAT_THREAD_NOTIFY
-            } else if (isRecallMessage) {
+            } else if (isRecallMessage || isContactNotify) {
                 if (direct == ChatMessageDirection.SEND) {
                     EaseMessageViewType.VIEW_TYPE_MESSAGE_UNSENT_ME
                 } else {

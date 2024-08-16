@@ -16,18 +16,16 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.hyphenate.chat.EMChatThreadEvent
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_DESTROY
 import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_LEAVE
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.base.EaseBaseFragment
 import com.hyphenate.easeui.common.ChatClient
-import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.ChatThread
 import com.hyphenate.easeui.common.ChatThreadChangeListener
+import com.hyphenate.easeui.common.ChatThreadEvent
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.enums.EaseChatFinishReason
@@ -36,11 +34,9 @@ import com.hyphenate.easeui.common.extensions.showToast
 import com.hyphenate.easeui.common.extensions.toUser
 import com.hyphenate.easeui.common.helper.EaseMenuFilterHelper
 import com.hyphenate.easeui.common.helper.EaseThreadNotifyHelper
-import com.hyphenate.easeui.common.utils.EasePresenceUtil
 import com.hyphenate.easeui.configs.setAvatarStyle
 import com.hyphenate.easeui.configs.setStatusStyle
 import com.hyphenate.easeui.databinding.EaseFragmentChatBinding
-import com.hyphenate.easeui.feature.contact.EaseContactDetailsActivity
 import com.hyphenate.easeui.feature.group.EaseGroupDetailActivity
 import com.hyphenate.easeui.feature.chat.adapter.EaseMessagesAdapter
 import com.hyphenate.easeui.feature.chat.controllers.EaseChatAttachmentController
@@ -51,18 +47,19 @@ import com.hyphenate.easeui.feature.chat.interfaces.OnChatExtendMenuItemClickLis
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatFinishListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatInputChangeListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatLayoutListener
-import com.hyphenate.easeui.feature.chat.interfaces.OnChatPresenceListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatRecordTouchListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnSendCombineMessageCallback
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageForwardCallback
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageItemClickListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageSendCallback
 import com.hyphenate.easeui.feature.chat.interfaces.OnModifyMessageListener
+import com.hyphenate.easeui.feature.chat.interfaces.OnMultipleSelectRemoveMsgListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnPeerTypingListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnReactionMessageListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnReportMessageListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnTranslationMessageListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnWillSendMessageListener
+import com.hyphenate.easeui.feature.chat.widgets.EaseChatLayout
 import com.hyphenate.easeui.feature.chat.widgets.EaseChatMessageListLayout
 import com.hyphenate.easeui.feature.chat.widgets.EaseInputMenuStyle
 import com.hyphenate.easeui.feature.contact.EaseContactCheckActivity
@@ -82,8 +79,8 @@ import com.hyphenate.easeui.provider.getSyncUser
 
 open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChatLayoutListener,
     OnMenuChangeListener, OnWillSendMessageListener, OnModifyMessageListener, OnReportMessageListener,
-    OnChatFinishListener, OnTranslationMessageListener, OnChatPresenceListener,
-    OnMessageChatThreadClickListener, ChatThreadChangeListener,IActivityBackPressed {
+    OnChatFinishListener, OnTranslationMessageListener, OnMessageChatThreadClickListener,
+    ChatThreadChangeListener,IActivityBackPressed, OnMultipleSelectRemoveMsgListener {
     private var backPressListener: View.OnClickListener? = null
     private var extendMenuItemClickListener: OnChatExtendMenuItemClickListener? = null
     private var chatInputChangeListener: OnChatInputChangeListener? = null
@@ -99,6 +96,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     private var messageForwardCallback: OnMessageForwardCallback? = null
     private var sendCombineMessageCallback: OnSendCombineMessageCallback? = null
 
+    private var menuDialog:EaseChatExtendMenuDialog? = null
     private var messagesAdapter: EaseMessagesAdapter? = null
     var conversationId: String? = null
     var chatType: EaseChatType? = null
@@ -255,7 +253,6 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
             ContextCompat.getColor(mContext, R.color.ease_color_background))
         updateSilent()
         addMenu()
-        val enablePresence = EaseIM.getConfig()?.presencesConfig?.enablePresences ?: false
         chatType?.let { type ->
             when(type) {
                 EaseChatType.GROUP_CHAT -> {
@@ -278,9 +275,6 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
                 }
 
                 EaseChatType.SINGLE_CHAT -> {
-                    if (enablePresence) {
-                        binding?.layoutChat?.fetchChatPresence(conversationId)
-                    }
                     EaseIM.getUserProvider()?.getSyncUser(conversationId)?.let { user ->
                         binding?.run {
                             if (titleBar.getTitle().isNullOrEmpty() || updateName) {
@@ -308,6 +302,9 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         if (chatType != EaseChatType.GROUP_CHAT || isThread || EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage == false){
             binding?.titleBar?.setMenuIconVisible(R.id.chat_menu_topic,false)
         }
+        if (chatType != EaseChatType.GROUP_CHAT || isThread || EaseIM.getConfig()?.chatConfig?.enableChatPingMessage == false){
+            binding?.titleBar?.setMenuIconVisible(R.id.chat_menu_pin,false)
+        }
     }
 
     private fun setMenuItemClickListener() {
@@ -322,13 +319,17 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
                 EaseChatThreadListActivity.actionStart(mContext,conversationId)
                 return true
             }
+            R.id.chat_menu_pin -> {
+                binding?.layoutChat?.initPinView()
+                return true
+            }
             else -> return false
         }
     }
 
     private fun defaultSkipLogic() {
         if (chatType == EaseChatType.SINGLE_CHAT) {
-            startActivity(EaseContactDetailsActivity.createIntent(mContext
+            startActivity(EaseContactCheckActivity.createIntent(mContext
                 , EaseIM.getCache().getUser(conversationId!!)?.toUser() ?: EaseUser(conversationId!!)))
         } else if (chatType == EaseChatType.GROUP_CHAT){
             if (!isThread){
@@ -366,9 +367,9 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     }
 
     private fun setCustomExtendView() {
-        val dialog = EaseChatExtendMenuDialog(mContext)
-        dialog.init()
-        binding?.layoutChat?.chatInputMenu?.setCustomExtendMenu(dialog)
+        menuDialog = EaseChatExtendMenuDialog(mContext)
+        menuDialog?.init()
+        binding?.layoutChat?.chatInputMenu?.setCustomExtendMenu(menuDialog)
     }
 
     override fun initListener() {
@@ -383,8 +384,8 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
                 it.setOnChatRecordTouchListener(recordTouchListener)
                 it.setOnChatFinishListener(this)
                 it.setOnTranslationMessageListener(this)
-                it.setChatPresenceListener(this)
                 it.setOnMessageThreadViewClickListener(this)
+                it.setMultipleSelectRemoveMsgListener(this)
             }
             root.titleBar.let {
                 it.setLogoClickListener {
@@ -474,11 +475,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
                 finishCurrentActivity(EaseChatFinishReason.onContactRemoved)
             }
         }
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
-            if (it.isPresenceChange ) {
-                updatePresence()
-            }
-        }
+
         EaseFlowBus.with<EaseEvent>(EaseConstant.EASE_MULTIPLE_SELECT).register(this) {
             if (it.isNotifyChange && it.message == mContext + conversationId) {
                 setMultipleSelectStyle()
@@ -542,9 +539,12 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        binding?.layoutChat?.chatInputMenu?.setCustomExtendMenu(null)
+        menuDialog?.unregisterListener()
+        menuDialog = null
         EaseIM.removeMultiDeviceListener(multiDeviceListener)
         EaseIM.removeThreadChangeListener(this)
+        super.onDestroyView()
     }
 
     fun selectPicFromLocal() {
@@ -568,7 +568,18 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
                     .post(lifecycleScope, EaseEvent(EaseEvent.EVENT.UPDATE.name, EaseEvent.TYPE.CONVERSATION, conversationId))
                 mContext.finish()
             }
+            EaseChatFinishReason.onGroupUserRemoved -> {
+                mContext.finish()
+            }
             else -> {}
+        }
+    }
+
+    override fun multipleSelectRemoveMsgSuccess() {
+        if (binding?.layoutChat?.messageMultipleSelectController?.isInMultipleSelectStyle == true) {
+            binding?.layoutChat?.messageMultipleSelectController?.cancelMultiSelectStyle(binding?.titleBar?.getToolBar()) {
+                cancelMultipleSelectStyle()
+            }
         }
     }
 
@@ -672,6 +683,11 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     }
 
     override fun onSendCombineSuccess(message: ChatMessage?) {
+        if (binding?.layoutChat?.messageMultipleSelectController?.isInMultipleSelectStyle == true) {
+            binding?.layoutChat?.messageMultipleSelectController?.cancelMultiSelectStyle(binding?.titleBar?.getToolBar()) {
+                cancelMultipleSelectStyle()
+            }
+        }
         sendCombineMessageCallback?.onSendCombineSuccess(message)
     }
 
@@ -700,6 +716,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     }
 
     override fun onModifyMessageSuccess(messageModified: ChatMessage?) {
+        EaseIM.getCache().cleanUrlPreviewInfo(messageModified?.msgId)
         modifyMessageListener?.onModifyMessageSuccess(messageModified)
     }
 
@@ -730,32 +747,6 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         translationMessageListener?.onTranslationMessageFailure(code, error)
     }
 
-    override fun fetchChatPresenceSuccess(presence: MutableList<ChatPresence>?) {
-        ChatLog.e(TAG,"fetchChatPresenceSuccess $presence")
-        updatePresence()
-    }
-
-    override fun fetchChatPresenceFail(code: Int, error: String?) {
-        ChatLog.e(TAG,"fetchChatPresenceFail $code $error")
-    }
-
-    open fun updatePresence(){
-        if (chatType == EaseChatType.SINGLE_CHAT){
-            conversationId?.let {
-                val presence = EaseIM.getCache().getUserPresence(it)
-                val logoStatus = EasePresenceUtil.getPresenceIcon(mContext,presence)
-                val subtitle = EasePresenceUtil.getPresenceString(mContext,presence)
-                binding?.run{
-                    titleBar.setLogoStatusMargin(end = -1, bottom = -1)
-                    titleBar.setLogoStatus(logoStatus)
-                    titleBar.setSubtitle(subtitle)
-                    titleBar.getStatusView().visibility = View.VISIBLE
-                    titleBar.setLogoStatusSize(resources.getDimensionPixelSize(R.dimen.ease_title_bar_status_icon_size))
-                }
-            }
-        }
-    }
-
     open fun updateSilent(){
         val isSilent = EaseIM.getCache().getMutedConversationList().containsKey(conversationId)
         binding?.run {
@@ -768,6 +759,17 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     }
 
     override fun onPeerTyping(action: String?) {
+        EaseIM.getConfig()?.chatConfig?.enableChatTyping?.let {
+            if (!it) {
+                return
+            }
+        }
+        if (TextUtils.equals(action, EaseChatLayout.ACTION_TYPING_BEGIN)) {
+            binding?.titleBar?.setSubtitle(getString(R.string.alert_during_typing))
+            binding?.titleBar?.visibility = View.VISIBLE
+        } else if (TextUtils.equals(action, EaseChatLayout.ACTION_TYPING_END)) {
+            binding?.titleBar?.setSubtitle("")
+        }
         otherTypingListener?.onPeerTyping(action)
     }
 
@@ -787,7 +789,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         }
     }
 
-    override fun onChatThreadCreated(event: EMChatThreadEvent?) {
+    override fun onChatThreadCreated(event: ChatThreadEvent?) {
         EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage?.let {
             if (!it) {
                 return
@@ -801,7 +803,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         }
     }
 
-    override fun onChatThreadUpdated(event: EMChatThreadEvent?) {
+    override fun onChatThreadUpdated(event: ChatThreadEvent?) {
         EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage?.let {
             if (!it) {
                 return
@@ -814,7 +816,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         }
     }
 
-    override fun onChatThreadDestroyed(event: EMChatThreadEvent?) {
+    override fun onChatThreadDestroyed(event: ChatThreadEvent?) {
         EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage?.let {
             if (!it) {
                 return
@@ -828,7 +830,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         }
     }
 
-    override fun onChatThreadUserRemoved(event: EMChatThreadEvent?) {
+    override fun onChatThreadUserRemoved(event: ChatThreadEvent?) {
         EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage?.let {
             if (!it) {
                 return
@@ -1067,7 +1069,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
          * @param turnOn
          * @return
          */
-        internal fun turnOnTypingMonitor(turnOn: Boolean): Builder {
+         fun turnOnTypingMonitor(turnOn: Boolean): Builder {
             bundle.putBoolean(Constant.KEY_TURN_ON_TYPING_MONITOR, turnOn)
             return this
         }
@@ -1078,7 +1080,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
          * @param listener
          * @return
          */
-        internal fun setOnPeerTypingListener(listener: OnPeerTypingListener?): Builder {
+        fun setOnPeerTypingListener(listener: OnPeerTypingListener?): Builder {
             peerTypingListener = listener
             return this
         }

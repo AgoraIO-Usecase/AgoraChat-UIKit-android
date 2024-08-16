@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import com.hyphenate.chat.EMChatThreadEvent
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
@@ -16,6 +15,7 @@ import com.hyphenate.easeui.common.ChatGroup
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatThread
+import com.hyphenate.easeui.common.ChatThreadEvent
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.dialog.CustomDialog
@@ -210,7 +210,7 @@ open class EaseChatThreadFragment:EaseChatFragment(),IChatThreadResultView{
             moreDialog = SimpleListSheetDialog(
                 context = it,
                 itemList = menu,
-                object : SimpleListSheetItemClickListener {
+                itemListener = object : SimpleListSheetItemClickListener {
                     override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
                         when(menu.menuId){
                             R.id.thread_more_edit -> {
@@ -373,7 +373,7 @@ open class EaseChatThreadFragment:EaseChatFragment(),IChatThreadResultView{
         ChatLog.e(TAG,"getThreadParentInfoFail $code $message")
     }
 
-    override fun onChatThreadUpdated(event: EMChatThreadEvent?) {
+    override fun onChatThreadUpdated(event: ChatThreadEvent?) {
         event?.chatThread?.let {
             if (conversationId == event.chatThread.parentId){
                 binding?.titleBar?.setTitle(it.chatThreadName?:"")
@@ -381,13 +381,13 @@ open class EaseChatThreadFragment:EaseChatFragment(),IChatThreadResultView{
         }
     }
 
-    override fun onChatThreadDestroyed(event: EMChatThreadEvent?) {
+    override fun onChatThreadDestroyed(event: ChatThreadEvent?) {
         event?.chatThread?.let {
             exitThreadChat(it.chatThreadId)
         }
     }
 
-    override fun onChatThreadUserRemoved(event: EMChatThreadEvent?) {
+    override fun onChatThreadUserRemoved(event: ChatThreadEvent?) {
         event?.chatThread?.let {
             exitThreadChat(it.chatThreadId)
         }

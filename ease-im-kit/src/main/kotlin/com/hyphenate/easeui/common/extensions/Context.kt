@@ -144,14 +144,14 @@ fun Context.getImageResourceSize(@DrawableRes resId: Int): EaseSize {
  * Show toast.
  */
 fun Context.showToast(msg: String) {
-    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
 }
 
 /**
  * Show toast.
  */
 fun Context.showToast(@StringRes resId: Int) {
-    Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+    Toast.makeText(applicationContext, resId, Toast.LENGTH_SHORT).show()
 }
 
 /**

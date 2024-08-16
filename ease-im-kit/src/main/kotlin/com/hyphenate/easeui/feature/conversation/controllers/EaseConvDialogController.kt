@@ -1,7 +1,6 @@
 package com.hyphenate.easeui.feature.conversation.controllers
 
 import android.content.Context
-import android.content.Intent
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -72,6 +71,7 @@ class EaseConvDialogController(
             context = context,
             title = context.getString(R.string.ease_conv_action_add_contact),
             subtitle = context.getString(R.string.ease_conv_dialog_add_contact),
+            inputHint = context.getString(R.string.ease_dialog_edit_input_id_hint),
             rightButtonText = context.getString(R.string.ease_dialog_right_text),
             isEditTextMode = true,
             onInputModeConfirmListener = {

@@ -18,7 +18,7 @@ import com.hyphenate.easeui.interfaces.OnItemClickListener
 import com.hyphenate.easeui.model.EaseReaction
 import com.hyphenate.easeui.viewmodel.reaction.EaseChatReactionViewModel
 import com.hyphenate.easeui.viewmodel.reaction.IChatReactionRequest
-import com.hyphenate.util.EMLog
+import com.hyphenate.easeui.common.ChatLog
 
 class EaseChatReactionsDialog: EaseBaseSheetFragmentDialog<EaseDialogChatReactionsBinding>(), IMessageReaction,
     IChatReactionResultView {
@@ -53,7 +53,7 @@ class EaseChatReactionsDialog: EaseBaseSheetFragmentDialog<EaseDialogChatReactio
                             } else {
                                 addReaction(identityCode)
                             }
-                        } ?: EMLog.e("EaseChatReactionsDialog", "identityCode is null")
+                        } ?: ChatLog.e("EaseChatReactionsDialog", "identityCode is null")
                     }
                 }
             }
@@ -116,7 +116,7 @@ class EaseChatReactionsDialog: EaseBaseSheetFragmentDialog<EaseDialogChatReactio
 
     override fun addReactionFail(messageId: String, errorCode: Int, errorMsg: String?) {
         super.addReactionFail(messageId, errorCode, errorMsg)
-        EMLog.e("EaseChatReactionsDialog", "addReactionFail: $errorCode $errorMsg")
+        ChatLog.e("EaseChatReactionsDialog", "addReactionFail: $errorCode $errorMsg")
         reactionErrorListener?.onError(messageId, errorCode, errorMsg)
     }
 
@@ -128,7 +128,7 @@ class EaseChatReactionsDialog: EaseBaseSheetFragmentDialog<EaseDialogChatReactio
 
     override fun removeReactionFail(messageId: String, errorCode: Int, errorMsg: String?) {
         super.removeReactionFail(messageId, errorCode, errorMsg)
-        EMLog.e("EaseChatReactionsDialog", "removeReactionFail: $errorCode $errorMsg")
+        ChatLog.e("EaseChatReactionsDialog", "removeReactionFail: $errorCode $errorMsg")
         reactionErrorListener?.onError(messageId, errorCode, errorMsg)
     }
 }

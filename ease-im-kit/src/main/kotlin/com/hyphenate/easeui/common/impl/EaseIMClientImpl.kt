@@ -300,4 +300,8 @@ internal class EaseIMClientImpl: EaseIMClient {
         ChatListenersWrapper.getInstance().removeThreadChangeListener(listener)
     }
 
+    override fun releaseGlobalListener() {
+        removeChatListener()
+    }
+
 }

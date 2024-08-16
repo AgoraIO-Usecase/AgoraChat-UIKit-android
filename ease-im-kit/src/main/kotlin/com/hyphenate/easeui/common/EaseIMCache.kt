@@ -3,6 +3,7 @@ package com.hyphenate.easeui.common
 import com.hyphenate.easeui.common.enums.EaseCacheType
 import com.hyphenate.easeui.common.helper.EasePreferenceManager
 import com.hyphenate.easeui.model.EaseGroupProfile
+import com.hyphenate.easeui.model.EasePreview
 import com.hyphenate.easeui.model.EaseProfile
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
@@ -14,8 +15,8 @@ class EaseIMCache {
     // Cache the userinfo parsed by message ext. The key is the userId, the value is the userinfo.
     private val messageUserMap: ConcurrentMap<String, EaseProfile> = ConcurrentHashMap()
     private val mutedConvMap: MutableMap<String, Long> = HashMap()
-
-    private val presencesMap: ConcurrentHashMap<String, ChatPresence> = ConcurrentHashMap()
+    private val previewMap:ConcurrentMap<String, EasePreview> = ConcurrentHashMap()
+    private val checkPreviewMap:MutableMap<String,Boolean> = mutableMapOf()
 
     companion object {
         private const val TAG = "EaseIMCache"
@@ -113,31 +114,13 @@ class EaseIMCache {
         EasePreferenceManager.getInstance().setMuteMap(ChatClient.getInstance().currentUser, mutedConvMap)
     }
 
-    @Synchronized
-    fun insertPresences(userId: String?,chatPresence: ChatPresence){
-        presencesMap.let { presence->
-            userId?.let {
-                presence[it] = chatPresence
-            }
-        }
-    }
-
-    fun getUserPresence(userId: String):ChatPresence?{
-        if (presencesMap.size > 0 && presencesMap.containsKey(userId)){
-            return presencesMap[userId]
-        }
-        return null
-    }
-
-    var getPresenceInfo:ConcurrentHashMap<String, ChatPresence> = presencesMap
-
     fun clear(type: EaseCacheType?) {
         if (type == null || type == EaseCacheType.ALL) {
             userMap.clear()
             groupMap.clear()
             messageUserMap.clear()
             mutedConvMap.clear()
-            presencesMap.clear()
+            previewMap.clear()
         } else {
             when (type) {
                 EaseCacheType.CONTACT -> userMap.clear()
@@ -162,6 +145,55 @@ class EaseIMCache {
                 userMap[it.id] = it
             }
         }
+    }
+
+    fun saveUrlPreviewInfo(msgId:String?,bean:EasePreview){
+        msgId?.let {
+            if (it.isNotEmpty()){
+                previewMap[msgId] = bean
+            }
+        }
+    }
+
+    fun getUrlPreviewInfo(msgId: String?): EasePreview? {
+        msgId?.let {
+            if (previewMap.size > 0 && it.isNotEmpty()) {
+                if (previewMap.containsKey(msgId)) {
+                    return previewMap[msgId]
+                }
+            }
+        }
+        return null
+    }
+
+    fun cleanUrlPreviewInfo(msgId: String?){
+        msgId?.let {
+            if (previewMap.containsKey(it)) {
+                previewMap.remove(it)
+            }
+            if (checkPreviewMap.containsKey(it)){
+                checkPreviewMap.remove(it)
+            }
+        }
+    }
+
+    fun checkUrlPreview(msgId:String?,isFirst:Boolean? = true){
+        msgId?.let {
+            if (it.isNotEmpty()){
+                checkPreviewMap[msgId] = isFirst?:true
+            }
+        }
+    }
+
+    fun isFirstLoadedUrlPreview(msgId:String?):Boolean{
+        msgId?.let {
+            if (checkPreviewMap.isNotEmpty() && it.isNotEmpty()) {
+                if (checkPreviewMap.containsKey(msgId)) {
+                    return checkPreviewMap[msgId]?:true
+                }
+            }
+        }
+        return true
     }
 
 }

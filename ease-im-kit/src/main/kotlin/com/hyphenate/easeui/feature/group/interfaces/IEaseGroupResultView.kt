@@ -166,14 +166,14 @@ interface IEaseGroupResultView: IControlDataView {
     fun fetchMemberInfoFail(code: Int, error: String){}
 
     /**
-     * Delete conversation successfully.
+     * Clear conversation successfully.
      */
-    fun deleteConversationByGroupSuccess(conversationId: String?){}
+    fun clearConversationByGroupSuccess(conversationId: String?){}
 
     /**
-     * Delete conversation failed.
+     * Clear conversation failed.
      */
-    fun deleteConversationByGroupFail(code: Int, error: String?){}
+    fun clearConversationByGroupFail(code: Int, error: String?){}
 
     /**
      * Make contact interruption-free successfully.

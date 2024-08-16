@@ -18,13 +18,11 @@ import com.hyphenate.easeui.feature.chat.activities.EaseChatActivity
 import com.hyphenate.easeui.base.EaseBaseActivity
 import com.hyphenate.easeui.common.ChatConversationType
 import com.hyphenate.easeui.common.ChatLog
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.ChatSilentModeResult
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.dialog.CustomDialog
 import com.hyphenate.easeui.common.extensions.dpToPx
 import com.hyphenate.easeui.common.extensions.mainScope
-import com.hyphenate.easeui.common.extensions.toProfile
 import com.hyphenate.easeui.configs.EaseBottomMenuConfig
 import com.hyphenate.easeui.configs.EaseDetailMenuConfig
 import com.hyphenate.easeui.common.dialog.SimpleListSheetDialog
@@ -46,11 +44,9 @@ import com.hyphenate.easeui.model.getNickname
 import com.hyphenate.easeui.model.isCurrentUser
 import com.hyphenate.easeui.viewmodel.contacts.EaseContactListViewModel
 import com.hyphenate.easeui.viewmodel.contacts.IContactListRequest
-import com.hyphenate.easeui.widget.EaseSwitchItemView
 
 open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsBinding>(),
-    EaseSwitchItemView.OnCheckedChangeListener, View.OnClickListener,
-    IEaseContactResultView, OnMenuItemClickListener{
+     View.OnClickListener, IEaseContactResultView, OnMenuItemClickListener{
     protected var user: EaseUser? = null
     private var dialog: SimpleListSheetDialog? = null
     private var gridAdapter: EaseContactDetailItemAdapter? = null
@@ -88,7 +84,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
 
     open fun initView(){
         initSwitch()
-        initPresence()
+        initUserAvatarInfo()
         initMenu()
     }
 
@@ -96,8 +92,13 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
         contactViewModel = ViewModelProvider(this)[EaseContactListViewModel::class.java]
         contactViewModel?.attachView(this)
 
-        user?.let {
-            contactViewModel?.fetchChatPresence(mutableListOf(it.userId))
+        contactViewModel?.let {
+            val isLoad = EaseIM.isLoadBlockListFromServer?: false
+            if (!isLoad){
+                it.fetchBlockListFromServer()
+            }else{
+                it.getBlockListFromLocal()
+            }
         }
     }
 
@@ -112,9 +113,12 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
         }
         binding.switchItemDisturb.setSwitchTarckDrawable(R.drawable.ease_switch_track_selector)
         binding.switchItemDisturb.setSwitchThumbDrawable(R.drawable.ease_switch_thumb_selector)
+
+        binding.switchItemBlack.setSwitchTarckDrawable(R.drawable.ease_switch_track_selector)
+        binding.switchItemBlack.setSwitchThumbDrawable(R.drawable.ease_switch_thumb_selector)
     }
 
-    open fun initPresence(){
+    open fun initUserAvatarInfo(){
         EaseIM.getConfig()?.avatarConfig?.setStatusStyle(binding.epPresence.getStatusView(),4.dpToPx(mContext),
             ContextCompat.getColor(mContext, R.color.ease_color_background))
         binding.epPresence.setPresenceStatusMargin(end = -3, bottom = -3)
@@ -127,7 +131,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
 
         user?.let {
             EaseIM.getUserProvider()?.getUser(it.userId)?.let { profile->
-                binding.epPresence.setPresenceData(profile)
+                binding.epPresence.setUserAvatarData(profile)
                 binding.tvName.text = profile.getRemarkOrName()
                 binding.tvNumber.text = profile.id
             }
@@ -136,7 +140,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
                 binding.gvGridview.visibility = View.GONE
                 binding.titleBar.getToolBar().menu.forEach {menu-> menu.isVisible = false }
                 binding.switchItemDisturb.visibility = View.GONE
-                binding.swItemBlack.visibility = View.GONE
+                binding.switchItemBlack.visibility = View.GONE
             }
         }
     }
@@ -163,8 +167,8 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
     open fun initListener(){
         EaseIM.addContactListener(contactListener)
         binding.tvNumber.setOnClickListener(this)
-        binding.switchItemDisturb.setOnCheckedChangeListener(this)
-        binding.swItemBlack.setOnCheckedChangeListener(this)
+        binding.switchItemDisturb.setOnClickListener(this)
+        binding.switchItemBlack.setOnClickListener(this)
         binding.itemClear.setOnClickListener(this)
         gridAdapter?.setContactDetailItemClickListener(this)
         binding.titleBar.setNavigationOnClickListener { mContext.onBackPressed() }
@@ -189,44 +193,6 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
                 finish()
             }
         }
-
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
-            if (it.isPresenceChange ) {
-                updatePresence()
-            }
-        }
-    }
-
-    private fun updatePresence(){
-        val map = EaseIM.getCache().getPresenceInfo
-        user?.let { user->
-            map.let {
-                binding.epPresence.setPresenceData(user.toProfile(),it[user.userId])
-            }
-        }
-    }
-
-    override fun onCheckedChanged(buttonView: EaseSwitchItemView?, isChecked: Boolean) {
-        when(buttonView?.id){
-            R.id.switch_item_disturb -> {
-                user?.let {
-                    if (isChecked){
-                        contactViewModel?.makeSilentModeForConversation(it.userId,ChatConversationType.Chat)
-                    }else{
-                        contactViewModel?.cancelSilentForConversation(it.userId,ChatConversationType.Chat)
-                    }
-                }
-            }
-            R.id.sw_item_black -> {
-                if (isChecked){
-                    showBlackDialog()
-                }else{
-                    user?.let {
-                        contactViewModel?.removeUserFromBlackList(it.userId)
-                    }
-                }
-            }
-        }
     }
 
     override fun onClick(v: View?) {
@@ -236,6 +202,30 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
             }
             R.id.tv_number -> {
                 copyId()
+            }
+            R.id.switch_item_disturb -> {
+                binding.switchItemDisturb.switch?.let { switch ->
+                    val isChecked = switch.isChecked.not()
+                    user?.let {
+                        if (isChecked){
+                            contactViewModel?.makeSilentModeForConversation(it.userId,ChatConversationType.Chat)
+                        }else{
+                            contactViewModel?.cancelSilentForConversation(it.userId,ChatConversationType.Chat)
+                        }
+                    }
+                }
+            }
+            R.id.switch_item_black -> {
+                binding.switchItemBlack.switch?.let { switch ->
+                    val isChecked = switch.isChecked.not()
+                    if (isChecked){
+                        showBlockDialog()
+                    }else{
+                        user?.let {
+                            contactViewModel?.removeUserFromBlockList(it.userId)
+                        }
+                    }
+                }
             }
             else -> {}
         }
@@ -259,28 +249,54 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
 
             },
             onRightButtonClickListener = {
-                contactViewModel?.deleteConversation(user?.userId)
+                contactViewModel?.clearConversationMessage(user?.userId)
             }
         )
         clearDialog.show()
     }
 
-    private fun showBlackDialog(){
+    private fun showBlockDialog(){
         val blackDialog = CustomDialog(
             this@EaseContactDetailsActivity,
             resources.getString(R.string.ease_dialog_black_title),
             resources.getString(R.string.ease_dialog_black),
             false,
-            onLeftButtonClickListener = {
-                binding.swItemBlack.setChecked(false)
-            },
+            onLeftButtonClickListener = {},
             onRightButtonClickListener = {
                 user?.let {
-                    contactViewModel?.addUserToBlackList(mutableListOf(it.userId))
+                    contactViewModel?.addUserToBlockList(mutableListOf(it.userId))
                 }
             }
         )
         blackDialog.show()
+    }
+
+    open fun updateBlockSwitch(list:MutableList<EaseUser>){
+        list.map {
+            if (it.userId == user?.userId){
+                binding.switchItemBlack.setChecked(true)
+                updateBlockLayout(true)
+            }else{
+                binding.switchItemBlack.setChecked(false)
+                updateBlockLayout(false)
+            }
+        }
+    }
+
+    open fun updateBlockLayout(isChecked:Boolean){
+        if (isChecked){
+            binding.run {
+                functionLayout.visibility = View.GONE
+                switchItemDisturb.visibility = View.GONE
+                itemClear.visibility = View.GONE
+            }
+        }else{
+            binding.run {
+                functionLayout.visibility = View.VISIBLE
+                switchItemDisturb.visibility = View.VISIBLE
+                itemClear.visibility = View.VISIBLE
+            }
+        }
     }
 
     open fun getDeleteDialogMenu(): MutableList<EaseMenuItem>?{
@@ -315,7 +331,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
         dialog = SimpleListSheetDialog(
             context = context,
             itemList = menu,
-            object : SimpleListSheetItemClickListener{
+            itemListener = object : SimpleListSheetItemClickListener{
                 override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
                     simpleSheetMenuItemClick(position, menu)
                 }
@@ -323,27 +339,44 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
         supportFragmentManager.let { dialog?.show(it,"more_dialog") }
     }
 
-    override fun addUserToBlackListSuccess() {
+    override fun fetchBlockListFromServerSuccess(list: MutableList<EaseUser>) {
+        EaseIM.isLoadBlockListFromServer = true
+        updateBlockSwitch(list)
     }
 
-    override fun addUserToBlackListFail(code: Int, error: String) {
-        binding.swItemBlack.setChecked(false)
+    override fun fetchBlockListFromServerFail(code: Int, error: String) {
+        EaseIM.isLoadBlockListFromServer = true
     }
 
-    override fun removeUserFromBlackListSuccess() {
-
+    override fun getBlockListFromLocalSuccess(list: MutableList<EaseUser>) {
+        updateBlockSwitch(list)
     }
 
-    override fun removeUserFromBlackListFail(code: Int, error: String) {
-
+    override fun addUserToBlockListSuccess() {
+        binding.switchItemBlack.setChecked(true)
+        updateBlockLayout(true)
     }
 
-    override fun deleteConversationSuccess(conversationId: String?) {
+    override fun addUserToBlockListFail(code: Int, error: String) {
+        binding.switchItemBlack.setChecked(false)
+        updateBlockLayout(false)
+    }
+
+    override fun removeUserFromBlockListSuccess() {
+        binding.switchItemBlack.setChecked(false)
+        updateBlockLayout(false)
+    }
+
+    override fun removeUserFromBlockListFail(code: Int, error: String) {
+        ChatLog.e(TAG,"removeUserFromBlockListFail $code $error")
+    }
+
+    override fun clearConversationSuccess(conversationId: String?) {
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.REMOVE.name)
             .post(lifecycleScope, EaseEvent(EaseEvent.EVENT.REMOVE.name, EaseEvent.TYPE.CONVERSATION, conversationId))
     }
 
-    override fun deleteConversationFail(code: Int, error: String?) {
+    override fun clearConversationFail(code: Int, error: String?) {
         ChatLog.e(TAG,"deleteConversationFail $code $error")
     }
 
@@ -359,6 +392,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
 
     override fun makeSilentForContactSuccess(silentResult: ChatSilentModeResult) {
         binding.icNotice.visibility = View.VISIBLE
+        binding.switchItemDisturb.setChecked(true)
         EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.UPDATE.name)
             .post(lifecycleScope
                 , EaseEvent(EaseEvent.EVENT.UPDATE.name
@@ -375,6 +409,7 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
 
     override fun cancelSilentForContactSuccess() {
         binding.icNotice.visibility = View.GONE
+        binding.switchItemDisturb.setChecked(false)
         EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.UPDATE.name)
             .post(mContext.mainScope()
                 , EaseEvent(EaseEvent.EVENT.UPDATE.name
@@ -402,15 +437,6 @@ open class EaseContactDetailsActivity:EaseBaseActivity<EaseLayoutContactDetailsB
             return true
         }
         return false
-    }
-
-    override fun fetchChatPresenceSuccess(presence: MutableList<ChatPresence>) {
-        ChatLog.e(TAG,"fetchChatPresenceSuccess $presence")
-        updatePresence()
-    }
-
-    override fun fetchChatPresenceFail(code: Int, error: String) {
-        ChatLog.e(TAG,"fetchChatPresenceFail $code $error")
     }
 
     companion object {

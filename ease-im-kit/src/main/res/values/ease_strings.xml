@@ -3,7 +3,6 @@
     <string name="ease_search_text_hint">Search</string>
     <string name="ease_sheet_cancel">Cancel</string>
 
-
     <!-- dialog -->
     <string name="ease_dialog_black_title">Confirm Block?</string>
     <string name="ease_dialog_black">After confirming the blocking, you will not be able to receive any messages from the other party.</string>
@@ -68,13 +67,13 @@
     <string name="ease_action_forward">Forward</string>
     <string name="ease_action_recall">Recall</string>
     <string name="ease_action_delete">Delete</string>
-    <string name="ease_action_unsent">Unsend</string>
     <string name="ease_action_edit">Edit</string>
     <string name="ease_action_report">Report</string>
     <string name="ease_action_translation">Translate</string>
     <string name="ease_action_hide_translation">Hide translation</string>
     <string name="ease_action_multi_select">Select</string>
     <string name="ease_action_thread">Create a Thread</string>
+    <string name="ease_action_pin">Pin</string>
 
     <!-- chat record -->
     <string name="ease_chat_record_voice_record">Tap to Record</string>
@@ -174,16 +173,6 @@
     <string name="ease_data_format_hour">HH:mm</string>
     <string name="ease_data_format_today">hh:mm aa</string>
     <string name="ease_loading">Loading…</string>
-
-    <!--presence-->
-    <string name="ease_presence_online">Online</string>
-    <string name="ease_presence_busy">Busy</string>
-    <string name="ease_presence_do_not_disturb">Do not Disturb</string>
-    <string name="ease_presence_leave">Leave</string>
-    <string name="ease_presence_offline">Offline</string>
-    <string name="ease_presence_custom">Custom Status</string>
-    <string name="ease_presence_status">Status</string>
-    <string name="ease_presence_done">Done</string>
 
     <!--contact-->
     <string name="ease_contact_title">Contacts</string>
@@ -296,5 +285,17 @@
     <string name="thread_member">thread member</string>
     <string name="thread_leave">leave thread</string>
     <string name="thread_destroy">destroy thread</string>
+
+    <string name="alert_during_typing">Typing…</string>
+
+    <string name="ease_block_title">block(%1$d)</string>
+    <string name="ease_switch_block_title">Block</string>
+    <string name="ease_search_block_user">Search</string>
+
+    <string name="ease_url_preview_parsing">Parsing…</string>
+
+    <string name="pin_info_view_text">Pin Message</string>
+    <string name="ease_pin_list_item_delete">Remove</string>
+    <string name="ease_pin_list_item_confirm_delete">Confirm</string>
 
 </resources>

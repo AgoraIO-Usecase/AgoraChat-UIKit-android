@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
@@ -150,6 +151,12 @@ object EaseFlowBus {
         fun conflate(): EventBus<T> {
             operateEvents = operateEvents
                 .conflate()
+            return this
+        }
+
+        fun buffer(): EventBus<T>{
+            operateEvents = operateEvents
+                .buffer()
             return this
         }
 

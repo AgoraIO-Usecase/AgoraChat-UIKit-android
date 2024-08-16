@@ -26,10 +26,15 @@ class EaseNotificationRepository(
             notificationMsgManager.getAllSystemMessage()
         }
 
+    suspend fun loadMoreMessage(startMsgId:String?,limit:Int):List<ChatMessage> =
+        withContext(Dispatchers.IO){
+            notificationMsgManager.loadMoreMessage(startMsgId,limit)
+        }
+
     suspend fun fetchProfileInfo(members: List<String>?) =
         withContext(Dispatchers.IO){
             if (members.isNullOrEmpty()) {
-                throw ChatException(ChatError.INVALID_PARAM, "members is null.")
+                throw ChatException(ChatError.INVALID_PARAM, "members is null or empty.")
             }
             EaseIM.getUserProvider()?.fetchUsersBySuspend(members)
         }

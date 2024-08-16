@@ -241,14 +241,26 @@ interface IChatViewRequest: IAttachView {
     fun hideTranslationMessage(message: ChatMessage?)
 
     /**
-     * fetch the current user status of a specified user
-     * @param userIds
-     */
-    fun fetchChatPresence(userIds:MutableList<String>)
-
-    /**
      * Get in progress messages in target conversation
      */
     fun getInProgressMessages()
+
+    /**
+     * pin message
+     * @param message
+     */
+    fun pinMessage(message:ChatMessage?)
+
+    /**
+     * pin message
+     * @param message
+     */
+    fun unPinMessage(message:ChatMessage?)
+
+    /**
+     * fetch pin message from server
+     * @param conversationId
+     */
+    fun fetchPinMessageFromServer(conversationId:String?)
 
 }

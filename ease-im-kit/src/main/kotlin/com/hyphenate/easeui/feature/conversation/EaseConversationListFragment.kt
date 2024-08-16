@@ -6,7 +6,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
@@ -18,6 +17,8 @@ import com.hyphenate.easeui.common.ChatMultiDeviceListener
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.databinding.FragmentConversationListLayoutBinding
+import com.hyphenate.easeui.feature.contact.interfaces.IEaseContactResultView
+import com.hyphenate.easeui.feature.conversation.interfaces.OnLoadConversationListener
 import com.hyphenate.easeui.feature.conversation.adapter.EaseConversationListAdapter
 import com.hyphenate.easeui.feature.conversation.controllers.EaseConvDialogController
 import com.hyphenate.easeui.feature.conversation.interfaces.OnConversationListChangeListener
@@ -33,6 +34,7 @@ import com.hyphenate.easeui.interfaces.OnItemClickListener
 import com.hyphenate.easeui.interfaces.OnItemDataClickListener
 import com.hyphenate.easeui.interfaces.OnItemLongClickListener
 import com.hyphenate.easeui.interfaces.OnMenuItemClickListener
+import com.hyphenate.easeui.model.EaseConversation
 import com.hyphenate.easeui.model.EaseEvent
 import com.hyphenate.easeui.model.EaseMenuItem
 import com.hyphenate.easeui.model.getChatType
@@ -40,9 +42,9 @@ import com.hyphenate.easeui.viewmodel.contacts.EaseContactListViewModel
 
 open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationListLayoutBinding>(),
     OnItemClickListener, OnItemLongClickListener, OnMenuItemClickListener,
-    Toolbar.OnMenuItemClickListener {
+    OnLoadConversationListener,IEaseContactResultView {
 
-    private val dialogController by lazy { EaseConvDialogController(mContext, this) }
+    val dialogController by lazy { EaseConvDialogController(mContext, this) }
     private val contactViewModel by lazy { ViewModelProvider(this)[EaseContactListViewModel::class.java] }
 
     private var menuItemClickListener: OnMenuItemClickListener? = null
@@ -55,6 +57,14 @@ open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationLi
 
         override fun onGroupDestroyed(groupId: String?, groupName: String?) {
             checkDeleteEvent(groupId)
+        }
+
+        override fun onUserRemoved(groupId: String?, groupName: String?) {
+            binding?.listConversation?.getListAdapter()?.mData?.map {
+                if (it.conversationId == groupId){
+                    refreshData()
+                }
+            }
         }
     }
     private val contactListener = object : EaseContactListener() {
@@ -105,6 +115,7 @@ open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationLi
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
+        contactViewModel.attachView(this)
         arguments?.run {
             binding?.run {
                 titleConversations.visibility = if (getBoolean(Constant.KEY_USE_TITLE, false)) View.VISIBLE else View.GONE
@@ -126,6 +137,8 @@ open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationLi
                 getInt(Constant.KEY_EMPTY_LAYOUT, -1).takeIf { it != -1 }?.let {
                     listConversation.getListAdapter()?.setEmptyView(it)
                 }
+
+                defaultMenu()
             }
         }
     }
@@ -138,7 +151,8 @@ open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationLi
         binding?.listConversation?.setOnItemClickListener(this)
         binding?.listConversation?.setOnItemLongClickListener(this)
         binding?.listConversation?.setOnMenuItemClickListener(this)
-        binding?.titleConversations?.setOnMenuItemClickListener(this)
+        binding?.listConversation?.setLoadConversationListener(this)
+        setMenuItemClickListener()
         EaseIM.addContactListener(contactListener)
         EaseIM.addConversationListener(conversationListener)
         EaseIM.addGroupChangeListener(groupChangeListener)
@@ -146,7 +160,6 @@ open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationLi
     }
 
     override fun initData() {
-        super.initData()
         binding?.listConversation?.loadData()
         initEventBus()
     }
@@ -187,6 +200,11 @@ open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationLi
                 refreshData()
             }
         }
+        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.REMOVE + EaseEvent.TYPE.GROUP + EaseEvent.TYPE.CONTACT).register(this) {
+            if (it.isGroupChange && it.event == EaseConstant.EVENT_REMOVE_GROUP_MEMBER) {
+                refreshData()
+            }
+        }
     }
 
     fun refreshData() {
@@ -201,12 +219,40 @@ open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationLi
         }
     }
 
+    open fun defaultMenu(){
+        binding?.titleConversations?.inflateMenu(R.menu.menu_conversation_actions)
+    }
+
+    open fun defaultActionMoreDialog(){
+        dialogController.showMoreDialog { content ->
+            if (content.isNotEmpty()) {
+                contactViewModel.addContact(content)
+            }
+        }
+    }
+
+    private fun setMenuItemClickListener() {
+        binding?.titleConversations?.setOnMenuItemClickListener {
+            return@setOnMenuItemClickListener setMenuItemClick(it)
+        }
+    }
+
+    open fun setMenuItemClick(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.action_more -> {
+                defaultActionMoreDialog()
+                return true
+            }
+            else -> return false
+        }
+    }
+
     override fun onDestroyView() {
-        super.onDestroyView()
         EaseIM.removeContactListener(contactListener)
         EaseIM.removeConversationListener(conversationListener)
         EaseIM.removeGroupChangeListener(groupChangeListener)
         EaseIM.removeMultiDeviceListener(multiDeviceListener)
+        super.onDestroyView()
     }
 
     override fun onItemClick(view: View?, position: Int) {
@@ -222,28 +268,16 @@ open class EaseConversationListFragment: EaseBaseFragment<FragmentConversationLi
         }
     }
 
-    /**
-     * For [EaseTitleBar] menu item click.
-     */
-    override fun onMenuItemClick(item: MenuItem?): Boolean {
-        item?.let {
-            when(it.itemId) {
-                R.id.action_more -> {
-                    dialogController.showMoreDialog { content ->
-                        if (!content.isNullOrEmpty()) {
-                            contactViewModel.addContact(content)
-                        }
-                    }
-                    return true
-                }
-                else -> {}
-            }
-        }
-        return false
+    override fun addContactFail(code: Int, error: String) {
+        ChatLog.e("EaseConversationListFragment","addContactFail $code $error")
     }
 
     override fun onItemLongClick(view: View?, position: Int): Boolean {
         return itemLongClickListener?.onItemLongClick(view, position) ?: false
+    }
+
+    override fun loadConversationListSuccess(userList: List<EaseConversation>) {
+
     }
 
     override fun onMenuItemClick(item: EaseMenuItem?, position: Int): Boolean {

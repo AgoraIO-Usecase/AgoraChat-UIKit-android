@@ -137,8 +137,8 @@ class EaseChatPrimaryMenu @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
         binding.etSendmessage.removeTextChangedListener(this)
+        super.onDetachedFromWindow()
     }
 
     override fun setMenuShowType(style: EaseInputMenuStyle?) {
@@ -193,7 +193,7 @@ class EaseChatPrimaryMenu @JvmOverloads constructor(
         listener?.onToggleEmojiconClicked(binding.ivFaceChecked.visibility == VISIBLE)
     }
 
-    override fun showMoreStatus() {
+    override fun  showMoreStatus() {
         if (binding.btnMore.isChecked) {
             hideSoftKeyboard()
             hideButtons()

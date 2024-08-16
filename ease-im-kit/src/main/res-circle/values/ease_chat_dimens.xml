@@ -3,5 +3,6 @@
 
     <dimen name="ease_chat_image_corner_radius">@dimen/ease_corner_large</dimen>
     <dimen name="ease_chat_padding_bubble">@dimen/ease_size_0</dimen>
+    <dimen name="ease_chat_thread_padding_bubble">@dimen/ease_size_2</dimen>
 
 </resources>

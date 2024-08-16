@@ -232,8 +232,8 @@ interface IChatLayout {
     fun setOnChatFinishListener(listener: OnChatFinishListener?)
 
     /**
-     * Set chat presence listener.
+     * Set multiple select remove message listener
      */
-    fun setChatPresenceListener(listener: OnChatPresenceListener?)
+    fun setMultipleSelectRemoveMsgListener(listener: OnMultipleSelectRemoveMsgListener){}
 
 }

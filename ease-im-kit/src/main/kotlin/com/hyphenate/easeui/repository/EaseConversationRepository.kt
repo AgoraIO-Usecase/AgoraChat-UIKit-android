@@ -4,6 +4,7 @@ import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatConversationType
 import com.hyphenate.easeui.common.ChatError
+import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatManager
 import com.hyphenate.easeui.common.ChatPushManager
@@ -42,7 +43,7 @@ class EaseConversationRepository(
      */
     suspend fun loadData(): List<EaseConversation> =
         withContext(Dispatchers.IO) {
-            val hasLoaded: Boolean = EasePreferenceManager.getInstance().isLoadedConversationsFromServer() ?: false
+            val hasLoaded: Boolean = EasePreferenceManager.getInstance().isLoadedConversationsFromServer()
             if (hasLoaded) {
                 if (EaseIM.DEBUG) {
                     ChatLog.d(TAG, "loadData from local db")
@@ -50,7 +51,7 @@ class EaseConversationRepository(
                 chatManager.allConversationsBySort
                     // Filter system message and empty conversations.
                     ?.filter {
-                        it.conversationId() != EaseConstant.DEFAULT_SYSTEM_MESSAGE_ID && it.allMessages.isNotEmpty()
+                        it.conversationId() != EaseConstant.DEFAULT_SYSTEM_MESSAGE_ID
                     }
                     ?.map {
                         it.parse()
@@ -85,6 +86,17 @@ class EaseConversationRepository(
                         it.parse()
                     } ?: listOf()
             }
+        }
+
+    /**
+     * Load conversation list from local db.
+     */
+    suspend fun loadLocalConversation() =
+        withContext(Dispatchers.IO){
+            val localData = chatManager.allConversationsBySort?.filter {
+                it.conversationId() != EaseConstant.DEFAULT_SYSTEM_MESSAGE_ID
+            }?.map { it.parse() } ?: listOf()
+            localData
         }
 
     /**
@@ -209,6 +221,20 @@ class EaseConversationRepository(
                 }.map {
                     it.conversationId
                 }
+            if (userList.isEmpty()) {
+                throw ChatException(ChatError.INVALID_PARAM, "userList is empty.")
+            }
             EaseIM.getUserProvider()?.fetchUsersBySuspend(userList)
         }
+
+    /**
+     * Clear All Conversation Message
+     */
+    suspend fun clearConversationMessage(conversation: EaseConversation) =
+        withContext(Dispatchers.IO) {
+            conversation.run {
+                conversation.chatConversation()?.clearAllMessages()
+                ChatError.EM_NO_ERROR
+            }
+    }
 }

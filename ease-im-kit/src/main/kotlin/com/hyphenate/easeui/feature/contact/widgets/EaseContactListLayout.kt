@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hyphenate.easeui.R
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.feature.contact.adapter.EaseContactListAdapter
 import com.hyphenate.easeui.common.enums.EaseListViewType
 import com.hyphenate.easeui.common.RefreshHeader
@@ -21,7 +20,7 @@ import com.hyphenate.easeui.common.impl.OnItemClickListenerImpl
 import com.hyphenate.easeui.common.impl.OnItemLongClickListenerImpl
 import com.hyphenate.easeui.feature.contact.interfaces.IContactListLayout
 import com.hyphenate.easeui.feature.contact.interfaces.IEaseContactResultView
-import com.hyphenate.easeui.feature.contact.interfaces.OnLoadContactListener
+import com.hyphenate.easeui.feature.contact.interfaces.OnContactEventListener
 import com.hyphenate.easeui.interfaces.OnItemClickListener
 import com.hyphenate.easeui.interfaces.OnItemLongClickListener
 import com.hyphenate.easeui.model.EaseUser
@@ -36,7 +35,7 @@ class EaseContactListLayout@JvmOverloads constructor(
     private val attrs: AttributeSet? = null,
     private val defStyleAttr: Int = 0
 ): LinearLayout(context, attrs, defStyleAttr), IContactListLayout ,IEaseContactResultView {
-    private var isFirstLoad = false
+    private var isFirstLoadInfo = false
     /**
      * Refresh layout.
      */
@@ -71,12 +70,14 @@ class EaseContactListLayout@JvmOverloads constructor(
     /**
      * Load contact listener.
      */
-    private var loadContactListener:OnLoadContactListener? = null
+    private var loadContactListener:OnContactEventListener? = null
 
 
     private var contactViewModel: IContactListRequest? = null
 
     private var viewType: EaseListViewType? = EaseListViewType.LIST_CONTACT
+
+    private var isFirstLoadFromServer:Boolean = true
 
     /**
      * Concat adapter
@@ -140,7 +141,7 @@ class EaseContactListLayout@JvmOverloads constructor(
                         index in firstVisibleItemPosition..lastVisibleItemPosition
                     }
                     if (!visibleList.isNullOrEmpty()) {
-                        contactViewModel?.fetchContactInfo(visibleList)
+                        fetchContactInfo(visibleList)
                     }
                 }
             }
@@ -162,6 +163,10 @@ class EaseContactListLayout@JvmOverloads constructor(
 
     fun loadContactData(fetchServerData: Boolean) {
         contactViewModel?.loadData(fetchServerData)
+    }
+
+    fun fetchContactInfo(visibleList:List<EaseUser>?){
+        contactViewModel?.fetchContactInfo(visibleList)
     }
 
     override fun setViewModel(viewModel: IContactListRequest?) {
@@ -200,7 +205,7 @@ class EaseContactListLayout@JvmOverloads constructor(
         when(viewType){
             EaseListViewType.LIST_CONTACT -> {  loadContactData(true) }
             EaseListViewType.LIST_SELECT_CONTACT -> { loadContactData(false) }
-            else -> {}
+            else -> { loadContactData(false) }
         }
     }
 
@@ -247,7 +252,7 @@ class EaseContactListLayout@JvmOverloads constructor(
         this.itemLongClickListener = listener
     }
 
-    override fun setLoadContactListener(listener: OnLoadContactListener) {
+    override fun setLoadContactListener(listener: OnContactEventListener) {
         this.loadContactListener = listener
     }
 
@@ -257,6 +262,11 @@ class EaseContactListLayout@JvmOverloads constructor(
         listAdapter?.mData?.let {
             if (it.size > 0){
                 loadContactListener?.loadContactListSuccess(list)
+            }else {
+                if (isFirstLoadFromServer){
+                    loadContactData(true)
+                    isFirstLoadFromServer = false
+                }else{}
             }
         }
     }
@@ -266,17 +276,31 @@ class EaseContactListLayout@JvmOverloads constructor(
         loadContactListener?.loadContactListFail(code, error)
     }
 
-    override fun setPresence(presence: ConcurrentHashMap<String, ChatPresence>?) {
-        listAdapter?.setUserPresences(presence)
+    override fun addContactSuccess(userId: String) {
+        loadContactListener?.addContactSuccess(userId)
+    }
+
+    override fun addContactFail(code: Int, error: String) {
+        loadContactListener?.addContactFail(code, error)
+    }
+
+    override fun setUserAvatarInfo(info: ConcurrentHashMap<String, Int>?) {
+        listAdapter?.setUserAvatarInfo(info)
     }
 
     override fun fetchUserInfoByUserSuccess(users: List<EaseUser>?) {
         if (!users.isNullOrEmpty()) {
             listAdapter?.notifyItemRangeChanged(0, listAdapter?.itemCount ?: 0)
-            if (!isFirstLoad){
+            if (!isFirstLoadInfo){
                 contactViewModel?.loadData()
-                isFirstLoad = true
+                isFirstLoadInfo = true
             }
         }
+    }
+
+    override fun onDetachedFromWindow() {
+        itemLongClickListener = null
+        contactViewModel?.detachView()
+        super.onDetachedFromWindow()
     }
 }

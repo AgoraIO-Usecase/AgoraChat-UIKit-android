@@ -12,7 +12,7 @@ interface IPhotoView {
      *
      * @return true if the PhotoView allows zooming.
      */
-    fun canZoom(): Boolean
+    fun canZoom(): Boolean?
 
     /**
      * Gets the Display Rectangle of the currently displayed Drawable. The
@@ -26,24 +26,24 @@ interface IPhotoView {
     /**
      * @return The current minimum scale level. What this value represents depends on the current [ImageView.ScaleType].
      */
-    fun getMinScale(): Float
+    fun getMinScale(): Float?
 
     /**
      * @return The current middle scale level. What this value represents depends on the current [ImageView.ScaleType].
      */
-    fun getMidScale(): Float
+    fun getMidScale(): Float?
 
     /**
      * @return The current maximum scale level. What this value represents depends on the current [ImageView.ScaleType].
      */
-    fun getMaxScale(): Float
+    fun getMaxScale(): Float?
 
     /**
      * Returns the current scale value
      *
      * @return float - current scale value
      */
-    fun getScale(): Float
+    fun getScale(): Float?
 
     /**
      * Return the current scale type in use by the ImageView.

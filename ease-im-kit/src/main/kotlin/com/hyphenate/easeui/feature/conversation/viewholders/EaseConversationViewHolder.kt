@@ -149,6 +149,8 @@ class EaseConversationViewHolder(
                     } else {
                         msgState.visibility = View.GONE
                     }
+                }?:kotlin.run {
+                    message.text = ""
                 }
 
                 // Set un-send message info

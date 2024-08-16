@@ -13,8 +13,10 @@ import com.hyphenate.easeui.feature.chat.reaction.interfaces.OnEaseChatReactionE
 import com.hyphenate.easeui.feature.chat.reply.EaseChatMessageReplyView
 import com.hyphenate.easeui.feature.chat.reply.interfaces.OnMessageReplyViewClickListener
 import com.hyphenate.easeui.feature.chat.translation.EaseChatMessageTranslationView
+import com.hyphenate.easeui.feature.chat.urlpreview.EaseChatMessageUrlPreview
 import com.hyphenate.easeui.feature.thread.widgets.EaseChatMessageThreadView
 import com.hyphenate.easeui.feature.thread.interfaces.OnMessageChatThreadClickListener
+import com.hyphenate.easeui.interfaces.UrlPreviewStatusCallback
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowText
 
@@ -146,6 +148,34 @@ object EaseChatAddExtendFunctionViewController{
             if (isLoaded) {
                 translationView.visibility = View.VISIBLE
             }
+        }
+    }
+
+    fun addUrlPreviewToMessage(
+        view: EaseChatRowText,
+        message: ChatMessage?,
+        callback: UrlPreviewStatusCallback?=null
+    ){
+        EaseIM.getConfig()?.chatConfig?.enableUrlPreview?.let {
+            if (!it) {
+                return
+            }
+        }
+        val isSend = message?.direct() == ChatMessageDirection.SEND
+        var urlPreview: EaseChatMessageUrlPreview?
+        view.getBubbleBottom?.let {
+            if (it.childCount == 0){
+                urlPreview = EaseChatMessageUrlPreview(isSend,view.context)
+                urlPreview?.id = R.id.ease_url_preview
+            }else{
+                urlPreview = it.findViewById(R.id.ease_url_preview)
+                if (urlPreview == null){
+                    urlPreview = EaseChatMessageUrlPreview(isSend,view.context)
+                    urlPreview?.id = R.id.ease_url_preview
+                }
+            }
+            view.addChildToBubbleBottomLayout(urlPreview)
+            urlPreview?.checkPreview(message,callback)
         }
     }
 }

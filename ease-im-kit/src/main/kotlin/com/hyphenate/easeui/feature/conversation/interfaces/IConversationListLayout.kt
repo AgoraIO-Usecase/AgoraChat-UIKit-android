@@ -56,4 +56,11 @@ interface IConversationListLayout: IRecyclerView {
      */
     fun setOnConversationChangeListener(listener: OnConversationListChangeListener?)
 
+    /**
+     * load conversation data listener
+     * @param listener
+     * @return
+     */
+    fun setLoadConversationListener(listener: OnLoadConversationListener)
+
 }

@@ -85,6 +85,9 @@ open class EaseCreateGroupActivity:EaseBaseActivity<EaseActivityCreateGroupLayou
                 finish()
             }
             it.groupMemberCount.setOnClickListener{
+                if (binding.groupMemberCount.isEnabled){
+                    binding.groupMemberCount.isEnabled = false
+                }
                 createGroup()
             }
         }
@@ -120,6 +123,7 @@ open class EaseCreateGroupActivity:EaseBaseActivity<EaseActivityCreateGroupLayou
     }
 
     override fun createGroupSuccess(group: ChatGroup) {
+        binding.groupMemberCount.isEnabled = true
         ChatClient.getInstance().chatManager().saveMessage(group.createNewGroupMessage(group.groupName))
         EaseChatActivity.actionStart(mContext,group.groupId, EaseChatType.GROUP_CHAT)
         finish()
@@ -127,6 +131,7 @@ open class EaseCreateGroupActivity:EaseBaseActivity<EaseActivityCreateGroupLayou
 
     override fun createGroupFail(code: Int, error: String) {
         ChatLog.e(TAG,"createGroupFail $code $error")
+        binding.groupMemberCount.isEnabled = true
         finish()
     }
 

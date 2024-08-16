@@ -170,8 +170,16 @@ class EaseNotificationMsgManager {
      * Get all messages of notification
      * @return
      */
-    fun getAllMessage():List<ChatMessage>{
+    fun getAllNotifyMessage():List<ChatMessage>{
         return getConversation().allMessages
+    }
+
+    /**
+     * load more message of notification
+     * @return
+     */
+    fun loadMoreMessage(startMsgId:String?="",limit:Int):List<ChatMessage>{
+        return getConversation().loadMoreMsgFromDB(startMsgId,limit)
     }
 
 

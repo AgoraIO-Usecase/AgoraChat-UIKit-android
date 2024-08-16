@@ -128,7 +128,7 @@ open class EaseContactCheckActivity:EaseBaseActivity<EaseActivityContactAddLayou
         }
     }
 
-    override fun addContactSuccess() {
+    override fun addContactSuccess(userId: String) {
         binding.tvAddContact.isSelected = false
     }
 

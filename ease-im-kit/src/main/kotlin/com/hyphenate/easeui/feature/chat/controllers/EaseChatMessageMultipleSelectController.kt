@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.hyphenate.easeui.R
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatType
 import com.hyphenate.easeui.common.dialog.CustomDialog
@@ -82,7 +83,7 @@ class EaseChatMessageMultipleSelectController(
                 }
 
                 override fun onForwardClick(messageIdList: List<String>) {
-                    EMLog.e("multipleSelectController", "onForwardClick: $messageIdList")
+                    ChatLog.e("multipleSelectController", "onForwardClick: $messageIdList")
                     if (messageIdList.isNotEmpty()){
                         EaseMessageForwardDialogFragment().apply {
                             setOnForwardClickListener(object : OnForwardClickListener {

@@ -37,6 +37,13 @@ open class EaseChatRowUserCard @JvmOverloads constructor(
                 userIdView?.text = uId
                 val nickName = params[EaseConstant.USER_CARD_NICK]
                 nicknameView?.text = nickName
+                if (nickName.isNullOrEmpty()){
+                    nicknameView?.visibility = GONE
+                    userIdView?.visibility = VISIBLE
+                }else{
+                    nicknameView?.visibility = VISIBLE
+                    userIdView?.visibility = GONE
+                }
                 val headUrl = params[EaseConstant.USER_CARD_AVATAR]
                 headImageView?.load(headUrl) {
                     placeholder(R.drawable.ease_default_avatar)

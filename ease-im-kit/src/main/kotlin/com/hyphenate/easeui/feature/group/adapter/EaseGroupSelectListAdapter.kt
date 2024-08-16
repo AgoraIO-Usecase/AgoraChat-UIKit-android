@@ -59,6 +59,17 @@ class EaseGroupSelectListAdapter(
         notifyDataSetChanged()
     }
 
+    fun addSelectList(list: MutableList<String>){
+        if (list.isNotEmpty()){
+            list.forEach { id ->
+                if (!checkedList.contains(id)){
+                    checkedList.add(id)
+                }
+            }
+        }
+        notifyDataSetChanged()
+    }
+
     fun resetSelect(){
         checkedList.clear()
         notifyDataSetChanged()
@@ -99,7 +110,7 @@ class EaseGroupSelectListAdapter(
                         selectedListener?.onContactSelectedChanged(view,checkedList)
                     }
 
-                    emPresence.setPresenceData(item.toProfile())
+                    emPresence.setUserAvatarData(item.toProfile())
                     tvName.text = item.getRemarkOrName()
 
                     letterHeader.visibility = View.GONE

@@ -18,12 +18,22 @@ import kotlin.coroutines.suspendCoroutine
 
 suspend fun EaseNotificationMsgManager.getAllSystemMessage():List<ChatMessage>{
     return suspendCoroutine{ continuation ->
-        val allMessage = getAllMessage()
+        val allMessage = getAllNotifyMessage()
         if (allMessage.isNotEmpty()){
             continuation.resume(allMessage)
         }else{
             continuation.resume(mutableListOf())
-//            continuation.resumeWithException(ChatException(-1, "no system message"))
+        }
+    }
+}
+
+suspend fun EaseNotificationMsgManager.loadMoreMessage(startMsgId:String,limit:Int):List<ChatMessage>{
+    return suspendCoroutine{ continuation ->
+        val allMessage = loadMoreMessage(startMsgId,limit)
+        if (allMessage.isNotEmpty()){
+            continuation.resume(allMessage)
+        }else{
+            continuation.resume(mutableListOf())
         }
     }
 }

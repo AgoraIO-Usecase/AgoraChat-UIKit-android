@@ -22,8 +22,9 @@ import com.hyphenate.easeui.model.EaseMenuItem
 class SimpleListSheetDialog(
     context: Context,
     itemList: MutableList<EaseMenuItem>?,
+    val title:String? = null,
     val itemListener: SimpleListSheetItemClickListener ?= null,
-    val type: SimpleSheetType = SimpleSheetType.ITEM_LAYOUT_DIRECTION_CENTER
+    val type: SimpleSheetType? = SimpleSheetType.ITEM_LAYOUT_DIRECTION_CENTER
 ):EaseBaseSheetFragmentDialog<EaseLayoutSimpleSheetDialogBinding>() {
     private var mContext:Context
     private var sheetAdapter: SimpleSheetAdapter? = null
@@ -49,6 +50,14 @@ class SimpleListSheetDialog(
     }
 
     override fun initView(){
+        title?.let {
+            if (it.isEmpty()){
+                binding?.tvTitle?.visibility = View.GONE
+            }else{
+                binding?.tvTitle?.visibility = View.VISIBLE
+                binding?.tvTitle?.text = it
+            }
+        }
         binding?.let {
             if (type == SimpleSheetType.ITEM_LAYOUT_DIRECTION_START){
                 it.cancel.text = ""
@@ -57,7 +66,7 @@ class SimpleListSheetDialog(
                 layoutParams.height = 34f.dpToIntPx(mContext)
                 it.cancel.layoutParams = layoutParams
             }
-            sheetAdapter = SimpleSheetAdapter(data,type)
+            sheetAdapter = type?.let { it1 -> SimpleSheetAdapter(data, it1) }
             val layoutManager = LinearLayoutManager(mContext)
             it.rlSheetList.layoutManager = layoutManager
             it.rlSheetList.adapter = this.sheetAdapter

@@ -8,6 +8,8 @@ interface IEaseSearchRequest: IAttachView {
 
     fun searchUser(query:String)
 
+    fun searchBlockUser(query: String)
+
     fun searchConversation(query:String)
 
     fun searchMessage(

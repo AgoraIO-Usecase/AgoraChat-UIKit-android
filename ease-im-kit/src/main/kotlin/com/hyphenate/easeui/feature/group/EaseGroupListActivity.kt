@@ -8,7 +8,7 @@ import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.base.EaseBaseActivity
 import com.hyphenate.easeui.common.extensions.hasRoute
 import com.hyphenate.easeui.databinding.EaseLayoutGroupListBinding
-import com.hyphenate.easeui.feature.group.fragment.EaseGroupListFragment
+import com.hyphenate.easeui.feature.group.fragments.EaseGroupListFragment
 
 class EaseGroupListActivity:EaseBaseActivity<EaseLayoutGroupListBinding>() {
     override fun getViewBinding(inflater: LayoutInflater): EaseLayoutGroupListBinding {

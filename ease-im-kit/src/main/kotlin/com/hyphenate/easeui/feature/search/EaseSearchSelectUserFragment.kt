@@ -2,6 +2,7 @@ package com.hyphenate.easeui.feature.search
 
 import android.os.Bundle
 import android.view.View
+import com.hyphenate.easeui.R
 import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter
 import com.hyphenate.easeui.feature.search.adapter.EaseSearchUserAdapter
 import com.hyphenate.easeui.interfaces.OnContactSelectedListener
@@ -28,6 +29,11 @@ class EaseSearchSelectUserFragment:EaseSearchUserFragment(), OnContactSelectedLi
 
     override fun onContactSelectedChanged(v: View, selectedMembers: MutableList<String>) {
         this.selectData = selectedMembers
+        if (selectedMembers.isNotEmpty()){
+            binding?.tvRight?.text = mContext.resources.getString(R.string.ease_dialog_confirm)
+        }else{
+            binding?.tvRight?.text = mContext.resources.getString(R.string.ease_dialog_cancel)
+        }
     }
 
     override fun onTvRightClick(view: View) {

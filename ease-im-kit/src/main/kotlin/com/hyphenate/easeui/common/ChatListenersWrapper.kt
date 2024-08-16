@@ -1,23 +1,20 @@
 package com.hyphenate.easeui.common
 
-import com.hyphenate.EMChatThreadChangeListener
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.CONTACT_ACCEPT
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.CONTACT_REMOVE
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_CREATE
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_DESTROY
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_JOIN
-import com.hyphenate.easeui.common.ChatMultiDeviceListener.GROUP_LEAVE
+import com.hyphenate.EMMultiDeviceListener.CONTACT_ACCEPT
+import com.hyphenate.EMMultiDeviceListener.CONTACT_REMOVE
+import com.hyphenate.EMMultiDeviceListener.GROUP_CREATE
+import com.hyphenate.EMMultiDeviceListener.GROUP_DESTROY
+import com.hyphenate.EMMultiDeviceListener.GROUP_JOIN
+import com.hyphenate.EMMultiDeviceListener.GROUP_LEAVE
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.bus.EaseFlowBus
-import com.hyphenate.easeui.common.ChatLoginExtensionInfo
-import com.hyphenate.easeui.common.ChatRecallMessageInfo
 import com.hyphenate.easeui.common.extensions.createUnsentMessage
 import com.hyphenate.easeui.common.extensions.getUserInfo
 import com.hyphenate.easeui.common.extensions.isGroupChat
 import com.hyphenate.easeui.common.extensions.mainScope
 import com.hyphenate.easeui.common.helper.EaseAtMessageHelper
-import com.hyphenate.easeui.feature.invitation.helper.EaseNotificationMsgManager
 import com.hyphenate.easeui.feature.invitation.enums.InviteMessageStatus
+import com.hyphenate.easeui.feature.invitation.helper.EaseNotificationMsgManager
 import com.hyphenate.easeui.feature.invitation.helper.RequestMsgHelper
 import com.hyphenate.easeui.interfaces.OnEventResultListener
 import com.hyphenate.easeui.model.EaseEvent
@@ -28,8 +25,8 @@ import java.util.Collections
 
 
 internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListener, ChatGroupChangeListener,
-    ChatContactListener, ChatConversationListener, ChatPresenceListener, ChatRoomChangeListener,
-    ChatMultiDeviceListener, EMChatThreadChangeListener {
+    ChatContactListener, ChatConversationListener, ChatPresenceListener,
+    ChatMultiDeviceListener, ChatThreadChangeListener {
 
     private val chatConnectionListener = Collections.synchronizedList(mutableListOf<ChatConnectionListener>())
     private val chatMessageListener = Collections.synchronizedList(mutableListOf<ChatMessageListener>())
@@ -49,7 +46,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         ChatClient.getInstance().groupManager().addGroupChangeListener(this)
         ChatClient.getInstance().contactManager().setContactListener(this)
         ChatClient.getInstance().presenceManager().addListener(this)
-        ChatClient.getInstance().chatroomManager().addChatRoomChangeListener(this)
+        ChatClient.getInstance().chatroomManager().addChatRoomChangeListener(chatroomListener)
         ChatClient.getInstance().addMultiDeviceListener(this)
         ChatClient.getInstance().chatThreadManager().addChatThreadChangeListener(this)
     }
@@ -61,7 +58,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         ChatClient.getInstance().groupManager().removeGroupChangeListener(this)
         ChatClient.getInstance().contactManager().removeContactListener(this)
         ChatClient.getInstance().presenceManager().removeListener(this)
-        ChatClient.getInstance().chatroomManager().removeChatRoomListener(this)
+        ChatClient.getInstance().chatroomManager().removeChatRoomListener(chatroomListener)
         ChatClient.getInstance().removeMultiDeviceListener(this)
         ChatClient.getInstance().chatThreadManager().removeChatThreadChangeListener(this)
 
@@ -185,60 +182,60 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     /**  ChatConnectionListener  */
     override fun onConnected() {
         chatConnectionListener.let {
-            try {
-                for (connectionListener in it) {
+            for (connectionListener in it) {
+                try {
                     connectionListener.onConnected()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onDisconnected(errorCode: Int) {
         chatConnectionListener.let {
-            try {
-                for (connectionListener in it) {
+            for (connectionListener in it) {
+                try {
                     connectionListener.onDisconnected(errorCode)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onTokenWillExpire() {
         chatConnectionListener.let {
-            try {
-                for (connectionListener in it) {
+            for (connectionListener in it) {
+                try {
                     connectionListener.onTokenWillExpire()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onTokenExpired() {
         chatConnectionListener.let {
-            try {
-                for (connectionListener in it) {
+            for (connectionListener in it) {
+                try {
                     connectionListener.onTokenExpired()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onLogout(errorCode: Int, info: ChatLoginExtensionInfo?) {
         chatConnectionListener.let {
-            try {
-                for (connectionListener in it) {
+            for (connectionListener in it) {
+                try {
                     connectionListener.onLogout(errorCode, info)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -257,48 +254,48 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
             }
         }
         chatMessageListener.let {
-            try {
-                for (messageListener in it) {
+            for (messageListener in it) {
+                try {
                     messageListener.onMessageReceived(messages)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onCmdMessageReceived(messages: MutableList<ChatMessage>?) {
         chatMessageListener.let {
-            try {
-                for (messageListener in it) {
+            for (messageListener in it) {
+                try {
                     messageListener.onCmdMessageReceived(messages)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onGroupMessageRead(groupReadAcks: MutableList<ChatGroupReadAck>?) {
         chatMessageListener.let {
-            try {
-                for (messageListener in it) {
+            for (messageListener in it) {
+                try {
                     messageListener.onGroupMessageRead(groupReadAcks)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onMessageChanged(message: ChatMessage?, change: Any?) {
         chatMessageListener.let {
-            try {
-                for (messageListener in it) {
+            for (messageListener in it) {
+                try {
                     messageListener.onMessageChanged(message, change)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -309,36 +306,36 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         operationTime: Long
     ) {
         chatMessageListener.let {
-            try {
-                for (messageListener in it) {
+            for (messageListener in it) {
+                try {
                     messageListener.onMessageContentChanged(messageModified,operatorId,operationTime)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onMessageDelivered(messages: MutableList<ChatMessage>?) {
         chatMessageListener.let {
-            try {
-                for (messageListener in it) {
+            for (messageListener in it) {
+                try {
                     messageListener.onMessageDelivered(messages)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onMessageRead(messages: MutableList<ChatMessage>?) {
         chatMessageListener.let {
-            try {
-                for (messageListener in it) {
+            for (messageListener in it) {
+                try {
                     messageListener.onMessageRead(messages)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -356,36 +353,53 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
             }
         }
         chatMessageListener.let {
-            try {
-                for (messageListener in it) {
+            for (messageListener in it) {
+                try {
                     messageListener.onMessageRecalledWithExt(recallMessageInfo)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onReactionChanged(messageReactionChangeList: MutableList<ChatMessageReactionChange>?) {
         chatMessageListener.let {
-            try {
-                for (messageListener in it) {
+            for (messageListener in it) {
+                try {
                     messageListener.onReactionChanged(messageReactionChangeList)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onReadAckForGroupMessageUpdated() {
         chatMessageListener.let {
-            try {
-                for (messageListener in it) {
+            for (messageListener in it) {
+                try {
                     messageListener.onReadAckForGroupMessageUpdated()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun onMessagePinChanged(
+        messageId: String?,
+        conversationId: String?,
+        pinOperation: ChatMessagePinOperation?,
+        pinInfo: ChatMessagePinInfo?
+    ) {
+        chatMessageListener.let {
+            for (messageListener in it) {
+                try {
+                    messageListener.onMessagePinChanged(messageId, conversationId, pinOperation, pinInfo)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }
@@ -398,12 +412,12 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         reason: String?
     ) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onInvitationReceived(groupId,groupName,inviter,reason)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -415,24 +429,24 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         reason: String?
     ) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onRequestToJoinReceived(groupId,groupName,applicant,reason)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onRequestToJoinAccepted(groupId: String?, groupName: String?, accepter: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onRequestToJoinAccepted(groupId,groupName,accepter)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -444,60 +458,60 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         reason: String?
     ) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onRequestToJoinDeclined(groupId,groupName,decliner,reason)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onInvitationAccepted(groupId: String?, invitee: String?, reason: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onInvitationAccepted(groupId,invitee,reason)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onInvitationDeclined(groupId: String?, invitee: String?, reason: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onInvitationDeclined(groupId,invitee,reason)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onUserRemoved(groupId: String?, groupName: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onUserRemoved(groupId,groupName)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onGroupDestroyed(groupId: String?, groupName: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onGroupDestroyed(groupId,groupName)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -508,180 +522,180 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         inviteMessage: String?
     ) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onAutoAcceptInvitationFromGroup(groupId,inviter,inviteMessage)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onMuteListAdded(groupId: String?, mutes: MutableList<String>?, muteExpire: Long) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onMuteListAdded(groupId,mutes,muteExpire)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onMuteListRemoved(groupId: String?, mutes: MutableList<String>?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onMuteListRemoved(groupId,mutes)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onWhiteListAdded(groupId: String?, whitelist: MutableList<String>?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onWhiteListAdded(groupId,whitelist)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onWhiteListRemoved(groupId: String?, whitelist: MutableList<String>?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onWhiteListRemoved(groupId,whitelist)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onAllMemberMuteStateChanged(groupId: String?, isMuted: Boolean) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onAllMemberMuteStateChanged(groupId,isMuted)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onAdminAdded(groupId: String?, administrator: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onAdminAdded(groupId,administrator)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onAdminRemoved(groupId: String?, administrator: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onAdminRemoved(groupId,administrator)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onOwnerChanged(groupId: String?, newOwner: String?, oldOwner: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onOwnerChanged(groupId,newOwner,oldOwner)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onMemberJoined(groupId: String?, member: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onMemberJoined(groupId,member)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onMemberExited(groupId: String?, member: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onMemberExited(groupId,member)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onAnnouncementChanged(groupId: String?, announcement: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onAnnouncementChanged(groupId,announcement)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onSharedFileAdded(groupId: String?, sharedFile: ChatShareFile?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onSharedFileAdded(groupId,sharedFile)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onSharedFileDeleted(groupId: String?, fileId: String?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onSharedFileDeleted(groupId,fileId)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onSpecificationChanged(group: ChatGroup?) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onSpecificationChanged(group)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -693,12 +707,12 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         from: String?
     ) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onGroupMemberAttributeChanged(groupId, userId, attribute, from)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -711,24 +725,24 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         applicant: String?
     ) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onRequestToJoinDeclined(groupId, groupName, decliner, reason, applicant)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onStateChanged(group: ChatGroup?, isDisabled: Boolean) {
         chatGroupChangeListener.let {
-            try {
-                for (groupListener in it) {
+            for (groupListener in it) {
+                try {
                     groupListener.onStateChanged(group, isDisabled)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -736,12 +750,12 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     /**  ContactListener  */
     override fun onContactAdded(username: String?) {
         chatContactListener.let {
-            try {
-                for (contactListener in it) {
+            for (contactListener in it) {
+                try {
                     contactListener.onContactAdded(username)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -749,12 +763,12 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onContactDeleted(username: String?) {
         deleteDefaultContactAgreedMsg(username)
         chatContactListener.let {
-            try {
-                for (contactListener in it) {
+            for (contactListener in it) {
+                try {
                     contactListener.onContactDeleted(username)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -762,36 +776,36 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onContactInvited(username: String?, reason: String?) {
         saveDefaultContactInvitedMsg(username, reason)
         chatContactListener.let {
-            try {
-                for (contactListener in it) {
+            for (contactListener in it) {
+                try {
                     contactListener.onContactInvited(username,reason)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onFriendRequestAccepted(username: String?) {
         chatContactListener.let {
-            try {
-                for (contactListener in it) {
+            for (contactListener in it) {
+                try {
                     contactListener.onFriendRequestAccepted(username)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onFriendRequestDeclined(username: String?) {
         chatContactListener.let {
-            try {
-                for (contactListener in it) {
+            for (contactListener in it) {
+                try {
                     contactListener.onFriendRequestDeclined(username)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -799,106 +813,220 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     /**  ConversationListener  */
     override fun onConversationUpdate() {
         chatConversationListener.let {
-            try {
-                for (conversationListener in it) {
+            for (conversationListener in it) {
+                try {
                     conversationListener.onConversationUpdate()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onConversationRead(from: String?, to: String?) {
         chatConversationListener.let {
-            try {
-                for (conversationListener in it) {
+            for (conversationListener in it) {
+                try {
                     conversationListener.onConversationRead(from, to)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     /**  PresenceListener  */
     override fun onPresenceUpdated(presences: MutableList<ChatPresence>?) {
-        defaultPresencesEvent(presences)
         chatPresenceListener.let {
-            try {
-                for (conversationListener in it) {
+            for (conversationListener in it) {
+                try {
                     conversationListener.onPresenceUpdated(presences)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     /**  ChatRoomChangeListener  */
-    override fun onChatRoomDestroyed(roomId: String?, roomName: String?) {
-        chatRoomChangeListener.let {
-            try {
-                for (chatroomListener in it) {
-                    chatroomListener.onChatRoomDestroyed(roomId,roomName)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
+    private val chatroomListener by lazy { object : ChatRoomChangeListener{
 
-    override fun onMemberJoined(roomId: String?, participant: String?, ext: String?) {
-        chatRoomChangeListener.let {
-            try {
+        override fun onChatRoomDestroyed(roomId: String?, roomName: String?) {
+            chatRoomChangeListener.let {
                 for (chatroomListener in it) {
-                    chatroomListener.onMemberJoined(roomId,participant,ext)
+                    try {
+                        chatroomListener.onChatRoomDestroyed(roomId,roomName)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
-    }
 
-    override fun onMemberExited(roomId: String?, roomName: String?, participant: String?) {
-        chatRoomChangeListener.let {
-            try {
+        override fun onMemberJoined(roomId: String?, participant: String?) {
+            chatRoomChangeListener.let {
                 for (chatroomListener in it) {
-                    chatroomListener.onMemberExited(roomId,roomName,participant)
+                    try {
+                        chatroomListener.onMemberJoined(roomId,participant)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
-    }
 
-    override fun onRemovedFromChatRoom(
-        reason: Int,
-        roomId: String?,
-        roomName: String?,
-        participant: String?
-    ) {
-        chatRoomChangeListener.let {
-            try {
+        override fun onMemberExited(roomId: String?, roomName: String?, participant: String?) {
+            chatRoomChangeListener.let {
                 for (chatroomListener in it) {
-                    chatroomListener.onRemovedFromChatRoom(reason,roomId,roomName,participant)
+                    try {
+                        chatroomListener.onMemberExited(roomId,roomName,participant)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
-    }
+
+        override fun onRemovedFromChatRoom(
+            reason: Int,
+            roomId: String?,
+            roomName: String?,
+            participant: String?
+        ) {
+            chatRoomChangeListener.let {
+                for (chatroomListener in it) {
+                    try {
+                        chatroomListener.onRemovedFromChatRoom(reason,roomId,roomName,participant)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+
+        override fun onMuteListAdded(
+            chatRoomId: String?,
+            mutes: MutableList<String>?,
+            expireTime: Long
+        ) {
+            chatRoomChangeListener.let {
+                for (chatroomListener in it) {
+                    try {
+                        chatroomListener.onMuteListAdded(chatRoomId, mutes, expireTime)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+
+        override fun onMuteListRemoved(chatRoomId: String?, mutes: MutableList<String>?) {
+            chatRoomChangeListener.let {
+                for (chatroomListener in it) {
+                    try {
+                        chatroomListener.onMuteListRemoved(chatRoomId, mutes)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+
+        override fun onWhiteListAdded(chatRoomId: String?, whitelist: MutableList<String>?) {
+            chatRoomChangeListener.let {
+                for (chatroomListener in it) {
+                    try {
+                        chatroomListener.onWhiteListAdded(chatRoomId, whitelist)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+
+        override fun onWhiteListRemoved(chatRoomId: String?, whitelist: MutableList<String>?) {
+            chatRoomChangeListener.let {
+                for (chatroomListener in it) {
+                    try {
+                        chatroomListener.onWhiteListRemoved(chatRoomId, whitelist)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+
+        override fun onAllMemberMuteStateChanged(chatRoomId: String?, isMuted: Boolean) {
+            chatRoomChangeListener.let {
+                for (chatroomListener in it) {
+                    try {
+                        chatroomListener.onAllMemberMuteStateChanged(chatRoomId, isMuted)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+
+        override fun onAdminAdded(chatRoomId: String?, admin: String?) {
+            chatRoomChangeListener.let {
+                for (chatroomListener in it) {
+                    try {
+                        chatroomListener.onAdminAdded(chatRoomId, admin)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+
+        override fun onAdminRemoved(chatRoomId: String?, admin: String?) {
+            chatRoomChangeListener.let {
+                for (chatroomListener in it) {
+                    try {
+                        chatroomListener.onAdminRemoved(chatRoomId, admin)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+
+        override fun onOwnerChanged(chatRoomId: String?, newOwner: String?, oldOwner: String?) {
+            chatRoomChangeListener.let {
+                for (chatroomListener in it) {
+                    try {
+                        chatroomListener.onOwnerChanged(chatRoomId, newOwner, oldOwner)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+
+        override fun onAnnouncementChanged(chatRoomId: String?, announcement: String?) {
+            chatRoomChangeListener.let {
+                for (chatroomListener in it) {
+                    try {
+                        chatroomListener.onAnnouncementChanged(chatRoomId, announcement)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+    }}
 
     /**  MultiDeviceListener  */
     override fun onContactEvent(event: Int, target: String?, ext: String?) {
         defaultMultiDeviceContactEvent(event,target,ext)
         chatMultiDeviceListener.let {
-            try {
-                for (emMultiDeviceListener in it) {
+            for (emMultiDeviceListener in it) {
+                try {
                     emMultiDeviceListener.onContactEvent(event,target,ext)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -906,12 +1034,12 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     override fun onGroupEvent(event: Int, target: String?, usernames: MutableList<String>?) {
         defaultMultiDeviceGroupEvent(event,target,usernames)
         chatMultiDeviceListener.let {
-            try {
-                for (emMultiDeviceListener in it) {
+            for (emMultiDeviceListener in it) {
+                try {
                     emMultiDeviceListener.onGroupEvent(event,target,usernames)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -922,36 +1050,36 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         type: ChatConversationType?
     ) {
         chatMultiDeviceListener.let {
-            try {
-                for (emMultiDeviceListener in it) {
+            for (emMultiDeviceListener in it) {
+                try {
                     emMultiDeviceListener.onConversationEvent(event, conversationId, type)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onMessageRemoved(conversationId: String?, deviceId: String?) {
         chatMultiDeviceListener.let {
-            try {
-                for (emMultiDeviceListener in it) {
+            for (emMultiDeviceListener in it) {
+                try {
                     emMultiDeviceListener.onMessageRemoved(conversationId, deviceId)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onChatThreadEvent(event: Int, target: String?, usernames: MutableList<String>?) {
         chatMultiDeviceListener.let {
-            try {
-                for (emMultiDeviceListener in it) {
+            for (emMultiDeviceListener in it) {
+                try {
                     emMultiDeviceListener.onChatThreadEvent(event, target, usernames)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -959,48 +1087,48 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     /**  ThreadChangeListener  */
     override fun onChatThreadCreated(event: ChatThreadEvent?) {
         chatThreadChangeListener.let {
-            try {
-                for (emChatThreadChangeListener in it) {
+            for (emChatThreadChangeListener in it) {
+                try {
                     emChatThreadChangeListener.onChatThreadCreated(event)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onChatThreadUpdated(event: ChatThreadEvent?) {
         chatThreadChangeListener.let {
-            try {
-                for (emChatThreadChangeListener in it) {
+            for (emChatThreadChangeListener in it) {
+                try {
                     emChatThreadChangeListener.onChatThreadUpdated(event)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onChatThreadDestroyed(event: ChatThreadEvent?) {
         chatThreadChangeListener.let {
-            try {
-                for (emChatThreadChangeListener in it) {
+            for (emChatThreadChangeListener in it) {
+                try {
                     emChatThreadChangeListener.onChatThreadDestroyed(event)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
 
     override fun onChatThreadUserRemoved(event: ChatThreadEvent?) {
         chatThreadChangeListener.let {
-            try {
-                for (emChatThreadChangeListener in it) {
+            for (emChatThreadChangeListener in it) {
+                try {
                     emChatThreadChangeListener.onChatThreadUserRemoved(event)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
@@ -1009,9 +1137,10 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         val useDefaultContactSystemMsg = EaseIM.getConfig()?.systemMsgConfig?.useDefaultContactSystemMsg ?: false
         if (useDefaultContactSystemMsg){
             var isExist = false
-            val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllMessage()
+            val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllNotifyMessage()
+            val localContact = ChatClient.getInstance().contactManager().contactsFromLocal
             allRequestMessage.map {msg->
-                if (msg.ext()[EaseConstant.SYSTEM_MESSAGE_FROM] == username){
+                if (msg.ext()[EaseConstant.SYSTEM_MESSAGE_FROM] == username || localContact.contains(username)){
                     isExist = true
                 }
             }
@@ -1039,7 +1168,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     private fun deleteDefaultContactAgreedMsg(username: String?){
         val useDefaultContactSystemMsg = EaseIM.getConfig()?.systemMsgConfig?.useDefaultContactSystemMsg ?: false
         if (useDefaultContactSystemMsg){
-            val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllMessage()
+            val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllNotifyMessage()
             allRequestMessage.map {msg->
                 if (msg.ext()[EaseConstant.SYSTEM_MESSAGE_FROM] == username &&
                     msg.ext()[EaseConstant.SYSTEM_MESSAGE_STATUS] == InviteMessageStatus.AGREED.name
@@ -1060,7 +1189,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         if (useDefaultMultiDeviceContactEvent){
             when(event){
                 CONTACT_REMOVE -> {
-                    val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllMessage()
+                    val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllNotifyMessage()
                     allRequestMessage.map {msg->
                         if (msg.ext()[EaseConstant.SYSTEM_MESSAGE_FROM] == target &&
                             msg.ext()[EaseConstant.SYSTEM_MESSAGE_STATUS] == InviteMessageStatus.AGREED.name
@@ -1121,18 +1250,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         }
     }
 
-    private fun defaultPresencesEvent(presences: MutableList<ChatPresence>?){
-        val enablePresences = EaseIM.getConfig()?.presencesConfig?.enablePresences ?: false
-        if (enablePresences){
-            presences?.forEach { presence->
-                EaseIM.getCache().insertPresences(presence.publisher,presence)
-                EaseIM.getContext()?.let {
-                    EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name)
-                        .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.UPDATE.name, EaseEvent.TYPE.PRESENCE))
-                }
-            }
-        }
-    }
+
 
     @Synchronized
     internal fun callbackEvent(function: String, errorCode: Int, errorMessage: String?) {

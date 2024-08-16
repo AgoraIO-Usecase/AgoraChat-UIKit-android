@@ -10,7 +10,6 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import coil.load
-import com.hyphenate.chat.EMGroup
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.feature.chat.activities.EaseChatActivity
@@ -42,7 +41,6 @@ import com.hyphenate.easeui.interfaces.EaseGroupListener
 import com.hyphenate.easeui.interfaces.OnMenuItemClickListener
 import com.hyphenate.easeui.interfaces.SimpleListSheetItemClickListener
 import com.hyphenate.easeui.model.EaseEvent
-import com.hyphenate.easeui.model.EaseGroupProfile
 import com.hyphenate.easeui.model.EaseMenuItem
 import com.hyphenate.easeui.provider.getSyncProfile
 import com.hyphenate.easeui.viewmodel.group.EaseGroupViewModel
@@ -86,7 +84,7 @@ open class EaseGroupDetailActivity:EaseBaseActivity<EaseLayoutGroupDetailsBindin
             }
         }
 
-        override fun onSpecificationChanged(group: EMGroup?) {
+        override fun onSpecificationChanged(group: ChatGroup?) {
             group?.let {
                 if (groupId == it.groupId){
                     binding.tvSignature.text = it.description
@@ -217,7 +215,19 @@ open class EaseGroupDetailActivity:EaseBaseActivity<EaseLayoutGroupDetailsBindin
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.GROUP).register(this) {
             if (it.isGroupChange && it.message == groupId) {
                 group = ChatClient.getInstance().groupManager().getGroup(groupId)
-                updateView()
+                if (it.event == EaseConstant.EVENT_UPDATE_GROUP_OWNER){
+                    binding.itemSpacing.visibility = View.GONE
+                    binding.itemGroupName.visibility = View.GONE
+                    binding.itemGroupDescribe.visibility = View.GONE
+                }else{
+                    updateView()
+                }
+            }
+        }
+        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.REMOVE + EaseEvent.TYPE.GROUP + EaseEvent.TYPE.CONTACT).register(this) {
+            if (it.isGroupChange && it.message == groupId) {
+                group = ChatClient.getInstance().groupManager().getGroup(groupId)
+                binding.itemMemberList.tvContent?.text = group?.memberCount?.toString()
             }
         }
     }
@@ -310,7 +320,7 @@ open class EaseGroupDetailActivity:EaseBaseActivity<EaseLayoutGroupDetailsBindin
 
                     },
                     onRightButtonClickListener = {
-                        groupViewModel?.deleteConversation(groupId)
+                        groupViewModel?.clearConversationMessage(groupId)
                     }
                 )
                 dialog.show()
@@ -373,7 +383,7 @@ open class EaseGroupDetailActivity:EaseBaseActivity<EaseLayoutGroupDetailsBindin
         dialog = SimpleListSheetDialog(
             context = context,
             itemList = getBottomSheetMenu(),
-            object : SimpleListSheetItemClickListener {
+            itemListener = object : SimpleListSheetItemClickListener {
                 override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
                     simpleMenuItemClickListener(position, menu)
                     dialog?.dismiss()
@@ -467,12 +477,12 @@ open class EaseGroupDetailActivity:EaseBaseActivity<EaseLayoutGroupDetailsBindin
         ChatLog.e(TAG,"destroyChatGroupFail $code $error")
     }
 
-    override fun deleteConversationByGroupSuccess(conversationId: String?) {
+    override fun clearConversationByGroupSuccess(conversationId: String?) {
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.REMOVE.name)
             .post(lifecycleScope, EaseEvent(EaseEvent.EVENT.REMOVE.name, EaseEvent.TYPE.CONVERSATION, conversationId))
     }
 
-    override fun deleteConversationByGroupFail(code: Int, error: String?) {
+    override fun clearConversationByGroupFail(code: Int, error: String?) {
         ChatLog.e(TAG,"deleteConversationByGroupFail $code $error")
     }
 

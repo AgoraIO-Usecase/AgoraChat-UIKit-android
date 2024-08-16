@@ -67,13 +67,13 @@
     <string name="ease_action_forward">转发</string>
     <string name="ease_action_recall">撤回</string>
     <string name="ease_action_delete">删除</string>
-    <string name="ease_action_unsent">撤回</string>
     <string name="ease_action_edit">编辑</string>
     <string name="ease_action_report">举报</string>
     <string name="ease_action_translation">翻译</string>
     <string name="ease_action_hide_translation">隐藏翻译</string>
     <string name="ease_action_multi_select">多选</string>
     <string name="ease_action_thread">创建话题</string>
+    <string name="ease_action_pin">置顶</string>
 
     <!-- chat record -->
     <string name="ease_chat_record_voice_record">点击录音</string>
@@ -173,16 +173,6 @@
     <string name="ease_data_format_hour">HH:mm</string>
     <string name="ease_data_format_today">hh:mm aa</string>
     <string name="ease_loading">Loading…</string>
-
-    <!--presence-->
-    <string name="ease_presence_online">在线</string>
-    <string name="ease_presence_busy">忙碌</string>
-    <string name="ease_presence_do_not_disturb">请勿打扰</string>
-    <string name="ease_presence_leave">离开</string>
-    <string name="ease_presence_offline">离线</string>
-    <string name="ease_presence_custom">自定义状态</string>
-    <string name="ease_presence_status">状态</string>
-    <string name="ease_presence_done">完成</string>
 
     <!--contact-->
     <string name="ease_contact_title">联系人</string>
@@ -296,5 +286,17 @@
     <string name="thread_member">话题成员</string>
     <string name="thread_leave">离开话题</string>
     <string name="thread_destroy">销毁话题</string>
+
+    <string name="alert_during_typing">对方正在输入中…</string>
+
+    <string name="ease_block_title">黑名单（%1$d）</string>
+    <string name="ease_switch_block_title">拉黑</string>
+    <string name="ease_search_block_user">搜索</string>
+
+    <string name="ease_url_preview_parsing">解析中…</string>
+
+    <string name="pin_info_view_text">Pin Message</string>
+    <string name="ease_pin_list_item_delete">删除</string>
+    <string name="ease_pin_list_item_confirm_delete">确认删除</string>
 
 </resources>

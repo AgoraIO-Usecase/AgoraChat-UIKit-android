@@ -37,6 +37,7 @@
             app:layout_constraintBottom_toBottomOf="@id/iv_icon"
             app:layout_constraintEnd_toEndOf="@id/iv_icon"
             android:visibility="gone"
+            android:background="@drawable/ease_chat_avatar_status_bg"
             android:src="@drawable/ease_bg_toolbar_status"
             />
 

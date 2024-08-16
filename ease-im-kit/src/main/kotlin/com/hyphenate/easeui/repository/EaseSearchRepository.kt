@@ -9,6 +9,7 @@ import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatSearchDirection
 import com.hyphenate.easeui.common.ChatSearchScope
 import com.hyphenate.easeui.common.extensions.parse
+import com.hyphenate.easeui.common.suspends.searchBlockContact
 import com.hyphenate.easeui.common.suspends.searchContact
 import com.hyphenate.easeui.common.suspends.searchMessage
 import com.hyphenate.easeui.model.EaseConversation
@@ -33,6 +34,14 @@ class EaseSearchRepository(
     suspend fun searchUser(query:String):MutableList<EaseUser> =
         withContext(Dispatchers.IO){
            chatContactManager.searchContact(query)
+        }
+
+    /**
+     * Search block user from local .
+     */
+    suspend fun searchBlockUser(query:String):MutableList<EaseUser> =
+        withContext(Dispatchers.IO){
+            chatContactManager.searchBlockContact(query)
         }
 
     /**

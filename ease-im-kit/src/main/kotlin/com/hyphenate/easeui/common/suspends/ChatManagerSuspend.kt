@@ -1,5 +1,7 @@
 package com.hyphenate.easeui.common.suspends
 
+import com.hyphenate.easeui.common.ChatCallback
+import com.hyphenate.easeui.common.ChatValueCallback
 import com.hyphenate.easeui.common.ChatConversation
 import com.hyphenate.easeui.common.ChatConversationType
 import com.hyphenate.easeui.common.ChatCursorResult
@@ -397,5 +399,61 @@ suspend fun ChatManager.searchMessage(
 ):List<ChatMessage>{
     return suspendCoroutine { continuation ->
         continuation.resume(searchMsgFromDB(keywords, timeStamp, maxCount, from, direction,chatScope))
+    }
+}
+
+suspend fun ChatManager.pinChatMessage(messageId: String?):Int{
+    return suspendCoroutine { continuation ->
+        messageId?.let {
+            asyncPinMessage(it,object: ChatCallback{
+
+                override fun onSuccess() {
+                    continuation.resume(ChatError.EM_NO_ERROR)
+                }
+
+                override fun onError(code: Int, message: String?) {
+                    continuation.resumeWithException(ChatException(code, message))
+                }
+            })
+        }?:kotlin.run {
+            continuation.resumeWithException(ChatException(ChatError.INVALID_PARAM, "messageId is NullOrEmpty"))
+        }
+    }
+}
+
+suspend fun ChatManager.unPinChatMessage(messageId: String?):Int{
+    return suspendCoroutine { continuation ->
+        messageId?.let {
+            asyncUnPinMessage(it,object: ChatCallback{
+
+                override fun onSuccess() {
+                    continuation.resume(ChatError.EM_NO_ERROR)
+                }
+
+                override fun onError(code: Int, message: String?) {
+                    continuation.resumeWithException(ChatException(code, message))
+                }
+            })
+        }?:kotlin.run {
+            continuation.resumeWithException(ChatException(ChatError.INVALID_PARAM, "messageId is NullOrEmpty"))
+        }
+    }
+}
+
+suspend fun ChatManager.fetchPinChatMessageFromServer(conversationId:String?):MutableList<ChatMessage>?{
+    return suspendCoroutine { continuation ->
+        conversationId?.let {
+            asyncGetPinnedMessagesFromServer(it,object : ChatValueCallback<MutableList<ChatMessage>>{
+                override fun onSuccess(value: MutableList<ChatMessage>?) {
+                    continuation.resume(value)
+                }
+
+                override fun onError(code: Int, message: String?) {
+                    continuation.resumeWithException(ChatException(code, message))
+                }
+            })
+        }?:kotlin.run {
+            continuation.resumeWithException(ChatException(ChatError.INVALID_PARAM, "conversationId is NullOrEmpty"))
+        }
     }
 }

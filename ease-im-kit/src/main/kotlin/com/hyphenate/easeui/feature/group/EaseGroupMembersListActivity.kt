@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.base.EaseBaseActivity
@@ -15,21 +16,22 @@ import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatGroup
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.EaseConstant
+import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.dialog.CustomDialog
 import com.hyphenate.easeui.common.enums.EaseGroupMemberType
 import com.hyphenate.easeui.common.extensions.isOwner
 import com.hyphenate.easeui.common.extensions.toUser
-import com.hyphenate.easeui.common.helper.SidebarHelper
 import com.hyphenate.easeui.databinding.EaseActivityGroupMemberLayoutBinding
 import com.hyphenate.easeui.feature.contact.EaseContactCheckActivity
-import com.hyphenate.easeui.feature.group.fragment.EaseGroupAddMemberFragment
-import com.hyphenate.easeui.feature.group.fragment.EaseGroupMemberFragment
-import com.hyphenate.easeui.feature.group.fragment.EaseGroupRemoveMemberFragment
+import com.hyphenate.easeui.feature.group.fragments.EaseGroupAddMemberFragment
+import com.hyphenate.easeui.feature.group.fragments.EaseGroupMemberFragment
+import com.hyphenate.easeui.feature.group.fragments.EaseGroupRemoveMemberFragment
 import com.hyphenate.easeui.feature.group.interfaces.IEaseGroupResultView
 import com.hyphenate.easeui.feature.group.interfaces.IGroupMemberEventListener
 import com.hyphenate.easeui.interfaces.EaseContactListener
 import com.hyphenate.easeui.interfaces.EaseGroupListener
 import com.hyphenate.easeui.interfaces.OnContactSelectedListener
+import com.hyphenate.easeui.model.EaseEvent
 import com.hyphenate.easeui.model.EaseProfile
 import com.hyphenate.easeui.model.EaseUser
 import com.hyphenate.easeui.model.getNickname
@@ -39,7 +41,7 @@ import com.hyphenate.easeui.viewmodel.group.IGroupRequest
 open class EaseGroupMembersListActivity:EaseBaseActivity<EaseActivityGroupMemberLayoutBinding>(),
     View.OnClickListener , IEaseGroupResultView, IGroupMemberEventListener{
     private var groupId:String? =""
-    private var actionType: EaseGroupMemberType?=EaseGroupMemberType.GROUP_MEMBER_NORMAL
+    private var actionType: EaseGroupMemberType? = EaseGroupMemberType.GROUP_MEMBER_NORMAL
     private var group:ChatGroup?=null
     private var memberFragment: EaseGroupMemberFragment? = null
     private var addMemberFragment: EaseGroupAddMemberFragment? = null
@@ -48,7 +50,7 @@ open class EaseGroupMembersListActivity:EaseBaseActivity<EaseActivityGroupMember
     private var selectData:MutableList<String> = mutableListOf()
     private var data:MutableList<EaseUser> = mutableListOf()
     private var groupViewModel: IGroupRequest? = null
-    private var sidebarHelper: SidebarHelper = SidebarHelper()
+    private var oldType: EaseGroupMemberType = EaseGroupMemberType.GROUP_MEMBER_NORMAL
 
     private val groupChangeListener = object : EaseGroupListener() {
 
@@ -98,7 +100,10 @@ open class EaseGroupMembersListActivity:EaseBaseActivity<EaseActivityGroupMember
     private val contactListener = object : EaseContactListener() {
 
         override fun onContactDeleted(username: String?) {
-           if (actionType == EaseGroupMemberType.GROUP_MEMBER_ADD){
+           if (
+               actionType == EaseGroupMemberType.GROUP_MEMBER_ADD ||
+               actionType == EaseGroupMemberType.GROUP_MEMBER_REMOVE
+           ){
                selectData.clear()
                addMemberFragment?.resetSelect()
                addMemberFragment?.loadLocalData()
@@ -183,11 +188,21 @@ open class EaseGroupMembersListActivity:EaseBaseActivity<EaseActivityGroupMember
                 this@EaseGroupMembersListActivity.selectData = selectedMembers
                 updateCount()
             }
+
+            override fun onSearchSelectedResult(selectedMembers: MutableList<String>) {
+                selectedMembers.forEach { id->
+                    if (!this@EaseGroupMembersListActivity.selectData.contains(id)){
+                        this@EaseGroupMembersListActivity.selectData.add(id)
+                    }
+                }
+                updateCount()
+            }
         })
         val bundle = Bundle()
         bundle.putString(EaseConstant.EXTRA_CONVERSATION_ID, groupId)
         addMemberFragment?.arguments = bundle
         addMemberFragment?.setMemberList(memberList)
+        addMemberFragment?.addSelectMember(this@EaseGroupMembersListActivity.selectData)
         addMemberFragment?.setSideBar(binding.sideBarContact)
         replace(addMemberFragment, "add_member")
     }
@@ -205,10 +220,21 @@ open class EaseGroupMembersListActivity:EaseBaseActivity<EaseActivityGroupMember
                 this@EaseGroupMembersListActivity.selectData = selectedMembers
                 updateCount()
             }
+
+            override fun onSearchSelectedResult(selectedMembers: MutableList<String>) {
+                selectedMembers.forEach { id->
+                    if (!this@EaseGroupMembersListActivity.selectData.contains(id)){
+                        this@EaseGroupMembersListActivity.selectData.add(id)
+                    }
+                }
+                updateCount()
+            }
         })
         val bundle = Bundle()
         bundle.putString(EaseConstant.EXTRA_CONVERSATION_ID, groupId)
         removeMemberFragment?.arguments = bundle
+        removeMemberFragment?.setMemberList(memberList)
+        removeMemberFragment?.addSelectList(this@EaseGroupMembersListActivity.selectData)
         removeMemberFragment?.setSideBar(binding.sideBarContact)
         replace(removeMemberFragment, "remove_member")
     }
@@ -283,12 +309,20 @@ open class EaseGroupMembersListActivity:EaseBaseActivity<EaseActivityGroupMember
                 }
             }
             R.id.item_add -> {
+                if (oldType != EaseGroupMemberType.GROUP_MEMBER_ADD){
+                    selectData.clear()
+                }
+                oldType = EaseGroupMemberType.GROUP_MEMBER_ADD
                 actionType = EaseGroupMemberType.GROUP_MEMBER_ADD
                 changeToAddMemberList()
                 updateAddLayout()
                 updateCount()
             }
             R.id.item_remove -> {
+                if (oldType != EaseGroupMemberType.GROUP_MEMBER_REMOVE){
+                    selectData.clear()
+                }
+                oldType = EaseGroupMemberType.GROUP_MEMBER_REMOVE
                 actionType = EaseGroupMemberType.GROUP_MEMBER_REMOVE
                 changeToRemoveMemberList()
                 updateRemoveLayout()
@@ -299,7 +333,9 @@ open class EaseGroupMembersListActivity:EaseBaseActivity<EaseActivityGroupMember
                 submitAddSelection()
             }
             R.id.tv_right_remove -> {
-                showDeleteMemberDialog()
+                if (selectData.size > 0){
+                    showDeleteMemberDialog()
+                }
             }
             else ->{}
         }
@@ -313,7 +349,7 @@ open class EaseGroupMembersListActivity:EaseBaseActivity<EaseActivityGroupMember
                 binding.itemAdd.visibility = View.VISIBLE
                 binding.itemRemove.visibility = View.VISIBLE
             }else{
-                binding.itemAdd.visibility = View.VISIBLE
+                binding.itemAdd.visibility = View.GONE
                 binding.itemRemove.visibility = View.GONE
             }
         }
@@ -451,6 +487,7 @@ open class EaseGroupMembersListActivity:EaseBaseActivity<EaseActivityGroupMember
     }
 
     override fun addGroupMemberSuccess() {
+        selectData.clear()
         addMemberFragment?.resetSelect()
         removeMemberFragment?.loadData()
         memberFragment?.loadLocalData()
@@ -465,10 +502,14 @@ open class EaseGroupMembersListActivity:EaseBaseActivity<EaseActivityGroupMember
     }
 
     override fun removeChatGroupMemberSuccess() {
+        selectData.clear()
         removeMemberFragment?.resetSelect()
+        removeMemberFragment?.loadData()
         memberFragment?.loadLocalData()
         changeToMemberList()
         updateNormalLayout()
+        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.REMOVE + EaseEvent.TYPE.GROUP + EaseEvent.TYPE.CONTACT)
+            .post(lifecycleScope, EaseEvent(EaseConstant.EVENT_REMOVE_GROUP_MEMBER, EaseEvent.TYPE.GROUP, groupId))
     }
 
     override fun removeChatGroupMemberFail(code: Int, error: String) {
@@ -498,6 +539,8 @@ open class EaseGroupMembersListActivity:EaseBaseActivity<EaseActivityGroupMember
     }
 
     override fun changeChatGroupOwnerSuccess() {
+        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE + EaseEvent.TYPE.GROUP)
+            .post(lifecycleScope, EaseEvent(EaseConstant.EVENT_UPDATE_GROUP_OWNER, EaseEvent.TYPE.GROUP, groupId))
         finish()
     }
 

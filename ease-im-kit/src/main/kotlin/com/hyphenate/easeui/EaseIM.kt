@@ -37,6 +37,11 @@ object EaseIM {
     // Whether the debug mode is open in EaseIM.
     const val DEBUG: Boolean = true
 
+    /**
+     * Open Application first load block list from server.
+     */
+    var isLoadBlockListFromServer: Boolean? = false
+
     private val client: EaseIMClient by lazy {
         EaseIMClientImpl()
     }
@@ -58,6 +63,10 @@ object EaseIM {
      */
     fun isInited(): Boolean {
         return client.isInited()
+    }
+
+    fun releaseGlobalListener(){
+        client.releaseGlobalListener()
     }
 
     /**
@@ -248,33 +257,8 @@ object EaseIM {
         return client.getCustomActivityRoute()
     }
 
-    /**
-     * Get presence info cache
-     */
-    fun getPresenceInfo():MutableMap<String,ChatPresence>{
-        return getCache().getPresenceInfo
-    }
-
-    fun getUserPresence(userId:String):ChatPresence?{
-        return getCache().getUserPresence(userId)
-    }
-
     fun checkMutedConversationList(userId:String):Boolean{
         return getCache().getMutedConversationList().containsKey(userId)
-    }
-
-    /**
-     * Is loaded contact data from server
-     */
-    fun isLoadedContactFromServer():Boolean{
-        return EasePreferenceManager.getInstance().isLoadedContactFromServer()
-    }
-
-    /**
-     * Set loaded contact data from server tag
-     */
-    fun setLoadedContactFromServer(){
-        EasePreferenceManager.getInstance().setLoadedContactFromServer(true)
     }
 
     /**

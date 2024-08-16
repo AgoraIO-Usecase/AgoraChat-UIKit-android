@@ -157,11 +157,11 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, OnTouchListener,
         }
     }
 
-    val imageView: ImageView
+    val imageView: ImageView?
         get() {
             var imageView: ImageView? = null
             if (null != mImageView) {
-                imageView = mImageView!!.get()
+                imageView = mImageView?.get()
             }
 
             // If we don't have an ImageView, call cleanup()
@@ -229,14 +229,16 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, OnTouchListener,
         }
         val imageView = imageView
         if (hasDrawable(imageView)) {
-            mCurrentFlingRunnable = FlingRunnable(imageView.context)
-            mCurrentFlingRunnable!!.fling(
-                imageView.width,
-                imageView.height,
-                velocityX.toInt(),
-                velocityY.toInt()
-            )
-            imageView.post(mCurrentFlingRunnable)
+            imageView?.let {
+                mCurrentFlingRunnable = FlingRunnable(imageView.context)
+                mCurrentFlingRunnable?.fling(
+                    imageView.width,
+                    imageView.height,
+                    velocityX.toInt(),
+                    velocityY.toInt()
+                )
+                imageView.post(mCurrentFlingRunnable)
+            }
         }
     }
 
@@ -654,22 +656,20 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, OnTouchListener,
         }
 
         override fun run() {
-            val imageView: ImageView = imageView
-            if (null != imageView) {
-                mSuppMatrix.postScale(mDeltaScale, mDeltaScale, mFocalX, mFocalY)
+            val imageView: ImageView? = imageView
+            mSuppMatrix.postScale(mDeltaScale, mDeltaScale, mFocalX, mFocalY)
+            checkAndDisplayMatrix()
+            val currentScale: Float = getScale()
+            if (mDeltaScale > 1f && currentScale < mTargetZoom || mDeltaScale < 1f && mTargetZoom < currentScale) {
+                // We haven't hit our target scale yet, so post ourselves
+                // again
+                imageView?.let { Compat.postOnAnimation(it, this) }
+            } else {
+                // We've scaled past our target zoom, so calculate the
+                // necessary scale so we're back at target zoom
+                val delta = mTargetZoom / currentScale
+                mSuppMatrix.postScale(delta, delta, mFocalX, mFocalY)
                 checkAndDisplayMatrix()
-                val currentScale: Float = getScale()
-                if (mDeltaScale > 1f && currentScale < mTargetZoom || mDeltaScale < 1f && mTargetZoom < currentScale) {
-                    // We haven't hit our target scale yet, so post ourselves
-                    // again
-                    Compat.postOnAnimation(imageView, this)
-                } else {
-                    // We've scaled past our target zoom, so calculate the
-                    // necessary scale so we're back at target zoom
-                    val delta = mTargetZoom / currentScale
-                    mSuppMatrix.postScale(delta, delta, mFocalX, mFocalY)
-                    checkAndDisplayMatrix()
-                }
             }
         }
 
@@ -726,8 +726,8 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, OnTouchListener,
         }
 
         override fun run() {
-            val imageView: ImageView = imageView
-            if (null != imageView && mScroller.computeScrollOffset()) {
+            val imageView: ImageView? = imageView
+            if (mScroller.computeScrollOffset()) {
                 val newX = mScroller.getCurrX()
                 val newY = mScroller.getCurrY()
                 if (DEBUG) {
@@ -746,7 +746,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, OnTouchListener,
                 mCurrentY = newY
 
                 // Post On animation
-                Compat.postOnAnimation(imageView, this)
+                imageView?.let { Compat.postOnAnimation(it, this) }
             }
         }
     }

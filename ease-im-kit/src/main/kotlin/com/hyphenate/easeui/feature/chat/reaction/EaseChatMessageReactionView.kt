@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.hyphenate.easeui.R
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.extensions.isSend
 import com.hyphenate.easeui.databinding.EaseItemMessageReactionBinding
@@ -21,7 +22,6 @@ import com.hyphenate.easeui.model.EaseReaction
 import com.hyphenate.easeui.viewmodel.reaction.EaseChatReactionViewModel
 import com.hyphenate.easeui.viewmodel.reaction.IChatReactionRequest
 import com.hyphenate.easeui.widget.EaseFlowLayout
-import com.hyphenate.util.EMLog
 
 class EaseChatMessageReactionView @JvmOverloads constructor(
     private val context: Context,
@@ -138,7 +138,7 @@ class EaseChatMessageReactionView @JvmOverloads constructor(
     }
 
     override fun addReactionFail(messageId: String, errorCode: Int, errorMsg: String?) {
-        EMLog.e("EaseChatMessageReactionView", "addReactionFail: $errorCode $errorMsg")
+        ChatLog.e("EaseChatMessageReactionView", "addReactionFail: $errorCode $errorMsg")
         reactionErrorListener?.onError(messageId, errorCode, errorMsg)
     }
 
@@ -148,7 +148,7 @@ class EaseChatMessageReactionView @JvmOverloads constructor(
 
     override fun removeReactionFail(messageId: String, errorCode: Int, errorMsg: String?) {
         super.removeReactionFail(messageId, errorCode, errorMsg)
-        EMLog.e("EaseChatMessageReactionView", "removeReactionFail: $errorCode $errorMsg")
+        ChatLog.e("EaseChatMessageReactionView", "removeReactionFail: $errorCode $errorMsg")
         reactionErrorListener?.onError(messageId, errorCode, errorMsg)
     }
 

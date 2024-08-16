@@ -82,6 +82,10 @@ open class EaseMenuHelper {
         menuView?.clear()
     }
 
+    open fun release(){
+        menuView = null
+    }
+
     /**
      * Dismiss menu.
      */

@@ -6,7 +6,7 @@ import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter
 import com.hyphenate.easeui.common.ChatGroup
 import com.hyphenate.easeui.databinding.EaseLayoutGroupListItemBinding
 import com.hyphenate.easeui.feature.group.config.EaseGroupListConfig
-import com.hyphenate.easeui.feature.group.holder.EaseGroupListViewHolder
+import com.hyphenate.easeui.feature.group.viewholders.EaseGroupListViewHolder
 
 open class EaseGroupListAdapter(
     var config:EaseGroupListConfig = EaseGroupListConfig()

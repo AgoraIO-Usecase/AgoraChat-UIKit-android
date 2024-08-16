@@ -22,6 +22,7 @@ class EaseContactBottomSheetFragment: EaseContainChildBottomSheetFragment() {
                 .setTitleBarBackPressListener {
                     hide()
                 }
+                .setDefaultMenuVisible(false)
                 .setHeaderItemVisible(false)
                 .setSideBarVisible(true)
                 .setSearchType(EaseSearchType.USER)

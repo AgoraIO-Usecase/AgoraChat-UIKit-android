@@ -352,6 +352,14 @@ open class EaseCreateChatThreadFragment: EaseBaseFragment<EaseFragmentThreadCrea
         this.backPressListener = listener
     }
 
+    override fun onDestroyView() {
+        binding?.layoutMenu?.let {
+            it.setCustomExtendMenu(null)
+            it.setChatInputMenuListener(null)
+        }
+        super.onDestroyView()
+    }
+
     class Builder(
         private val conversationId: String?,
         private val topicMsgId: String?,

@@ -28,9 +28,10 @@ import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageBody
 import com.hyphenate.easeui.common.ChatMessageDirection
+import com.hyphenate.easeui.common.ChatMessagePinInfo
+import com.hyphenate.easeui.common.ChatMessagePinOperation
 import com.hyphenate.easeui.common.ChatMessageReactionChange
 import com.hyphenate.easeui.common.ChatMessageType
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.ChatRecallMessageInfo
 import com.hyphenate.easeui.common.ChatTextMessageBody
 import com.hyphenate.easeui.common.ChatThread
@@ -53,7 +54,7 @@ import com.hyphenate.easeui.feature.chat.controllers.EaseChatMessageReplyControl
 import com.hyphenate.easeui.feature.chat.controllers.EaseChatMessageReportController
 import com.hyphenate.easeui.feature.chat.controllers.EaseChatMessageTranslationController
 import com.hyphenate.easeui.feature.chat.controllers.EaseChatNotificationController
-import com.hyphenate.easeui.feature.chat.controllers.EaseChatPresenceController
+import com.hyphenate.easeui.feature.chat.controllers.EaseChatPinMessageController
 import com.hyphenate.easeui.feature.chat.enums.getConversationType
 import com.hyphenate.easeui.feature.chat.forward.EaseMessageForwardDialogFragment
 import com.hyphenate.easeui.feature.chat.interfaces.ChatInputMenuListener
@@ -64,12 +65,12 @@ import com.hyphenate.easeui.feature.chat.interfaces.OnWillSendMessageListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatErrorListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatFinishListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatLayoutListener
-import com.hyphenate.easeui.feature.chat.interfaces.OnChatPresenceListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnChatRecordTouchListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageAckSendCallback
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageListItemClickListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageListTouchListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnModifyMessageListener
+import com.hyphenate.easeui.feature.chat.interfaces.OnMultipleSelectRemoveMsgListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnReactionMessageListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnRecallMessageResultListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnReportMessageListener
@@ -151,13 +152,6 @@ class EaseChatLayout @JvmOverloads constructor(
     }
 
     /**
-     * Use to control the logic of user presence status.
-     */
-    private val chatPresenceController: EaseChatPresenceController by lazy {
-        EaseChatPresenceController(mContext,this,viewModel)
-    }
-
-    /**
      * Use to control the logic of chat message multiple select logic.
      */
     val messageMultipleSelectController: EaseChatMessageMultipleSelectController by lazy {
@@ -169,6 +163,10 @@ class EaseChatLayout @JvmOverloads constructor(
      */
     val chatNotificationController: EaseChatNotificationController by lazy {
         EaseChatNotificationController(chatBinding, conversationId, viewModel)
+    }
+
+    val chatPinMessageController:EaseChatPinMessageController by lazy {
+        EaseChatPinMessageController(mContext,this@EaseChatLayout, conversationId, viewModel)
     }
 
     /**
@@ -266,14 +264,14 @@ class EaseChatLayout @JvmOverloads constructor(
     private var translationMessageListener: OnTranslationMessageListener? = null
 
     /**
-     * listener for chat presence
-     */
-    private var chatPresenceListener :OnChatPresenceListener? = null
-
-    /**
      * listener for chat thread view click listener
      */
-    private var threadViewClickListener:OnMessageChatThreadClickListener? = null
+    private var threadViewClickListener: OnMessageChatThreadClickListener? = null
+
+    /**
+     * listener for multiple select view remove message listener
+     */
+    private var multipleSelectRemoveMsgListener: OnMultipleSelectRemoveMsgListener? = null
 
     private val chatMessageListener = object : EaseMessageListener() {
         override fun onMessageReceived(messages: MutableList<ChatMessage>?) {
@@ -355,6 +353,11 @@ class EaseChatLayout @JvmOverloads constructor(
                             isRefresh = true
                         }
                     }
+                    val pinMessage:ChatMessage? = ChatClient.getInstance().chatManager().getMessage(message.recallMessageId)
+                    val isPined: Boolean = pinMessage?.pinnedInfo() == null || pinMessage.pinnedInfo().operatorId().isEmpty()
+                    if (isPined){
+                        chatPinMessageController.removeData(pinMessage)
+                    }
                 }
             }
             if (isRefresh) {
@@ -390,8 +393,23 @@ class EaseChatLayout @JvmOverloads constructor(
         ) {
             messageModified?.let {
                 if (it.conversationId() == conversationId) {
+                    EaseIM.getCache().cleanUrlPreviewInfo(it.msgId)
                     chatBinding.layoutChatMessage.refreshMessage(it)
                 }
+            }
+        }
+
+        override fun onMessagePinChanged(
+            messageId: String?,
+            conversationId: String?,
+            pinOperation: ChatMessagePinOperation?,
+            pinInfo: ChatMessagePinInfo?
+        ) {
+            val message = ChatClient.getInstance().chatManager().getMessage(messageId)
+            message?.let{
+                chatPinMessageController.updatePinMessage(it,pinInfo?.operatorId())
+            }?:kotlin.run{
+                chatPinMessageController.fetchPinnedMessagesFromServer()
             }
         }
     }
@@ -643,6 +661,9 @@ class EaseChatLayout @JvmOverloads constructor(
                         R.id.action_chat_multi_select -> {
                             messageMultipleSelectController.showMultipleSelectStyle(message)
                         }
+                        R.id.action_chat_pin_message -> {
+                            chatPinMessageController.pinMessage(message,true)
+                        }
 
                         else -> {}
                     }
@@ -654,16 +675,20 @@ class EaseChatLayout @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
         EaseIM.removeChatMessageListener(chatMessageListener)
         EaseIM.removeConversationListener(conversationListener)
         groupChangeListener?.let { EaseIM.removeGroupChangeListener(it) }
         chatRoomListener?.let { EaseIM.removeChatRoomChangeListener(it) }
         typingHandler?.removeCallbacksAndMessages(null)
+        menuHelper.setOnMenuChangeListener(null)
+        menuHelper.setOnMenuItemClickListener(null)
+        menuHelper.dismiss()
+        menuHelper.release()
         if (isGroupConv()) {
             EaseAtMessageHelper.get().removeAtMeGroup(conversationId)
             EaseAtMessageHelper.get().cleanToAtUserList()
         }
+        super.onDetachedFromWindow()
     }
 
     fun init(conversationId: String?, chatType: EaseChatType?, loadDataType: EaseLoadDataType = EaseLoadDataType.LOCAL) {
@@ -689,16 +714,16 @@ class EaseChatLayout @JvmOverloads constructor(
         }
         EaseAtMessageHelper.get().setupWithConversation(conversationId)
         initTypingHandler()
+        if (chatType != EaseChatType.SINGLE_CHAT){
+            chatPinMessageController.fetchPinnedMessagesFromServer()
+            chatPinMessageController.initPinInfoView()
+        }
     }
 
     fun loadData(msgId: String? = "", pageSize: Int = 10) {
         sendChannelAck()
         chatBinding.layoutChatMessage.loadData(msgId, pageSize)
         getInProgressMessages()
-    }
-
-    fun fetchChatPresence(conversationId:String?){
-        chatPresenceController.fetchChatPresence(conversationId)
     }
 
     private fun sendChannelAck() {
@@ -968,12 +993,12 @@ class EaseChatLayout @JvmOverloads constructor(
         this.finishListener = listener
     }
 
-    override fun ackConversationReadSuccess() {
-
+    override fun setMultipleSelectRemoveMsgListener(listener: OnMultipleSelectRemoveMsgListener) {
+        this.multipleSelectRemoveMsgListener = listener
     }
 
-    override fun setChatPresenceListener(listener: OnChatPresenceListener?) {
-        this.chatPresenceListener = listener
+    override fun ackConversationReadSuccess() {
+
     }
 
     override fun ackConversationReadFail(code: Int, message: String?) {
@@ -1019,13 +1044,14 @@ class EaseChatLayout @JvmOverloads constructor(
     }
 
     override fun deleteMessageListSuccess() {
+        multipleSelectRemoveMsgListener?.multipleSelectRemoveMsgSuccess()
         messageMultipleSelectController.clearSelectedMessages()
         chatBinding.layoutChatMessage.refreshMessages()
         sendChatUpdateEvent()
     }
 
     override fun deleteMessageListFail(code: Int, errorMsg: String?) {
-
+        multipleSelectRemoveMsgListener?.multipleSelectRemoveMsgFail(code, errorMsg)
     }
 
     override fun recallMessageFinish(originalMessage: ChatMessage?, notification: ChatMessage?) {
@@ -1140,14 +1166,6 @@ class EaseChatLayout @JvmOverloads constructor(
         translationMessageListener?.onTranslationMessageFailure(code, error)
     }
 
-    override fun onFetchChatPresenceSuccess(presence: MutableList<ChatPresence>) {
-        this.chatPresenceListener?.fetchChatPresenceSuccess(presence)
-    }
-
-    override fun onFetchChatPresenceFail(code: Int, error: String) {
-        this.chatPresenceListener?.fetchChatPresenceFail(code, error)
-    }
-
     override fun onForwardMessageSuccess(message: ChatMessage?) {
         message?.let {
             if (it.conversationId() == conversationId) {
@@ -1183,6 +1201,38 @@ class EaseChatLayout @JvmOverloads constructor(
         }
         listener?.onSendCombineError(message, code, error)
         listener?.onError(code, error)
+    }
+
+    override fun onPinMessageSuccess(message:ChatMessage?) {
+        chatPinMessageController.updatePinMessage(message,EaseIM.getCurrentUser()?.id)
+    }
+
+    override fun onPinMessageFail(code: Int, error: String?) {
+        ChatLog.e(TAG,"onPinMessageFail $code $error")
+    }
+
+    override fun onUnPinMessageSuccess(message: ChatMessage?) {
+        chatPinMessageController.updatePinMessage(message,EaseIM.getCurrentUser()?.id)
+    }
+
+    override fun onUnPinMessageFail(code: Int, error: String?) {
+        ChatLog.e(TAG,"onUnPinMessageFail $code $error")
+    }
+
+    override fun onFetchPinMessageFromServerSuccess(value: MutableList<ChatMessage>?) {
+        if (value.isNullOrEmpty()){
+            chatPinMessageController.hidePinInfoView()
+        }else{
+            chatPinMessageController.setData(value)
+        }
+    }
+
+    fun initPinView(){
+        chatPinMessageController.setPinInfoView()
+    }
+
+    override fun onFetchPinMessageFromServerFail(code: Int, error: String?) {
+        ChatLog.e(TAG,"onFetchPinMessageFromServerFail $code $error")
     }
 
     override fun clearMenu() {

@@ -1,6 +1,5 @@
 package com.hyphenate.easeui.feature.contact.interfaces
 
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.feature.contact.adapter.EaseContactListAdapter
 import com.hyphenate.easeui.common.enums.EaseListViewType
 import com.hyphenate.easeui.common.interfaces.IRecyclerView
@@ -46,16 +45,16 @@ interface IContactListLayout : IRecyclerView {
 
     /**
      * Set user presence
-     * @param presence
+     * @param info
      * @return
      */
-    fun setPresence(presence: ConcurrentHashMap<String, ChatPresence>?)
+    fun setUserAvatarInfo(info: ConcurrentHashMap<String, Int>?)
 
     /**
      * load contact data listener
      * @param listener
      * @return
      */
-    fun setLoadContactListener(listener: OnLoadContactListener)
+    fun setLoadContactListener(listener: OnContactEventListener)
 
 }

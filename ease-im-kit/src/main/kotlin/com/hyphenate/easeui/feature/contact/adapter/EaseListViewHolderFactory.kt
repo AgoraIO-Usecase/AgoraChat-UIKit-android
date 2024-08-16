@@ -8,7 +8,7 @@ import com.hyphenate.easeui.databinding.EaseLayoutGroupSelectContactBinding
 import com.hyphenate.easeui.feature.contact.viewholders.ContactViewHolder
 import com.hyphenate.easeui.feature.contact.item.EaseUserContactItem
 import com.hyphenate.easeui.feature.contact.viewholders.EaseGroupMemberViewHolder
-import com.hyphenate.easeui.feature.group.viewholder.EaseSelectContactViewHolder
+import com.hyphenate.easeui.feature.group.viewholders.EaseSelectContactViewHolder
 import com.hyphenate.easeui.model.EaseUser
 
 object EaseListViewHolderFactory {

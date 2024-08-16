@@ -369,13 +369,11 @@
     <style name="ease_chat_row_receive_bubble_style" parent="ease_chat_row_bubble_style">
         <item name="android:layout_marginStart">@dimen/ease_size_10</item>
         <item name="android:background">@drawable/ease_chat_row_receive_bubble_bg</item>
-        <item name="android:paddingStart">@dimen/ease_size_5</item>
     </style>
 
     <style name="ease_chat_row_send_bubble_style" parent="ease_chat_row_bubble_style">
         <item name="android:layout_marginEnd">@dimen/ease_size_10</item>
         <item name="android:background">@drawable/ease_chat_row_sent_bubble_bg</item>
-        <item name="android:paddingEnd">@dimen/ease_size_5</item>
     </style>
 
     <style name="ease_chat_row_receive_file_bubble_style" parent="ease_chat_row_receive_bubble_style">
@@ -390,20 +388,21 @@
         <item name="android:autoLink">web</item>
         <item name="android:gravity">center|start</item>
         <item name="android:lineSpacingExtra">@dimen/ease_size_2</item>
-        <item name="android:maxWidth">225.0dip</item>
+        <item name="android:maxWidth">225dp</item>
         <item name="android:minHeight">@dimen/ease_size_22</item>
         <item name="android:layout_marginStart">@dimen/ease_size_12</item>
         <item name="android:layout_marginEnd">@dimen/ease_size_12</item>
         <item name="android:layout_marginTop">@dimen/ease_size_7</item>
-        <item name="android:textColorLink">@color/ease_chat_row_text_content_link_color</item>
     </style>
 
     <style name="ease_chat_row_receive_text_content_style" parent="ease_chat_row_text_content_style">
         <item name="android:textColor">@color/ease_chat_row_receive_text_content_color</item>
+        <item name="android:textColorLink">@color/ease_color_primary</item>
     </style>
 
     <style name="ease_chat_row_send_text_content_style" parent="ease_chat_row_text_content_style">
         <item name="android:textColor">@color/ease_chat_row_send_text_content_color</item>
+        <item name="android:textColorLink">@color/ease_chat_row_send_text_content_color</item>
     </style>
 
     <style name="ease_chat_row_edit_label_style">
@@ -774,11 +773,13 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">left|center_vertical</item>
-        <item name="android:textColor">@color/ease_color_text_secondary</item>
+        <item name="android:textColor">@color/ease_color_text_on_container</item>
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="ease_chat_row_receive_user_card_contact_id_style" parent="ease_chat_row_user_card_contact_id_style"/>
+    <style name="ease_chat_row_receive_user_card_contact_id_style" parent="ease_chat_row_user_card_contact_id_style">
+        <item name="android:textColor">@color/ease_color_on_background_low</item>
+    </style>
 
     <style name="ease_chat_row_user_card_contact_line_style">
         <item name="android:layout_width">@dimen/ease_size_0</item>
@@ -974,9 +975,15 @@
 
     <style name="ease_chat_row_send_bottom_bubble_style" parent="ease_chat_row_send_top_bubble_style"/>
 
-    <style name="ease_chat_row_receive_bubble_bottom_style" parent="ease_chat_row_receive_top_bubble_style"/>
+    <style name="ease_chat_row_receive_bubble_bottom_style" parent="ease_chat_row_receive_top_bubble_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:maxWidth">249dp</item>
+    </style>
 
-    <style name="ease_chat_row_send_bubble_bottom_style" parent="ease_chat_row_receive_bubble_bottom_style"/>
+    <style name="ease_chat_row_send_bubble_bottom_style" parent="ease_chat_row_receive_bubble_bottom_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:maxWidth">249dp</item>
+    </style>
 
     <!-- Reaction -->
     <style name="ease_chat_message_menu_reaction_icon_style" parent="ease_chat_emoji_item_icon">
@@ -1084,7 +1091,7 @@
         <item name="android:paddingEnd">@dimen/ease_size_12</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">@dimen/ease_size_8</item>
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
@@ -1314,5 +1321,49 @@
         <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Medium</item>
         <item name="android:textColor">@color/ease_color_primary</item>
     </style>
+
+    <style name="ease_chat_pin_list_title">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Medium</item>
+        <item name="android:textColor">@color/ease_color_on_background_low</item>
+    </style>
+
+    <style name="ease_chat_pin_list_subtitle">
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Medium</item>
+        <item name="android:textColor">@color/ease_color_text_secondary_high</item>
+    </style>
+
+    <style name="ease_chat_pin_list_item_time">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Medium</item>
+        <item name="android:textColor">@color/ease_color_text_secondary_high</item>
+    </style>
+
+    <style name="ease_chat_pin_list_item_delete">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Medium</item>
+        <item name="android:textColor">@color/ease_color_on_background_special</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingStart">6dp</item>
+    </style>
+    <style name="ease_chat_pin_message_sent_divider_style" parent="ease_chat_message_sent_translation_divider_style"/>
+    <style name="ease_chat_pin_message_received_divider_style" parent="ease_chat_message_received_translation_divider_style"/>
+
+    <style name="ease_chat_pin_view_group_title">
+        <item name="android:drawablePadding">8dp</item>
+        <item name="paddingStart">8dp</item>
+        <item name="android:drawableLeft">@drawable/ease_icon_chat_pininfo_light</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Large</item>
+        <item name="android:text">@string/pin_info_view_text</item>
+        <item name="android:textColor">@color/ease_color_on_background_low</item>
+    </style>
+
 
 </resources>

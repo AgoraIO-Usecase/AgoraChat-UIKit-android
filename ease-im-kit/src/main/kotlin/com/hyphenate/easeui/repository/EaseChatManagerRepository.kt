@@ -18,15 +18,18 @@ import com.hyphenate.easeui.common.suspends.ackGroupMessageToRead
 import com.hyphenate.easeui.common.suspends.ackMessageToRead
 import com.hyphenate.easeui.common.suspends.addMessageReaction
 import com.hyphenate.easeui.common.suspends.fetchHistoryMessages
+import com.hyphenate.easeui.common.suspends.fetchPinChatMessageFromServer
 import com.hyphenate.easeui.common.suspends.fetchReactionDetailBySuspend
 import com.hyphenate.easeui.common.suspends.fetchReactionListBySuspend
 import com.hyphenate.easeui.common.suspends.joinChatroom
 import com.hyphenate.easeui.common.suspends.leaveChatroom
 import com.hyphenate.easeui.common.suspends.modifyMessage
+import com.hyphenate.easeui.common.suspends.pinChatMessage
 import com.hyphenate.easeui.common.suspends.recallChatMessage
 import com.hyphenate.easeui.common.suspends.removeMessageReaction
 import com.hyphenate.easeui.common.suspends.reportChatMessage
 import com.hyphenate.easeui.common.suspends.translationChatMessage
+import com.hyphenate.easeui.common.suspends.unPinChatMessage
 import com.hyphenate.easeui.common.utils.isMessageIdValid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -181,5 +184,20 @@ class EaseChatManagerRepository(
                 throw ChatException(ChatError.MESSAGE_INVALID, "Message type should be combine.")
             }
             chatManager.downloadAndParseCombineMessage(message, valueCallback)
+        }
+
+    suspend fun pinMessage(message:ChatMessage?) =
+        withContext(Dispatchers.IO){
+            chatManager.pinChatMessage(message?.msgId)
+        }
+
+    suspend fun unPinMessage(message:ChatMessage?) =
+        withContext(Dispatchers.IO){
+            chatManager.unPinChatMessage(message?.msgId)
+        }
+
+    suspend fun fetchPinMessageFromService(conversationId:String?) =
+        withContext(Dispatchers.IO){
+           chatManager.fetchPinChatMessageFromServer(conversationId)
         }
 }

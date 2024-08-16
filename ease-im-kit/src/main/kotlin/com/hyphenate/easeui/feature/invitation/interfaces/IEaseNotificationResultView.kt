@@ -9,12 +9,22 @@ interface IEaseNotificationResultView: IControlDataView {
     /**
      * Get all message successfully.
      */
-    fun getAllMessageSuccess(msgList:List<ChatMessage>)
+    fun getLocalMessageSuccess(msgList:List<ChatMessage>)
 
     /**
      * Failed to get all message.
      */
-    fun getAllMessageFail(code: Int, error: String){}
+    fun getLocalMessageFail(code: Int, error: String){}
+
+    /**
+     * load more message successfully.
+     */
+    fun loadMoreMessageSuccess(msgList:List<ChatMessage>)
+
+    /**
+     * Failed to load more message.
+     */
+    fun loadMoreMessageFail(code: Int, error: String){}
 
     /**
      * Fetch profile successfully.

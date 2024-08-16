@@ -28,7 +28,6 @@ import com.hyphenate.easeui.feature.group.interfaces.IEaseGroupResultView
 import com.hyphenate.easeui.interfaces.EaseGroupListener
 import com.hyphenate.easeui.model.EaseEvent
 import com.hyphenate.easeui.model.EaseGroupProfile
-import com.hyphenate.easeui.model.EaseProfile
 import com.hyphenate.easeui.viewmodel.group.EaseGroupViewModel
 import com.hyphenate.easeui.viewmodel.group.IGroupRequest
 

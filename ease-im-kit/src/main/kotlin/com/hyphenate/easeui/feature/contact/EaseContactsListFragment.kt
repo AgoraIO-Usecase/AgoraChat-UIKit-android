@@ -11,11 +11,11 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.LayoutRes
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.base.EaseBaseFragment
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.feature.contact.adapter.EaseContactListAdapter
 import com.hyphenate.easeui.common.enums.EaseListViewType
 import com.hyphenate.easeui.common.bus.EaseFlowBus
@@ -23,8 +23,8 @@ import com.hyphenate.easeui.common.extensions.mainScope
 import com.hyphenate.easeui.configs.EaseHeaderItemConfig
 import com.hyphenate.easeui.databinding.FragmentContactListLayoutBinding
 import com.hyphenate.easeui.feature.contact.adapter.EaseCustomHeaderAdapter
+import com.hyphenate.easeui.feature.contact.interfaces.OnContactEventListener
 import com.hyphenate.easeui.feature.contact.interfaces.OnHeaderItemClickListener
-import com.hyphenate.easeui.feature.contact.interfaces.OnLoadContactListener
 import com.hyphenate.easeui.feature.conversation.controllers.EaseConvDialogController
 import com.hyphenate.easeui.feature.group.EaseGroupListActivity
 import com.hyphenate.easeui.feature.invitation.EaseNewRequestsActivity
@@ -43,7 +43,7 @@ import com.hyphenate.easeui.viewmodel.contacts.EaseContactListViewModel
 import kotlinx.coroutines.launch
 
 open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutBinding>(),
-    Toolbar.OnMenuItemClickListener, OnItemLongClickListener, OnLoadContactListener {
+    OnItemLongClickListener, OnContactEventListener{
     private var adapter: EaseContactListAdapter? = null
     private var headerAdapter:EaseCustomHeaderAdapter?=null
     private var headerItemClickListener: OnHeaderItemClickListener? = null
@@ -52,12 +52,11 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
     private var contactSelectedListener:OnContactSelectedListener?=null
     private var backPressListener: View.OnClickListener? = null
     private var viewType: EaseListViewType? = EaseListViewType.LIST_CONTACT
-    private var isSideBarVisible:Boolean? = true
     private var headerList:List<EaseCustomHeaderItem>? = null
     private var searchType: EaseSearchType? = null
     private var selectedMembers:MutableList<String> = mutableListOf()
     private val contactViewModel by lazy { ViewModelProvider(this)[EaseContactListViewModel::class.java] }
-    private val dialogController by lazy { EaseConvDialogController(mContext, this) }
+    val dialogController by lazy { EaseConvDialogController(mContext, this) }
 
     private val returnSearchClickResult: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -132,16 +131,26 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
                 getString(Constant.KEY_SEARCH_TYPE)?.let {
                     searchType = EaseSearchType.valueOf(it)
                 }
+
+                listContact.setListViewType(viewType)
+                val isShowSidebar = getBoolean(Constant.KEY_SIDEBAR_VISIBLE,true)
+                listContact.setSideBarVisible(isShowSidebar)
+
+                defaultMenu()
+
+                if (!getBoolean(Constant.KEY_DEFAULT_MENU_VISIBLE,true)){
+                    titleContact.hideDefaultMenu()
+                }
             }
-        }
-        binding?.run {
-            listContact.setListViewType(viewType)
-            listContact.setSideBarVisible(isSideBarVisible)
+        }?:kotlin.run {
+            refreshData()
         }
     }
 
     override fun initListener() {
-        super.initListener()
+
+        setMenuItemClickListener()
+
         binding?.searchBar?.setOnClickListener {
             returnSearchClickResult.launch(
                 EaseSearchActivity.createIntent(
@@ -212,7 +221,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
 
         binding?.listContact?.setOnItemLongClickListener(this)
         binding?.listContact?.setLoadContactListener(this)
-        binding?.titleContact?.getToolBar()?.setOnMenuItemClickListener(this)
 
         EaseIM.addContactListener(contactListener)
     }
@@ -225,8 +233,31 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
         }
     }
 
+    open fun defaultMenu(){
+        binding?.titleContact?.inflateMenu(R.menu.menu_new_request_add_contact)
+    }
+
+    private fun setMenuItemClickListener() {
+        binding?.titleContact?.setOnMenuItemClickListener {
+            return@setOnMenuItemClickListener setMenuItemClick(it)
+        }
+    }
+
+    open fun setMenuItemClick(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.action_add_contact -> {
+                dialogController.showAddContactDialog { content ->
+                    if (content.isNotEmpty()) {
+                        contactViewModel.addContact(content)
+                    }
+                }
+                return true
+            }
+            else -> return false
+        }
+    }
+
     override fun initData() {
-        super.initData()
         EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.REMOVE.name).register(viewLifecycleOwner) { event ->
             if (event.isContactChange) {
                 refreshData()
@@ -237,24 +268,11 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
                 refreshData()
             }
         }
-
         EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(viewLifecycleOwner) {
             if (it.isNotifyChange) {
                 refreshRequest()
             }
         }
-
-        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.UPDATE.name).register(this) {
-            val enablePresences = EaseIM.getConfig()?.presencesConfig?.enablePresences ?: false
-            if (it.isPresenceChange && enablePresences) {
-                setPresence()
-            }
-        }
-
-    }
-
-    private fun setPresence(){
-        binding?.listContact?.setPresence(EaseIM.getCache().getPresenceInfo)
     }
 
     private fun refreshData() {
@@ -284,6 +302,9 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
         }
     }
 
+    fun fetchContactInfo(visibleList:List<EaseUser>?){
+        binding?.listContact?.fetchContactInfo(visibleList)
+    }
 
     override fun loadContactListSuccess(userList: MutableList<EaseUser>) {
 
@@ -291,6 +312,10 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
 
     override fun loadContactListFail(code: Int, error: String) {
 
+    }
+
+    override fun addContactFail(code: Int, error: String) {
+        ChatLog.e(TAG,"addContactFail $code $error")
     }
 
     override fun onItemLongClick(view: View?, position: Int): Boolean {
@@ -333,10 +358,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
         this.contactSelectedListener = listener
     }
 
-    private fun setShowSideBar(isShowSidebar:Boolean){
-        this.isSideBarVisible = isShowSidebar
-    }
-
     private fun updateRequestCount(){
         mContext.mainScope().launch {
             headerList?.map {
@@ -367,7 +388,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
         private var contactSelectedListener:OnContactSelectedListener?=null
         private var backPressListener: View.OnClickListener? = null
         private var viewType: EaseListViewType? = EaseListViewType.LIST_CONTACT
-        private var isSideBarVisible:Boolean = true
         private var headerList:List<EaseCustomHeaderItem>? = mutableListOf()
 
         /**
@@ -433,6 +453,16 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
         }
 
         /**
+         * Whether to use default titleBar which is [io.agora.uikit.widget.EaseTitleBar]
+         * @param isVisible
+         * @return
+         */
+        fun setDefaultMenuVisible(isVisible: Boolean): Builder {
+            bundle.putBoolean(Constant.KEY_DEFAULT_MENU_VISIBLE, isVisible)
+            return this
+        }
+
+        /**
          * Whether to use search bar.
          * @param useSearchBar
          */
@@ -485,7 +515,7 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
          * @return
          */
         fun setSideBarVisible(isVisible:Boolean):Builder{
-            this.isSideBarVisible = isVisible
+            bundle.putBoolean(Constant.KEY_SIDEBAR_VISIBLE,true)
             return this
         }
 
@@ -571,7 +601,6 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
             fragment.setOnItemLongClickListener(itemLongClickListener)
             fragment.setHeaderItemList(headerList)
             fragment.setOnContactSelectedListener(contactSelectedListener)
-            fragment.setShowSideBar(isSideBarVisible)
             return fragment
         }
     }
@@ -587,23 +616,8 @@ open class EaseContactsListFragment: EaseBaseFragment<FragmentContactListLayoutB
         const val KEY_SHOW_ITEM_HEADER = "key_show_item_header"
         const val KEY_SELECT_USER = "select_user"
         const val KEY_USER = "user"
-    }
-
-    override fun onMenuItemClick(item: MenuItem?): Boolean {
-        item?.let {
-            when(it.itemId) {
-                R.id.action_add_contact -> {
-                    dialogController.showAddContactDialog { content ->
-                        if (content.isNotEmpty()) {
-                            contactViewModel.addContact(content)
-                        }
-                    }
-                    return true
-                }
-                else -> {}
-            }
-        }
-        return false
+        const val KEY_SIDEBAR_VISIBLE = "key_side_bar_visible"
+        const val KEY_DEFAULT_MENU_VISIBLE = "key_default_menu_visible"
     }
 
 }

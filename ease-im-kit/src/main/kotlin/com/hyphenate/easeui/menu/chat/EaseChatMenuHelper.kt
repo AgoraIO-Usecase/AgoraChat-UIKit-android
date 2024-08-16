@@ -11,6 +11,7 @@ import com.hyphenate.easeui.common.ChatTextMessageBody
 import com.hyphenate.easeui.common.ChatType
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.extensions.canEdit
+import com.hyphenate.easeui.common.extensions.isGroupChat
 import com.hyphenate.easeui.feature.chat.reaction.EaseMessageMenuReactionView
 import com.hyphenate.easeui.interfaces.OnMenuChangeListener
 import com.hyphenate.easeui.interfaces.OnMenuDismissListener
@@ -74,7 +75,7 @@ class EaseChatMenuHelper: EaseMenuHelper() {
             if (it.status() == ChatMessageStatus.SUCCESS && it.direct() === ChatMessageDirection.SEND) {
                 findItemVisible(R.id.action_chat_recall, canRecallMessage(it))
             }
-            if (it.status() == ChatMessageStatus.SUCCESS && it.from != ChatClient.getInstance().currentUser)
+            if (it.status() == ChatMessageStatus.SUCCESS)
                 findItemVisible(R.id.action_chat_report, true)
             if (type == ChatMessageType.TXT) findItemVisible(R.id.action_chat_copy, true)
             if (it.chatType === ChatType.GroupChat && !it.isChatThreadMessage && it.chatThread == null) {
@@ -110,6 +111,9 @@ class EaseChatMenuHelper: EaseMenuHelper() {
                 findItemVisible(R.id.action_chat_delete, false)
                 findItemVisible(R.id.action_chat_recall, false)
             }
+            if (it.isGroupChat() && message?.isChatThreadMessage == false){
+                findItemVisible(R.id.action_chat_pin_message,true)
+            }
         }
 
     }
@@ -138,16 +142,20 @@ class EaseChatMenuHelper: EaseMenuHelper() {
         }
         getContext()?.run {
             // add forward menu
-            addItemMenu(R.id.action_chat_forward, (getTargetMenuIndex(R.id.action_chat_reply) + 1 ) * 10 + 2
+            addItemMenu(R.id.action_chat_forward, (getTargetMenuIndex(R.id.action_chat_copy) + 1 ) * 10 + 5
                 , getString(R.string.ease_action_forward), resourceId = R.drawable.ease_chat_item_menu_forward)
             // add multi select menu
             if (EaseIM.getConfig()?.chatConfig?.enableSendCombineMessage == true) {
-                addItemMenu(R.id.action_chat_multi_select, (getTargetMenuIndex(R.id.action_chat_reply) + 1 ) * 10 + 4
+                addItemMenu(R.id.action_chat_multi_select, (getTargetMenuIndex(R.id.action_chat_edit) + 1 ) * 10 + 5
                     , getString(R.string.ease_action_multi_select), resourceId = R.drawable.ease_chat_item_menu_multi)
             }
             if (EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage == true) {
-                addItemMenu(R.id.action_chat_thread,(getTargetMenuIndex(R.id.action_chat_thread) + 1 ) * 4
+                addItemMenu(R.id.action_chat_thread,(getTargetMenuIndex(R.id.action_chat_copy) + 1 ) * 10 + 7
                     ,getString(R.string.ease_action_thread),resourceId = R.drawable.ease_chat_item_menu_topic)
+            }
+            if (EaseIM.getConfig()?.chatConfig?.enableChatPingMessage == true){
+                addItemMenu(R.id.action_chat_pin_message,(getTargetMenuIndex(R.id.action_chat_edit) + 1 ) * 10 + 7
+                    ,getString(R.string.ease_action_pin), resourceId = R.drawable.ease_icon_chat_pininfo_light)
             }
         }
     }
@@ -196,33 +204,40 @@ class EaseChatMenuHelper: EaseMenuHelper() {
 
     }
 
+    override fun release(){
+        message = null
+       super.release()
+    }
+
     companion object {
         val MENU_ITEM_IDS = intArrayOf(
             R.id.action_chat_copy,
             R.id.action_chat_reply,
-            R.id.action_chat_translation,
+            R.id.action_chat_recall,
             R.id.action_chat_edit,
+            R.id.action_chat_translation,
             R.id.action_chat_report,
             R.id.action_chat_delete,
-            R.id.action_chat_recall,
         )
         val MENU_TITLES = intArrayOf(
             R.string.ease_action_copy,
             R.string.ease_action_reply,
-            R.string.ease_action_translation,
+            R.string.ease_action_recall,
             R.string.ease_action_edit,
+            R.string.ease_action_translation,
             R.string.ease_action_report,
             R.string.ease_action_delete,
-            R.string.ease_action_unsent
+
         )
         val MENU_ICONS = intArrayOf(
             R.drawable.ease_chat_item_menu_copy,
             R.drawable.ease_chat_item_menu_reply,
-            R.drawable.ease_chat_item_menu_translation,
+            R.drawable.ease_chat_item_menu_unsent,
             R.drawable.ease_chat_item_menu_edit,
+            R.drawable.ease_chat_item_menu_translation,
             R.drawable.ease_chat_item_menu_report,
             R.drawable.ease_chat_item_menu_delete,
-            R.drawable.ease_chat_item_menu_unsent
+
         )
     }
 

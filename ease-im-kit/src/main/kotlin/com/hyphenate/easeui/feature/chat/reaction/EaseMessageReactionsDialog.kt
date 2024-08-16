@@ -10,6 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hyphenate.easeui.base.EaseBaseSheetFragmentDialog
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.bus.EaseFlowBus
 import com.hyphenate.easeui.common.extensions.dpToPx
@@ -22,7 +23,6 @@ import com.hyphenate.easeui.model.EaseEvent
 import com.hyphenate.easeui.model.EaseReaction
 import com.hyphenate.easeui.viewmodel.reaction.EaseMessageReactionListViewModel
 import com.hyphenate.easeui.viewmodel.reaction.IMessageReactionListRequest
-import com.hyphenate.util.EMLog
 
 class EaseMessageReactionsDialog(
     private val message: ChatMessage
@@ -148,6 +148,6 @@ class EaseMessageReactionsDialog(
     }
 
     override fun fetchReactionListFail(messageId: String, errorCode: Int, errorMsg: String?) {
-        EMLog.e("EaseMessageReactionsDialog", "fetchReactionListFail errorCode: $errorCode, errorMsg: $errorMsg")
+        ChatLog.e("EaseMessageReactionsDialog", "fetchReactionListFail errorCode: $errorCode, errorMsg: $errorMsg")
     }
 }

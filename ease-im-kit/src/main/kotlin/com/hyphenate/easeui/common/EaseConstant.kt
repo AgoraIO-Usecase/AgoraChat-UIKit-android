@@ -27,6 +27,7 @@ object EaseConstant {
     const val MESSAGE_ATTR_EXPRESSION_ID = "em_expression_id"
 
     const val MESSAGE_TYPE_RECALL = "message_recall"
+    const val MESSAGE_TYPE_CONTACT_NOTIFY = "message_contact_notify"
 
     // reply
     const val QUOTE_MSG_ID = "msgID"
@@ -52,6 +53,8 @@ object EaseConstant {
     // event
     const val EVENT_UPDATE_GROUP_NAME = "event_update_group_name"
     const val EVENT_UPDATE_GROUP_DESCRIPTION = "event_update_group_description"
+    const val EVENT_UPDATE_GROUP_OWNER = "event_update_group_owner"
+    const val EVENT_REMOVE_GROUP_MEMBER = "event_remove_group_member"
 
     const val SYSTEM_MESSAGE_FROM = "from"
     const val SYSTEM_MESSAGE_REASON = "reason"
@@ -76,5 +79,12 @@ object EaseConstant {
     const val THREAD_TOPIC_MESSAGE_ID = "ease_thread_topic_msg_id"
     const val THREAD_MESSAGE_ID = "ease_thread_msg_id"
     const val THREAD_NOTIFICATION_TYPE = "ease_thread_notification_type"
+
+    //url preview
+    const val MESSAGE_URL_PREVIEW = "ease_chat_uikit_text_url_preview"
+    const val MESSAGE_URL_PREVIEW_URL = "url"
+    const val MESSAGE_URL_PREVIEW_TITLE = "title"
+    const val MESSAGE_URL_PREVIEW_DESCRIPTION = "description"
+    const val MESSAGE_URL_PREVIEW_IMAGE_URL = "imageUrl"
 }
 

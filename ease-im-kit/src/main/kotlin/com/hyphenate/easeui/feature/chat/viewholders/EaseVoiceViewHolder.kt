@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
+import com.hyphenate.easeui.common.ChatDownloadStatus
 import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageDirection
@@ -14,7 +15,6 @@ import com.hyphenate.easeui.common.helper.EaseChatRowVoicePlayer
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoice
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatType
-import com.hyphenate.easeui.common.ChatDownloadStatus.*
 import java.io.File
 
 class EaseVoiceViewHolder(itemView: View) : EaseChatRowViewHolder(itemView) {
@@ -49,20 +49,21 @@ class EaseVoiceViewHolder(itemView: View) : EaseChatRowViewHolder(itemView) {
                 }
             } else {
                 val st = getContext().resources.getString(R.string.ease_is_download_voice_click_later)
+                val voiceBody = body as ChatVoiceMessageBody
+                val downloadStatus = voiceBody.downloadStatus()
                 if (status() === ChatMessageStatus.SUCCESS) {
-                    if (ChatClient.getInstance().options.autodownloadThumbnail) {
+                    if (ChatClient.getInstance().options.autodownloadThumbnail && downloadStatus == ChatDownloadStatus.SUCCESSED) {
                         play(this)
                     } else {
-                        val voiceBody = body as ChatVoiceMessageBody
-                        ChatLog.i("TAG", "Voice body download status: " + voiceBody.downloadStatus())
-                        when (voiceBody.downloadStatus()) {
-                            PENDING, FAILED -> {
+                        ChatLog.i("TAG", "Voice body download status: $downloadStatus")
+                        when (downloadStatus) {
+                            ChatDownloadStatus.PENDING, ChatDownloadStatus.FAILED -> {
                                 getChatRow()?.updateView()
                                 asyncDownloadVoice(this)
                             }
 
-                            DOWNLOADING -> Toast.makeText(getContext(), st, Toast.LENGTH_SHORT).show()
-                            SUCCESSED -> play(this)
+                            ChatDownloadStatus.DOWNLOADING -> Toast.makeText(getContext(), st, Toast.LENGTH_SHORT).show()
+                            ChatDownloadStatus.SUCCESSED -> play(this)
                         }
                     }
                 } else if (status() === ChatMessageStatus.INPROGRESS) {

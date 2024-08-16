@@ -1,7 +1,6 @@
 package com.hyphenate.easeui.feature.chat.interfaces
 
 import com.hyphenate.easeui.common.ChatMessage
-import com.hyphenate.easeui.common.ChatPresence
 import com.hyphenate.easeui.common.interfaces.IControlDataView
 import org.json.JSONObject
 
@@ -214,19 +213,6 @@ interface IHandleChatResultView : IControlDataView {
     fun onTranslationMessageFail(code: Int, error: String){}
 
     /**
-     * fetch the current user status of a specified user success.
-     * @param presence
-     */
-    fun onFetchChatPresenceSuccess(presence:MutableList<ChatPresence>){}
-
-    /**
-     * fetch the current user status of a specified user fail.
-     * @param code  error code.
-     * @param error error message.
-     */
-    fun onFetchChatPresenceFail(code: Int, error: String){}
-
-    /**
      * Message forwarded successfully.
      * @param message The forwarded message.
      */
@@ -253,5 +239,42 @@ interface IHandleChatResultView : IControlDataView {
      * @param error error message.
      */
     fun onSendCombineMessageFail(message: ChatMessage?, code: Int, error: String?)
+
+    /**
+     * Pin message success
+     */
+    fun onPinMessageSuccess(message: ChatMessage?){}
+
+    /**
+     * Pin message fail
+     * @param code  error code.
+     * @param error error message.
+     */
+    fun onPinMessageFail(code: Int, error: String?){}
+
+    /**
+     * unPin message success
+     */
+    fun onUnPinMessageSuccess(message: ChatMessage?) {}
+
+    /**
+     * unPin message fail
+     * @param code  error code.
+     * @param error error message.
+     */
+    fun onUnPinMessageFail(code: Int, error: String?){}
+
+    /**
+     * Fetch pin message from server success
+     * @param value pin message list
+     */
+    fun onFetchPinMessageFromServerSuccess(value:MutableList<ChatMessage>?){}
+
+    /**
+     * Fetch pin message from server fail
+     * @param code  error code.
+     * @param error error message.
+     */
+    fun onFetchPinMessageFromServerFail(code: Int, error: String?){}
 
 }

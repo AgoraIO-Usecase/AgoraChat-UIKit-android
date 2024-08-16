@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyphenate.easeui.base.EaseBaseFragment
 import com.hyphenate.easeui.common.ChatClient
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.RefreshHeader
 import com.hyphenate.easeui.common.bus.EaseFlowBus
@@ -20,7 +21,6 @@ import com.hyphenate.easeui.model.EaseEvent
 import com.hyphenate.easeui.model.EaseUser
 import com.hyphenate.easeui.viewmodel.reaction.EaseReactionUserListViewModel
 import com.hyphenate.easeui.viewmodel.reaction.IReactionUserListRequest
-import com.hyphenate.util.EMLog
 import kotlinx.coroutines.launch
 
 class EaseReactionUserListFragment
@@ -109,7 +109,7 @@ class EaseReactionUserListFragment
     }
 
     override fun removeReactionFail(messageId: String, errorCode: Int, errorMsg: String?) {
-        EMLog.e("EaseReactionUserListUserListFragment",
+        ChatLog.e("EaseReactionUserListUserListFragment",
             "removeReactionFail messageId: $messageId errorCode: $errorCode errorMsg: $errorMsg")
     }
 
@@ -126,7 +126,7 @@ class EaseReactionUserListFragment
     }
 
     override fun fetchReactionDetailFail(messageId: String, errorCode: Int, errorMsg: String?) {
-        EMLog.e("EaseReactionUserListUserListFragment",
+        ChatLog.e("EaseReactionUserListUserListFragment",
             "fetchReactionDetailFail messageId: $messageId errorCode: $errorCode errorMsg: $errorMsg")
         finishRefresh()
     }
@@ -144,7 +144,7 @@ class EaseReactionUserListFragment
     }
 
     override fun fetchMoreReactionDetailFail(messageId: String, errorCode: Int, errorMsg: String?) {
-        EMLog.e("EaseReactionUserListUserListFragment",
+        ChatLog.e("EaseReactionUserListUserListFragment",
             "fetchMoreReactionDetailFail messageId: $messageId errorCode: $errorCode errorMsg: $errorMsg")
         finishLoadMore()
     }

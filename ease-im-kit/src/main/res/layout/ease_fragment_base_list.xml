@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.hyphenate.easeui.widget.EaseSearchView
+        android:id="@+id/search_bar"
+        style="@style/ease_widget_search_view"/>
 
     <com.hyphenate.easeui.widget.RefreshLayout
         android:id="@+id/srl_contact_refresh"
@@ -16,4 +21,4 @@
 
     </com.hyphenate.easeui.widget.RefreshLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

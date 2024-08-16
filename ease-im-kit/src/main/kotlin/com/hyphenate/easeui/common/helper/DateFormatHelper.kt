@@ -2,7 +2,6 @@ package com.hyphenate.easeui.common.helper
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatTimeInfo
@@ -20,7 +19,7 @@ object DateFormatHelper {
     private val UTC = TimeZone.getTimeZone("UTC")
 
     fun getTimestampString(context: Context, messageDate: Date): String? {
-        var format: String? = null
+        var format: String?
         val language = Locale.getDefault().language
         val isZh = language.startsWith("zh")
         val messageTime = messageDate.time

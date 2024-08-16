@@ -1,20 +1,16 @@
 package com.easemob.quickstart
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import com.easemob.quickstart.databinding.ActivityMainBinding
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatOptions
+import com.hyphenate.easeui.common.extensions.showToast
 import com.hyphenate.easeui.feature.chat.enums.EaseChatType
 import com.hyphenate.easeui.feature.chat.activities.EaseChatActivity
 import com.hyphenate.easeui.interfaces.EaseConnectionListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -42,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     private fun initSDK() {
         val appkey = getString(R.string.app_key)
         if (appkey.isEmpty()) {
-            showToast("You should set your AppKey first!")
+            applicationContext.showToast("You should set your AppKey first!")
             ChatLog.e(TAG, "You should set your AppKey first!")
             return
         }
@@ -116,17 +112,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         EaseIM.removeConnectionListener(connectListener)
+        EaseIM.releaseGlobalListener()
+        super.onDestroy()
     }
 
     companion object {
         private const val TAG = "MainActivity"
-    }
-}
-
-fun Context.showToast(msg: String) {
-    CoroutineScope(Dispatchers.Main).launch {
-        Toast.makeText(this@showToast, msg, Toast.LENGTH_SHORT).show()
     }
 }

@@ -44,7 +44,7 @@ class EaseSearchConversationAdapter: EaseBaseRecyclerViewAdapter<EaseConversatio
 
                     // Set conversation avatar and name.
                     if (item.isGroupChat()) {
-                        emPresence.setPresenceData(avatar = R.drawable.ease_default_group_avatar
+                        emPresence.setUserAvatarData(avatar = R.drawable.ease_default_group_avatar
                             ,nickname = null)
                         tvName.text = item.conversationId.getGroupNameFromId()
                         EaseIM.getGroupProfileProvider()?.getSyncProfile(item.conversationId)?.let { profile ->
@@ -57,11 +57,11 @@ class EaseSearchConversationAdapter: EaseBaseRecyclerViewAdapter<EaseConversatio
                             }
                         }
                     } else if (item.isChatRoom()) {
-                        emPresence.setPresenceData(avatar = R.drawable.ease_default_chatroom_avatar
+                        emPresence.setUserAvatarData(avatar = R.drawable.ease_default_chatroom_avatar
                             ,nickname = null)
                         tvName.text = item.conversationId.getChatroomName()
                     } else {
-                        emPresence.setPresenceData(avatar = R.drawable.ease_default_avatar
+                        emPresence.setUserAvatarData(avatar = R.drawable.ease_default_avatar
                             ,nickname = item.conversationId)
                         tvName.text = item.conversationId
                         EaseIM.getUserProvider()?.getSyncUser(item.conversationId)?.let { profile ->

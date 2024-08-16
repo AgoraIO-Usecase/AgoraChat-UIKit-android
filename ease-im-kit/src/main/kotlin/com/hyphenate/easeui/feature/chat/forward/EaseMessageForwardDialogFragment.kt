@@ -44,7 +44,7 @@ class EaseMessageForwardDialogFragment: EaseBaseSheetFragmentDialog<EaseDialogMe
 
     override fun initData() {
         super.initData()
-        val contact = EaseContactForwardFragment()
+        val contact = EaseContactForwardFragmentEvent()
         val group = EaseGroupListForwardFragment()
         contact.setOnForwardClickListener(forwardClickListener)
         group.setOnForwardClickListener(forwardClickListener)

@@ -13,8 +13,8 @@ abstract class EaseBaseViewModel<V: IControlDataView>: ViewModel(), IAttachView 
         this.view = null
     }
     override fun onCleared() {
-        super.onCleared()
         detachView()
+        super.onCleared()
     }
 
 }
