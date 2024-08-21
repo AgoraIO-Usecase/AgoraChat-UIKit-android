@@ -714,10 +714,8 @@ class EaseChatLayout @JvmOverloads constructor(
         }
         EaseAtMessageHelper.get().setupWithConversation(conversationId)
         initTypingHandler()
-        if (chatType != EaseChatType.SINGLE_CHAT){
-            chatPinMessageController.fetchPinnedMessagesFromServer()
-            chatPinMessageController.initPinInfoView()
-        }
+        chatPinMessageController.fetchPinnedMessagesFromServer()
+        chatPinMessageController.initPinInfoView()
     }
 
     fun loadData(msgId: String? = "", pageSize: Int = 10) {

@@ -111,7 +111,7 @@ class EaseChatMenuHelper: EaseMenuHelper() {
                 findItemVisible(R.id.action_chat_delete, false)
                 findItemVisible(R.id.action_chat_recall, false)
             }
-            if (it.isGroupChat() && message?.isChatThreadMessage == false){
+            if (message?.isChatThreadMessage == false){
                 findItemVisible(R.id.action_chat_pin_message,true)
             }
         }
