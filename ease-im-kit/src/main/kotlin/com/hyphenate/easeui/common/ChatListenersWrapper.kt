@@ -240,6 +240,14 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         }
     }
 
+    override fun onOfflineMessageSyncStart() {
+
+    }
+
+    override fun onOfflineMessageSyncFinish() {
+
+    }
+
     /**  ChatConnectionListener  */
     override fun onMessageReceived(messages: MutableList<ChatMessage>?) {
         // Update message userinfo when receive messages.
