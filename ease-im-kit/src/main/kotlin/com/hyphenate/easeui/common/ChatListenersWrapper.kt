@@ -18,6 +18,7 @@ import com.hyphenate.easeui.feature.invitation.helper.EaseNotificationMsgManager
 import com.hyphenate.easeui.feature.invitation.helper.RequestMsgHelper
 import com.hyphenate.easeui.interfaces.OnEventResultListener
 import com.hyphenate.easeui.model.EaseEvent
+import com.hyphenate.util.EMLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -401,12 +402,14 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         pinOperation: ChatMessagePinOperation?,
         pinInfo: ChatMessagePinInfo?
     ) {
+        EMLog.d("ChatListenersWrapper", "onMessagePinChanged messageId:$messageId conversationId:$conversationId pinOperation:$pinOperation pinInfo:$pinInfo")
         chatMessageListener.let {
             for (messageListener in it) {
                 try {
                     messageListener.onMessagePinChanged(messageId, conversationId, pinOperation, pinInfo)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    EMLog.e("ChatListenersWrapper", "onMessagePinChanged error:${e.message}")
                 }
             }
         }
