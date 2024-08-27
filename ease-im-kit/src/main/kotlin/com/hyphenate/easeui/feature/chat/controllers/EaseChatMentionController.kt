@@ -9,6 +9,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.FragmentActivity
+import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.configs.EaseCustomMentionItemConfig
 import com.hyphenate.easeui.feature.contact.interfaces.OnHeaderItemClickListener
@@ -59,28 +60,30 @@ class EaseChatMentionController(
     }
 
     fun showMentionDialog(conversationId: String){
-        val defaultMentionItemList = EaseCustomMentionItemConfig(context).getDefaultMentionItemList()
-        val easeGroupMentionBottomSheet = EaseGroupMentionBottomSheet(
-            groupId = conversationId,
-            headerList = defaultMentionItemList ,
-            itemListener = object : OnMentionResultListener {
-                override fun onMentionItemClick(view: View?, position: Int, userId: String?) {
-                    chatLayout?.inputAtUsername(userId,false)
-                }
-            },
-            headerItemListener = object : OnHeaderItemClickListener {
-                override fun onHeaderItemClick(v: View, itemIndex: Int,itemId:Int?) {
-                    itemId?.let {
-                        if (it == R.id.ease_mention_at_all){
-                            chatLayout?.inputAtUsername(
-                                context.resources.getString(R.string.ease_all_members), false
-                            )
+        if ( EaseIM.getConfig()?.chatConfig?.enableMention == true){
+            val defaultMentionItemList = EaseCustomMentionItemConfig(context).getDefaultMentionItemList()
+            val easeGroupMentionBottomSheet = EaseGroupMentionBottomSheet(
+                groupId = conversationId,
+                headerList = defaultMentionItemList ,
+                itemListener = object : OnMentionResultListener {
+                    override fun onMentionItemClick(view: View?, position: Int, userId: String?) {
+                        chatLayout?.inputAtUsername(userId,false)
+                    }
+                },
+                headerItemListener = object : OnHeaderItemClickListener {
+                    override fun onHeaderItemClick(v: View, itemIndex: Int,itemId:Int?) {
+                        itemId?.let {
+                            if (it == R.id.ease_mention_at_all){
+                                chatLayout?.inputAtUsername(
+                                    context.resources.getString(R.string.ease_all_members), false
+                                )
+                            }
                         }
                     }
                 }
-            }
-        )
-        (context as FragmentActivity).supportFragmentManager.let {  easeGroupMentionBottomSheet.show(it,"group_mention") }
+            )
+            (context as FragmentActivity).supportFragmentManager.let {  easeGroupMentionBottomSheet.show(it,"group_mention") }
+        }
     }
 
 
