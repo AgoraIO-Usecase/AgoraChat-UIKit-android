@@ -217,8 +217,10 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
             binding?.layoutChat?.chatMessageListLayout?.hideChatReceiveAvatar(hideReceiveAvatar)
             val hideSendAvatar: Boolean = it.getBoolean(Constant.KEY_HIDE_SEND_AVATAR, false)
             binding?.layoutChat?.chatMessageListLayout?.hideChatSendAvatar(hideSendAvatar)
-            val turnOnTypingMonitor: Boolean =
-                it.getBoolean(Constant.KEY_TURN_ON_TYPING_MONITOR, false)
+            var turnOnTypingMonitor: Boolean = EaseIM.getConfig()?.chatConfig?.enableChatTyping ?:true
+            if (it.containsKey(Constant.KEY_TURN_ON_TYPING_MONITOR)){
+                turnOnTypingMonitor =  it.getBoolean(Constant.KEY_TURN_ON_TYPING_MONITOR, true)
+            }
             binding?.layoutChat?.turnOnTypingMonitor(turnOnTypingMonitor)
             val chatBg: Int = it.getInt(Constant.KEY_CHAT_BACKGROUND, -1)
             if (chatBg != -1) {

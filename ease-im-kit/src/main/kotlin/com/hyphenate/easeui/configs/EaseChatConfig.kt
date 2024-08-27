@@ -43,14 +43,14 @@ class EaseChatConfig {
     var enableUrlPreview: Boolean = true
 
     /**
-     * Open Graph 协议的正则表达式模式
+     * The Regular Expression Pattern of Open Graph Protocol
      */
     var titleOGPattern: String = "<meta property=\"og:title\" content=\"(.*?)\"\\s*/?>"
     var descriptionOGPattern: String = "<meta property=\"og:description\" content=\"(.*?)\"\\s*/?>"
     var imageOGPattern: String = "<meta property=\"og:image\" content=\"(.*?)\"\\s*/?>"
 
     /**
-     *  非 Open Graph 协议的正则表达式模式
+     *  Regular expression patterns for non Open Graph protocols
      */
     var titlePattern: String = "<title>(.*?)</title>"
     var descriptionPattern: String = "<meta\\s+name=\"description\"\\s+content=\"(.*?)\"\\s*/?>"
@@ -84,6 +84,11 @@ class EaseChatConfig {
      * The config that whether to enable the function of pin message.
      */
     var enableChatPingMessage: Boolean = true
+
+    /**
+     * The config that whether to enable the function of mention message.
+     */
+    var enableMention: Boolean = true
 
     /**
      * Set the time period within which messages can be recalled, in milliseconds
