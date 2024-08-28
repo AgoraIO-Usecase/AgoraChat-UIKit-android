@@ -405,6 +405,7 @@ class EaseChatLayout @JvmOverloads constructor(
             pinOperation: ChatMessagePinOperation?,
             pinInfo: ChatMessagePinInfo?
         ) {
+            ChatLog.d(TAG, "onMessagePinChanged: messageId:$messageId, conversationId:$conversationId, pinOperation:$pinOperation, pinInfo:$pinInfo")
             val message = ChatClient.getInstance().chatManager().getMessage(messageId)
             message?.let{
                 chatPinMessageController.updatePinMessage(it,pinInfo?.operatorId())

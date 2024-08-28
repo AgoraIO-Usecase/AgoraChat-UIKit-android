@@ -240,6 +240,14 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         }
     }
 
+    override fun onOfflineMessageSyncStart() {
+
+    }
+
+    override fun onOfflineMessageSyncFinish() {
+
+    }
+
     /**  ChatConnectionListener  */
     override fun onMessageReceived(messages: MutableList<ChatMessage>?) {
         // Update message userinfo when receive messages.
@@ -393,12 +401,14 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         pinOperation: ChatMessagePinOperation?,
         pinInfo: ChatMessagePinInfo?
     ) {
+        ChatLog.d("ChatListenersWrapper", "onMessagePinChanged messageId:$messageId conversationId:$conversationId pinOperation:$pinOperation pinInfo:$pinInfo")
         chatMessageListener.let {
             for (messageListener in it) {
                 try {
                     messageListener.onMessagePinChanged(messageId, conversationId, pinOperation, pinInfo)
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    ChatLog.e("ChatListenersWrapper", "onMessagePinChanged error:${e.message}")
                 }
             }
         }

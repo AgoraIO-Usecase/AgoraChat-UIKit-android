@@ -3,6 +3,8 @@ package com.hyphenate.easeui.interfaces
 import com.hyphenate.easeui.common.ChatGroupReadAck
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageListener
+import com.hyphenate.easeui.common.ChatMessagePinInfo
+import com.hyphenate.easeui.common.ChatMessagePinOperation
 import com.hyphenate.easeui.common.ChatMessageReactionChange
 import com.hyphenate.easeui.common.ChatRecallMessageInfo
 
@@ -29,4 +31,12 @@ open class EaseMessageListener: ChatMessageListener {
         operatorId: String?,
         operationTime: Long
     ) {}
+
+    override fun onMessagePinChanged(
+        messageId: String?,
+        conversationId: String?,
+        pinOperation: ChatMessagePinOperation?,
+        pinInfo: ChatMessagePinInfo?
+    ) {
+    }
 }
