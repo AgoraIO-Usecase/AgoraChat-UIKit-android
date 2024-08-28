@@ -95,7 +95,6 @@ import com.hyphenate.easeui.model.EaseProfile
 import com.hyphenate.easeui.model.EaseUser
 import com.hyphenate.easeui.viewmodel.messages.EaseChatViewModel
 import com.hyphenate.easeui.viewmodel.messages.IChatViewRequest
-import com.hyphenate.util.EMLog
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -406,7 +405,7 @@ class EaseChatLayout @JvmOverloads constructor(
             pinOperation: ChatMessagePinOperation?,
             pinInfo: ChatMessagePinInfo?
         ) {
-            EMLog.d(TAG, "onMessagePinChanged: messageId:$messageId, conversationId:$conversationId, pinOperation:$pinOperation, pinInfo:$pinInfo")
+            ChatLog.d(TAG, "onMessagePinChanged: messageId:$messageId, conversationId:$conversationId, pinOperation:$pinOperation, pinInfo:$pinInfo")
             val message = ChatClient.getInstance().chatManager().getMessage(messageId)
             message?.let{
                 chatPinMessageController.updatePinMessage(it,pinInfo?.operatorId())
