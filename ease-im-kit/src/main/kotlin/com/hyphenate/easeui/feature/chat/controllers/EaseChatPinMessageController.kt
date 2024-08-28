@@ -145,7 +145,7 @@ class EaseChatPinMessageController(
 
     private fun sortedByMapValue():MutableList<ChatMessage>{
         val list = pinMessageMap.values.toMutableList()
-        return list.sortedByDescending { sortMsg-> sortMsg.pinnedInfo().pinTime() }.toMutableList()
+        return list.filter {  it.pinnedInfo()!=null }.sortedByDescending { sortMsg-> sortMsg.pinnedInfo()?.pinTime() }.toMutableList()
     }
 
     fun addData(message: ChatMessage?) {
