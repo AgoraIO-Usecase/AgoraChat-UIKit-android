@@ -113,10 +113,10 @@ open class EaseChatRowImage @JvmOverloads constructor(
     }
 
     private fun showPlaceholderSize(message: ChatMessage) {
+        imageView?.setImageResource(R.drawable.ease_default_image)
         message.getPlaceholderShowSize(context)?.let {
             imageView?.layoutParams = ViewGroup.LayoutParams(it.width, it.height)
         } ?: run {
-            imageView?.setImageResource(R.drawable.ease_default_image)
             imageView?.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT

@@ -304,7 +304,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
         if (chatType != EaseChatType.GROUP_CHAT || isThread || EaseIM.getConfig()?.chatConfig?.enableChatThreadMessage == false){
             binding?.titleBar?.setMenuIconVisible(R.id.chat_menu_topic,false)
         }
-        if (chatType != EaseChatType.GROUP_CHAT || isThread || EaseIM.getConfig()?.chatConfig?.enableChatPingMessage == false){
+        if (isThread || EaseIM.getConfig()?.chatConfig?.enableChatPingMessage == false){
             binding?.titleBar?.setMenuIconVisible(R.id.chat_menu_pin,false)
         }
     }

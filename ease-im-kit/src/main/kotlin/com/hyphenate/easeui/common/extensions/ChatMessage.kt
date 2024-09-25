@@ -226,8 +226,12 @@ internal fun ChatMessage.createUnsentMessage(isReceive: Boolean = false): ChatMe
  */
 internal fun ChatMessage.createNotifyPinMessage(operationUser: String?): ChatMessage {
     val userInfo = EaseIM.getUserProvider()?.getSyncUser(operationUser)
-
-    val msgNotification = ChatMessage.createReceiveMessage(ChatMessageType.TXT)
+    var msgNotification:ChatMessage?
+    if (TextUtils.equals(to, ChatClient.getInstance().currentUser)) {
+        msgNotification= ChatMessage.createReceiveMessage(ChatMessageType.TXT)
+    }else{
+        msgNotification= ChatMessage.createSendMessage(ChatMessageType.TXT)
+    }
     var content:String
     content = if (pinnedInfo() == null || pinnedInfo().operatorId().isNullOrEmpty()) {
         "${userInfo?.getRemarkOrName()?:operationUser} removed a pin message"
