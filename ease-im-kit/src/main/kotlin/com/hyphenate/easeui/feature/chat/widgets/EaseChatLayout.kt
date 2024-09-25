@@ -692,7 +692,7 @@ class EaseChatLayout @JvmOverloads constructor(
         super.onDetachedFromWindow()
     }
 
-    fun init(conversationId: String?, chatType: EaseChatType?, loadDataType: EaseLoadDataType = EaseLoadDataType.LOCAL) {
+    fun init(conversationId: String?, chatType: EaseChatType, loadDataType: EaseLoadDataType = EaseLoadDataType.LOCAL) {
         this.conversationId = conversationId
         this.loadDataType = loadDataType
         this.chatType = chatType

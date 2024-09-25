@@ -269,11 +269,11 @@ class EaseChatMessageListLayout @JvmOverloads constructor(
     }
 
     @JvmOverloads
-    fun init(conversationId: String?, chatType: EaseChatType?
+    fun init(conversationId: String?, chatType: EaseChatType
              , loadDataType: EaseLoadDataType = EaseLoadDataType.LOCAL) {
         this.loadDataType = loadDataType
         conversation = ChatClient.getInstance().chatManager().getConversation(conversationId
-            , chatType?.getConversationType(), true, loadDataType == EaseLoadDataType.THREAD)
+            , chatType.getConversationType(), true, loadDataType == EaseLoadDataType.THREAD)
 
         viewModel?.setupWithConversation(conversation)
 

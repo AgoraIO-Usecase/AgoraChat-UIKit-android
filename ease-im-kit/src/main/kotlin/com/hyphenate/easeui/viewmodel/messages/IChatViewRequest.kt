@@ -17,7 +17,7 @@ interface IChatViewRequest: IAttachView {
      * @param chatType
      * @param loadDataType
      */
-    fun setupWithToUser(toChatUsername: String?, chatType: EaseChatType?, loadDataType: EaseLoadDataType)
+    fun setupWithToUser(toChatUsername: String?, chatType: EaseChatType, loadDataType: EaseLoadDataType)
 
     /**
      * Bind with the parent id for chat thread conversation.

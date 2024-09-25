@@ -55,12 +55,12 @@ open class EaseChatViewModel: EaseBaseViewModel<IHandleChatResultView>(), IChatV
 
     override fun setupWithToUser(
         toChatUsername: String?,
-        chatType: EaseChatType?,
+        chatType: EaseChatType,
         loadDataType: EaseLoadDataType
     ) {
         _loadDataType = loadDataType
         _conversation = ChatClient.getInstance().chatManager().getConversation(toChatUsername
-            , chatType?.getConversationType(), true, loadDataType == EaseLoadDataType.THREAD)
+            , chatType.getConversationType(), true, loadDataType == EaseLoadDataType.THREAD)
     }
 
     override fun bindParentId(parentId: String?) {

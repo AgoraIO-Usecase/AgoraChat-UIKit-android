@@ -99,7 +99,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     private var menuDialog:EaseChatExtendMenuDialog? = null
     private var messagesAdapter: EaseMessagesAdapter? = null
     var conversationId: String? = null
-    var chatType: EaseChatType? = null
+    var chatType: EaseChatType = EaseChatType.SINGLE_CHAT
     var searchMsgId: String? = null
     var isFromServer = false
     var isThread = false
@@ -255,7 +255,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
             ContextCompat.getColor(mContext, R.color.ease_color_background))
         updateSilent()
         addMenu()
-        chatType?.let { type ->
+        chatType.let { type ->
             when(type) {
                 EaseChatType.GROUP_CHAT -> {
                     EaseIM.getGroupProfileProvider()
@@ -669,7 +669,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
                 return true
             }
             R.id.extend_item_contact_card -> {
-                attachmentController.selectContact(childFragmentManager, chatType!!)
+                attachmentController.selectContact(childFragmentManager, chatType)
                 return true
             }
         }
