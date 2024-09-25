@@ -73,7 +73,7 @@ class ChatThreadFragment:EaseChatThreadFragment() {
             moreDialog = SimpleListSheetDialog(
                 context = it,
                 itemList = menu,
-                object : SimpleListSheetItemClickListener {
+                itemListener = object : SimpleListSheetItemClickListener {
                     override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
                         when(menu.menuId){
                             R.id.thread_more_edit -> {
