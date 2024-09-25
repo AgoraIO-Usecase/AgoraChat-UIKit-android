@@ -120,29 +120,23 @@ object EaseEmojiHelper {
     private const val o_ee_50 = "[-)]"
     private const val o_ee_51 = "[:-]"
     private const val o_ee_52 = "☺"
-    private const val o_ee_53 = "\uD83E\uDD74"
-    private const val o_ee_54 = "\uD83D\uDE41"
-    private const val o_ee_55 = "\uD83D\uDE2D"
-    private const val o_ee_56 = "\uD83D\uDE10"
-    private const val o_ee_57 = "\uD83D\uDE07"
-    private const val o_ee_58 = "\uD83D\uDE2C"
 
     private val mapping: Map<String, String> = mapOf(
         o_ee_1 to "☺️",
         o_ee_2 to "😄",
         o_ee_3 to "😉",
         o_ee_4 to "😮",
-        o_ee_5 to "\uD83D\uDE0B",
+        o_ee_5 to "\uD83E\uDD2A",
         o_ee_6 to "😎",
         o_ee_7 to "😡",
-        o_ee_8 to "\uD83D\uDE16",
+        o_ee_8 to "\uD83E\uDD74",
         o_ee_9 to "😳",
         o_ee_10 to "🙁",
         o_ee_11 to "😭",
         o_ee_12 to "😐",
         o_ee_13 to "😇",
         o_ee_14 to "😬",
-        o_ee_15 to "\uD83D\uDE06",
+        o_ee_15 to "\uD83E\uDD13",
         o_ee_16 to "😱",
         o_ee_17 to "\uD83C\uDF85",
         o_ee_18 to "\uD83D\uDE34",
@@ -151,7 +145,7 @@ object EaseEmojiHelper {
         o_ee_21 to "😯",
         o_ee_22 to "\uD83D\uDE0F",
         o_ee_23 to "\uD83D\uDE11",
-        o_ee_24 to "\uD83D\uDC96",
+        o_ee_24 to "❤️",
         o_ee_25 to "💔",
         o_ee_26 to "🌜",
         o_ee_27 to "🌟",
@@ -180,12 +174,6 @@ object EaseEmojiHelper {
         o_ee_50 to "🤢",
         o_ee_51 to "🙄",
         o_ee_52 to "☺️",
-        o_ee_53 to "\uD83E\uDD74",
-        o_ee_54 to "\uD83D\uDE41",
-        o_ee_55 to "\uD83D\uDE2D",
-        o_ee_56 to "\uD83D\uDE10",
-        o_ee_57 to "\uD83D\uDE07",
-        o_ee_58 to "\uD83D\uDE2C",
 
     )
 
@@ -223,61 +211,9 @@ object EaseEmojiHelper {
      * @param spannable
      * @return
      */
-    fun addEmojis(context: Context, spannable: Spannable, emojiIconSize: Int): Boolean {
-        var hasChanges = false
-        hasChanges = mappingEmoji(context, spannable, emojiIconSize)
-        if (hasChanges) {
-            return true
-        }
-        for ((key, value) in emojiMap.entries) {
-            val matcher = Pattern.compile(Pattern.quote(key)).matcher(spannable)
-            while (matcher.find()) {
-                var set = true
-                for (span in spannable.getSpans(
-                    matcher.start(),
-                    matcher.end(), ImageSpan::class.java)) {
-                    if (spannable.getSpanStart(span) >= matcher.start()
-                        && spannable.getSpanEnd(span) <= matcher.end()) {
-                        spannable.removeSpan(span)
-                    } else {
-                        set = false
-                        break
-                    }
-                }
-                if (set) {
-                    hasChanges = true
-                    if (value is String && !value.startsWith("http")) {
-                        val file = File(value as String)
-                        if (!file.exists() || file.isDirectory) {
-                            return false
-                        }
-                        spannable.setSpan(
-                            ImageSpan(context, Uri.fromFile(file)),
-                            matcher.start(), matcher.end(),
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                    } else {
-                        if (value is Int) {
-                            val drawable = ContextCompat.getDrawable(context, value)
-                            drawable?.let {
-                                val width = if (it.intrinsicWidth < emojiIconSize) it.intrinsicWidth else emojiIconSize
-                                val height = if (it.intrinsicHeight < emojiIconSize) it.intrinsicHeight else emojiIconSize
-                                it.setBounds(
-                                    0, 0, width,
-                                    height
-                                )
-                                spannable.setSpan(
-                                    ImageSpan(it),
-                                    matcher.start(), matcher.end(),
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return hasChanges
+    fun addEmojis(context: Context, spannable: Spannable, emojiIconSize: Int){
+        mappingEmoji(context, spannable, emojiIconSize)
+        emojiMappingToIcon(context,spannable,emojiIconSize)
     }
 
     private fun mappingEmoji(context: Context, spannable: Spannable, emojiIconSize: Int): Boolean {
@@ -329,6 +265,59 @@ object EaseEmojiHelper {
                 if (spannable is SpannableStringBuilder) {
                     for (i in matcherIndexPairs.reversed()) {
                         spannable.replace(i.first, i.second, value)
+                    }
+                }
+            }
+        }
+        return hasChanges
+    }
+
+    private fun emojiMappingToIcon(context: Context,spannable: Spannable,emojiIconSize: Int): Boolean{
+        var hasChanges = false
+        for ((key, value) in emojiMap.entries) {
+            val matcher = Pattern.compile(Pattern.quote(key)).matcher(spannable)
+            while (matcher.find()) {
+                var set = true
+                for (span in spannable.getSpans(
+                    matcher.start(),
+                    matcher.end(), ImageSpan::class.java)) {
+                    if (spannable.getSpanStart(span) >= matcher.start()
+                        && spannable.getSpanEnd(span) <= matcher.end()) {
+                        spannable.removeSpan(span)
+                    } else {
+                        set = false
+                        break
+                    }
+                }
+                if (set) {
+                    hasChanges = true
+                    if (value is String && !value.startsWith("http")) {
+                        val file = File(value as String)
+                        if (!file.exists() || file.isDirectory) {
+                            return false
+                        }
+                        spannable.setSpan(
+                            ImageSpan(context, Uri.fromFile(file)),
+                            matcher.start(), matcher.end(),
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    } else {
+                        if (value is Int) {
+                            val drawable = ContextCompat.getDrawable(context, value)
+                            drawable?.let {
+                                val width = if (it.intrinsicWidth < emojiIconSize) it.intrinsicWidth else emojiIconSize
+                                val height = if (it.intrinsicHeight < emojiIconSize) it.intrinsicHeight else emojiIconSize
+                                it.setBounds(
+                                    0, 0, width,
+                                    height
+                                )
+                                spannable.setSpan(
+                                    ImageSpan(it),
+                                    matcher.start(), matcher.end(),
+                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                                )
+                            }
+                        }
                     }
                 }
             }
