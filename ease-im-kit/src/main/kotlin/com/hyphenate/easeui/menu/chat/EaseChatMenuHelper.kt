@@ -2,7 +2,6 @@ package com.hyphenate.easeui.menu.chat
 
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
-import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageDirection
 import com.hyphenate.easeui.common.ChatMessageStatus
@@ -11,7 +10,6 @@ import com.hyphenate.easeui.common.ChatTextMessageBody
 import com.hyphenate.easeui.common.ChatType
 import com.hyphenate.easeui.common.EaseConstant
 import com.hyphenate.easeui.common.extensions.canEdit
-import com.hyphenate.easeui.common.extensions.isGroupChat
 import com.hyphenate.easeui.feature.chat.reaction.EaseMessageMenuReactionView
 import com.hyphenate.easeui.interfaces.OnMenuChangeListener
 import com.hyphenate.easeui.interfaces.OnMenuDismissListener
@@ -43,7 +41,11 @@ class EaseChatMenuHelper: EaseMenuHelper() {
         if (EaseIM.getConfig()?.chatConfig?.enableMessageReaction == true && message?.status() == ChatMessageStatus.SUCCESS){
             view?.let { view->
                 message?.run {
-                    EaseMessageMenuReactionView(view.context).let {
+                    val enableWxStyle = EaseIM.getConfig()?.chatConfig?.enableWxMessageStyle
+                    EaseMessageMenuReactionView(
+                        view.context,
+                        spanCount = if (enableWxStyle == true) 6 else 7
+                    ).let {
                         it.setupWithMessage(this)
                         it.bindWithMenuHelper(this@EaseChatMenuHelper)
                         it.showReaction()
@@ -58,10 +60,8 @@ class EaseChatMenuHelper: EaseMenuHelper() {
     }
 
     fun hindReactionView(){
-        if (EaseIM.getConfig()?.chatConfig?.enableMessageReaction == true && message?.status() == ChatMessageStatus.SUCCESS){
-            view?.let { view->
-                clearTopView()
-            }
+        view?.let { view->
+            clearTopView()
         }
     }
 

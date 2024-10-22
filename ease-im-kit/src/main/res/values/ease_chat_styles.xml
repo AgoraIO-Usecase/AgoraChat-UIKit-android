@@ -60,9 +60,7 @@
         <item name="android:layout_marginStart">@dimen/ease_size_8</item>
         <item name="android:layout_marginEnd">@dimen/ease_size_12</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:focusable">true</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:focusableInTouchMode">true</item>
         <item name="android:visibility">visible</item>
     </style>
 
@@ -71,7 +69,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/ease_chat_primary_menu_input_bg</item>
-        <item name="android:focusableInTouchMode">true</item>
         <item name="android:imeOptions">actionSend</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:inputType">text</item>
@@ -149,13 +146,11 @@
     </style>
 
     <style name="ease_chat_extend_menu_item_icon">
-        <item name="android:layout_width">@dimen/ease_size_35</item>
-        <item name="android:layout_height">@dimen/ease_size_35</item>
+        <item name="android:layout_width">@dimen/ease_size_32</item>
+        <item name="android:layout_height">@dimen/ease_size_32</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:scaleType">fitCenter</item>
-        <item name="android:layout_marginTop">@dimen/ease_size_10</item>
-        <item name="android:layout_marginBottom">@dimen/ease_size_5</item>
-        <item name="android:visibility">gone</item>
+        <item name="android:visibility">visible</item>
     </style>
 
     <style name="ease_chat_extend_menu_item_title">
@@ -163,7 +158,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:layout_marginBottom">@dimen/ease_size_10</item>
+        <item name="android:layout_marginTop">@dimen/ease_size_8</item>
+        <item name="android:layout_marginBottom">@dimen/ease_size_5</item>
         <item name="android:textColor">@color/ease_chat_extend_menu_item_title_color</item>
     </style>
 

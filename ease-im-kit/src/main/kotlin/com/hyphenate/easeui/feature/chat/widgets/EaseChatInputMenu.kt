@@ -82,10 +82,14 @@ class EaseChatInputMenu @JvmOverloads constructor(
             (extendMenu as EaseChatExtendMenu).init()
         }
         if (extendMenu is View) {
-            binding.extendMenuContainer.visibility = VISIBLE
-            binding.extendMenuContainer.removeAllViews()
-            binding.extendMenuContainer.addView(extendMenu as View?)
-            extendMenu?.setEaseChatExtendMenuItemClickListener(this)
+            postDelayed({
+                binding.run {
+                    extendMenuContainer.visibility = VISIBLE
+                    extendMenuContainer.removeAllViews()
+                    extendMenuContainer.addView(extendMenu as View?)
+                    extendMenu?.setEaseChatExtendMenuItemClickListener(this@EaseChatInputMenu)
+                }
+            }, 200)
         }
         if (extendMenu is Dialog) {
             binding.extendMenuContainer.visibility = GONE
@@ -129,19 +133,31 @@ class EaseChatInputMenu @JvmOverloads constructor(
             (emojiMenu as EaseEmojiconMenu).init()
         }
         if (emojiMenu is View) {
-            binding.extendMenuContainer.visibility = VISIBLE
-            binding.extendMenuContainer.removeAllViews()
-            binding.extendMenuContainer.addView(emojiMenu as View?)
-            emojiMenu?.setEmojiconMenuListener(this)
+            postDelayed({
+                binding.run {
+                    extendMenuContainer.visibility = VISIBLE
+                    extendMenuContainer.alpha = 0f
+                    extendMenuContainer.animate().alpha(1f).setDuration(400).start()
+                    extendMenuContainer.removeAllViews()
+                    extendMenuContainer.addView(emojiMenu as View?)
+                    emojiMenu?.setEmojiconMenuListener(this@EaseChatInputMenu)
+                }
+            }, 200)
         }
         if (emojiMenu is Fragment && context is AppCompatActivity) {
-            binding.extendMenuContainer.visibility = VISIBLE
-            val manager = context.supportFragmentManager
-            manager.beginTransaction().replace(
-                R.id.extend_menu_container,
-                (emojiMenu as Fragment?)!!
-            ).commitAllowingStateLoss()
-            emojiMenu?.setEmojiconMenuListener(this)
+            postDelayed({
+                binding.run {
+                    extendMenuContainer.visibility = VISIBLE
+                    extendMenuContainer.alpha = 0f
+                    extendMenuContainer.animate().alpha(1f).setDuration(400).start()
+                    val manager = context.supportFragmentManager
+                    manager.beginTransaction().replace(
+                        R.id.extend_menu_container,
+                        (emojiMenu as Fragment?)!!
+                    ).commitAllowingStateLoss()
+                    emojiMenu?.setEmojiconMenuListener(this@EaseChatInputMenu)
+                }
+            }, 200)
         }
     }
 

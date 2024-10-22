@@ -10,6 +10,7 @@ import android.os.Message
 import android.text.Editable
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -352,11 +353,7 @@ class EaseChatLayout @JvmOverloads constructor(
                         if (TextUtils.equals(it.conversationId(), conversationId)) {
                             isRefresh = true
                         }
-                    }
-                    val pinMessage:ChatMessage? = ChatClient.getInstance().chatManager().getMessage(message.recallMessageId)
-                    val isPined: Boolean = pinMessage?.pinnedInfo() == null || pinMessage.pinnedInfo().operatorId().isEmpty()
-                    if (isPined){
-                        chatPinMessageController.removeData(pinMessage)
+                        removePinMessage(it)
                     }
                 }
             }
@@ -444,8 +441,11 @@ class EaseChatLayout @JvmOverloads constructor(
 
             override fun onBubbleLongClick(v: View?, message: ChatMessage?): Boolean {
                 if (listener?.onBubbleLongClick(v, message) == true) return true
-                chatBinding.layoutMenu.hideSoftKeyboard()
-                menuHelper.initMenu(v)
+                val enableWxStyle = EaseIM.getConfig()?.chatConfig?.enableWxMessageStyle
+                if (enableWxStyle != true){
+                    chatBinding.layoutMenu.hideSoftKeyboard()
+                }
+                menuHelper.initMenu(v,message,true)
                 menuHelper.initMenuWithMessage(message)
                 setMenuItemClickListener(message)
                 menuHelper.show()
@@ -876,6 +876,14 @@ class EaseChatLayout @JvmOverloads constructor(
         }
     }
 
+    private fun removePinMessage(message:ChatMessage?){
+        val pinMessage:ChatMessage? = ChatClient.getInstance().chatManager().getMessage(message?.msgId)
+        val isPined: Boolean = pinMessage?.pinnedInfo() == null || pinMessage.pinnedInfo().operatorId().isEmpty()
+        if (isPined){
+            chatPinMessageController.removeData(pinMessage)
+        }
+    }
+
     override fun sendTextMessage(content: String?, isNeedGroupAck: Boolean) {
         viewModel?.sendTextMessage(content, isNeedGroupAck)
     }
@@ -1055,6 +1063,7 @@ class EaseChatLayout @JvmOverloads constructor(
 
     override fun recallMessageFinish(originalMessage: ChatMessage?, notification: ChatMessage?) {
         recallMessageListener?.recallSuccess(originalMessage, notification)
+        removePinMessage(originalMessage)
         chatBinding.layoutChatMessage.refreshMessages()
         sendChatUpdateEvent()
     }

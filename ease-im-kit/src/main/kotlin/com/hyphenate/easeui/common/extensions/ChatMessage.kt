@@ -226,7 +226,7 @@ internal fun ChatMessage.createUnsentMessage(isReceive: Boolean = false): ChatMe
  */
 internal fun ChatMessage.createNotifyPinMessage(operationUser: String?): ChatMessage {
     val userInfo = EaseIM.getUserProvider()?.getSyncUser(operationUser)
-    var msgNotification:ChatMessage?
+    val msgNotification:ChatMessage?
     if (TextUtils.equals(to, ChatClient.getInstance().currentUser)) {
         msgNotification= ChatMessage.createReceiveMessage(ChatMessageType.TXT)
     }else{
@@ -252,6 +252,7 @@ internal fun ChatMessage.createNotifyPinMessage(operationUser: String?): ChatMes
     msgNotification.isUnread = false
     msgNotification.msgTime = System.currentTimeMillis()
     msgNotification.setLocalTime(System.currentTimeMillis())
+    msgNotification.setAttribute(EaseConstant.MESSAGE_PIN_NOTIFY,true)
     msgNotification.setAttribute(EaseConstant.MESSAGE_TYPE_RECALL, true)
     msgNotification.setStatus(ChatMessageStatus.SUCCESS)
     msgNotification.setIsChatThreadMessage(isChatThreadMessage)

@@ -51,5 +51,8 @@
     <color name="ease_color_region_outline_high">@color/ease_primary_90</color>
     <!-- For divider line -->
     <color name="ease_color_outline_variant">@color/ease_neutral_20</color>
+    <!-- extend menu bg -->
+    <color name="ease_color_wx_style_extend_menu_tint">@color/ease_neutral_90</color>
+    <color name="ease_color_wx_style_extend_menu_text_tint">@color/ease_neutral_70</color>
 
 </resources>

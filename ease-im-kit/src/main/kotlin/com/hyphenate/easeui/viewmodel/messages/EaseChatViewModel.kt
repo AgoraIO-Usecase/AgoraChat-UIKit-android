@@ -495,6 +495,9 @@ open class EaseChatViewModel: EaseBaseViewModel<IHandleChatResultView>(), IChatV
             message?.let { msg ->
                 ChatMessage.createSendMessage(msg.type).apply {
                     val body = msg.body
+                    if (body is ChatTextMessageBody && msg.ext().containsKey(EaseConstant.TRANSLATION_STATUS)){
+                        setAttribute(EaseConstant.TRANSLATION_STATUS,false)
+                    }
                     if (body != null) {
                         setBody(body)
                     }

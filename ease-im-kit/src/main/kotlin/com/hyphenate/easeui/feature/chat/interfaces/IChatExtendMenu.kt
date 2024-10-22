@@ -17,7 +17,7 @@ interface IChatExtendMenu {
      * @param itemId
      * @param order
      */
-    fun registerMenuItem(name: String?, drawableRes: Int, itemId: Int, order: Int = 0)
+    fun registerMenuItem(name: String?, drawableRes: Int, itemId: Int, order: Int = 0,titleColor:Int = -1,resourceTintColor:Int = -1)
 
     /**
      * Add new extended functions
@@ -26,7 +26,7 @@ interface IChatExtendMenu {
      * @param itemId
      * @param order
      */
-    fun registerMenuItem(nameRes: Int, drawableRes: Int, itemId: Int, order: Int = 0)
+    fun registerMenuItem(nameRes: Int, drawableRes: Int, itemId: Int, order: Int = 0,titleColor:Int = -1,resourceTintColor:Int = -1)
 
     /**
      * Set item click listener

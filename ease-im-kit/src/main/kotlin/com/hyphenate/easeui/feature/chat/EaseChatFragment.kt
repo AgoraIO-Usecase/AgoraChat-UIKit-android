@@ -59,6 +59,7 @@ import com.hyphenate.easeui.feature.chat.interfaces.OnReactionMessageListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnReportMessageListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnTranslationMessageListener
 import com.hyphenate.easeui.feature.chat.interfaces.OnWillSendMessageListener
+import com.hyphenate.easeui.feature.chat.widgets.EaseChatExtendMenu
 import com.hyphenate.easeui.feature.chat.widgets.EaseChatLayout
 import com.hyphenate.easeui.feature.chat.widgets.EaseChatMessageListLayout
 import com.hyphenate.easeui.feature.chat.widgets.EaseInputMenuStyle
@@ -105,6 +106,7 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     var isThread = false
 
     private var sendOriginalImage = false
+    private var extendMenu:EaseChatExtendMenu? = null
 
     protected val attachmentController: EaseChatAttachmentController by lazy {
         EaseChatAttachmentController(mContext, binding?.layoutChat, conversationId, sendOriginalImage)
@@ -369,9 +371,23 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
     }
 
     private fun setCustomExtendView() {
-        menuDialog = EaseChatExtendMenuDialog(mContext)
-        menuDialog?.init()
-        binding?.layoutChat?.chatInputMenu?.setCustomExtendMenu(menuDialog)
+        val enableWxStyle = EaseIM.getConfig()?.chatConfig?.enableWxExtendStyle
+        if (enableWxStyle == true){
+            extendMenu = EaseChatExtendMenu(mContext)
+            (extendMenu as EaseChatExtendMenu).init()
+            extendMenu?.registerMenuItem(
+                R.string.ease_attach_contact_card,
+                R.drawable.em_chat_card_selector,
+                R.id.extend_item_contact_card,
+                titleColor = ContextCompat.getColor(mContext,R.color.ease_color_wx_style_extend_menu_text_tint),
+                resourceTintColor = ContextCompat.getColor(mContext,R.color.ease_color_wx_style_extend_menu_tint)
+            )
+            binding?.layoutChat?.chatInputMenu?.setCustomExtendMenu(extendMenu)
+        }else{
+            menuDialog = EaseChatExtendMenuDialog(mContext)
+            menuDialog?.init()
+            binding?.layoutChat?.chatInputMenu?.setCustomExtendMenu(menuDialog)
+        }
     }
 
     override fun initListener() {
@@ -542,8 +558,14 @@ open class EaseChatFragment: EaseBaseFragment<EaseFragmentChatBinding>(), OnChat
 
     override fun onDestroyView() {
         binding?.layoutChat?.chatInputMenu?.setCustomExtendMenu(null)
-        menuDialog?.unregisterListener()
-        menuDialog = null
+        val enableWxStyle = EaseIM.getConfig()?.chatConfig?.enableWxExtendStyle
+        if (enableWxStyle == true) {
+            extendMenu?.clear()
+            extendMenu = null
+        }else{
+            menuDialog?.unregisterListener()
+            menuDialog = null
+        }
         EaseIM.removeMultiDeviceListener(multiDeviceListener)
         EaseIM.removeThreadChangeListener(this)
         super.onDestroyView()

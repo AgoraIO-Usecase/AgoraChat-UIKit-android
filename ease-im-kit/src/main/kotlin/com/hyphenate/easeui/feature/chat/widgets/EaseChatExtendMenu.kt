@@ -81,7 +81,7 @@ class EaseChatExtendMenu @JvmOverloads constructor(
 
     private fun initChatExtendMenu() {
         val manager = HorizontalPageLayoutManager(numRows, numColumns)
-        manager.setItemHeight(90.dpToPx(context))
+        manager.setItemHeight(110.dpToPx(context))
         binding.rvExtendMenu.layoutManager = manager
         binding.rvExtendMenu.setHasFixedSize(true)
         val concatAdapter = ConcatAdapter()
@@ -111,7 +111,13 @@ class EaseChatExtendMenu @JvmOverloads constructor(
 
     private fun addDefaultData() {
         for (i in itemStrings.indices) {
-            registerMenuItem(itemStrings[i], itemdrawables[i], itemIds[i])
+            registerMenuItem(
+                itemStrings[i],
+                itemdrawables[i],
+                itemIds[i],
+                titleColor = ContextCompat.getColor(context,R.color.ease_color_wx_style_extend_menu_text_tint),
+                resourceTintColor = ContextCompat.getColor(context,R.color.ease_color_wx_style_extend_menu_tint)
+            )
         }
     }
 
@@ -168,9 +174,9 @@ class EaseChatExtendMenu @JvmOverloads constructor(
      * @param order
      * order by
      */
-    override fun registerMenuItem(name: String?, drawableRes: Int, itemId: Int, order: Int) {
+    override fun registerMenuItem(name: String?, drawableRes: Int, itemId: Int, order: Int,titleColor:Int,resourceTintColor:Int) {
         if (!itemMap.containsKey(itemId)) {
-            val item = EaseMenuItem(title = name ?: "", resourceId = drawableRes, menuId = itemId, order = order)
+            val item = EaseMenuItem(title = name ?: "", resourceId = drawableRes, menuId = itemId, order = order, titleColor = titleColor, resourceTintColor = resourceTintColor)
             itemMap[itemId] = item
             itemModels.add(item)
             sortByOrder(itemModels)
@@ -194,8 +200,8 @@ class EaseChatExtendMenu @JvmOverloads constructor(
      * @param order
      * order by
      */
-    override fun registerMenuItem(nameRes: Int, drawableRes: Int, itemId: Int, order: Int) {
-        registerMenuItem(context.getString(nameRes), drawableRes, itemId, order)
+    override fun registerMenuItem(nameRes: Int, drawableRes: Int, itemId: Int, order: Int,titleColor:Int,resourceTintColor:Int) {
+        registerMenuItem(context.getString(nameRes), drawableRes, itemId, order,titleColor,resourceTintColor)
     }
 
     override fun setEaseChatExtendMenuItemClickListener(listener: EaseChatExtendMenuItemClickListener?) {
@@ -204,9 +210,7 @@ class EaseChatExtendMenu @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (helper != null && binding.rvExtendMenu != null) {
-            helper.scrollToPosition(0)
-            helper.checkCurrentStatus()
-        }
+        helper.scrollToPosition(0)
+        helper.checkCurrentStatus()
     }
 }

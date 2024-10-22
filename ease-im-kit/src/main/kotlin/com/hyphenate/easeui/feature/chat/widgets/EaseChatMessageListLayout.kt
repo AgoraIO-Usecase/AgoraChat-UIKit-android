@@ -1,8 +1,10 @@
 package com.hyphenate.easeui.feature.chat.widgets
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -180,6 +182,7 @@ class EaseChatMessageListLayout @JvmOverloads constructor(
         binding.messagesRefresh.setEnableLoadMore(false)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initListener() {
         binding.messagesRefresh.setOnRefreshListener {
             // load more older data
@@ -221,9 +224,44 @@ class EaseChatMessageListLayout @JvmOverloads constructor(
             })
         }
 
-        setOnClickListener {
-            messageTouchListener?.onTouchItemOutside(it, -1)
-        }
+        val gestureDetector = GestureDetector(context,object: GestureDetector.OnGestureListener {
+            override fun onDown(e: MotionEvent): Boolean {
+                messageTouchListener?.onTouchItemOutside(null, -1)
+                return false
+            }
+
+            override fun onShowPress(e: MotionEvent) {
+
+            }
+
+            override fun onSingleTapUp(e: MotionEvent): Boolean {
+                return true;
+            }
+
+            override fun onScroll(
+                e1: MotionEvent?,
+                e2: MotionEvent,
+                distanceX: Float,
+                distanceY: Float
+            ): Boolean {
+                return false
+            }
+
+            override fun onLongPress(e: MotionEvent) {
+
+            }
+
+            override fun onFling(
+                e1: MotionEvent?,
+                e2: MotionEvent,
+                velocityX: Float,
+                velocityY: Float
+            ): Boolean {
+                return false
+            }
+        })
+
+        binding.messageList.setOnTouchListener { v, event -> gestureDetector.onTouchEvent(event) }
 
         binding.messageList.addOnLayoutChangeListener(object: OnLayoutChangeListener {
             override fun onLayoutChange(

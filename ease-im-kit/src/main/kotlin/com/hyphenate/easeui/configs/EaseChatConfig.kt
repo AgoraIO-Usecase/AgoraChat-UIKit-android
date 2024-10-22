@@ -2,7 +2,6 @@ package com.hyphenate.easeui.configs
 
 import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
-import com.hyphenate.easeui.common.extensions.getBooleanResource
 import com.hyphenate.easeui.common.extensions.getIntegerResource
 
 class EaseChatConfig {
@@ -89,6 +88,16 @@ class EaseChatConfig {
      * The config that whether to enable the function of mention message.
      */
     var enableMention: Boolean = true
+
+    /**
+     * The config that whether to enable the message menu style to Wx.
+     */
+    var enableWxMessageStyle: Boolean = true
+
+    /**
+     * The config that whether to enable the extend style to Wx.
+     */
+    var enableWxExtendStyle: Boolean = true
 
     /**
      * Set the time period within which messages can be recalled, in milliseconds

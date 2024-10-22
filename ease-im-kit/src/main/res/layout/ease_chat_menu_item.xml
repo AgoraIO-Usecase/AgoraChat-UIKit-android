@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/ease_chat_menu_item_height"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/image"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/image_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/text"
-        app:layout_constraintVertical_chainStyle="packed"
-        style="@style/ease_chat_extend_menu_item_icon" />
+        android:background="@drawable/ease_chat_extend_menu_wxstyle_bg"
+        android:layout_width="@dimen/ease_size_64"
+        android:layout_height="@dimen/ease_size_64">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            style="@style/ease_chat_extend_menu_item_icon" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/text"
         tools:text="photo"
-        app:layout_constraintStart_toStartOf="@id/image"
-        app:layout_constraintEnd_toEndOf="@id/image"
-        app:layout_constraintTop_toBottomOf="@id/image"
+        app:layout_constraintStart_toStartOf="@id/image_layout"
+        app:layout_constraintEnd_toEndOf="@id/image_layout"
+        app:layout_constraintTop_toBottomOf="@id/image_layout"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_goneMarginTop="@dimen/ease_size_10"
+        app:layout_goneMarginTop="@dimen/ease_size_8"
         style="@style/ease_chat_extend_menu_item_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

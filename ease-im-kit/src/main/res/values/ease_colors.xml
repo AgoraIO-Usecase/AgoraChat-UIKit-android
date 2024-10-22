@@ -90,5 +90,8 @@
     <color name="ease_color_outline_variant">@color/ease_neutral_90</color>
     <!-- For not enable -->
     <color name="ease_color_text_not_enable">@color/ease_neutral_70</color>
+    <!-- extend menu bg -->
+    <color name="ease_color_wx_style_extend_menu_tint">@color/ease_neutral_30</color>
+    <color name="ease_color_wx_style_extend_menu_text_tint">@color/ease_neutral_30</color>
 
 </resources>

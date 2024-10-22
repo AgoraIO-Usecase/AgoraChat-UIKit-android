@@ -92,10 +92,18 @@ class EaseChatPinMessageListViewGroup @JvmOverloads constructor(
         return super.dispatchTouchEvent(event)
     }
 
+    private fun updatePinCount(){
+        adapter?.let {
+            tvCount?.text = "${it.mData?.size} Pin Message"
+            it.notifyDataSetChanged()
+        }
+
+    }
+
     private fun setData(data: MutableList<ChatMessage>?) {
         data?.let {
-            tvCount?.text = "${it.size} Pin Message"
             adapter?.setData(it)
+            updatePinCount()
         }
     }
 
@@ -118,17 +126,13 @@ class EaseChatPinMessageListViewGroup @JvmOverloads constructor(
 
     fun removeData(message: ChatMessage?) {
         adapter?.let {
-            val messageList: MutableList<ChatMessage>? = it.data?.toMutableList()
-            if (messageList != null && message != null) {
-                for (i in messageList.indices) {
-                    if (messageList[i].msgId.equals(message.msgId)) {
-                        messageList.remove(message)
-                        break
-                    }
+            it.mData?.map { msg->
+                if (msg.msgId.equals(message?.msgId)) {
+                    removeData(msg)
                 }
-                it.notifyDataSetChanged()
             }
-            if (it.data.isNullOrEmpty()) {
+            updatePinCount()
+            if (it.mData.isNullOrEmpty()) {
                 visibility = GONE
                 viewStatusChangeListener?.onHidePinView()
             }
@@ -137,6 +141,7 @@ class EaseChatPinMessageListViewGroup @JvmOverloads constructor(
 
     fun addData(message: ChatMessage){
         adapter?.addData(0,message)
+        updatePinCount()
     }
 
     fun setConstraintLayoutMaxHeight(height: Int) {

@@ -86,5 +86,8 @@ object EaseConstant {
     const val MESSAGE_URL_PREVIEW_TITLE = "title"
     const val MESSAGE_URL_PREVIEW_DESCRIPTION = "description"
     const val MESSAGE_URL_PREVIEW_IMAGE_URL = "imageUrl"
+
+    // pin message
+    const val MESSAGE_PIN_NOTIFY = "ease_pin_notify"
 }
 

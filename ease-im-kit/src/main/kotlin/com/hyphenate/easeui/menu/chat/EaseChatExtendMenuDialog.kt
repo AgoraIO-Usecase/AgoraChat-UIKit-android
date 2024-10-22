@@ -39,7 +39,7 @@ class EaseChatExtendMenuDialog(
             registerMenuItem(itemStrings[i], itemdrawables[i], itemIds[i], i * 100)
         }
 
-        getMenuAdapter()?.let {
+        getMenuAdapter().let {
             it.setMenuGravity(EaseMenuItemView.MenuGravity.LEFT)
             it.setMenuOrientation(EaseMenuItemView.MenuOrientation.HORIZONTAL)
             it.notifyDataSetChanged()
@@ -56,12 +56,12 @@ class EaseChatExtendMenuDialog(
             }
         })
     }
-    override fun registerMenuItem(name: String?, drawableRes: Int, itemId: Int, order: Int) {
+    override fun registerMenuItem(name: String?, drawableRes: Int, itemId: Int, order: Int,titleColor:Int,resourceTintColor:Int) {
         registerMenuItem(title = name ?: "", resourceId = drawableRes, menuId = itemId, order = order)
     }
 
-    override fun registerMenuItem(nameRes: Int, drawableRes: Int, itemId: Int, order: Int) {
-        registerMenuItem(title = context.getString(nameRes) ?: "", resourceId = drawableRes, menuId = itemId, order = order)
+    override fun registerMenuItem(nameRes: Int, drawableRes: Int, itemId: Int, order: Int,titleColor:Int,resourceTintColor:Int) {
+        registerMenuItem(title = context.getString(nameRes), resourceId = drawableRes, menuId = itemId, order = order)
     }
 
     override fun setEaseChatExtendMenuItemClickListener(listener: EaseChatExtendMenuItemClickListener?) {

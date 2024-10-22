@@ -8,10 +8,14 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.extensions.mainScope
 import com.hyphenate.easeui.interfaces.OnMenuDismissListener
 import com.hyphenate.easeui.interfaces.OnMenuItemClickListener
 import com.hyphenate.easeui.model.EaseMenuItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -24,13 +28,21 @@ open class EaseMenuHelper {
     private var menuView: IMenu? = null
     protected var view: View? = null
     private var context: Context? = null
+    private var enableWxStyle: Boolean? = false
+    private var isChat:Boolean = false
 
-    open fun initMenu(view: View?) {
+    open fun initMenu(view: View?,message: ChatMessage? = null,isChat:Boolean = false) {
         this.view = view
+        this.isChat = isChat
         view?.let {
+            enableWxStyle = EaseIM.getConfig()?.chatConfig?.enableWxMessageStyle
             context = it.context
-            if (menuView == null) {
-                menuView = EaseMenuDialog()
+            if (enableWxStyle == true && isChat){
+                menuView = EaseMenuPopupWindow(context,view,message)
+            }else{
+                if (menuView == null) {
+                    menuView = EaseMenuDialog()
+                }
             }
         }
     }
@@ -122,15 +134,23 @@ open class EaseMenuHelper {
 
     fun show() {
         addMenuItem()
-        menuView?.let { menu ->
-            if (menu is BottomSheetDialogFragment) {
-                view?.run {
-                    if (context is Activity) {
-                        menu.show((context as AppCompatActivity).supportFragmentManager, "EaseConvMenuHelper")
-                    } else {
-                        throw IllegalArgumentException("Context must be Activity")
-                    }
-                } ?: throw IllegalArgumentException("View is null")
+        if (enableWxStyle == true && isChat){
+            if (menuView is EaseMenuPopupWindow){
+                CoroutineScope(Dispatchers.Main).launch {
+                    (menuView as EaseMenuPopupWindow).show()
+                }
+            }
+        }else{
+            menuView?.let { menu ->
+                if (menu is BottomSheetDialogFragment) {
+                    view?.run {
+                        if (context is Activity) {
+                            menu.show((context as AppCompatActivity).supportFragmentManager, "EaseConvMenuHelper")
+                        } else {
+                            throw IllegalArgumentException("Context must be Activity")
+                        }
+                    } ?: throw IllegalArgumentException("View is null")
+                }
             }
         }
     }
@@ -139,8 +159,10 @@ open class EaseMenuHelper {
      * Set menu cancelable.
      */
     fun setDialogCancelable(cancelable: Boolean) {
-        if (menuView is DialogFragment) {
-            (menuView as DialogFragment).isCancelable = cancelable
+        if (enableWxStyle == true && isChat){
+            (menuView as? EaseMenuPopupWindow)?.isOutsideTouchable = cancelable
+        }else{
+            (menuView as? DialogFragment)?.isCancelable = cancelable
         }
     }
 
@@ -206,8 +228,14 @@ open class EaseMenuHelper {
     fun addTopView(view: View) {
         this.view?.context?.mainScope()?.launch {
             delay(100)
-            menuView?.let {
-                (it as? EaseMenuDialog)?.addTopView(view)
+            if (enableWxStyle == true && isChat){
+                menuView?.let {
+                    (it as? EaseMenuPopupWindow)?.addReactionView(view)
+                }
+            }else{
+                menuView?.let {
+                    (it as? EaseMenuDialog)?.addTopView(view)
+                }
             }
         }
     }
@@ -218,8 +246,14 @@ open class EaseMenuHelper {
     fun clearTopView(){
         this.view?.context?.mainScope()?.launch {
             delay(100)
-            menuView?.let {
-                (it as? EaseMenuDialog)?.clearTopView()
+            if (enableWxStyle == true && isChat){
+                menuView?.let {
+                    (it as? EaseMenuPopupWindow)?.clearReactionView()
+                }
+            }else{
+                menuView?.let {
+                    (it as? EaseMenuDialog)?.clearTopView()
+                }
             }
         }
     }

@@ -39,7 +39,6 @@ class EaseChatPrimaryMenu @JvmOverloads constructor(
     private val inputManager: InputMethodManager by lazy { context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
 
     init {
-        binding.etSendmessage.requestFocus()
         binding.etSendmessage.run {
             setHorizontallyScrolling(false)
             var maxLines = context.resources.getInteger(R.integer.ease_input_edit_text_max_lines)
@@ -165,6 +164,7 @@ class EaseChatPrimaryMenu @JvmOverloads constructor(
         checkSendButton()
         setInputMenuType()
         listener?.onToggleTextBtnClicked()
+        showKeyboard()
     }
 
     override fun showVoiceStatus() {
@@ -193,7 +193,7 @@ class EaseChatPrimaryMenu @JvmOverloads constructor(
         listener?.onToggleEmojiconClicked(binding.ivFaceChecked.visibility == VISIBLE)
     }
 
-    override fun  showMoreStatus() {
+    override fun showMoreStatus() {
         if (binding.btnMore.isChecked) {
             hideSoftKeyboard()
             hideButtons()
@@ -216,13 +216,17 @@ class EaseChatPrimaryMenu @JvmOverloads constructor(
         if (binding.etSendmessage == null || context !is Activity) {
             return
         }
-        binding.etSendmessage.requestFocus()
         if (context.window.attributes.softInputMode
             != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
-            context.currentFocus?.let {
-                inputManager.hideSoftInputFromWindow(it.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-            }
+            inputManager.hideSoftInputFromWindow(binding.etSendmessage.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
+        binding.etSendmessage.isFocusableInTouchMode = false
+    }
+
+    private fun showKeyboard() {
+        binding.etSendmessage.isFocusableInTouchMode = true
+        binding.etSendmessage.requestFocus()
+        inputManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
     }
 
     override fun onEmojiconInputEvent(emojiContent: CharSequence?) {

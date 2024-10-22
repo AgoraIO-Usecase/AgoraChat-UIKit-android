@@ -2,6 +2,7 @@ package com.hyphenate.easeui.viewmodel.reaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hyphenate.easeui.EaseIM
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageReaction
@@ -13,6 +14,7 @@ import com.hyphenate.easeui.model.EaseDefaultEmojiIconData
 import com.hyphenate.easeui.model.EaseReaction
 import com.hyphenate.easeui.model.toReaction
 import com.hyphenate.easeui.repository.EaseChatManagerRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -47,6 +49,7 @@ class EaseChatReactionViewModel: ViewModel(), IChatReactionRequest {
         return dialogMap[messageId]
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getDefaultReactions(message: ChatMessage) {
         viewModelScope.launch {
             flow {
@@ -62,7 +65,12 @@ class EaseChatReactionViewModel: ViewModel(), IChatReactionRequest {
                 }
             }
             .collect {
-                it.toMutableList().run {
+                val defaultReactions = it.toMutableList()
+                val enableWxStyle = EaseIM.getConfig()?.chatConfig?.enableWxMessageStyle
+                if (enableWxStyle == true){
+                    defaultReactions.remove(defaultReactions[defaultReactions.size - 1])
+                }
+                defaultReactions.run {
                     add(EaseReaction(icon = R.drawable.emoji_more, type = EaseReactionType.ADD))
                     getTargetView(message.msgId)?.getDefaultReactionsSuccess(this)
                     getTargetDialogView(message.msgId)?.getDefaultReactionsSuccess(this)
@@ -71,6 +79,7 @@ class EaseChatReactionViewModel: ViewModel(), IChatReactionRequest {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAllChatReactions(message: ChatMessage) {
         viewModelScope.launch {
             flow {

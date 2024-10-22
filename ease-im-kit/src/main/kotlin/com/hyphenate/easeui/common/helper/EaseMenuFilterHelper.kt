@@ -16,7 +16,9 @@ object EaseMenuFilterHelper {
                         it.getBooleanAttribute(EaseConstant.THREAD_NOTIFICATION_TYPE, false)
                     val isRecallMessage: Boolean =
                         message.getBooleanAttribute(EaseConstant.MESSAGE_TYPE_RECALL, false)
-                    if (isThreadNotify || isRecallMessage){
+                    val isPinMessage: Boolean =
+                        message.getBooleanAttribute(EaseConstant.MESSAGE_PIN_NOTIFY, false)
+                    if (isThreadNotify || isRecallMessage || isPinMessage){
                         defaultFilterRow(helper)
                     }
                 }
@@ -41,6 +43,6 @@ object EaseMenuFilterHelper {
     private fun defaultFilterRow(helper: EaseChatMenuHelper?){
         helper?.setAllItemsVisible(false)
         helper?.clearTopView()
-        helper?.findItemVisible(R.id.action_chat_delete,true)
+        helper?.findItemVisible(R.id.action_chat_delete,false)
     }
 }
