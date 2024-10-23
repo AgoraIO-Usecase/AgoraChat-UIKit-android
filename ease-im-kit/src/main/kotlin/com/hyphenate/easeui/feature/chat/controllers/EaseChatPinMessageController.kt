@@ -68,6 +68,7 @@ class EaseChatPinMessageController(
             it.setOnItemClickListener(object : EaseChatPinMessageListViewGroup.OnPinItemClickListener{
                 override fun onItemClick(message: ChatMessage?) {
                     hidePinInfoView()
+                    isShowPinView = false
                     //click for pin message list
                     val messageList: List<ChatMessage>? = chatLayout.chatMessageListLayout?.getMessagesAdapter()?.data
                     var isExist = false
