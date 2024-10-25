@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="EaseChatExtendMenu">
+        <attr name="numColumns" format="integer"/>
+        <attr name="numRows" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="EaseMenuItemView">
+        <attr name="menuOrientation" format="enum">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+        <attr name="contentGravity" format="enum">
+            <enum name="center" value="0"/>
+            <enum name="left" value="1"/>
+            <enum name="right" value="2"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="EaseEmojiconMenu">
+        <attr name="bigEmojiconRows" format="integer"/>
+        <attr name="emojiconColumns" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="EaseWaveView">
+        <!-- The wave color -->
+        <attr name="ease_wave_color" format="color|reference" />
+        <!-- Set the wave width -->
+        <attr name="ease_wave_width" format="dimension" />
+        <!-- Set the wave height -->
+        <attr name="ease_wave_height" format="dimension" />
+        <!-- Set the wave radius -->
+        <attr name="ease_wave_radius" format="dimension"/>
+        <!-- Set the wave's stroke width -->
+        <attr name="ease_wave_stroke_width" format="dimension" />
+        <!-- Set how far the wave spread outwards -->
+        <attr name="ease_wave_move_distance" format="dimension" />
+        <!-- Set the first alpha when the animator starts -->
+        <attr name="ease_wave_start_alpha"  format="float" />
+        <!-- Set the end alpha when the animator finish -->
+        <attr name="ease_wave_end_alpha"  format="float" />
+        <!-- Set the animator duration -->
+        <attr name="ease_wave_duration" format="integer" />
+        <!-- Set whether to show the background wave -->
+        <attr name="ease_wave_show_bg_wave" format="boolean" />
+        <!-- Set the background wave width -->
+        <attr name="ease_wave_bg_width" format="dimension" />
+        <!-- Set the background wave height -->
+        <attr name="ease_wave_bg_height" format="dimension" />
+        <!-- Set the background wave radius -->
+        <attr name="ease_wave_bg_radius" format="dimension"/>
+        <!-- Set the background wave's stroke width -->
+        <attr name="ease_wave_bg_stroke_width" format="dimension" />
+        <!-- Set the background wave color -->
+        <attr name="ease_wave_bg_color" format="color|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="EaseChatMessageListLayout">
+        <!-- Text size of text message -->
+        <attr name="ease_chat_item_text_size" format="dimension"/>
+        <!-- Text color of text message  -->
+        <attr name="ease_chat_item_text_color" format="reference|color"/>
+        <!-- Min height of text message -->
+        <attr name="ease_chat_item_min_height" format="dimension"/>
+        <!-- Text size of time -->
+        <attr name="ease_chat_item_time_text_size" format="dimension"/>
+        <!-- Text color of time -->
+        <attr name="ease_chat_item_time_text_color" format="reference|color"/>
+        <!-- Background of time -->
+        <attr name="ease_chat_item_time_background" format="reference|color"/>
+        <!-- Default avatar -->
+        <attr name="ease_chat_item_avatar_default_src" format="reference"/>
+        <!--<attr name="ease_chat_item_avatar_size" format="dimension"/>-->
+        <!-- avatar shape type -->
+        <attr name="ease_chat_item_avatar_shape_type" format="enum">
+            <enum name="none" value="0" />
+            <enum name="round" value="1" />
+            <enum name="rectangle" value="2" />
+        </attr>
+        <!-- Background of item -->
+        <attr name="ease_chat_item_receiver_background" format="reference|color"/>
+        <attr name="ease_chat_item_sender_background" format="reference|color"/>
+        <!-- Whether to show nickname -->
+        <attr name="ease_chat_item_show_nickname" format="boolean"/>
+        <!-- Whether to show item avatar -->
+        <attr name="ease_chat_item_show_avatar" format="boolean"/>
+        <!-- Whether to hide receiver avatar -->
+        <attr name="ease_chat_item_hide_receiver_avatar" format="boolean"/>
+        <!-- Whether to hide sender avatar -->
+        <attr name="ease_chat_item_hide_sender_avatar" format="boolean"/>
+        <!-- Item show type -->
+        <attr name="ease_chat_item_show_type" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="start" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="EaseChatMessageReplyView">
+        <!-- whether is sender -->
+        <attr name="ease_chat_message_reply_is_sender" format="boolean" />
+        <attr name="ease_chat_message_reply_is_history" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="EaseChatReactionView">
+        <!-- whether is sender -->
+        <attr name="ease_chat_item_sender" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="EaseChatMessageTranslationView">
+        <!-- whether is sender -->
+        <attr name="ease_chat_message_translation_is_sender" format="boolean" />
+        <attr name="ease_chat_message_translation_is_history" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="EaseChatMessageUrlPreview">
+        <!-- whether is sender -->
+        <attr name="ease_chat_message_preview_is_sender" format="boolean" />
+    </declare-styleable>
+</resources>

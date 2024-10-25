@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/ease_color_background"
+    android:orientation="vertical">
+
+    <io.agora.uikit.widget.EaseTitleBar
+        android:id="@+id/title_contact"
+        app:titleBarTitle="@string/ease_contact_title"
+        app:titleBarTitleCenter="true"
+        app:titleTextColor="@color/ease_color_on_background_low"
+        app:titleBarMenuIconTint="@color/ease_color_on_background_low"
+        app:titleBarMenuTitleColor="@color/ease_color_on_background_low"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ease_toolbar_height"/>
+
+    <io.agora.uikit.widget.EaseSearchView
+        android:id="@+id/search_bar"
+        style="@style/ease_widget_search_view"
+        app:search_text="@string/ease_contact_search"/>
+
+    <io.agora.uikit.feature.contact.widgets.EaseContactListLayout
+        android:id="@+id/list_contact"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

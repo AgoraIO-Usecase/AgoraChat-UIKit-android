@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="ease_conv_item_height">@dimen/ease_size_72</dimen>
+    <dimen name="ease_conv_item_avatar_size">@dimen/ease_size_50</dimen>
+    <dimen name="ease_conv_item_avatar_margin_start">@dimen/ease_size_16</dimen>
+</resources>

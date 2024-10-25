@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <io.agora.uikit.widget.EaseTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ease_toolbar_height"
+        android:background="@color/ease_color_background"
+        app:titleBarDisplayHomeAsUpEnabled="true"
+        app:titleBarTitleTextColor="@color/ease_color_on_background_low"
+        app:titleBarMenuIconTint="@color/ease_color_on_background"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_forward"
+        style="@style/ease_message_forward_dialog_tab_layout_style" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_forward"
+        style="@style/ease_message_forward_dialog_viewpager_style" />
+
+</LinearLayout>

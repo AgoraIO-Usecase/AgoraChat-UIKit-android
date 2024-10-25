@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ease_search_text_hint">Search</string>
+    <string name="ease_sheet_cancel">Cancel</string>
+
+    <!-- dialog -->
+    <string name="ease_dialog_black_title">Confirm Block?</string>
+    <string name="ease_dialog_black">After confirming the blocking, you will not be able to receive any messages from the other party.</string>
+    <string name="ease_dialog_clear">Clear Chat History?</string>
+    <string name="ease_dialog_delete_contact_title">Delete this contact?</string>
+    <string name="ease_dialog_delete_contact_subtitle">Deleting the %1$s will clear the chat history.</string>
+    <string name="ease_dialog_edit_input_id_hint">User ID</string>
+    <string name="ease_dialog_cancel">Cancel</string>
+    <string name="ease_dialog_confirm">Confirm</string>
+
+    <!-- conversation -->
+    <string name="ease_message_unread_count_max">99+</string>
+    <string name="ease_location_recv">[%1$s location]</string>
+    <string name="ease_location_prefix">[My location]</string>
+    <string name="ease_location">[Location]</string>
+    <string name="ease_picture">[Image]</string>
+    <string name="ease_video">[Video]</string>
+    <string name="ease_file">[File]</string>
+    <string name="ease_voice">[Audio]</string>
+    <string name="ease_custom">[Custom message]</string>
+    <string name="ease_combine">[Chat history]</string>
+    <string name="ease_user_card">[Contact] %1$s</string>
+    <string name="ease_dynamic_expression">[Animoji]</string>
+    <string name="ease_chat_were_not_send_msg">[Draft]</string>
+    <string name="ease_all_members">All</string>
+    <string name="ease_chat_were_mentioned">[Someone@You]</string>
+    <string name="ease_chat_were_mentioned_all">[@All]</string>
+
+    <string name="ease_search_conversation_hint">Search</string>
+
+    <string name="ease_conversation_menu_action_more">More</string>
+    <string name="ease_conversation_title">Chat</string>
+    <string name="ease_conv_action_new_conversation">New Chat</string>
+    <string name="ease_conv_action_add_contact">Add Contacts</string>
+    <string name="ease_conv_action_create_group">New Group</string>
+    <string name="ease_conv_dialog_add_contact">Add contact by user ID</string>
+
+    <!-- chat -->
+    <string name="ease_chat_primary_menu_button_send">Send</string>
+    <string name="ease_chat_primary_menu_button_pushtotalk">Hold to talk</string>
+    <string name="ease_chat_primary_menu_input_hint">Aa</string>
+    <string name="ease_chat_search_message">Search by Keywords</string>
+
+    <string name="ease_attach_picture">Album</string>
+    <string name="ease_attach_take_pic">Camera</string>
+    <string name="ease_attach_location">Location</string>
+    <string name="ease_attach_video">Video</string>
+    <string name="ease_attach_file">File</string>
+    <string name="ease_attach_contact_card">Contact Card</string>
+
+    <string name="ease_group_ack_read_count">%1$d read</string>
+    <string name="ease_custom_message">Custom message: %1$s</string>
+    <string name="ease_have_uploaded">Uploaded</string>
+    <string name="ease_chat_unknown_type">Unsupported message type</string>
+    <string name="ease_msg_recall_by_self">You have recalled a message.</string>
+    <string name="ease_msg_recall_by_user">%1$s has recalled a message.</string>
+    <string name="ease_is_download_voice_click_later">Downloading audio, click when done.</string>
+
+    <!-- chat menu -->
+    <string name="ease_action_reply">Reply</string>
+    <string name="ease_action_copy">Copy</string>
+    <string name="ease_action_forward">Forward</string>
+    <string name="ease_action_recall">Recall</string>
+    <string name="ease_action_delete">Delete</string>
+    <string name="ease_action_edit">Edit</string>
+    <string name="ease_action_report">Report</string>
+    <string name="ease_action_translation">Translate</string>
+    <string name="ease_action_hide_translation">Hide translation</string>
+    <string name="ease_action_multi_select">Select</string>
+    <string name="ease_action_thread">Create a Thread</string>
+    <string name="ease_action_pin">Pin</string>
+
+    <!-- chat record -->
+    <string name="ease_chat_record_voice_record">Tap to Record</string>
+    <string name="ease_chat_record_voice_recording">Recording</string>
+    <string name="ease_chat_record_voice_play">Tap to Play</string>
+    <string name="ease_chat_record_voice_playing">Playing</string>
+    <string name="ease_chat_record_voice_remain">%1$ds Remaining</string>
+    <string name="ease_chat_record_voice_time">%1$ds</string>
+
+    <!-- chat attachment -->
+    <string name="ease_download_the_pictures">Downloading image: 0%</string>
+    <string name="ease_image_expired">Image expired</string>
+    <string name="ease_download_the_pictures_new">Downloading image:</string>
+    <string name="ease_downwaiting">Downloading file, please wait.</string>
+    <string name="ease_failed_to_download_file">Failed to download file:</string>
+    <string name="ease_file_expired">File expired:</string>
+    <string name="ease_is_down_please_wait">Downloading video, please wait.</string>
+    <string name="ease_video_expired">Video expired</string>
+
+    <!-- chat message reply -->
+    <string name="ease_emoji">[Emoji]</string>
+    <string name="ease_thread">[Thread]</string>
+    <string name="ease_chat_inputmenu_quote_reply_to">Replying to</string>
+    <string name="ease_error_message_not_exist">Message does not exist</string>
+    <string name="ease_quote_message_not_exist">Quoted content does not exist</string>
+    <string name="ease_message_reply_emoji_type">Emoji</string>
+    <string name="ease_message_reply_image_type">Image</string>
+    <string name="ease_message_reply_video_type">Video</string>
+    <string name="ease_message_reply_file_type">Attachment</string>
+    <string name="ease_message_reply_voice_type">Voice</string>
+    <string name="ease_message_reply_location_type">Location</string>
+    <string name="ease_message_reply_custom_type">Custom</string>
+    <string name="ease_message_reply_combine_type">Chat history</string>
+    <string name="ease_message_reply_location_content">Location: %1$s</string>
+    <string name="ease_message_reply_file_content">Attachment: %1$s</string>
+    <string name="ease_message_reply_voice_content">Voice: %1$d \"</string>
+    <string name="ease_message_reply_unknown_type">Unsupported message type</string>
+
+    <!-- chat message edit -->
+    <string name="ease_cancel">Cancel</string>
+    <string name="ease_message_edit">Editing</string>
+    <string name="ease_message_edited">Message Edited</string>
+    <string name="ease_fail_to_edit">Fail to edit</string>
+    <string name="ease_chat_message_edit_edited">Edited</string>
+
+    <!-- chat user card -->
+    <string name="ease_chat_message_user_card_label">Contact Card</string>
+    <string name="ease_chat_message_user_card_select_title">Share Contacts?</string>
+    <string name="ease_chat_message_user_card_share_content">Confirm to share %1$s to %2$s?</string>
+
+    <!-- chat dialog -->
+    <string name="ease_chat_dialog_delete_title">Delete this message?</string>
+    <string name="ease_chat_dialog_delete_content">After deletion, the other party can still see the message.</string>
+    <string name="ease_chat_dialog_recall_title">Recall this message?</string>
+    <string name="ease_chat_dialog_resend_title">Confirm to resend this message?</string>
+    <string name="ease_chat_dialog_delete_multi_message_title">Confirm to delete %1$d messages?</string>
+    <string name="ease_chat_dialog_delete_one_message_title">Confirm to delete 1 message?</string>
+
+    <!-- chat copy -->
+    <string name="ease_chat_copy_success">Copied</string>
+
+    <!-- chat reaction -->
+    <string name="ease_chat_reaction_reach_limit">The number of Reactions has reached the upper limit</string>
+
+    <!-- chat reply -->
+    <string name="ease_chat_reply_forwarded">Forwarded</string>
+
+    <!-- chat forward -->
+    <string name="ease_message_forward">Forward to</string>
+    <string name="ease_message_forward_to_contact">Contact</string>
+    <string name="ease_message_forward_to_group">Group</string>
+    <string name="ease_combine_default">Chat history</string>
+    <string name="ease_combine_compatible_default">The version is low and unable to display the content.</string>
+
+    <!-- chat unread -->
+    <string name="ease_message_unread_count">%1$d unread messages</string>
+
+    <!-- chat new -->
+    <string name="ease_chat_new_conversation">New Chat</string>
+    <string name="ease_chat_new_group_welcome">Group %1$s has been created.</string>
+
+    <!-- conversation menu -->
+    <string name="ease_conv_menu_item_silent">Mute</string>
+    <string name="ease_conv_menu_item_unsilent">Unmute</string>
+    <string name="ease_conv_menu_item_pin">Pin</string>
+    <string name="ease_conv_menu_item_unpin">Unpin</string>
+    <string name="ease_conv_menu_item_read">Mark as read</string>
+    <string name="ease_conv_menu_item_delete">Delete</string>
+
+    <!-- alert -->
+    <string name="ease_prompt">Note</string>
+    <string name="ease_ok">OK</string>
+
+    <!-- Date format -->
+    <string name="ease_date_language_zh">zh</string>
+    <string name="ease_date_just">just</string>
+    <string name="ease_data_format_hour">HH:mm</string>
+    <string name="ease_data_format_today">hh:mm aa</string>
+    <string name="ease_loading">Loading…</string>
+
+    <!--contact-->
+    <string name="ease_contact_title">Contacts</string>
+    <string name="ease_delete_contact">Delete Contact</string>
+    <string name="ease_clear_history">Clear Chat History</string>
+    <string name="ease_message_no_disturbance">Mute Notifications</string>
+    <string name="ease_contact_header_request">New Requests</string>
+    <string name="ease_contact_header_group">Groups</string>
+    <string name="ease_contact_search">Search Contacts</string>
+    <string name="ease_contact_add">Add a Contact</string>
+    <string name="ease_contact_number">ID: %1$s</string>
+    <string name="ease_header_request">New Requests</string>
+    <string name="ease_header_group">Groups</string>
+    <string name="ease_dialog_right_text">Add</string>
+
+    <!--add contact dialog-->
+    <string name="ease_contact_add_dialog_title">Add Contacts</string>
+
+    <!--Invitation-->
+    <string name="ease_new_invitation_title">New Requests</string>
+    <string name="ease_new_invitation">New Requests</string>
+    <string name="ease_invitation_detail_action">Add Contacts</string>
+    <string name="ease_invitation_reason">Request to add you as a contact.</string>
+    <string name="ease_invitation_action_add">Add</string>
+    <string name="ease_invitation_action_added">Added</string>
+    <string name="contact_listener_onFriendRequestDeclined">%1$s has declined your friend request</string>
+    <string name="contact_listener_onFriendRequestAccepted">Your friend request has been accepted</string>
+
+    <string name="ease_agreed_to">You\'ve approved the request from %1$s</string>
+    <string name="system_decline_invite">You\'ve declined %1$s\'s friend request</string>
+
+    <string name="system_msg_expired">Expired</string>
+
+    <string name="ease_detail_item_message">Chat</string>
+    <string name="ease_detail_item_audio">Audio</string>
+    <string name="ease_detail_item_video">Video</string>
+    <string name="ease_detail_item_search_msg">Search</string>
+
+    <!--Group-->
+    <string name="ease_new_group_title">New Group</string>
+    <string name="ease_new_group_count">Create(%1$d)</string>
+    <string name="ease_group_detail_member_list">Group Members</string>
+    <string name="ease_group_detail_member_count">%1$d people</string>
+    <string name="ease_group_detail_my_notes">My Alias in the Group</string>
+    <string name="ease_group_detail_group_name">Group Name</string>
+    <string name="ease_group_detail_group_id">ID: %1$s</string>
+    <string name="ease_group_detail_group_describe">Group Description</string>
+    <string name="ease_group_detail_change_owner">Transfer Ownership</string>
+    <string name="ease_group_detail_destroy">Disband Group</string>
+    <string name="ease_group_detail_leave">Leave Group</string>
+    <string name="ease_group_detail_leave_dialog">Leave this Group?</string>
+    <string name="ease_group_detail_leave_dialog_destroy">Disband this group?</string>
+    <string name="ease_group_detail_leave_dialog_des">Confirm to exit the group and delete the group\'s chat history.</string>
+    <string name="ease_group_detail_leave_dialog_owner_des">Confirm to destroy the group and delete the group\'s chat history.</string>
+    <string name="ease_group_count">Groups(%1$d)</string>
+    <string name="ease_group_change_name">Group Name</string>
+    <string name="ease_group_change_name_count">%1$d/32</string>
+    <string name="ease_group_change_describe">Group Description</string>
+    <string name="ease_group_change_describe_count">%1$d/512</string>
+    <string name="ease_group_change_save">Done</string>
+    <string name="ease_group_change_owner_title">Transfer Ownership</string>
+    <string name="ease_group_change_owner">Transfer group ownership to "%1$s"?</string>
+    <string name="ease_group_remove_members">Are you sure to delete %1$s group members?</string>
+    <string name="ease_group_remove_members_2">Are you sure such as "%1$s" to delete group members?</string>
+    <string name="ease_group_remove_members_more_than_3">Are you sure such as "%1$s" to delete %2$d group members?</string>
+
+    <string name="menu_thread_topic">Topic</string>
+
+    <!--Group Member-->
+    <string name="ease_group_member_count">Group Members (%1$d)</string>
+    <string name="ease_add_group_member_title">Add Group Members</string>
+    <string name="ease_add_group_member_select_count">Add(%1$d)</string>
+    <string name="ease_remove_group_member_title">Remove Members</string>
+    <string name="ease_remove_group_member_select_count">Remove(%1$d)</string>
+
+    <!--Group Mention-->
+    <string name="ease_group_mention_title">\@&#160;Mention</string>
+    <string name="ease_group_mention_all">All</string>
+
+    <!--report-->
+    <string name="ease_report_title">Message reporting</string>
+    <string name="ease_report_reason">Reason for reporting</string>
+    <string name="ease_report_bottom_left">Cancel</string>
+    <string name="ease_report_bottom_right">Report</string>
+    <string name="ease_report_success">Reported successfully</string>
+
+    <!-- notifier -->
+    <string name="ease_notifier_channel_name">hyphenate chatuidemo message default channel.</string>
+    <string name="ease_notifier_default_content">%1$s contacts sent %2$s messages</string>
+
+    <!-- translation -->
+    <string name="ease_translation_status">translated</string>
+
+    <!-- thread -->
+    <string name="ease_thread_list_title">All Topics%1$s</string>
+    <string name="ease_thread_affiliation_group">#Affiliation group %1$s</string>
+    <string name="ease_thread_region_count">%1$s Reply</string>
+    <string name="ease_thread_region_no_msg">No Message</string>
+    <string name="ease_thread_member_title">Thread Member</string>
+    <string name="ease_thread_remove_from_topic">Remove from topic</string>
+    <string name="ease_thread_delete_topic_title">Are you sure to delete the topic?</string>
+    <string name="ease_thread_delete_topic_subtitle">This operation is not recoverable</string>
+    <string name="ease_thread_notify_content">%1$s Create a topic: %2$s</string>
+    <string name="ease_thread_notify_detail">detail</string>
+    <string name="ease_thread_edit_title">Topic Name</string>
+    <string name="ease_thread_edit_name_count">%1$d/64</string>
+    <string name="ease_thread_unknown_message">The original message does not exist</string>
+
+    <string name="thread_edit">thread edit</string>
+    <string name="thread_member">thread member</string>
+    <string name="thread_leave">leave thread</string>
+    <string name="thread_destroy">destroy thread</string>
+
+    <string name="alert_during_typing">Typing…</string>
+
+    <string name="ease_block_title">block(%1$d)</string>
+    <string name="ease_switch_block_title">Block</string>
+    <string name="ease_search_block_user">Search</string>
+
+    <string name="ease_url_preview_parsing">Parsing…</string>
+
+    <string name="pin_info_view_text">Pin Message</string>
+    <string name="ease_pin_list_item_delete">Remove</string>
+    <string name="ease_pin_list_item_confirm_delete">Confirm</string>
+
+</resources>

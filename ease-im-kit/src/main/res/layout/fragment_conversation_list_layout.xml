@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <io.agora.uikit.widget.EaseTitleBar
+        android:id="@+id/title_conversations"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ease_toolbar_height"
+        app:titleBarReplaceActionBar="false"
+        app:titleBarTitle="@string/ease_conversation_title"
+        app:titleBarTitleCenter="true"
+        app:titleBarSubtitleTextColor="@color/ease_color_text_secondary"
+        app:titleBarTitleTextColor="@color/ease_color_on_background_low"
+        app:titleBarMenuIconTint="@color/ease_color_on_background_low"
+        app:titleBarMenuTitleColor="@color/ease_color_on_background_low"/>
+
+    <io.agora.uikit.widget.EaseSearchView
+        android:id="@+id/search_bar"
+        style="@style/ease_widget_search_view"/>
+
+    <io.agora.uikit.feature.conversation.widgets.EaseConversationListLayout
+        android:id="@+id/list_conversation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

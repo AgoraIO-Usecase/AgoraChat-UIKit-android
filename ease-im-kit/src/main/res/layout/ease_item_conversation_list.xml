@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cv_item_root"
+    style="@style/ease_conv_item_root">
+
+    <io.agora.uikit.widget.EaseImageView
+        android:id="@+id/avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:ease_shape_type="rectangle"
+        app:ease_radius="@dimen/ease_corner_small"
+        style="@style/ease_conv_item_avatar" />
+
+    <TextView
+        android:id="@+id/unread_msg_number"
+        app:layout_constraintCircle="@id/avatar"
+        app:layout_constraintCircleAngle="45"
+        app:layout_constraintCircleRadius="@dimen/ease_size_30"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="4"
+        style="@style/ease_conv_item_unread_number" />
+
+    <View
+        android:id="@+id/unread_msg_dot"
+        app:layout_constraintCircle="@id/avatar"
+        app:layout_constraintCircleAngle="45"
+        app:layout_constraintCircleRadius="@dimen/ease_size_30"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/ease_conv_item_unread_dot" />
+
+    <TextView
+        android:id="@+id/name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/message"
+        app:layout_constraintStart_toEndOf="@id/avatar"
+        app:layout_constraintEnd_toStartOf="@id/msg_mute"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Group Chat"
+        style="@style/ease_conv_item_name" />
+
+    <ImageView
+        android:id="@+id/msg_mute"
+        app:layout_constraintStart_toEndOf="@id/name"
+        app:layout_constraintTop_toTopOf="@id/name"
+        app:layout_constraintBottom_toBottomOf="@id/name"
+        app:layout_constraintEnd_toStartOf="@id/time"
+        style="@style/ease_conv_item_mute" />
+
+    <TextView
+        android:id="@+id/time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rl_unread_right"
+        tools:text="09:51"
+        style="@style/ease_conv_item_time" />
+
+    <ImageView
+        android:id="@+id/msg_state"
+        app:layout_constraintStart_toEndOf="@id/avatar"
+        app:layout_constraintLeft_toRightOf="@id/avatar"
+        app:layout_constraintTop_toTopOf="@id/message"
+        app:layout_constraintBottom_toBottomOf="@id/message"
+        android:src="@drawable/ease_msg_state_failed_resend"
+        style="@style/ease_conv_item_msg_state" />
+
+    <TextView
+        android:id="@+id/mentioned"
+        app:layout_constraintTop_toTopOf="@id/message"
+        app:layout_constraintBottom_toBottomOf="@id/message"
+        app:layout_constraintStart_toEndOf="@id/avatar"
+        app:layout_constraintEnd_toStartOf="@id/message"
+        style="@style/ease_conv_item_mentioned" />
+
+    <View
+        android:id="@+id/barrier_view"
+        android:layout_width="@dimen/ease_size_1"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/ease_size_10"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_constraintStart_toEndOf="@id/avatar"/>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="right"
+        app:constraint_referenced_ids="msg_state,mentioned,barrier_view"/>
+    
+    <TextView
+        android:id="@+id/message"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_constraintStart_toEndOf="@id/barrier_message"
+        app:layout_constraintEnd_toStartOf="@id/rl_unread_right"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_goneMarginStart="@dimen/ease_size_2"
+        app:layout_goneMarginEnd="@dimen/ease_size_20"
+        tools:text="Agora Chat"
+        style="@style/ease_conv_item_message" />
+
+    <RelativeLayout
+        android:id="@+id/rl_unread_right"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/message"
+        app:layout_constraintTop_toBottomOf="@id/time"
+        style="@style/ease_conv_item_unread_right_root">
+
+        <TextView
+            android:id="@+id/unread_msg_number_right"
+            tools:text="5"
+            style="@style/ease_conv_item_unread_right_number" />
+
+        <View
+            android:id="@+id/unread_msg_dot_right"
+            style="@style/ease_conv_item_unread_right_dot" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_top_label"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        style="@style/ease_conv_item_pinned" />
+
+    <View
+        android:id="@+id/view_bottom_divider"
+        app:layout_constraintLeft_toLeftOf="@id/name"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/ease_conv_item_divider" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

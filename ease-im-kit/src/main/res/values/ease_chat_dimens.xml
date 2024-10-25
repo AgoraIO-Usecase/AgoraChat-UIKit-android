@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ease_chat_emoji_pager_height">255dp</dimen>
+
+    <dimen name="ease_chat_avatar_size">@dimen/ease_size_28</dimen>
+
+    <dimen name="ease_title_bar_icon_size">@dimen/ease_size_32</dimen>
+    <dimen name="ease_title_bar_status_icon_size">@dimen/ease_size_12</dimen>
+    <dimen name="ease_contact_list_status_icon_size">@dimen/ease_size_14</dimen>
+    <dimen name="ease_contact_status_icon_size">@dimen/ease_size_28</dimen>
+
+    <dimen name="ease_chat_row_file_bubble_max_width">240dp</dimen>
+    <dimen name="ease_chat_row_user_card_bubble_width">240dp</dimen>
+    <dimen name="ease_chat_row_message_reply_content_max_width">240dp</dimen>
+    <dimen name="ease_chat_message_edit_root_corner">0dp</dimen>
+
+    <dimen name="ease_chat_message_reaction_margin_parent">@dimen/ease_size_50</dimen>
+</resources>

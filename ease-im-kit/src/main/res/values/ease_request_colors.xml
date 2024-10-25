@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="ease_invitation_item_bg_color">@color/ease_color_primary</color>
+
+</resources>

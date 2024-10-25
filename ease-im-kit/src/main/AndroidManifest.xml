@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- IM SDK required start -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- IM SDK required end -->
+    <!-- IM UIKit required start -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <!-- Android 13 to replace READ_EXTERNAL_STORAGE permission -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+    <!-- Android 14 is used to grant partial access to photos and videos -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"/>
+    <!-- IM UIKit required end -->
+    <application>
+        <!--Add FileProvider-->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <!-- Chat activity -->
+        <activity android:name=".feature.chat.activities.EaseChatActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <!-- Group list activity -->
+        <activity android:name=".feature.group.EaseGroupListActivity"
+            android:exported="false"/>
+        <!-- Group detail activity -->
+        <activity android:name=".feature.group.EaseGroupDetailActivity"
+            android:exported="false"/>
+        <!-- Group member list activity -->
+        <activity android:name=".feature.group.EaseGroupMembersListActivity"
+            android:exported="false"/>
+        <!-- Edit group information activity -->
+        <activity android:name=".feature.group.EaseGroupDetailEditActivity"
+            android:windowSoftInputMode="stateAlwaysVisible"
+            android:exported="false"/>
+        <!-- Create group activity -->
+        <activity android:name=".feature.group.EaseCreateGroupActivity"
+            android:exported="false"/>
+        <!-- Common search activity -->
+        <activity android:name=".feature.search.EaseSearchActivity"
+            android:exported="false"/>
+        <!-- Contact list activity -->
+        <activity android:name=".feature.contact.EaseContactDetailsActivity"
+            android:exported="false"/>
+        <!-- Contact check activity -->
+        <activity android:name=".feature.contact.EaseContactCheckActivity"
+            android:exported="false"/>
+        <activity android:name=".feature.invitation.EaseNewRequestsActivity"
+            android:exported="false"/>
+        <activity android:name=".feature.invitation.EaseNewRequestsDetailsActivity"
+            android:exported="false"/>
+        <!-- Downloading video attachment activity -->
+        <activity android:name=".feature.chat.activities.EaseShowVideoActivity"
+            android:exported="false"/>
+        <!-- Show local video activity -->
+        <activity android:name=".feature.chat.activities.EaseShowLocalVideoActivity"
+            android:exported="false"/>
+        <!-- Show large image activity -->
+        <activity android:name=".feature.chat.activities.EaseShowBigImageActivity"
+            android:exported="false"/>
+        <!-- Download and show file activity -->
+        <activity android:name=".feature.chat.activities.EaseShowNormalFileActivity"
+            android:exported="false"/>
+        <!-- Chat thread activity -->
+        <activity android:name=".feature.thread.EaseChatThreadActivity"
+            android:exported="false"/>
+        <!-- Create chat thread activity -->
+        <activity android:name=".feature.thread.EaseCreateChatThreadActivity"
+            android:exported="false"/>
+        <!-- Chat thread list activity -->
+        <activity android:name=".feature.thread.EaseChatThreadListActivity"
+            android:exported="false"/>
+        <!-- Chat thread member list activity -->
+        <activity android:name=".feature.thread.EaseChatThreadMemberActivity"
+            android:exported="false"/>
+        <!-- Chat history activity for combine message -->
+        <activity android:name=".feature.chat.activities.EaseChatHistoryActivity"
+            android:exported="false"/>
+        <!-- Chat search message result activity -->
+        <activity android:name=".feature.chat.activities.EaseMessageSearchResultActivity"
+            android:exported="false"/>
+        <activity android:name=".feature.contact.EaseBlockListActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+    </application>
+</manifest>

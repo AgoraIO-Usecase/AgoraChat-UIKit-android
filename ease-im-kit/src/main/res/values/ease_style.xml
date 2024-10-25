@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Ease.TextAppearance.Headline.Large" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Ease.TextAppearance.Headline.Medium" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Ease.TextAppearance.Headline.Small" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Ease.TextAppearance.Title.Large" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="Ease.TextAppearance.Title.Medium" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="Ease.TextAppearance.Title.Small" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="Ease.TextAppearance.Label.Large" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="Ease.TextAppearance.Label.Medium" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="Ease.TextAppearance.Label.Small" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="Ease.TextAppearance.Label.ExtraSmall" parent="TextAppearance.AppCompat.Small.Inverse">
+        <item name="android:textSize">11sp</item>
+    </style>
+    <style name="Ease.TextAppearance.Body.Large" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="Ease.TextAppearance.Body.Medium" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="Ease.TextAppearance.Body.Small" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="Ease.TextAppearance.Body.ExtraSmall" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="SwitchCompatStyle">
+        <item name="android:thumb">@drawable/ease_switch_thumb_selector</item>
+        <item name="track">@drawable/ease_switch_track_selector</item>
+    </style>
+
+    <style name="Toolbar.PopupTheme" parent="ThemeOverlay.AppCompat.Light">
+        <!--设置背景色-->
+        <!--<item name="android:background">@color/white</item>-->
+        <!--设置字体颜色-->
+        <item name="android:textColor">@color/black</item>
+        <!--设置不覆盖锚点，即不覆盖三个点-->
+        <item name="overlapAnchor">false</item>
+    </style>
+
+    <style name="CustomBackgroundStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@android:color/black</item>
+    </style>
+
+    <style name="dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="dialog_from_bottom_anim">
+        <item name="android:windowEnterAnimation">@anim/ease_dialog_from_bottom_anim_in</item>
+    </style>
+
+    <style name="ease_custom_dialog_root">
+        <item name="android:background">@drawable/ease_dialog_custom_bg</item>
+    </style>
+
+    <style name="ease_custom_dialog_title">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Large</item>
+        <item name="android:textColor">@color/ease_custom_dialog_title_color</item>
+    </style>
+
+    <style name="ease_custom_dialog_subtitle">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Medium</item>
+        <item name="android:textColor">@color/ease_custom_dialog_subtitle_color</item>
+    </style>
+
+    <style name="ease_dialog_edit_view">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
+        <item name="android:textColor">@color/ease_group_detail_edit_text_color</item>
+        <item name="android:background">@drawable/ease_dialog_input_bg</item>
+        <item name="android:textColorHint">@color/ease_group_detail_edit_hint_text_color</item>
+    </style>
+
+    <style name="ease_bottom_sheet_dialog_cancel">
+        <item name="android:background">@color/ease_color_background</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Large</item>
+        <item name="android:textColor">@color/ease_bottom_sheet_cancel_text_color</item>
+        <item name="android:text">@string/ease_sheet_cancel</item>
+    </style>
+
+    <style name="ease_bottom_sheet_dialog_title">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Large</item>
+        <item name="android:textColor">@color/ease_color_on_background_low</item>
+        <item name="android:layout_marginBottom">@dimen/ease_size_8</item>
+        <item name="android:layout_marginTop">@dimen/ease_size_10</item>
+    </style>
+
+    <style name="ease_bottom_sheet_dialog_item">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
+        <item name="android:textColor">@color/ease_bottom_sheet_item_text_color</item>
+
+    </style>
+
+    <!-- Report -->
+    <style name="ease_report_title">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Medium</item>
+        <item name="android:textColor">@color/ease_color_on_background_low</item>
+        <item name="android:text">@string/ease_report_title</item>
+    </style>
+
+    <style name="ease_report_reason">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Small</item>
+        <item name="android:textColor">@color/ease_color_text_secondary</item>
+        <item name="android:text">@string/ease_report_reason</item>
+    </style>
+
+    <style name="ease_report_item_tv">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
+        <item name="android:textColor">@color/ease_color_on_background_low</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ease_report_item_checkbox">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/ease_report_checkbox_bg_selector_style</item>
+    </style>
+
+    <style name="ease_report_left_button">
+        <item name="android:background">@drawable/ease_dialog_border</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
+        <item name="android:textColor">@color/ease_custom_dialog_left_text_color</item>
+        <item name="android:text">@string/ease_report_bottom_left</item>
+    </style>
+
+    <style name="ease_report_right_button">
+        <item name="android:background">@drawable/ease_invitation_action_bg</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
+        <item name="android:textColor">@color/ease_selector_change_text_color</item>
+        <item name="android:text">@string/ease_report_bottom_right</item>
+    </style>
+
+    <style name="ease_dialog_left_button">
+        <item name="android:background">@drawable/ease_dialog_border</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
+        <item name="android:textColor">@color/ease_custom_dialog_left_text_color</item>
+        <item name="android:text">@string/ease_dialog_cancel</item>
+    </style>
+
+    <style name="ease_dialog_right_button">
+        <item name="android:background">@drawable/ease_custom_dialog_action_bg</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
+        <item name="android:textColor">@color/ease_selector_custom_dialog_tv_right_color</item>
+        <item name="android:text">@string/ease_dialog_confirm</item>
+    </style>
+
+    <!-- SearchView -->
+    <style name="ease_search_view_drawable">
+        <item name="android:src">@drawable/search</item>
+    </style>
+
+    <style name="ease_search_view_tv_text">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
+        <item name="android:textColor">@color/ease_color_text_secondary_high</item>
+    </style>
+
+    <style name="ease_search_tv_right">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Medium</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/ease_color_primary</item>
+        <item name="android:text">@string/ease_dialog_cancel</item>
+    </style>
+
+    <style name="ease_widget_search_view_root">
+        <item name="android:background">@drawable/ease_search_bg</item>
+    </style>
+
+    <style name="ease_widget_search_view">
+        <item name="search_text_color">@color/ease_color_text_hint</item>
+        <item name="search_gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/ease_size_44</item>
+        <item name="android:paddingStart">@dimen/ease_size_8</item>
+        <item name="android:paddingEnd">@dimen/ease_size_8</item>
+        <item name="android:paddingTop">@dimen/ease_size_4</item>
+        <item name="android:paddingBottom">@dimen/ease_size_4</item>
+    </style>
+
+    <style name="ease_list_item_root">
+        <item name="android:background">@drawable/ease_view_default_touch_shadow_bg</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+    </style>
+
+    <style name="ease_list_item_divider">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">@color/ease_color_outline_variant</item>
+    </style>
+
+    <!-- title bar -->
+    <style name="ease_widget_title_bar_back">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:src">@drawable/ease_default_navigation_icon</item>
+        <item name="android:tint">@color/ease_title_bar_navigation_icon_tint_color</item>
+    </style>
+
+    <style name="ease_widget_title_bar_title">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Medium</item>
+        <item name="android:textColor">@color/ease_widget_title_bar_title_color</item>
+    </style>
+
+    <style name="ease_dialog_edit_clear">
+        <item name="android:src">@drawable/ease_dialog_input_clear_light</item>
+    </style>
+
+    <!-- EaseArrowItem Style -->
+    <style name="ease_arrow_item_content_style">
+        <item name="android:layout_marginStart">@dimen/ease_size_16</item>
+        <item name="android:layout_marginEnd">@dimen/ease_size_2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Medium</item>
+        <item name="android:textColor">@color/ease_color_on_background_low</item>
+    </style>
+
+</resources>

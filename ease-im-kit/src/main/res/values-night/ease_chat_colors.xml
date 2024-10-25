@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ease_chat_row_voice_receive_icon_color">@color/ease_color_background</color>
+    <color name="ease_chat_row_voice_send_icon_color">@color/ease_neutral_special_30</color>
+    <color name="ease_chat_voice_record_wave_color">@color/ease_color_primary_container</color>
+    <color name="ease_chat_voice_record_wave_bg_color">@color/ease_primary_20</color>
+    <color name="ease_chat_record_delete_bg_color">@color/ease_neutral_20</color>
+    <color name="ease_chat_record_delete_tint_color">@color/ease_neutral_70</color>
+    <color name="ease_chat_record_voice_length_text_color">@color/ease_color_text_title</color>
+</resources>

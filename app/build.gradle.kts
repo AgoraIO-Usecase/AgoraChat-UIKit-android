@@ -1,20 +1,29 @@
+import java.util.*
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
 
+val properties = Properties()
+val inputStream = project.rootProject.file("local.properties").inputStream()
+properties.load( inputStream )
+
 android {
-    namespace = "com.easemob.chatuikit.demo"
+    namespace = "io.agora.chat.uikit.simple"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.easemob.chatuikit.demo"
+        applicationId = "io.agora.chat.uikit.simple"
         minSdk = 21
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
+        buildConfigField("String", "APPKEY", "\"${properties.getProperty("APPKEY")}\"")
     }
 
     buildTypes {
@@ -28,6 +37,7 @@ android {
     }
     buildFeatures{
         viewBinding = true
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -47,6 +57,12 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
-    implementation(project(mapOf("path" to ":ChatUIKit")))
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation("io.github.scwang90:refresh-layout-kernel:2.1.0")
+    implementation("io.github.scwang90:refresh-header-material:2.1.0")
+    implementation("io.github.scwang90:refresh-header-classics:2.1.0")
+    implementation("pub.devrel:easypermissions:3.0.0")
+    // Coil: load image library
+    implementation("io.coil-kt:coil:2.5.0")
+    implementation(project(mapOf("path" to ":ease-im-kit")))
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- For conversation date -->
+    <string-array name="ease_conversation_date_format_array">
+        <!-- today -->
+        <item>HH:mm</item>
+        <!-- other day -->
+        <item>MM-dd</item>
+        <!-- other year -->
+        <item>yy-MM-dd</item>
+    </string-array>
+
+    <!-- For chat date -->
+    <string-array name="ease_chat_date_format_array">
+        <!-- today -->
+        <item>HH:mm</item>
+        <!-- other day -->
+        <item>MM-dd HH:mm</item>
+        <!-- other year -->
+        <item>yy-MM-dd HH:mm</item>
+    </string-array>
+
+</resources>

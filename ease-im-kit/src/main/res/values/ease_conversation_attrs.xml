@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="EaseConversationListLayout">
+        <!-- Text size for conversation name in item -->
+        <attr name="ease_con_item_title_text_size" format="dimension"/>
+        <!-- Text color for conversation name in item -->
+        <attr name="ease_con_item_title_text_color" format="reference|color"/>
+        <!-- Text size for conversation's latest message in item -->
+        <attr name="ease_con_item_content_text_size" format="dimension"/>
+        <!-- Text color for conversation's latest message in item -->
+        <attr name="ease_con_item_content_text_color" format="reference|color"/>
+        <!-- Text size for conversation's time in item -->
+        <attr name="ease_con_item_date_text_size" format="dimension"/>
+        <!-- Text color for conversation's time in item -->
+        <attr name="ease_con_item_date_text_color" format="reference|color"/>
+        <!-- Text size for conversation's mention in item -->
+        <attr name="ease_con_item_mention_text_size" format="dimension"/>
+        <!-- Text color for conversation's mention in item -->
+        <attr name="ease_con_item_mention_text_color" format="reference|color"/>
+        <!-- avatar size -->
+        <attr name="ease_con_item_avatar_size" format="dimension"/>
+        <!-- avatar shape type -->
+        <attr name="ease_con_item_avatar_shape_type" format="enum">
+            <enum name="none" value="0" />
+            <enum name="round" value="1" />
+            <enum name="rectangle" value="2" />
+        </attr>
+        <!-- avatar radius if set shape type is round -->
+        <attr name="ease_con_item_avatar_radius" format="dimension"/>
+        <!-- border width -->
+        <attr name="ease_con_item_avatar_border_width" format="dimension"/>
+        <!-- border color -->
+        <attr name="ease_con_item_avatar_border_color" format="reference|color"/>
+        <!-- conversation item height -->
+        <attr name="ease_con_item_height" format="dimension"/>
+        <attr name="ease_con_item_background" format="reference|color"/>
+        <attr name="ease_con_item_unread_dot_position" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+        </attr>
+        <attr name="ease_con_item_unread_style" format="enum">
+            <enum name="num" value="0"/>
+            <enum name="dot" value="1"/>
+        </attr>
+    </declare-styleable>
+
+</resources>
