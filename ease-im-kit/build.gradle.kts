@@ -64,7 +64,7 @@ dependencies {
     // coroutines android library
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     // RecyclerView
-    implementation("androidx.recyclerview:recyclerview:1.3.1")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     // Coil: load image library
     implementation("io.coil-kt:coil:2.5.0")
     // Refresh layout
