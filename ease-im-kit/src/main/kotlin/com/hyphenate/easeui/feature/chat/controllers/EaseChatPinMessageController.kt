@@ -46,21 +46,23 @@ class EaseChatPinMessageController(
     }
 
     fun setPinInfoView(){
-        isShowPinView = !isShowPinView
-        if (isShowPinView){
-            showPinInfoView()
-        }else{
-            hidePinInfoView()
+        pinMessageListView?.post{
+            isShowPinView = !isShowPinView
+            if (isShowPinView){
+                showPinInfoView()
+            }else{
+                hidePinInfoView()
+            }
         }
     }
 
     fun showPinInfoView(){
-        pinMessageListView?.visibility = RelativeLayout.VISIBLE
+        pinMessageListView?.visibility = View.VISIBLE
         pinMessageListView?.show(pinMessages)
     }
 
     fun hidePinInfoView(){
-        pinMessageListView?.visibility = RelativeLayout.GONE
+        pinMessageListView?.visibility = View.GONE
     }
 
     private fun initListener(){

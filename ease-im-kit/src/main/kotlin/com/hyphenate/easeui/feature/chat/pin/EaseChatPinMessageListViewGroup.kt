@@ -28,7 +28,7 @@ class EaseChatPinMessageListViewGroup @JvmOverloads constructor(
 ){
     private var constraintLayout: ConstraintLayout? = null
     private var recyclerView: RecyclerView? = null
-    private var adapter: EaseChatPinMessageListAdapter? = null
+    private var pinAdapter: EaseChatPinMessageListAdapter? = null
     private var itemClickListener: OnPinItemClickListener? = null
     private var viewStatusChangeListener:OnPinViewStatusChangListener? = null
     private var tvCount: TextView? = null
@@ -49,23 +49,23 @@ class EaseChatPinMessageListViewGroup @JvmOverloads constructor(
         recyclerView = findViewById(R.id.rv_list)
         clBottom = findViewById<View>(R.id.cl_bottom)
 
-        adapter = EaseChatPinMessageListAdapter()
+        pinAdapter = EaseChatPinMessageListAdapter()
         val space = 8.dpToPx(context)
         val itemDecoration = EaseChatPinItemSpaceDecoration(space)
         recyclerView?.addItemDecoration(itemDecoration)
         recyclerView?.layoutManager = LinearLayoutManager(getContext())
-        adapter?.setOnItemClickListener(object: OnItemClickListener{
+        pinAdapter?.setOnItemClickListener(object: OnItemClickListener{
             override fun onItemClick(view: View?, position: Int) {
-                itemClickListener?.onItemClick(adapter?.getItem(position))
+                itemClickListener?.onItemClick(pinAdapter?.getItem(position))
             }
 
         })
-        adapter?.setOnItemSubViewClickListener(object : EaseBaseRecyclerViewAdapter.OnItemSubViewClickListener{
+        pinAdapter?.setOnItemSubViewClickListener(object : EaseBaseRecyclerViewAdapter.OnItemSubViewClickListener{
                 override fun onItemSubViewClick(view: View?, position: Int) {
                     itemSubViewClickListener?.onItemSubViewClick(view, position)
                 }
             })
-        recyclerView?.adapter = adapter
+        recyclerView?.adapter = pinAdapter
 
     }
 
@@ -93,7 +93,7 @@ class EaseChatPinMessageListViewGroup @JvmOverloads constructor(
     }
 
     private fun updatePinCount(){
-        adapter?.let {
+        pinAdapter?.let {
             tvCount?.text = "${it.mData?.size} Pin Message"
             it.notifyDataSetChanged()
         }
@@ -102,7 +102,7 @@ class EaseChatPinMessageListViewGroup @JvmOverloads constructor(
 
     private fun setData(data: MutableList<ChatMessage>?) {
         data?.let {
-            adapter?.setData(it)
+            pinAdapter?.setData(it)
             updatePinCount()
         }
     }
@@ -125,7 +125,7 @@ class EaseChatPinMessageListViewGroup @JvmOverloads constructor(
     }
 
     fun removeData(message: ChatMessage?) {
-        adapter?.let {
+        pinAdapter?.let {
             it.mData?.map { msg->
                 if (msg.msgId.equals(message?.msgId)) {
                     removeData(msg)
@@ -140,7 +140,7 @@ class EaseChatPinMessageListViewGroup @JvmOverloads constructor(
     }
 
     fun addData(message: ChatMessage){
-        adapter?.addData(0,message)
+        pinAdapter?.addData(0,message)
         updatePinCount()
     }
 

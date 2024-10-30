@@ -346,19 +346,21 @@ class EaseChatLayout @JvmOverloads constructor(
 
         override fun onMessageRecalledWithExt(recallMessageInfo: MutableList<ChatRecallMessageInfo>?) {
             super.onMessageRecalledWithExt(recallMessageInfo)
-            var isRefresh = false
-            if (recallMessageInfo != null && recallMessageInfo.size > 0) {
-                for (message in recallMessageInfo) {
-                    message.recallMessage?.let {
-                        if (TextUtils.equals(it.conversationId(), conversationId)) {
-                            isRefresh = true
+            post {
+                var isRefresh = false
+                if (recallMessageInfo != null && recallMessageInfo.size > 0) {
+                    for (message in recallMessageInfo) {
+                        message.recallMessage?.let {
+                            if (TextUtils.equals(it.conversationId(), conversationId)) {
+                                isRefresh = true
+                            }
+                            removePinMessage(it)
                         }
-                        removePinMessage(it)
                     }
                 }
-            }
-            if (isRefresh) {
-                chatBinding.layoutChatMessage.refreshMessages()
+                if (isRefresh) {
+                    chatBinding.layoutChatMessage.refreshMessages()
+                }
             }
         }
 
