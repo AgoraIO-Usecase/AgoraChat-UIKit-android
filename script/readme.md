@@ -1,0 +1,18 @@
+
+
+
+## 将文件和文件内部引用内容更改：
+
+## 对于uikit
+# cd script
+# python3 rename_file_and_update_content.py ../ease-im-kit/src --rename-files --replace-content
+# python3 rename_file_and_update_content.py ../quickstart/src --rename-files --replace-content
+
+## 对于demo或者其他调用工程:
+# python3 rename_file_and_update_content.py ../quickstart/src  --replace-content
+
+
+## 其他:
+# 找出需要变更名称的文件： python3 process_files.py ../ease-im-kit/src
+# 结果生成在result.txt中，然后拷贝到rename_file_and_update_content.py脚本里，实际上拷贝过去后，操作者会对生成的文件名根据实际情况略有微调。
+# 脚本写出来后第一次执行完后拿到了对应的map,以后就不需要再次执行了，放这里仅仅是为了备份一下。
