@@ -13,10 +13,10 @@ object ChatUIKitConstant {
 
     const val MESSAGE_ATTR_VALUE_AT_MSG_ALL = "ALL"
 
-    const val MESSAGE_ATTR_THREAD_FLAG_PARENT_ID = "ease_parent_id"
-    const val MESSAGE_ATTR_THREAD_FLAG_PARENT_MSG_ID = "ease_parent_msg_id"
+    const val MESSAGE_ATTR_THREAD_FLAG_PARENT_ID = "uikit_parent_id"
+    const val MESSAGE_ATTR_THREAD_FLAG_PARENT_MSG_ID = "uikit_parent_msg_id"
 
-    const val MESSAGE_EXT_USER_INFO_KEY = "ease_chat_uikit_user_info"
+    const val MESSAGE_EXT_USER_INFO_KEY = "chat_uikit_user_info"
 
     const val MESSAGE_EXT_USER_INFO_NICKNAME_KEY = "nickname"
 
@@ -42,9 +42,9 @@ object ChatUIKitConstant {
     const val USER_CARD_NICK = "nickname"
     const val USER_CARD_AVATAR = "avatar"
 
-    const val MESSAGE_CUSTOM_ALERT = "ease_message_alert"
-    const val MESSAGE_CUSTOM_ALERT_TYPE = "ease_message_alert_type"
-    const val MESSAGE_CUSTOM_ALERT_CONTENT = "ease_message_alert_content"
+    const val MESSAGE_CUSTOM_ALERT = "uikit_message_alert"
+    const val MESSAGE_CUSTOM_ALERT_TYPE = "uikit_message_alert_type"
+    const val MESSAGE_CUSTOM_ALERT_CONTENT = "uikit_message_alert_content"
 
     const val GROUP_MEMBER_ATTRIBUTE_NICKNAME = "nickname"
     const val GROUP_WELCOME_MESSAGE = "group_welcome_message"
@@ -71,23 +71,23 @@ object ChatUIKitConstant {
     const val API_TRANSLATION_MESSAGE ="translationMessage"
 
     // multiple select
-    const val EASE_MULTIPLE_SELECT = "ease_multiple_select"
+    const val EASE_MULTIPLE_SELECT = "uikit_multiple_select"
 
     // thread
-    const val THREAD_PARENT_ID = "ease_thread_parent_id"
-    const val THREAD_CHAT_THREAD_ID = "ease_thread_id"
-    const val THREAD_TOPIC_MESSAGE_ID = "ease_thread_topic_msg_id"
-    const val THREAD_MESSAGE_ID = "ease_thread_msg_id"
-    const val THREAD_NOTIFICATION_TYPE = "ease_thread_notification_type"
+    const val THREAD_PARENT_ID = "uikit_thread_parent_id"
+    const val THREAD_CHAT_THREAD_ID = "uikit_thread_id"
+    const val THREAD_TOPIC_MESSAGE_ID = "uikit_thread_topic_msg_id"
+    const val THREAD_MESSAGE_ID = "uikit_thread_msg_id"
+    const val THREAD_NOTIFICATION_TYPE = "uikit_thread_notification_type"
 
     //url preview
-    const val MESSAGE_URL_PREVIEW = "ease_chat_uikit_text_url_preview"
+    const val MESSAGE_URL_PREVIEW = "chat_uikit_text_url_preview"
     const val MESSAGE_URL_PREVIEW_URL = "url"
     const val MESSAGE_URL_PREVIEW_TITLE = "title"
     const val MESSAGE_URL_PREVIEW_DESCRIPTION = "description"
     const val MESSAGE_URL_PREVIEW_IMAGE_URL = "imageUrl"
 
     // pin message
-    const val MESSAGE_PIN_NOTIFY = "ease_pin_notify"
+    const val MESSAGE_PIN_NOTIFY = "uikit_pin_notify"
 }
 

@@ -95,7 +95,7 @@ object DateFormatHelper {
         format = check24Hour(context, isZh)
         when (calendar[Calendar.DAY_OF_WEEK]) {
             Calendar.SUNDAY -> {
-                ChatLog.d("EaseDateUtils", "Today is Sunday")
+                ChatLog.d("ChatUIKitDateUtils", "Today is Sunday")
                 week = if (isZh) {
                     "星期日 "
                 } else {
@@ -104,7 +104,7 @@ object DateFormatHelper {
             }
 
             Calendar.MONDAY -> {
-                ChatLog.d("EaseDateUtils", "Today is Monday")
+                ChatLog.d("ChatUIKitDateUtils", "Today is Monday")
                 week = if (isZh) {
                     "星期一 "
                 } else {
@@ -113,7 +113,7 @@ object DateFormatHelper {
             }
 
             Calendar.TUESDAY -> {
-                ChatLog.d("EaseDateUtils", "Today is Tuesday")
+                ChatLog.d("ChatUIKitDateUtils", "Today is Tuesday")
                 week = if (isZh) {
                     "星期二 "
                 } else {
@@ -122,7 +122,7 @@ object DateFormatHelper {
             }
 
             Calendar.WEDNESDAY -> {
-                ChatLog.d("EaseDateUtils", "Today is Wednesday")
+                ChatLog.d("ChatUIKitDateUtils", "Today is Wednesday")
                 week = if (isZh) {
                     "星期三 "
                 } else {
@@ -131,7 +131,7 @@ object DateFormatHelper {
             }
 
             Calendar.THURSDAY -> {
-                ChatLog.d("EaseDateUtils", "Today is Thursday")
+                ChatLog.d("ChatUIKitDateUtils", "Today is Thursday")
                 week = if (isZh) {
                     "星期四"
                 } else {
@@ -140,7 +140,7 @@ object DateFormatHelper {
             }
 
             Calendar.FRIDAY -> {
-                ChatLog.d("EaseDateUtils", "Today is Friday")
+                ChatLog.d("ChatUIKitDateUtils", "Today is Friday")
                 week = if (isZh) {
                     "星期五 "
                 } else {
@@ -149,7 +149,7 @@ object DateFormatHelper {
             }
 
             Calendar.SATURDAY -> {
-                ChatLog.d("EaseDateUtils", "Today is Saturday")
+                ChatLog.d("ChatUIKitDateUtils", "Today is Saturday")
                 week = if (isZh) {
                     "星期六 "
                 } else {
