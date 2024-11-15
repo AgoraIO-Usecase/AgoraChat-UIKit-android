@@ -44,5 +44,5 @@ interface IMessageReaction {
     /**
      * Set reaction error listener.
      */
-    fun setReactionErrorListener(listener: OnEaseChatReactionErrorListener?)
+    fun setReactionErrorListener(listener: OnChatUIKitReactionErrorListener?)
 }

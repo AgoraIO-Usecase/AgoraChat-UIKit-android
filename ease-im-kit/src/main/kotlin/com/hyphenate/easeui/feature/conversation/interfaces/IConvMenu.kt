@@ -2,7 +2,7 @@ package com.hyphenate.easeui.feature.conversation.interfaces
 
 import com.hyphenate.easeui.interfaces.OnMenuItemClickListener
 import com.hyphenate.easeui.interfaces.OnMenuPreShowListener
-import com.hyphenate.easeui.menu.EaseMenuHelper
+import com.hyphenate.easeui.menu.ChatUIKitMenuHelper
 
 interface IConvMenu {
     /**
@@ -43,5 +43,5 @@ interface IConvMenu {
      * Return to the menu help category
      * @return
      */
-    fun getConvMenuHelper(): EaseMenuHelper?
+    fun getConvMenuHelper(): ChatUIKitMenuHelper?
 }

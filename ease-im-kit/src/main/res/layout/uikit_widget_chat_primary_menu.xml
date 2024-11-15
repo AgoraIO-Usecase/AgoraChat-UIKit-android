@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:ignore="MissingDefaultResource">
+
+    <View style="@style/ease_chat_primary_menu_divider" />
+
+    <LinearLayout
+        android:id="@+id/rl_bottom"
+        style="@style/ease_chat_primary_menu_root">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btn_set_mode_voice"
+            app:tint="@color/ease_color_on_background"
+            style="@style/ease_chat_primary_menu_button_voice"
+            android:src="@drawable/uikit_chat_primary_menu_setmode_voice_btn" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btn_set_mode_keyboard"
+            app:tint="@color/ease_color_on_background"
+            style="@style/ease_chat_primary_menu_button_keyboard"
+            android:src="@drawable/uikit_chat_primary_menu_setmode_keyboard_btn" />
+
+        <FrameLayout
+            android:id="@+id/btn_press_to_speak"
+            style="@style/ease_chat_primary_menu_voice_trigger_root">
+
+            <TextView
+                android:text="@string/uikit_chat_primary_menu_button_pushtotalk"
+                style="@style/ease_chat_primary_menu_voice_trigger_text" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/edittext_layout"
+            style="@style/ease_chat_primary_menu_input_root">
+
+            <com.hyphenate.easeui.widget.ChatUIKitInputEditText
+                android:id="@+id/et_sendmessage"
+                android:hint="@string/uikit_chat_primary_menu_input_hint"
+                style="@style/ease_chat_primary_menu_input_edit" />
+
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_face"
+            style="@style/ease_chat_primary_menu_extend_root">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_face_normal"
+                app:tint="@color/ease_color_on_background"
+                android:src="@drawable/uikit_chatting_emoji_btn_normal"
+                style="@style/ease_chat_primary_menu_extend_emoji_switch" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_face_checked"
+                app:tint="@color/ease_color_on_background"
+                android:src="@drawable/uikit_chat_primary_menu_setmode_keyboard_btn"
+                style="@style/ease_chat_primary_menu_extend_input_switch" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/btn_more"
+                app:backgroundTint="@color/ease_color_on_background"
+                android:layout_toEndOf="@id/iv_face_checked"
+                style="@style/ease_chat_primary_menu_extend_more_switch" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ease_size_5">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_send"
+                android:src="@drawable/uikit_chat_input_primary_send_icon"
+                style="@style/ease_chat_primary_menu_send_button" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

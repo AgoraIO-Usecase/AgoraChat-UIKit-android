@@ -2,7 +2,7 @@ package com.hyphenate.easeui.common.helper
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatTimeInfo
 import java.text.DateFormat
@@ -207,7 +207,7 @@ object DateFormatHelper {
         if (delta < 0) {
             delta = -delta
         }
-        val interval = EaseIM.getConfig()?.chatConfig?.intervalDismissInChatList ?: INTERVAL_IN_MILLISECONDS
+        val interval = ChatUIKitClient.getConfig()?.chatConfig?.intervalDismissInChatList ?: INTERVAL_IN_MILLISECONDS
         return delta < interval
     }
 
@@ -244,7 +244,7 @@ object DateFormatHelper {
      * Format timestamp to date string.
      */
     fun timestampToDateString(timestamp: Long, formatStr: String?): String? {
-        val useDefaultLocale = EaseIM.getConfig()?.dateFormatConfig?.useDefaultLocale ?: false
+        val useDefaultLocale = ChatUIKitClient.getConfig()?.dateFormatConfig?.useDefaultLocale ?: false
         val format: DateFormat = SimpleDateFormat(formatStr, if (useDefaultLocale) Locale.getDefault() else Locale.ENGLISH)
         val date = Date(timestamp)
         return format.format(date)

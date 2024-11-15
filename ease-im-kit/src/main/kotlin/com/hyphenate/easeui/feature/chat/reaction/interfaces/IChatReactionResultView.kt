@@ -1,24 +1,24 @@
 package com.hyphenate.easeui.feature.chat.reaction.interfaces
 
 import com.hyphenate.easeui.common.interfaces.IControlDataView
-import com.hyphenate.easeui.model.EaseReaction
+import com.hyphenate.easeui.model.ChatUIKitReaction
 
 interface IChatReactionResultView: IControlDataView {
 
     /**
      * Get default reactions in message menu dialog successfully.
      */
-    fun getDefaultReactionsSuccess(reactions: List<EaseReaction>) {}
+    fun getDefaultReactionsSuccess(reactions: List<ChatUIKitReaction>) {}
 
     /**
      * Get all chat default reactions successfully.
      */
-    fun getAllChatReactionsSuccess(reactions: List<EaseReaction>) {}
+    fun getAllChatReactionsSuccess(reactions: List<ChatUIKitReaction>) {}
 
     /**
      * Get message reactions successfully.
      */
-    fun getMessageReactionSuccess(reactions: List<EaseReaction>) {}
+    fun getMessageReactionSuccess(reactions: List<ChatUIKitReaction>) {}
 
     /**
      * Add a reaction to the message successfully.

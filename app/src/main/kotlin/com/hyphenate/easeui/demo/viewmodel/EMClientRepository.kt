@@ -3,7 +3,7 @@ package com.hyphenate.easeui.demo.viewmodel
 import com.hyphenate.EMError
 import com.hyphenate.chat.EMClient
 import com.hyphenate.cloud.HttpClientManager
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatException
@@ -13,8 +13,8 @@ import com.hyphenate.easeui.demo.DemoApplication
 import com.hyphenate.easeui.demo.R
 import com.hyphenate.easeui.demo.base.ErrorCode
 import com.hyphenate.easeui.demo.bean.LoginResult
-import com.hyphenate.easeui.model.EaseProfile
-import com.hyphenate.easeui.model.EaseUser
+import com.hyphenate.easeui.model.ChatUIKitProfile
+import com.hyphenate.easeui.model.ChatUIKitUser
 import com.hyphenate.exceptions.HyphenateException
 import com.hyphenate.util.EMLog
 import kotlinx.coroutines.Dispatchers
@@ -84,17 +84,17 @@ class EMClientRepository {
         userName: String,
         pwd: String,
         isTokenFlag: Boolean
-    ): EaseUser =
+    ): ChatUIKitUser =
         withContext(Dispatchers.IO) {
             suspendCoroutine { continuation ->
                 if (isTokenFlag) {
-                    EaseIM.login(EaseProfile(userName), pwd, onSuccess = {
+                    ChatUIKitClient.login(ChatUIKitProfile(userName), pwd, onSuccess = {
                         successForCallBack(continuation)
                     }, onError = { code, error ->
                         continuation.resumeWithException(ChatException(code, error))
                     })
                 } else {
-                    EaseIM.login(userName, pwd, onSuccess = {
+                    ChatUIKitClient.login(userName, pwd, onSuccess = {
                         successForCallBack(continuation)
                     }, onError = { code, error ->
                         continuation.resumeWithException(ChatException(code, error))
@@ -111,7 +111,7 @@ class EMClientRepository {
     suspend fun logout(unbindDeviceToken: Boolean): Int =
         withContext(Dispatchers.IO) {
             suspendCoroutine { continuation ->
-                EaseIM.logout(unbindDeviceToken, onSuccess = {
+                ChatUIKitClient.logout(unbindDeviceToken, onSuccess = {
                     continuation.resume(ChatError.EM_NO_ERROR)
                 }, onError = { code, error ->
                     continuation.resumeWithException(ChatException(code, error))
@@ -119,10 +119,10 @@ class EMClientRepository {
             }
         }
 
-    private fun successForCallBack(continuation: Continuation<EaseUser>) {
+    private fun successForCallBack(continuation: Continuation<ChatUIKitUser>) {
         // get current user id
         val currentUser = EMClient.getInstance().currentUser
-        val user = EaseUser(currentUser)
+        val user = ChatUIKitUser(currentUser)
         continuation.resume(user)
 
         // ** manually load all local groups and conversation

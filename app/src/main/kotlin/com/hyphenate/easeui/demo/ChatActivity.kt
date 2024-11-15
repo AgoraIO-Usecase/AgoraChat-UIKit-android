@@ -2,14 +2,14 @@ package com.hyphenate.easeui.demo
 
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.extensions.showToast
-import com.hyphenate.easeui.feature.chat.EaseChatFragment
-import com.hyphenate.easeui.feature.chat.activities.EaseChatActivity
+import com.hyphenate.easeui.feature.chat.UIKitChatFragment
+import com.hyphenate.easeui.feature.chat.activities.UIKitChatActivity
 import com.hyphenate.easeui.feature.chat.interfaces.OnMessageForwardCallback
 import com.hyphenate.easeui.feature.chat.interfaces.OnSendCombineMessageCallback
 
-class ChatActivity: EaseChatActivity() {
+class ChatActivity: UIKitChatActivity() {
 
-    override fun setChildSettings(builder: EaseChatFragment.Builder) {
+    override fun setChildSettings(builder: UIKitChatFragment.Builder) {
         super.setChildSettings(builder)
         builder.setOnMessageForwardCallback(object : OnMessageForwardCallback {
             override fun onForwardSuccess(message: ChatMessage?) {

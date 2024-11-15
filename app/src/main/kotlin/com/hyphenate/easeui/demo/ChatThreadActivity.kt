@@ -1,10 +1,10 @@
 package com.hyphenate.easeui.demo
 
-import com.hyphenate.easeui.feature.chat.EaseChatFragment
-import com.hyphenate.easeui.feature.thread.EaseChatThreadActivity
+import com.hyphenate.easeui.feature.chat.UIKitChatFragment
+import com.hyphenate.easeui.feature.thread.ChatUIKitThreadActivity
 
-class ChatThreadActivity:EaseChatThreadActivity() {
-    override fun setChildSettings(builder: EaseChatFragment.Builder) {
+class ChatThreadActivity:ChatUIKitThreadActivity() {
+    override fun setChildSettings(builder: UIKitChatFragment.Builder) {
         super.setChildSettings(builder)
     }
 }

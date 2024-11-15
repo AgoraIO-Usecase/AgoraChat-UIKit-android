@@ -32,5 +32,5 @@ interface IChatExtendMenu {
      * Set item click listener
      * @param listener
      */
-    fun setEaseChatExtendMenuItemClickListener(listener: EaseChatExtendMenuItemClickListener?)
+    fun setEaseChatExtendMenuItemClickListener(listener: ChatUIKitExtendMenuItemClickListener?)
 }

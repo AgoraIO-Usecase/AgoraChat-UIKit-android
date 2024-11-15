@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/uikit_dialog_top_drag"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_reactions"
+        app:tabRippleColor="@color/transparent"
+        app:tabIndicator="@null"
+        style="@style/ease_message_reaction_dialog_tab_layout_style" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_reactions"
+        style="@style/ease_message_reaction_dialog_viewpager_style" />
+
+</LinearLayout>

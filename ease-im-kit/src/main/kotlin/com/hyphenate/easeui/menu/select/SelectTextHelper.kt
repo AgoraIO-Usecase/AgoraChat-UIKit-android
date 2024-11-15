@@ -687,7 +687,7 @@ class SelectTextHelper(builder: Builder) {
         private val ivArrow: ImageView
 
         init {
-            val contentView = LayoutInflater.from(context).inflate(R.layout.ease_pop_operate, null)
+            val contentView = LayoutInflater.from(context).inflate(R.layout.uikit_pop_operate, null)
             rvContent = contentView.findViewById(R.id.rv_content)
             ivArrow = contentView.findViewById(R.id.iv_arrow)
             if (0 != mPopBgResource) {

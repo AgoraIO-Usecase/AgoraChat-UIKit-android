@@ -2,12 +2,12 @@ package com.hyphenate.easeui.common.extensions
 
 import com.hyphenate.easeui.common.ChatConversation
 import com.hyphenate.easeui.common.ChatConversationType
-import com.hyphenate.easeui.model.EaseConversation
+import com.hyphenate.easeui.model.ChatUIKitConversation
 
 /**
- * Convert [ChatConversation] to [EaseConversation].
+ * Convert [ChatConversation] to [ChatUIKitConversation].
  */
-fun ChatConversation.parse() = EaseConversation(
+fun ChatConversation.parse() = ChatUIKitConversation(
     conversationId = conversationId(),
     conversationType = type,
     unreadMsgCount = unreadMsgCount,

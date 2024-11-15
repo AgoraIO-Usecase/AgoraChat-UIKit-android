@@ -7,13 +7,13 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import coil.load
-import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.base.EaseBaseFragment
+import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.base.ChatUIKitBaseFragment
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.dialog.CustomDialog
 import com.hyphenate.easeui.common.extensions.catchChatException
-import com.hyphenate.easeui.common.helper.EasePreferenceManager
+import com.hyphenate.easeui.common.helper.ChatUIKitPreferenceManager
 import com.hyphenate.easeui.demo.DemoApplication
 import com.hyphenate.easeui.demo.MainActivity
 import com.hyphenate.easeui.demo.R
@@ -21,7 +21,7 @@ import com.hyphenate.easeui.demo.databinding.DemoFragmentAboutMeBinding
 import com.hyphenate.easeui.demo.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
-class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>() {
+class AboutMeFragment: ChatUIKitBaseFragment<DemoFragmentAboutMeBinding>() {
 
     private lateinit var loginViewModel: LoginViewModel
     override fun getViewBinding(
@@ -33,10 +33,10 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
-        EaseIM.getCurrentUser()?.let {
+        ChatUIKitClient.getCurrentUser()?.let {
             binding?.run {
                 avatar.load(it.avatar) {
-                    error(com.hyphenate.easeui.R.drawable.ease_default_avatar)
+                    error(com.hyphenate.easeui.R.drawable.uikit_default_avatar)
                 }
                 tvNickName.text = if (it.name.isNullOrEmpty()) it.id else it.name
                 if (!it.name.isNullOrBlank()) {
@@ -70,9 +70,9 @@ class AboutMeFragment: EaseBaseFragment<DemoFragmentAboutMeBinding>() {
                 clearDialog.show()
             }
             itemCommonSet.setOnClickListener {
-                val isBlack = EasePreferenceManager.getInstance().getBoolean("isBlack")
+                val isBlack = ChatUIKitPreferenceManager.getInstance().getBoolean("isBlack")
                 AppCompatDelegate.setDefaultNightMode(if (isBlack) AppCompatDelegate.MODE_NIGHT_NO else AppCompatDelegate.MODE_NIGHT_YES)
-                EasePreferenceManager.getInstance().putBoolean("isBlack", !isBlack)
+                ChatUIKitPreferenceManager.getInstance().putBoolean("isBlack", !isBlack)
                 MainActivity.actionStart(mContext)
             }
         }

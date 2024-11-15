@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/ease_color_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+
+        <ImageButton
+            android:id="@+id/ib_action_voice_delete"
+            android:src="@drawable/uikit_chat_voice_file_delete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/voice_wave"
+            app:layout_constraintTop_toTopOf="@id/layout_action_voice_record"
+            app:layout_constraintBottom_toBottomOf="@id/layout_action_voice_record"
+            app:tint="@color/ease_chat_record_delete_tint_color"
+            style="@style/ease_chat_record_delete_button_style" />
+
+        <com.hyphenate.easeui.widget.ChatUIKitWaveView
+            android:id="@+id/voice_wave"
+            app:layout_constraintStart_toEndOf="@id/ib_action_voice_delete"
+            app:layout_constraintEnd_toStartOf="@id/ib_action_voice_send"
+            app:layout_constraintTop_toTopOf="@id/layout_action_voice_record"
+            app:layout_constraintBottom_toBottomOf="@id/layout_action_voice_record"
+            app:ease_wave_color="@color/ease_chat_voice_record_wave_color"
+            app:ease_wave_duration="1500"
+            app:ease_wave_width="@dimen/ease_size_72"
+            app:ease_wave_height="@dimen/ease_size_48"
+            app:ease_wave_move_distance="@dimen/ease_size_20"
+            app:ease_wave_show_bg_wave="true"
+            app:ease_wave_bg_width="@dimen/ease_size_92"
+            app:ease_wave_bg_height="@dimen/ease_size_68"
+            app:ease_wave_bg_stroke_width="@dimen/ease_size_10"
+            app:ease_wave_bg_color="@color/ease_chat_voice_record_wave_bg_color"
+            style="@style/ease_chat_record_wave_style" />
+
+        <ImageButton
+            android:id="@+id/layout_action_voice_record"
+            android:src="@drawable/uikit_chat_voice_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/ease_chat_record_voice_button_style" />
+
+        <TextView
+            android:id="@+id/tv_voice_length"
+            app:layout_constraintTop_toTopOf="@id/voice_wave"
+            app:layout_constraintBottom_toBottomOf="@id/voice_wave"
+            app:layout_constraintStart_toStartOf="@id/voice_wave"
+            app:layout_constraintEnd_toEndOf="@id/voice_wave"
+            tools:text="1s"
+            style="@style/ease_chat_record_voice_length_text_style" />
+
+        <TextView
+            android:id="@+id/tv_voice_tip"
+            app:layout_constraintTop_toBottomOf="@id/layout_action_voice_record"
+            app:layout_constraintStart_toStartOf="@id/layout_action_voice_record"
+            app:layout_constraintEnd_toEndOf="@id/layout_action_voice_record"
+            android:text="@string/uikit_chat_record_voice_record"
+            style="@style/ease_chat_record_voice_tip_text_style" />
+
+        <TextView
+            android:id="@+id/tv_voice_remain_tip"
+            app:layout_constraintTop_toBottomOf="@id/tv_voice_tip"
+            app:layout_constraintStart_toStartOf="@id/layout_action_voice_record"
+            app:layout_constraintEnd_toEndOf="@id/layout_action_voice_record"
+            tools:text="剩余 9s"
+            style="@style/ease_chat_record_voice_remain_tip_text_style" />
+
+        <ImageButton
+            android:id="@+id/ib_action_voice_send"
+            android:src="@drawable/uikit_chat_send_icon"
+            app:layout_constraintStart_toEndOf="@id/voice_wave"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/layout_action_voice_record"
+            app:layout_constraintBottom_toBottomOf="@id/layout_action_voice_record"
+            style="@style/ease_chat_record_send_button_style"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

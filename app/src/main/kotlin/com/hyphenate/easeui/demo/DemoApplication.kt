@@ -4,21 +4,21 @@ import android.app.Application
 import android.content.Intent
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.feature.chat.activities.EaseChatActivity
+import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.feature.chat.activities.UIKitChatActivity
 import com.hyphenate.easeui.common.ChatConnectionListener
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatOptions
 import com.hyphenate.easeui.common.impl.OnValueSuccess
 import com.hyphenate.easeui.common.extensions.showToast
-import com.hyphenate.easeui.common.helper.EasePreferenceManager
+import com.hyphenate.easeui.common.helper.ChatUIKitPreferenceManager
 import com.hyphenate.easeui.demo.base.UserActivityLifecycleCallbacks
 import com.hyphenate.easeui.demo.login.LoginActivity
-import com.hyphenate.easeui.feature.thread.EaseChatThreadActivity
-import com.hyphenate.easeui.interfaces.EaseConnectionListener
-import com.hyphenate.easeui.provider.EaseCustomActivityRoute
-import com.hyphenate.easeui.model.EaseProfile
-import com.hyphenate.easeui.provider.EaseUserProfileProvider
+import com.hyphenate.easeui.feature.thread.ChatUIKitThreadActivity
+import com.hyphenate.easeui.interfaces.ChatUIKitConnectionListener
+import com.hyphenate.easeui.provider.ChatUIKitCustomActivityRoute
+import com.hyphenate.easeui.model.ChatUIKitProfile
+import com.hyphenate.easeui.provider.ChatUIKitUserProfileProvider
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -40,13 +40,13 @@ class DemoApplication: Application() {
         options.appKey = appkey
         options.acceptInvitationAlways = false
         options.requireDeliveryAck = true
-        EaseIM.init(this, options)
+        ChatUIKitClient.init(this, options)
 
-        EaseIM.setCustomActivityRoute(object : EaseCustomActivityRoute {
+        ChatUIKitClient.setCustomActivityRoute(object : ChatUIKitCustomActivityRoute {
             override fun getActivityRoute(intent: Intent): Intent {
-                if (intent.component?.className == EaseChatActivity::class.java.name) {
+                if (intent.component?.className == UIKitChatActivity::class.java.name) {
                     intent.setClass(this@DemoApplication, ChatActivity::class.java)
-                }else if (intent.component?.className == EaseChatThreadActivity::class.java.name){
+                }else if (intent.component?.className == ChatUIKitThreadActivity::class.java.name){
                     intent.setClass(this@DemoApplication, ChatThreadActivity::class.java)
                 }
                 return intent
@@ -54,21 +54,21 @@ class DemoApplication: Application() {
 
         })
 
-        EaseIM.setUserProfileProvider(object : EaseUserProfileProvider{
-            override fun getUser(userId: String?): EaseProfile? {
+        ChatUIKitClient.setUserProfileProvider(object : ChatUIKitUserProfileProvider{
+            override fun getUser(userId: String?): ChatUIKitProfile? {
                 return getLocalGroupMemberInfo(userId)
             }
 
             override fun fetchUsers(
                 userIds: List<String>,
-                onValueSuccess: OnValueSuccess<List<EaseProfile>>
+                onValueSuccess: OnValueSuccess<List<ChatUIKitProfile>>
             ) {
 
             }
 
         })
 
-        EaseIM.addConnectionListener(object : EaseConnectionListener() {
+        ChatUIKitClient.addConnectionListener(object : ChatUIKitConnectionListener() {
             override fun onConnected() {
 
             }
@@ -88,8 +88,8 @@ class DemoApplication: Application() {
 
         })
 
-        // Call this method after EaseIM#init
-        val isBlack = EasePreferenceManager.getInstance().getBoolean("isBlack")
+        // Call this method after ChatUIKitClient#init
+        val isBlack = ChatUIKitPreferenceManager.getInstance().getBoolean("isBlack")
         AppCompatDelegate.setDefaultNightMode(if (isBlack) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
     }
 
@@ -122,25 +122,25 @@ class DemoApplication: Application() {
     }
 
 
-    fun getLocalGroupMemberInfo(username:String?): EaseProfile?{
-        var profile:EaseProfile? = null
+    fun getLocalGroupMemberInfo(username:String?): ChatUIKitProfile?{
+        var profile:ChatUIKitProfile? = null
         when(username){
             "apex" -> {
-                profile =  EaseProfile(
+                profile =  ChatUIKitProfile(
                     id = "apex",
                     name = "房主Host",
                     avatar = "https://a1.easemob.com/easemob/chatroom-uikit/chatfiles/b837f7b0-79f8-11ee-b817-23850e48ca47"
                 )
             }
             "apex1" -> {
-                profile =  EaseProfile(
+                profile =  ChatUIKitProfile(
                     id = "apex1",
                     name = "测试昵称",
                     avatar = "https://a1.easemob.com/easemob/chatroom-uikit/chatfiles/99296020-79f8-11ee-8475-c7a7b59db79f"
                 )
             }
             "lxm" -> {
-                profile =  EaseProfile(
+                profile =  ChatUIKitProfile(
                     id = "lxm",
                     name = "大威天龙",
                     avatar = "https://a1.easemob.com/easemob/chatroom-uikit/chatfiles/16bc4980-79f9-11ee-b272-3568dd301252"

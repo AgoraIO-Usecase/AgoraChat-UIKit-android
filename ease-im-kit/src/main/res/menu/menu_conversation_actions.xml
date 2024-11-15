@@ -4,8 +4,8 @@
 
     <item
         android:id="@+id/action_more"
-        android:icon="@drawable/ease_icon_add"
-        android:title="@string/ease_conversation_menu_action_more"
+        android:icon="@drawable/uikit_icon_add"
+        android:title="@string/uikit_conversation_menu_action_more"
         app:showAsAction="ifRoom" />
 
 </menu>

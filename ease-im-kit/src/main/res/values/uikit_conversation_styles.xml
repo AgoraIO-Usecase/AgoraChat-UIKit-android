@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ease_conv_item_root">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/ease_conv_item_height</item>
+        <item name="android:longClickable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">@drawable/uikit_view_default_touch_shadow_bg</item>
+    </style>
+
+    <style name="ease_conv_item_avatar">
+        <item name="android:layout_width">@dimen/ease_conv_item_avatar_size</item>
+        <item name="android:layout_height">@dimen/ease_conv_item_avatar_size</item>
+        <item name="android:layout_marginStart">@dimen/ease_conv_item_avatar_margin_start</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:src">@drawable/uikit_default_avatar</item>
+    </style>
+
+    <style name="ease_conv_item_unread_number">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Small</item>
+        <item name="android:textColor">@color/ease_conv_item_number_color</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/uikit_conv_item_unread_count_bg</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ease_conv_item_unread_dot">
+        <item name="android:layout_width">@dimen/ease_size_10</item>
+        <item name="android:layout_height">@dimen/ease_size_10</item>
+        <item name="android:background">@drawable/uikit_conv_item_unread_dot_bg</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ease_conv_item_name">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Medium</item>
+        <item name="android:textColor">@color/ease_conv_item_title_color</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/ease_size_12</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ease_conv_item_mute">
+        <item name="android:layout_width">@dimen/ease_size_20</item>
+        <item name="android:layout_height">@dimen/ease_size_20</item>
+        <item name="android:layout_marginStart">@dimen/ease_size_2</item>
+        <item name="android:layout_marginEnd">@dimen/ease_size_7</item>
+        <item name="android:src">@drawable/uikit_conversation_muted</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ease_conv_item_time">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Small</item>
+        <item name="android:textColor">@color/ease_conv_item_date_color</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/ease_size_16</item>
+        <item name="android:layout_marginTop">@dimen/ease_size_15</item>
+        <item name="android:gravity">end</item>
+    </style>
+
+    <style name="ease_conv_item_msg_state">
+        <item name="android:layout_width">@dimen/ease_size_14</item>
+        <item name="android:layout_height">@dimen/ease_size_14</item>
+        <item name="android:layout_marginStart">@dimen/ease_size_12</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ease_conv_item_mentioned">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Medium</item>
+        <item name="android:textColor">@color/ease_conv_item_mention_color</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/ease_size_9</item>
+        <item name="android:paddingRight">@dimen/ease_size_2</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ease_conv_item_message">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Medium</item>
+        <item name="android:textColor">@color/ease_conv_item_content_color</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/ease_size_2</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ease_conv_item_unread_right_root">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/ease_size_17</item>
+        <item name="android:layout_marginEnd">@dimen/ease_size_16</item>
+        <item name="android:layout_marginTop">@dimen/ease_size_5</item>
+    </style>
+
+    <style name="ease_conv_item_unread_right_number">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Small</item>
+        <item name="android:textColor">@color/ease_conv_item_number_color</item>
+        <item name="android:minWidth">@dimen/ease_size_18</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/uikit_conv_item_unread_count_bg</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ease_conv_item_unread_right_dot">
+        <item name="android:layout_width">@dimen/ease_size_8</item>
+        <item name="android:layout_height">@dimen/ease_size_8</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:background">@drawable/uikit_conv_item_unread_dot_bg</item>
+    </style>
+
+    <style name="uikit_conv_item_pinned">
+        <item name="android:layout_width">@dimen/ease_size_16</item>
+        <item name="android:layout_height">@dimen/ease_size_16</item>
+        <item name="android:layout_marginEnd">@dimen/ease_size_4</item>
+        <item name="android:layout_marginTop">@dimen/ease_size_4</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ease_conv_item_divider">
+        <item name="android:layout_width">@dimen/ease_size_0</item>
+        <item name="android:layout_height">@dimen/ease_size_0.5</item>
+        <item name="android:background">@color/ease_conv_item_divider_color</item>
+        <item name="android:visibility">visible</item>
+    </style>
+
+    <style name="ease_conv_menu_item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/ease_size_56</item>
+    </style>
+
+    <style name="ease_conv_menu_item_icon">
+        <item name="android:layout_width">@dimen/ease_size_28</item>
+        <item name="android:layout_height">@dimen/ease_size_28</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:layout_marginEnd">@dimen/ease_size_5</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="ease_conv_menu_item_title">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Large</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textColor">@color/ease_conv_menu_item_title_color</item>
+    </style>
+
+    <style name="ease_conv_menu_item_divider">
+        <item name="android:background">@color/ease_conv_menu_item_divider_color</item>
+        <item name="android:layout_width">@dimen/ease_size_0</item>
+        <item name="android:layout_height">@dimen/ease_size_1</item>
+    </style>
+
+    <style name="ease_conv_item_menu_cancel">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Medium</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/ease_size_56</item>
+        <item name="android:textColor">@color/ease_dialog_menu_cancel_color</item>
+        <item name="android:text">@string/uikit_cancel</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/ease_dialog_menu_bg_color</item>
+    </style>
+
+    <style name="ease_conv_item_menu_divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/ease_size_8</item>
+        <item name="android:background">@color/ease_conv_menu_item_divider_color</item>
+    </style>
+
+    <style name="ease_conv_item_menu_list">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/ease_dialog_menu_bg_color</item>
+    </style>
+
+    <style name="ease_item_menu_top_layout_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@color/ease_dialog_menu_bg_color</item>
+    </style>
+</resources>

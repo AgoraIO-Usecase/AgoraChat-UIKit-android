@@ -1,7 +1,7 @@
 package com.hyphenate.easeui.feature.chat.reply.interfaces
 
 import com.hyphenate.easeui.common.ChatMessage
-import com.hyphenate.easeui.viewmodel.reply.EaseChatMessageReplyViewModel
+import com.hyphenate.easeui.viewmodel.reply.ChatUIKitMessageReplyViewModel
 
 interface IChatMessageReply {
     /**
@@ -19,5 +19,5 @@ interface IChatMessageReply {
      * Set quote message viewModel.
      * @param viewModel
      */
-    fun setViewModel(viewModel: EaseChatMessageReplyViewModel?)
+    fun setViewModel(viewModel: ChatUIKitMessageReplyViewModel?)
 }

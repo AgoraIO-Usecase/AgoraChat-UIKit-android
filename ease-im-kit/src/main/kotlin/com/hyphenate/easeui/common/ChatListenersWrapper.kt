@@ -6,18 +6,18 @@ import com.hyphenate.EMMultiDeviceListener.GROUP_CREATE
 import com.hyphenate.EMMultiDeviceListener.GROUP_DESTROY
 import com.hyphenate.EMMultiDeviceListener.GROUP_JOIN
 import com.hyphenate.EMMultiDeviceListener.GROUP_LEAVE
-import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.common.bus.EaseFlowBus
+import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.common.bus.ChatUIKitFlowBus
 import com.hyphenate.easeui.common.extensions.createUnsentMessage
 import com.hyphenate.easeui.common.extensions.getUserInfo
 import com.hyphenate.easeui.common.extensions.isGroupChat
 import com.hyphenate.easeui.common.extensions.mainScope
-import com.hyphenate.easeui.common.helper.EaseAtMessageHelper
+import com.hyphenate.easeui.common.helper.ChatUIKitAtMessageHelper
 import com.hyphenate.easeui.feature.invitation.enums.InviteMessageStatus
-import com.hyphenate.easeui.feature.invitation.helper.EaseNotificationMsgManager
+import com.hyphenate.easeui.feature.invitation.helper.ChatUIKitNotificationMsgManager
 import com.hyphenate.easeui.feature.invitation.helper.RequestMsgHelper
 import com.hyphenate.easeui.interfaces.OnEventResultListener
-import com.hyphenate.easeui.model.EaseEvent
+import com.hyphenate.easeui.model.ChatUIKitEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -256,7 +256,7 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
                 msg.getUserInfo(true)
             }
             try {
-                EaseAtMessageHelper.get().parseMessages(messages)
+                ChatUIKitAtMessageHelper.get().parseMessages(messages)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -352,8 +352,8 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
         if (recallMessageInfo != null && recallMessageInfo.size > 0) {
             for (message in recallMessageInfo) {
                 message.recallMessage?.let {
-                    if (it.isGroupChat() && EaseAtMessageHelper.get().isAtMeMsg(it)) {
-                        EaseAtMessageHelper.get().removeAtMeGroup(it.conversationId())
+                    if (it.isGroupChat() && ChatUIKitAtMessageHelper.get().isAtMeMsg(it)) {
+                        ChatUIKitAtMessageHelper.get().removeAtMeGroup(it.conversationId())
                     }
                     val recallMsg = it.createUnsentMessage(true)
                     ChatClient.getInstance().chatManager().saveMessage(recallMsg)
@@ -1144,31 +1144,31 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     }
 
     private fun saveDefaultContactInvitedMsg(username: String?, reason: String?){
-        val useDefaultContactSystemMsg = EaseIM.getConfig()?.systemMsgConfig?.useDefaultContactSystemMsg ?: false
+        val useDefaultContactSystemMsg = ChatUIKitClient.getConfig()?.systemMsgConfig?.useDefaultContactSystemMsg ?: false
         if (useDefaultContactSystemMsg){
             var isExist = false
-            val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllNotifyMessage()
+            val allRequestMessage = ChatUIKitNotificationMsgManager.getInstance().getAllNotifyMessage()
             val localContact = ChatClient.getInstance().contactManager().contactsFromLocal
             allRequestMessage.map {msg->
-                if (msg.ext()[EaseConstant.SYSTEM_MESSAGE_FROM] == username || localContact.contains(username)){
+                if (msg.ext()[ChatUIKitConstant.SYSTEM_MESSAGE_FROM] == username || localContact.contains(username)){
                     isExist = true
                 }
             }
             if (!isExist){
-                val ext: MutableMap<String, Any> = EaseNotificationMsgManager.getInstance().createMsgExt()
+                val ext: MutableMap<String, Any> = ChatUIKitNotificationMsgManager.getInstance().createMsgExt()
                 username?.let {
-                    ext[EaseConstant.SYSTEM_MESSAGE_FROM] = it
+                    ext[ChatUIKitConstant.SYSTEM_MESSAGE_FROM] = it
                 }
                 reason?.let {
-                    ext[EaseConstant.SYSTEM_MESSAGE_REASON] = it
+                    ext[ChatUIKitConstant.SYSTEM_MESSAGE_REASON] = it
                 }
-                ext[EaseConstant.SYSTEM_MESSAGE_STATUS] = InviteMessageStatus.BEINVITEED.name
-                EaseIM.getContext()?.let {
-                    EaseNotificationMsgManager.getInstance()
+                ext[ChatUIKitConstant.SYSTEM_MESSAGE_STATUS] = InviteMessageStatus.BEINVITEED.name
+                ChatUIKitClient.getContext()?.let {
+                    ChatUIKitNotificationMsgManager.getInstance()
                         .createMessage( RequestMsgHelper.getSystemMessage(it,ext), ext)
 
-                    EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.ADD.name)
-                        .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.ADD.name, EaseEvent.TYPE.NOTIFY))
+                    ChatUIKitFlowBus.withStick<ChatUIKitEvent>(ChatUIKitEvent.EVENT.ADD.name)
+                        .post(it.mainScope(), ChatUIKitEvent(ChatUIKitEvent.EVENT.ADD.name, ChatUIKitEvent.TYPE.NOTIFY))
 
                 }
             }
@@ -1176,17 +1176,17 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     }
 
     private fun deleteDefaultContactAgreedMsg(username: String?){
-        val useDefaultContactSystemMsg = EaseIM.getConfig()?.systemMsgConfig?.useDefaultContactSystemMsg ?: false
+        val useDefaultContactSystemMsg = ChatUIKitClient.getConfig()?.systemMsgConfig?.useDefaultContactSystemMsg ?: false
         if (useDefaultContactSystemMsg){
-            val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllNotifyMessage()
+            val allRequestMessage = ChatUIKitNotificationMsgManager.getInstance().getAllNotifyMessage()
             allRequestMessage.map {msg->
-                if (msg.ext()[EaseConstant.SYSTEM_MESSAGE_FROM] == username &&
-                    msg.ext()[EaseConstant.SYSTEM_MESSAGE_STATUS] == InviteMessageStatus.AGREED.name
+                if (msg.ext()[ChatUIKitConstant.SYSTEM_MESSAGE_FROM] == username &&
+                    msg.ext()[ChatUIKitConstant.SYSTEM_MESSAGE_STATUS] == InviteMessageStatus.AGREED.name
                 ){
-                    EaseNotificationMsgManager.getInstance().removeMessage(msg)
-                    EaseIM.getContext()?.let {
-                        EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.REMOVE.name)
-                            .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.REMOVE.name, EaseEvent.TYPE.NOTIFY))
+                    ChatUIKitNotificationMsgManager.getInstance().removeMessage(msg)
+                    ChatUIKitClient.getContext()?.let {
+                        ChatUIKitFlowBus.withStick<ChatUIKitEvent>(ChatUIKitEvent.EVENT.REMOVE.name)
+                            .post(it.mainScope(), ChatUIKitEvent(ChatUIKitEvent.EVENT.REMOVE.name, ChatUIKitEvent.TYPE.NOTIFY))
 
                     }
                 }
@@ -1195,30 +1195,30 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     }
 
     private fun defaultMultiDeviceContactEvent(event: Int, target: String?, ext: String?){
-        val useDefaultMultiDeviceContactEvent = EaseIM.getConfig()?.multiDeviceConfig?.useDefaultMultiDeviceContactEvent ?: false
+        val useDefaultMultiDeviceContactEvent = ChatUIKitClient.getConfig()?.multiDeviceConfig?.useDefaultMultiDeviceContactEvent ?: false
         if (useDefaultMultiDeviceContactEvent){
             when(event){
                 CONTACT_REMOVE -> {
-                    val allRequestMessage = EaseNotificationMsgManager.getInstance().getAllNotifyMessage()
+                    val allRequestMessage = ChatUIKitNotificationMsgManager.getInstance().getAllNotifyMessage()
                     allRequestMessage.map {msg->
-                        if (msg.ext()[EaseConstant.SYSTEM_MESSAGE_FROM] == target &&
-                            msg.ext()[EaseConstant.SYSTEM_MESSAGE_STATUS] == InviteMessageStatus.AGREED.name
+                        if (msg.ext()[ChatUIKitConstant.SYSTEM_MESSAGE_FROM] == target &&
+                            msg.ext()[ChatUIKitConstant.SYSTEM_MESSAGE_STATUS] == InviteMessageStatus.AGREED.name
                         ){
-                            EaseNotificationMsgManager.getInstance().removeMessage(msg)
-                            EaseIM.getContext()?.let {
-                                EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.REMOVE.name)
-                                    .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.REMOVE.name, EaseEvent.TYPE.CONTACT))
+                            ChatUIKitNotificationMsgManager.getInstance().removeMessage(msg)
+                            ChatUIKitClient.getContext()?.let {
+                                ChatUIKitFlowBus.withStick<ChatUIKitEvent>(ChatUIKitEvent.EVENT.REMOVE.name)
+                                    .post(it.mainScope(), ChatUIKitEvent(ChatUIKitEvent.EVENT.REMOVE.name, ChatUIKitEvent.TYPE.CONTACT))
 
-                                EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.REMOVE.name)
-                                    .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.REMOVE.name, EaseEvent.TYPE.NOTIFY))
+                                ChatUIKitFlowBus.withStick<ChatUIKitEvent>(ChatUIKitEvent.EVENT.REMOVE.name)
+                                    .post(it.mainScope(), ChatUIKitEvent(ChatUIKitEvent.EVENT.REMOVE.name, ChatUIKitEvent.TYPE.NOTIFY))
                             }
                         }
                     }
                 }
                 CONTACT_ACCEPT -> {
-                    EaseIM.getContext()?.let {
-                        EaseFlowBus.withStick<EaseEvent>(EaseEvent.EVENT.ADD.name)
-                            .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.ADD.name, EaseEvent.TYPE.CONTACT))
+                    ChatUIKitClient.getContext()?.let {
+                        ChatUIKitFlowBus.withStick<ChatUIKitEvent>(ChatUIKitEvent.EVENT.ADD.name)
+                            .post(it.mainScope(), ChatUIKitEvent(ChatUIKitEvent.EVENT.ADD.name, ChatUIKitEvent.TYPE.CONTACT))
                     }
                 }
                 else -> {}
@@ -1228,31 +1228,31 @@ internal class ChatListenersWrapper : ChatConnectionListener, ChatMessageListene
     }
 
     private fun defaultMultiDeviceGroupEvent(event: Int, target: String?, usernames: MutableList<String>?){
-        val useDefaultMultiDeviceGroupEvent = EaseIM.getConfig()?.multiDeviceConfig?.useDefaultMultiDeviceGroupEvent ?: false
+        val useDefaultMultiDeviceGroupEvent = ChatUIKitClient.getConfig()?.multiDeviceConfig?.useDefaultMultiDeviceGroupEvent ?: false
         if (useDefaultMultiDeviceGroupEvent){
             when(event){
                 GROUP_CREATE -> {
-                    EaseIM.getContext()?.let {
-                        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD.name)
-                            .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.ADD.name, EaseEvent.TYPE.GROUP, target))
+                    ChatUIKitClient.getContext()?.let {
+                        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.ADD.name)
+                            .post(it.mainScope(), ChatUIKitEvent(ChatUIKitEvent.EVENT.ADD.name, ChatUIKitEvent.TYPE.GROUP, target))
                     }
                 }
                 GROUP_DESTROY -> {
-                    EaseIM.getContext()?.let {
-                        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.DESTROY.name)
-                            .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.DESTROY.name, EaseEvent.TYPE.GROUP, target))
+                    ChatUIKitClient.getContext()?.let {
+                        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.DESTROY.name)
+                            .post(it.mainScope(), ChatUIKitEvent(ChatUIKitEvent.EVENT.DESTROY.name, ChatUIKitEvent.TYPE.GROUP, target))
                     }
                 }
                 GROUP_JOIN -> {
-                    EaseIM.getContext()?.let {
-                        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.ADD.name)
-                            .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.ADD.name, EaseEvent.TYPE.GROUP, target))
+                    ChatUIKitClient.getContext()?.let {
+                        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.ADD.name)
+                            .post(it.mainScope(), ChatUIKitEvent(ChatUIKitEvent.EVENT.ADD.name, ChatUIKitEvent.TYPE.GROUP, target))
                     }
                 }
                 GROUP_LEAVE -> {
-                    EaseIM.getContext()?.let {
-                        EaseFlowBus.with<EaseEvent>(EaseEvent.EVENT.LEAVE.name)
-                            .post(it.mainScope(), EaseEvent(EaseEvent.EVENT.LEAVE.name, EaseEvent.TYPE.GROUP, target))
+                    ChatUIKitClient.getContext()?.let {
+                        ChatUIKitFlowBus.with<ChatUIKitEvent>(ChatUIKitEvent.EVENT.LEAVE.name)
+                            .post(it.mainScope(), ChatUIKitEvent(ChatUIKitEvent.EVENT.LEAVE.name, ChatUIKitEvent.TYPE.GROUP, target))
                     }
                 }
                 else -> {}

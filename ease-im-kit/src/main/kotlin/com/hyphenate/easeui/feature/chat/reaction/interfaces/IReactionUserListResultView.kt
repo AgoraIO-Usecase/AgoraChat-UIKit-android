@@ -1,7 +1,7 @@
 package com.hyphenate.easeui.feature.chat.reaction.interfaces
 
 import com.hyphenate.easeui.common.interfaces.IControlDataView
-import com.hyphenate.easeui.model.EaseUser
+import com.hyphenate.easeui.model.ChatUIKitUser
 
 interface IReactionUserListResultView: IControlDataView {
     /**
@@ -17,7 +17,7 @@ interface IReactionUserListResultView: IControlDataView {
     /**
      * Fetch reaction detail of the target reaction by page successfully.
      */
-    fun fetchReactionDetailSuccess(messageId: String, nextCursor: String, result: List<EaseUser>)
+    fun fetchReactionDetailSuccess(messageId: String, nextCursor: String, result: List<ChatUIKitUser>)
 
     /**
      * Fetch reaction detail of the target reaction by page failed.
@@ -27,7 +27,7 @@ interface IReactionUserListResultView: IControlDataView {
     /**
      * Fetch reaction detail of the target reaction by page successfully.
      */
-    fun fetchMoreReactionDetailSuccess(messageId: String, nextCursor: String, result: List<EaseUser>)
+    fun fetchMoreReactionDetailSuccess(messageId: String, nextCursor: String, result: List<ChatUIKitUser>)
 
     /**
      * Fetch reaction detail of the target reaction by page failed.

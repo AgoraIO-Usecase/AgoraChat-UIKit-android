@@ -8,15 +8,15 @@ import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatTextMessageBody
-import com.hyphenate.easeui.common.EaseConstant
-import com.hyphenate.easeui.feature.invitation.helper.EaseNotificationMsgManager
+import com.hyphenate.easeui.common.ChatUIKitConstant
+import com.hyphenate.easeui.feature.invitation.helper.ChatUIKitNotificationMsgManager
 import com.hyphenate.easeui.feature.invitation.enums.InviteMessageStatus
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
-suspend fun EaseNotificationMsgManager.getAllSystemMessage():List<ChatMessage>{
+suspend fun ChatUIKitNotificationMsgManager.getAllSystemMessage():List<ChatMessage>{
     return suspendCoroutine{ continuation ->
         val allMessage = getAllNotifyMessage()
         if (allMessage.isNotEmpty()){
@@ -27,7 +27,7 @@ suspend fun EaseNotificationMsgManager.getAllSystemMessage():List<ChatMessage>{
     }
 }
 
-suspend fun EaseNotificationMsgManager.loadMoreMessage(startMsgId:String,limit:Int):List<ChatMessage>{
+suspend fun ChatUIKitNotificationMsgManager.loadMoreMessage(startMsgId:String,limit:Int):List<ChatMessage>{
     return suspendCoroutine{ continuation ->
         val allMessage = loadMoreMessage(startMsgId,limit)
         if (allMessage.isNotEmpty()){
@@ -39,17 +39,17 @@ suspend fun EaseNotificationMsgManager.loadMoreMessage(startMsgId:String,limit:I
 }
 
 
-suspend fun EaseNotificationMsgManager.agreeInviteAction(context: Context, msg:ChatMessage):Int{
+suspend fun ChatUIKitNotificationMsgManager.agreeInviteAction(context: Context, msg:ChatMessage):Int{
     return suspendCoroutine{ continuation ->
         try {
-            val statusParams = msg.getStringAttribute(EaseConstant.SYSTEM_MESSAGE_STATUS)
+            val statusParams = msg.getStringAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_STATUS)
             val status = InviteMessageStatus.valueOf(statusParams)
             var message = ""
             when(status){
                 InviteMessageStatus.BEINVITEED -> {
-                    message = context.resources.getString(R.string.ease_invitation_reason)
+                    message = context.resources.getString(R.string.uikit_invitation_reason)
                     ChatClient.getInstance().contactManager().asyncAcceptInvitation(
-                        msg.getStringAttribute(EaseConstant.SYSTEM_MESSAGE_FROM),
+                        msg.getStringAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_FROM),
                         object : ChatCallback{
                             override fun onSuccess() {
                                 continuation.resume(ChatError.EM_NO_ERROR)
@@ -63,30 +63,30 @@ suspend fun EaseNotificationMsgManager.agreeInviteAction(context: Context, msg:C
                 else -> {}
             }
 
-            msg.setAttribute(EaseConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.AGREED.name)
-            msg.setAttribute(EaseConstant.SYSTEM_MESSAGE_REASON, message)
+            msg.setAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.AGREED.name)
+            msg.setAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_REASON, message)
             val body = ChatTextMessageBody(message)
             msg.body = body
-            EaseNotificationMsgManager.getInstance().updateMessage(msg)
+            ChatUIKitNotificationMsgManager.getInstance().updateMessage(msg)
         }catch (e:ChatException){
             e.printStackTrace()
-            msg.setAttribute(EaseConstant.SYSTEM_MESSAGE_EXPIRED, R.string.system_msg_expired)
+            msg.setAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_EXPIRED, R.string.system_msg_expired)
         }
 
     }
 }
 
-suspend fun EaseNotificationMsgManager.refuseInviteAction(context: Context, msg:ChatMessage):Int{
+suspend fun ChatUIKitNotificationMsgManager.refuseInviteAction(context: Context, msg:ChatMessage):Int{
     return suspendCoroutine{ continuation ->
         try {
-            val statusParams = msg.getStringAttribute(EaseConstant.SYSTEM_MESSAGE_STATUS)
+            val statusParams = msg.getStringAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_STATUS)
             val status = InviteMessageStatus.valueOf(statusParams)
             var message = ""
             when(status) {
                 InviteMessageStatus.BEINVITEED -> {
                     message = context.resources.getString(R.string.system_decline_invite)
                     ChatClient.getInstance().contactManager().asyncDeclineInvitation(
-                        msg.getStringAttribute(EaseConstant.SYSTEM_MESSAGE_FROM),
+                        msg.getStringAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_FROM),
                         object : ChatCallback{
                             override fun onSuccess() {
                                 continuation.resume(ChatError.EM_NO_ERROR)
@@ -100,14 +100,14 @@ suspend fun EaseNotificationMsgManager.refuseInviteAction(context: Context, msg:
                 }
                 else -> {}
             }
-            msg.setAttribute(EaseConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.AGREED.name)
-            msg.setAttribute(EaseConstant.SYSTEM_MESSAGE_REASON, message)
+            msg.setAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_STATUS, InviteMessageStatus.AGREED.name)
+            msg.setAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_REASON, message)
             val body = ChatTextMessageBody(message)
             msg.body = body
-            EaseNotificationMsgManager.getInstance().updateMessage(msg)
+            ChatUIKitNotificationMsgManager.getInstance().updateMessage(msg)
         }catch (e:ChatException){
             e.printStackTrace()
-            msg.setAttribute(EaseConstant.SYSTEM_MESSAGE_EXPIRED, R.string.system_msg_expired)
+            msg.setAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_EXPIRED, R.string.system_msg_expired)
         }
     }
 }

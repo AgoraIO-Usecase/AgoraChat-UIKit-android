@@ -4,19 +4,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.easemob.quickstart.databinding.ActivityMainBinding
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatOptions
 import com.hyphenate.easeui.common.extensions.showToast
-import com.hyphenate.easeui.feature.chat.enums.EaseChatType
-import com.hyphenate.easeui.feature.chat.activities.EaseChatActivity
-import com.hyphenate.easeui.interfaces.EaseConnectionListener
+import com.hyphenate.easeui.feature.chat.enums.ChatUIKitType
+import com.hyphenate.easeui.feature.chat.activities.UIKitChatActivity
+import com.hyphenate.easeui.interfaces.ChatUIKitConnectionListener
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     private val connectListener by lazy {
-        object : EaseConnectionListener() {
+        object : ChatUIKitConnectionListener() {
             override fun onConnected() {}
 
             override fun onDisconnected(errorCode: Int) {}
@@ -50,12 +50,12 @@ class MainActivity : AppCompatActivity() {
             // Set whether confirmation of delivery is required by the recipient. Default: false
             this.requireDeliveryAck = true
         }.let {
-            EaseIM.init(applicationContext, it)
+            ChatUIKitClient.init(applicationContext, it)
         }
     }
 
     private fun initListener() {
-        EaseIM.addConnectionListener(connectListener)
+        ChatUIKitClient.addConnectionListener(connectListener)
     }
 
     fun login(view: View) {
@@ -66,12 +66,12 @@ class MainActivity : AppCompatActivity() {
             ChatLog.e(TAG, "Username or password cannot be empty!")
             return
         }
-        if (!EaseIM.isInited()) {
+        if (!ChatUIKitClient.isInited()) {
             showToast("Please init first!")
             ChatLog.e(TAG, "Please init first!")
             return
         }
-        EaseIM.login(username, password
+        ChatUIKitClient.login(username, password
             , onSuccess = {
                 showToast("Login successfully!")
                 ChatLog.e(TAG, "Login successfully!")
@@ -83,12 +83,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun logout(view: View) {
-        if (!EaseIM.isInited()) {
+        if (!ChatUIKitClient.isInited()) {
             showToast("Please init first!")
             ChatLog.e(TAG, "Please init first!")
             return
         }
-        EaseIM.logout(false
+        ChatUIKitClient.logout(false
             , onSuccess = {
                 showToast("Logout successfully!")
                 ChatLog.e(TAG, "Logout successfully!")
@@ -103,17 +103,17 @@ class MainActivity : AppCompatActivity() {
             ChatLog.e(TAG, "Peer id cannot be empty!")
             return
         }
-        if (!EaseIM.isLoggedIn()) {
+        if (!ChatUIKitClient.isLoggedIn()) {
             showToast("Please login first!")
             ChatLog.e(TAG, "Please login first!")
             return
         }
-        EaseChatActivity.actionStart(this, username, EaseChatType.SINGLE_CHAT)
+        UIKitChatActivity.actionStart(this, username, ChatUIKitType.SINGLE_CHAT)
     }
 
     override fun onDestroy() {
-        EaseIM.removeConnectionListener(connectListener)
-        EaseIM.releaseGlobalListener()
+        ChatUIKitClient.removeConnectionListener(connectListener)
+        ChatUIKitClient.releaseGlobalListener()
         super.onDestroy()
     }
 

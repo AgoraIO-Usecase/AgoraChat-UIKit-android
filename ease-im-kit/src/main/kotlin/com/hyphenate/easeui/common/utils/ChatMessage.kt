@@ -2,7 +2,7 @@ package com.hyphenate.easeui.common.utils
 
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatMessage
-import com.hyphenate.easeui.common.EaseConstant
+import com.hyphenate.easeui.common.ChatUIKitConstant
 
 /**
  * Check if the message id is valid.
@@ -22,8 +22,8 @@ internal fun isMessageIdValid(messageId: String?): Boolean {
  */
 fun createExpressionMessage(toChatUsername: String, expressionName: String?, identityCode: String?): ChatMessage? {
     return ChatMessage.createTextSendMessage("[$expressionName]", toChatUsername)?.let {
-        if (!identityCode.isNullOrEmpty()) it.setAttribute(EaseConstant.MESSAGE_ATTR_EXPRESSION_ID, identityCode)
-        it.setAttribute(EaseConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, true)
+        if (!identityCode.isNullOrEmpty()) it.setAttribute(ChatUIKitConstant.MESSAGE_ATTR_EXPRESSION_ID, identityCode)
+        it.setAttribute(ChatUIKitConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, true)
         it
     }
 }

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ease_contact_header_item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">54dp</item>
+        <item name="arrowItemTitleSize">16sp</item>
+        <item name="arrowItemTitleStyle">bold</item>
+        <item name="arrowItemTitleColor">@color/ease_contact_arrow_item_title_color</item>
+        <item name="arrowItemShowArrow">false</item>
+        <item name="arrowItemShowDivider">true</item>
+        <item name="arrowItemContentColor">@color/ease_contact_arrow_item_content_color</item>
+    </style>
+
+    <style name="ease_contact_list_layout_sidebar">
+        <item name="android:layout_width">16dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="ease_side_bar_text_size">11sp</item>
+        <item name="layout_constraintHeight_percent">0.75</item>
+        <item name="android:layout_marginEnd">4dp</item>
+        <item name="ease_side_bar_head_arrays">@array/side_bar_array</item>
+        <item name="ease_side_bar_focus_bg_color">@color/ease_contact_layout_side_bar_focus_bg_color</item>
+    </style>
+
+    <style name="ease_contact_list_layout_sidebar_floating">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/ease_show_head_toast_bg</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">25dp</item>
+        <item name="android:paddingEnd">25dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="ease_contact_list_item_initial">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:textColor">@color/ease_contact_list_item_initial_text_color</item>
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Medium</item>
+        <item name="android:background">@color/ease_color_background</item>
+    </style>
+
+    <style name="ease_contact_list_item_tv_title">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Medium</item>
+        <item name="android:textColor">@color/ease_contact_list_item_title_color</item>
+    </style>
+
+    <style name="ease_contact_list_header_unread_count">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Body.Small</item>
+        <item name="android:textColor">@color/ease_contact_list_unread_color</item>
+        <item name="android:background">@drawable/uikit_conv_item_unread_count_bg</item>
+        <item name="android:maxLength">3</item>
+    </style>
+
+    <style name="ease_contact_list_item_tv_subtitle">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Title.Small</item>
+        <item name="android:textColor">@color/ease_contact_list_item_subtitle_color</item>
+    </style>
+
+    <style name="ease_contact_detail_arrow_item">
+        <item name="background">@color/ease_color_background</item>
+        <item name="arrowItemTitleSize">16sp</item>
+        <item name="arrowItemTitleStyle">bold</item>
+        <item name="arrowItemTitleColor">@color/ease_contact_arrow_item_title_color</item>
+        <item name="arrowItemShowArrow">false</item>
+        <item name="arrowItemShowDivider">true</item>
+        <item name="arrowItemContentColor">@color/ease_contact_arrow_item_content_color</item>
+    </style>
+
+    <style name="ease_contact_detail_switch_item">
+        <item name="background">@color/ease_color_background</item>
+        <item name="switchItemTitleSize">16sp</item>
+        <item name="switchItemTitleStyle">bold</item>
+        <item name="switchItemTitleColor">@color/ease_contact_switch_item_title_color</item>
+        <item name="switchItemShowAvatar">false</item>
+        <item name="switchItemShowDivider">true</item>
+    </style>
+
+    <style name="ease_contact_add_button">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Large</item>
+        <item name="android:textColor">@color/uikit_selector_change_text_color</item>
+        <item name="android:text">@string/uikit_contact_add</item>
+        <item name="android:background">@drawable/uikit_invitation_action_bg</item>
+    </style>
+
+    <style name="ease_checkbox_style">
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:clickable">false</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/uikit_checkbox_bg_selector_style</item>
+    </style>
+
+    <style name="ease_detail_layout_title">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Headline.Large</item>
+        <item name="android:textColor">@color/ease_details_title_color</item>
+    </style>
+
+    <style name="ease_detail_layout_subtitle1">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Large</item>
+        <item name="android:textColor">@color/ease_details_subtitle1_color</item>
+    </style>
+
+    <style name="ease_detail_layout_subtitle2">
+        <item name="android:textAppearance">@style/Ease.TextAppearance.Label.Medium</item>
+        <item name="android:textColor">@color/ease_details_subtitle2_color</item>
+        <item name="android:drawablePadding">2dp</item>
+        <item name="android:drawableEnd">@drawable/uikit_copy_id</item>
+    </style>
+
+</resources>

@@ -34,7 +34,7 @@ class SelectTextPopAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(mContext).inflate(R.layout.ease_item_select_text_pop, parent, false)
+            LayoutInflater.from(mContext).inflate(R.layout.uikit_item_select_text_pop, parent, false)
         return ViewHolder(view)
     }
 

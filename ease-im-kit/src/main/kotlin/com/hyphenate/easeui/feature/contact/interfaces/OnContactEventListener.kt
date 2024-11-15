@@ -1,12 +1,12 @@
 package com.hyphenate.easeui.feature.contact.interfaces
 
-import com.hyphenate.easeui.model.EaseUser
+import com.hyphenate.easeui.model.ChatUIKitUser
 
 interface OnContactEventListener {
     /**
      * Load contact list successfully.
      */
-    fun loadContactListSuccess(userList: MutableList<EaseUser>)
+    fun loadContactListSuccess(userList: MutableList<ChatUIKitUser>)
 
     /**
      *Load contact list Fail

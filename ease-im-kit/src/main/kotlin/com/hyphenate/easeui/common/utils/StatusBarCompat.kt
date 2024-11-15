@@ -249,7 +249,7 @@ object StatusBarCompat {
             return
         }
         if (leftArrow == null) {
-            leftArrow = ContextCompat.getDrawable(context, R.drawable.ease_default_navigation_icon)
+            leftArrow = ContextCompat.getDrawable(context, R.drawable.uikit_default_navigation_icon)
         }
         if (leftArrow != null) {
             leftArrow.setColorFilter(colorId, PorterDuff.Mode.SRC_ATOP)

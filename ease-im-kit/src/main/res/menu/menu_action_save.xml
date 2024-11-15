@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_save"
-        android:title="@string/ease_group_change_save"
+        android:title="@string/uikit_group_change_save"
         app:showAsAction="ifRoom" />
 
 </menu>

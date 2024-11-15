@@ -8,7 +8,7 @@ import androidx.annotation.ColorInt
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.PinyinHelper
-import com.hyphenate.easeui.common.helper.EaseEmojiHelper
+import com.hyphenate.easeui.common.helper.ChatUIKitEmojiHelper
 import java.util.regex.Pattern
 
 
@@ -65,7 +65,7 @@ internal fun String.getEmojiText(context: Context
                                  , emojiIconSize: Int = context.resources.getDimensionPixelSize(
     R.dimen.ease_chat_emoji_icon_size_show_in_spannable)
 ): Spannable {
-    return EaseEmojiHelper.getEmojiText(context, this, emojiIconSize)
+    return ChatUIKitEmojiHelper.getEmojiText(context, this, emojiIconSize)
 }
 
 /**

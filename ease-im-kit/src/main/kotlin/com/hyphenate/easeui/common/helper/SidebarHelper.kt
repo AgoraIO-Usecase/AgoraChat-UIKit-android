@@ -6,11 +6,11 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.hyphenate.easeui.base.EaseBaseRecyclerViewAdapter
-import com.hyphenate.easeui.model.EaseUser
-import com.hyphenate.easeui.widget.EaseSidebar
+import com.hyphenate.easeui.base.ChatUIKitBaseRecyclerViewAdapter
+import com.hyphenate.easeui.model.ChatUIKitUser
+import com.hyphenate.easeui.widget.ChatUIKitSidebar
 
-class SidebarHelper : EaseSidebar.OnTouchEventListener {
+class SidebarHelper : ChatUIKitSidebar.OnTouchEventListener {
     private var mFloatingHeader: TextView? = null
     private var mRecyclerView: RecyclerView? = null
     private var mAdapter: RecyclerView.Adapter<*>? = null
@@ -50,16 +50,16 @@ class SidebarHelper : EaseSidebar.OnTouchEventListener {
         if (mAdapter == null) {
             return
         }
-        if (mAdapter !is EaseBaseRecyclerViewAdapter<*>) {
+        if (mAdapter !is ChatUIKitBaseRecyclerViewAdapter<*>) {
             return
         }
-        val data: List<*>? = (mAdapter as EaseBaseRecyclerViewAdapter<*>).data
+        val data: List<*>? = (mAdapter as ChatUIKitBaseRecyclerViewAdapter<*>).data
         if (data == null || data.isEmpty()) {
             return
         }
-        if (data[0] !is EaseUser) return
+        if (data[0] !is ChatUIKitUser) return
         for (i in data.indices) {
-            val item: EaseUser = data[i] as EaseUser
+            val item: ChatUIKitUser = data[i] as ChatUIKitUser
             item.initialLetter.let {
                 if (TextUtils.equals(it, pointer)) {
                     val manager = mRecyclerView?.layoutManager as LinearLayoutManager?

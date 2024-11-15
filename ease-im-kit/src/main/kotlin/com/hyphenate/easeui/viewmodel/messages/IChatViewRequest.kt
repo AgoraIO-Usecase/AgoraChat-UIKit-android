@@ -5,8 +5,8 @@ import com.hyphenate.easeui.common.ChatCallback
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageBody
 import com.hyphenate.easeui.common.ChatType
-import com.hyphenate.easeui.feature.chat.enums.EaseChatType
-import com.hyphenate.easeui.feature.chat.enums.EaseLoadDataType
+import com.hyphenate.easeui.feature.chat.enums.ChatUIKitType
+import com.hyphenate.easeui.feature.chat.enums.ChatUIKitLoadDataType
 import com.hyphenate.easeui.viewmodel.IAttachView
 
 interface IChatViewRequest: IAttachView {
@@ -17,7 +17,7 @@ interface IChatViewRequest: IAttachView {
      * @param chatType
      * @param loadDataType
      */
-    fun setupWithToUser(toChatUsername: String?, chatType: EaseChatType, loadDataType: EaseLoadDataType)
+    fun setupWithToUser(toChatUsername: String?, chatType: ChatUIKitType, loadDataType: ChatUIKitLoadDataType)
 
     /**
      * Bind with the parent id for chat thread conversation.

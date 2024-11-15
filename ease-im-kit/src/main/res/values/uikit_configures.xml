@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Set default maxLines for input menu's EditText-->
+    <integer name="ease_input_edit_text_max_lines">4</integer>
+    <!--Set whether to show sending button in input menu-->
+    <bool name="ease_input_show_send_button">true</bool>
+    <!-- This configuration is to configure the time period within which the timestamp of message entries will not be displayed. The unit is milliseconds -->
+    <integer name="ease_chat_item_timestamp_dismiss_interval">0</integer>
+    <!-- Set the time period within which messages can be recalled, in milliseconds -->
+    <integer name="ease_chat_message_recall_period">120000</integer>
+    <!-- Set the emoji icon size showed in EditText and Text message in UIKitChatFragment -->
+    <dimen name="ease_chat_emoji_icon_size_show_in_spannable">@dimen/ease_size_20</dimen>
+
+    <!-- For conversation or chat date format, whether use the default locale;
+    If set false, will use the ENGLISH locale -->
+    <bool name="ease_date_use_default_locale">false</bool>
+    <!-- For conversation date -->
+    <string-array name="ease_conversation_date_format_array">
+        <!-- today -->
+        <item>HH:mm</item>
+        <!-- other day -->
+        <item>MMM dd</item>
+        <!-- other year -->
+        <item>MMM dd, yyyy</item>
+    </string-array>
+
+    <!-- For chat date -->
+    <string-array name="ease_chat_date_format_array">
+        <!-- today -->
+        <item>HH:mm</item>
+        <!-- other day -->
+        <item>MMM dd, HH:mm</item>
+        <!-- other year -->
+        <item>MMM dd, yyyy HH:mm</item>
+    </string-array>
+
+    <!-- system msg -->
+    <!-- use default contact system msg -->
+    <bool name="ease_use_default_contact_system_msg">true</bool>
+
+    <!--Set default max group member count-->
+    <integer name="ease_group_member_max_count">1000</integer>
+
+    <!--Set default multi device event-->
+    <bool name="ease_default_multi_device_contact_event">true</bool>
+    <bool name="ease_default_multi_device_group_event">true</bool>
+
+</resources>

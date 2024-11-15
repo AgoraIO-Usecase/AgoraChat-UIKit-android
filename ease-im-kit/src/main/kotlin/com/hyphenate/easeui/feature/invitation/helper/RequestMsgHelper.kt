@@ -4,7 +4,7 @@ import android.content.Context
 import android.text.TextUtils
 import com.hyphenate.easeui.common.ChatException
 import com.hyphenate.easeui.common.ChatMessage
-import com.hyphenate.easeui.common.EaseConstant
+import com.hyphenate.easeui.common.ChatUIKitConstant
 import com.hyphenate.easeui.feature.invitation.enums.InviteMessageStatus
 
 object RequestMsgHelper {
@@ -16,7 +16,7 @@ object RequestMsgHelper {
      */
     @Throws(NullPointerException::class)
     fun getSystemMessage(context: Context,msg: MutableMap<String, Any>): String {
-        val messageStatus = msg[EaseConstant.SYSTEM_MESSAGE_STATUS] as String?
+        val messageStatus = msg[ChatUIKitConstant.SYSTEM_MESSAGE_STATUS] as String?
         if (TextUtils.isEmpty(messageStatus)) {
             return ""
         }
@@ -26,7 +26,7 @@ object RequestMsgHelper {
         messge = when (status) {
             InviteMessageStatus.BEINVITEED -> String.format(
                 builder.toString(),
-                msg[EaseConstant.SYSTEM_MESSAGE_FROM]
+                msg[ChatUIKitConstant.SYSTEM_MESSAGE_FROM]
             )
             else -> ""
         }
@@ -41,7 +41,7 @@ object RequestMsgHelper {
      */
     @Throws(ChatException::class)
     fun getSystemMessage(context: Context,msg: ChatMessage): String {
-        val messageStatus: String = msg.getStringAttribute(EaseConstant.SYSTEM_MESSAGE_STATUS)
+        val messageStatus: String = msg.getStringAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_STATUS)
         if (TextUtils.isEmpty(messageStatus)) {
             return ""
         }
@@ -51,7 +51,7 @@ object RequestMsgHelper {
         message = when (status) {
             InviteMessageStatus.BEINVITEED -> java.lang.String.format(
                 builder.toString(),
-                msg.getStringAttribute(EaseConstant.SYSTEM_MESSAGE_FROM)
+                msg.getStringAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_FROM)
             )
             else -> ""
         }

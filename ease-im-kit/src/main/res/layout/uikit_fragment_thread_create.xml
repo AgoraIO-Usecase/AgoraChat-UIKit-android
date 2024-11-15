@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.hyphenate.easeui.widget.ChatUIKitTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ease_toolbar_height"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleBarMenuTitleColor="@color/ease_color_on_background_low"
+        app:titleBarTitleTextColor="@color/ease_color_on_background_low"
+        app:titleBarMenuIconTint="@color/ease_color_on_background_low"
+        app:titleBarSubtitleTextColor="@color/ease_color_text_secondary"
+        android:visibility="visible" />
+
+    <View
+        android:id="@+id/chat_header_divider"
+        app:layout_constraintTop_toBottomOf="@+id/title_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/ease_chat_title_bar_divider"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_topicMsg"
+        app:layout_constraintTop_toBottomOf="@+id/chat_header_divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.hyphenate.easeui.feature.chat.widgets.ChatUIKitInputMenu
+        android:id="@+id/layout_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,7 +15,7 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.hyphenate.easeui.R
-import com.hyphenate.easeui.widget.EaseImageView
+import com.hyphenate.easeui.widget.ChatUIKitImageView
 
 class CustomDialog(
     context: Context,
@@ -32,7 +32,7 @@ class CustomDialog(
 ) : Dialog(context) {
 
     init {
-        val view = LayoutInflater.from(context).inflate(R.layout.ease_layout_custom_dialog, null)
+        val view = LayoutInflater.from(context).inflate(R.layout.uikit_layout_custom_dialog, null)
         setContentView(view)
         setCancelable(true)
         setCanceledOnTouchOutside(true)
@@ -46,7 +46,7 @@ class CustomDialog(
         val leftButton = view.findViewById<TextView>(R.id.leftButton)
         val rightButton = view.findViewById<TextView>(R.id.rightButton)
         val editText = view.findViewById<EditText>(R.id.editText)
-        val inputClear = view.findViewById<EaseImageView>(R.id.input_clear)
+        val inputClear = view.findViewById<ChatUIKitImageView>(R.id.input_clear)
         val llEdit = view.findViewById<RelativeLayout>(R.id.rl_edit)
 
         titleTextView.text = title

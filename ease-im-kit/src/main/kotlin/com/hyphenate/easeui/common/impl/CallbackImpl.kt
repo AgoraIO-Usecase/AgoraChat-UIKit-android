@@ -1,6 +1,6 @@
 package com.hyphenate.easeui.common.impl
 
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatCallback
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatValueCallback
@@ -18,14 +18,14 @@ class CallbackImpl(private val onSuccess: OnSuccess,
     override fun onSuccess() {
         onSuccess.invoke()
         function?.let {
-            EaseIM.setEventResultCallback(it,ChatError.EM_NO_ERROR,"")
+            ChatUIKitClient.setEventResultCallback(it,ChatError.EM_NO_ERROR,"")
         }
     }
 
     override fun onError(code: Int, error: String?) {
         onError.invoke(code, error)
         function?.let {
-            EaseIM.setEventResultCallback(it,code,error)
+            ChatUIKitClient.setEventResultCallback(it,code,error)
         }
     }
 

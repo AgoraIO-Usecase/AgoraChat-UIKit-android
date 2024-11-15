@@ -1,8 +1,8 @@
 package com.hyphenate.easeui.interfaces
 
 import com.hyphenate.easeui.common.ChatMessage
-import com.hyphenate.easeui.menu.chat.EaseChatMenuHelper
-import com.hyphenate.easeui.model.EaseMenuItem
+import com.hyphenate.easeui.menu.chat.ChatUIKitChatMenuHelper
+import com.hyphenate.easeui.model.ChatUIKitMenuItem
 
 interface OnMenuChangeListener {
     /**
@@ -10,14 +10,14 @@ interface OnMenuChangeListener {
      * @param helper
      * @param message
      */
-    fun onPreMenu(helper: EaseChatMenuHelper?, message: ChatMessage?)
+    fun onPreMenu(helper: ChatUIKitChatMenuHelper?, message: ChatMessage?)
 
     /**
      * Item click
      * @param item
      * @param message
      */
-    fun onMenuItemClick(item: EaseMenuItem?, message: ChatMessage?): Boolean
+    fun onMenuItemClick(item: ChatUIKitMenuItem?, message: ChatMessage?): Boolean
 
     /**
      * Dismiss event

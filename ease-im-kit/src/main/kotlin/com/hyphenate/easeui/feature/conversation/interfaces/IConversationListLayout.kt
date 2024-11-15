@@ -1,8 +1,8 @@
 package com.hyphenate.easeui.feature.conversation.interfaces
 
-import com.hyphenate.easeui.feature.conversation.adapter.EaseConversationListAdapter
+import com.hyphenate.easeui.feature.conversation.adapter.ChatUIKitConversationListAdapter
 import com.hyphenate.easeui.common.interfaces.IRecyclerView
-import com.hyphenate.easeui.model.EaseConversation
+import com.hyphenate.easeui.model.ChatUIKitConversation
 import com.hyphenate.easeui.viewmodel.conversations.IConversationListRequest
 
 /**
@@ -16,20 +16,20 @@ interface IConversationListLayout: IRecyclerView {
      * Set custom list adapter
      * @param listAdapter
      */
-    fun setListAdapter(listAdapter: EaseConversationListAdapter?)
+    fun setListAdapter(listAdapter: ChatUIKitConversationListAdapter?)
 
     /**
      * Get data adapter
      * @return
      */
-    fun getListAdapter(): EaseConversationListAdapter?
+    fun getListAdapter(): ChatUIKitConversationListAdapter?
 
     /**
      * Get item data
      * @param position
      * @return
      */
-    fun getItem(position: Int): EaseConversation?
+    fun getItem(position: Int): ChatUIKitConversation?
 
 
     /**
@@ -37,18 +37,18 @@ interface IConversationListLayout: IRecyclerView {
      * @param position
      * @param info
      */
-    fun makeConversionRead(position: Int, info: EaseConversation?)
+    fun makeConversionRead(position: Int, info: ChatUIKitConversation?)
 
-    fun makeConversationTop(position: Int, info: EaseConversation?)
+    fun makeConversationTop(position: Int, info: ChatUIKitConversation?)
 
-    fun cancelConversationTop(position: Int, info: EaseConversation?)
+    fun cancelConversationTop(position: Int, info: ChatUIKitConversation?)
 
     /**
      * Delete conversation
      * @param position
      * @param info
      */
-    fun deleteConversation(position: Int, info: EaseConversation?)
+    fun deleteConversation(position: Int, info: ChatUIKitConversation?)
 
     /**
      * Set up monitoring of session changes

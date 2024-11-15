@@ -1,6 +1,6 @@
 package com.hyphenate.easeui.interfaces
 
-import com.hyphenate.easeui.model.EaseMenuItem
+import com.hyphenate.easeui.model.ChatUIKitMenuItem
 
 /**
  * The menu item click listener.
@@ -11,5 +11,5 @@ interface OnMenuItemClickListener {
      * @param item
      * @param position
      */
-    fun onMenuItemClick(item: EaseMenuItem?, position: Int): Boolean
+    fun onMenuItemClick(item: ChatUIKitMenuItem?, position: Int): Boolean
 }
