@@ -20,19 +20,13 @@ def process_files(directory):
             elif filename.startswith('ease') and filename.endswith('.xml'):
                 # 处理以ease开头且以.xml结尾的文件
                 base_name = os.path.splitext(filename)[0]
-                if base_name.startswith('ease_chat'):
-                    value = base_name.replace('ease_chat', 'chat_im', 1)
-                else:
-                    value = base_name.replace('ease', 'chat', 1)
+                value = base_name.replace('ease', 'uikit', 1)
                 file_map[base_name] = value
                 print(f"Processed Ease file: {filename} -> {value}")
             elif filename.startswith('ease') and (filename.endswith('.png') or filename.endswith('.jpg')):
                 # 处理以ease开头且以.png和jpg结尾的文件
                 base_name = os.path.splitext(filename)[0]
-                if base_name.startswith('ease_chat'):
-                    value = base_name.replace('ease_chat', 'chat_im', 1)
-                else:
-                    value = base_name.replace('ease', 'chat', 1)
+                value = base_name.replace('ease', 'uikit', 1)
                 file_map[base_name] = value
                 print(f"Processed Ease file: {filename} -> {value}")
             else:
