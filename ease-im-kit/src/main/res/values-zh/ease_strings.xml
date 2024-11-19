@@ -299,4 +299,16 @@
     <string name="ease_pin_list_item_delete">删除</string>
     <string name="ease_pin_list_item_confirm_delete">确认删除</string>
 
+    <string name="uikit_permission_camera_title">摄像头权限使用说明</string>
+    <string name="uikit_permission_mic_title">麦克风权限使用说明</string>
+    <string name="uikit_permission_media_title">读取多媒体权限使用说明</string>
+    <string name="uikit_permission_sdcard_title">读取存储卡权限使用说明</string>
+    <string name="uikit_permission_local_notification_title">本地通知权限使用说明</string>
+
+    <string name="uikit_permission_camera_content">用于拍摄照片或视频，发送图片、视频消息和进行实时音视频通话</string>
+    <string name="uikit_permission_mic_content">用于录制语音消息，和进行实时音视频通话</string>
+    <string name="uikit_permission_media_content">用于访问设备内的图片和视频，支持发送本地文件</string>
+    <string name="uikit_permission_sdcard_content">用于访问设备内的图片和视频，支持发送本地文件</string>
+    <string name="uikit_permission_local_notification_content">用于收到新消息时推送通知</string>
+
 </resources>

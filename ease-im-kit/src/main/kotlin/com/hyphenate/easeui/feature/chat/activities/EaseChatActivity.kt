@@ -29,10 +29,20 @@ import com.hyphenate.easeui.feature.chat.interfaces.OnMessageSendCallback
 import com.hyphenate.easeui.provider.getSyncProfile
 import com.hyphenate.easeui.provider.getSyncUser
 
-open class EaseChatActivity: EaseBaseActivity<EaseActivityChatBinding>() {
+open class EaseChatActivity : EaseBaseActivity<EaseActivityChatBinding>() {
 
     private var fragment: EaseChatFragment? = null
+    private var permissionDescView:View? = null
 
+    private val requestCameraPermission: ActivityResultLauncher<Array<String>> =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { result ->
+            onRequestResult(
+                result,
+                REQUEST_CODE_STORAGE_PICTURE
+            )
+        }
     private val requestImagePermission: ActivityResultLauncher<Array<String>> =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -78,17 +88,18 @@ open class EaseChatActivity: EaseBaseActivity<EaseActivityChatBinding>() {
                 .setEmptyLayout(R.layout.ease_layout_no_data_show_nothing)
                 .setOnChatExtendMenuItemClickListener(object : OnChatExtendMenuItemClickListener {
                     override fun onChatExtendMenuItemClick(view: View?, itemId: Int): Boolean {
-                        when(itemId) {
+                        when (itemId) {
                             R.id.extend_item_take_picture -> {
+                                permissionDescView =
+                                    PermissionsManager.getInstance().showPermissionDescView(
+                                        mContext,
+                                        Manifest.permission.CAMERA
+                                    )
+
                                 if (!PermissionsManager.getInstance()
                                         .hasPermission(mContext, Manifest.permission.CAMERA)
                                 ) {
-                                    PermissionsManager.getInstance()
-                                        .requestPermissionsIfNecessaryForResult(
-                                            mContext,
-                                            arrayOf(Manifest.permission.CAMERA),
-                                            null
-                                        )
+                                    requestCameraPermission.launch(arrayOf(Manifest.permission.CAMERA))
                                     return true
                                 }
                             }
@@ -99,6 +110,11 @@ open class EaseChatActivity: EaseBaseActivity<EaseActivityChatBinding>() {
                                         Manifest.permission.READ_MEDIA_IMAGES
                                     )
                                 ) {
+                                    permissionDescView =
+                                        PermissionsManager.getInstance().showPermissionDescView(
+                                            mContext,
+                                            Manifest.permission.READ_MEDIA_IMAGES
+                                        )
                                     return true
                                 }
                             }
@@ -111,6 +127,11 @@ open class EaseChatActivity: EaseBaseActivity<EaseActivityChatBinding>() {
                                         Manifest.permission.CAMERA
                                     )
                                 ) {
+                                    permissionDescView =
+                                        PermissionsManager.getInstance().showPermissionDescView(
+                                            mContext,
+                                            Manifest.permission.READ_MEDIA_VIDEO
+                                        )
                                     return true
                                 }
                             }
@@ -123,6 +144,11 @@ open class EaseChatActivity: EaseBaseActivity<EaseActivityChatBinding>() {
                                         Manifest.permission.READ_MEDIA_VIDEO
                                     )
                                 ) {
+                                    permissionDescView =
+                                        PermissionsManager.getInstance().showPermissionDescView(
+                                            mContext,
+                                            Manifest.permission.READ_MEDIA_IMAGES
+                                        )
                                     return true
                                 }
                             }
@@ -149,7 +175,7 @@ open class EaseChatActivity: EaseBaseActivity<EaseActivityChatBinding>() {
                 .setOnMessageSendCallback(object : OnMessageSendCallback {
 
                     override fun onError(code: Int, errorMsg: String?) {
-                        when(code) {
+                        when (code) {
                             ChatError.REACTION_REACH_LIMIT -> {
                                 mContext.showToast(R.string.ease_chat_reaction_reach_limit)
                             }
@@ -187,6 +213,8 @@ open class EaseChatActivity: EaseBaseActivity<EaseActivityChatBinding>() {
     }
 
     private fun onRequestResult(result: Map<String, Boolean>?, requestCode: Int) {
+        //dimiss permission explain dialog
+        PermissionsManager.getInstance().hidePermissionDescView(permissionDescView)
         if (!result.isNullOrEmpty()) {
             for ((key, value) in result) {
                 ChatLog.e("chat", "onRequestResult: $key  $value")

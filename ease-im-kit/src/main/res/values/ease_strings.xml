@@ -298,4 +298,16 @@
     <string name="ease_pin_list_item_delete">Remove</string>
     <string name="ease_pin_list_item_confirm_delete">Confirm</string>
 
+    <string name="uikit_permission_camera_title">Camera Permission</string>
+    <string name="uikit_permission_mic_title">Microphone Permission</string>
+    <string name="uikit_permission_media_title">Media Access Permission</string>
+    <string name="uikit_permission_sdcard_title">SDCard Access Permission</string>
+    <string name="uikit_permission_local_notification_title">Local Notification Permission</string>
+
+    <string name="uikit_permission_camera_content">Used to take photos or videos for sending image and video messages and enabling real-time audio and video calls</string>
+    <string name="uikit_permission_mic_content">Used to record voice messages and facilitate real-time audio and video calls</string>
+    <string name="uikit_permission_media_content">Used to access images and videos on the device, allowing users to send local files</string>
+    <string name="uikit_permission_sdcard_content">Used to access images and videos on the device, allowing users to send local files</string>
+    <string name="uikit_permission_local_notification_content">Used to push notifications when new messages are received</string>
+
 </resources>
