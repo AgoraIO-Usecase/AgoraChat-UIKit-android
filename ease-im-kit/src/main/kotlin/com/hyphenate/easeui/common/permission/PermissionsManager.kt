@@ -13,6 +13,7 @@
  */
 package com.hyphenate.easeui.common.permission
 
+import android.Manifest
 import android.Manifest.permission
 import android.app.Activity
 import android.content.Context
@@ -23,11 +24,21 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.annotation.StringDef
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.hyphenate.easeui.R
+import com.hyphenate.easeui.common.utils.StatusBarCompat.getStatusBarHeight
+import com.hyphenate.easeui.menu.select.SelectUtils
 import java.lang.ref.WeakReference
-import kotlin.math.min
 
 /**
  * A class to help you manage your permissions simply.
@@ -391,6 +402,89 @@ class PermissionsManager private constructor() {
             }
         }
         return permList
+    }
+
+    @StringDef(Manifest.permission.READ_MEDIA_IMAGES,
+        Manifest.permission.READ_MEDIA_VIDEO,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.CAMERA,
+        Manifest.permission.RECORD_AUDIO
+    )
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class Permission
+
+    fun showPermissionDescView(activity: Activity, @Permission permission: String) :View ?{
+        if (activity==null||activity.isFinishing){
+            return null
+        }
+
+        if (ActivityCompat.checkSelfPermission(activity, permission)== PackageManager.PERMISSION_GRANTED){
+           return null
+        }
+        var id=0
+        var title=0
+        var content=0
+        when(permission) {
+            Manifest.permission.READ_MEDIA_IMAGES->{
+                id = R.drawable.uikit_permission_media
+                title = R.string.uikit_permission_media_title
+                content = R.string.uikit_permission_media_content
+            }
+            Manifest.permission.READ_MEDIA_VIDEO   -> {
+                id = R.drawable.uikit_permission_media
+                title = R.string.uikit_permission_media_title
+                content = R.string.uikit_permission_media_content
+            }
+
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE -> {
+                id = R.drawable.uikit_permission_file
+                title = R.string.uikit_permission_sdcard_title
+                content = R.string.uikit_permission_sdcard_content
+            }
+
+            Manifest.permission.CAMERA -> {
+                id = R.drawable.uikit_permission_camera
+                title = R.string.uikit_permission_camera_title
+                content = R.string.uikit_permission_camera_content
+            }
+
+            Manifest.permission.RECORD_AUDIO -> {
+                id = R.drawable.uikit_permission_mic
+                title = R.string.uikit_permission_mic_title
+                content = R.string.uikit_permission_mic_content
+            }
+        }
+        var decorView = activity.window.decorView as FrameLayout
+        var permissionDescView = LayoutInflater.from(activity)
+            .inflate(R.layout.uikit_permission_desc_view, decorView, false)
+        decorView.post {
+            permissionDescView.findViewById<ImageView>(R.id.iv_icon).setImageResource(id)
+            permissionDescView.findViewById<TextView>(R.id.tv_title).text=activity.getText(title)
+            permissionDescView.findViewById<TextView>(R.id.tv_content).text=activity.getText(content)
+
+            decorView.addView(permissionDescView)
+            val layoutParams = permissionDescView.getLayoutParams() as FrameLayout.LayoutParams
+            layoutParams.setMargins(
+                layoutParams.leftMargin,
+                getStatusBarHeight(activity.applicationContext)+SelectUtils.dp2px(10f),
+                layoutParams.rightMargin,
+                layoutParams.topMargin
+            )
+            layoutParams.gravity = Gravity.CENTER_HORIZONTAL
+        }
+        return permissionDescView
+    }
+
+    fun hidePermissionDescView(permissionView: View?){
+        permissionView?.let {
+            it.post {
+                it.parent?.let { parent ->
+                    var parrent_viewgroup=parent as ViewGroup
+                    parrent_viewgroup.removeView(permissionView)
+                }
+            }
+        }
     }
 
     companion object {
