@@ -9,7 +9,7 @@
 # python3 rename_file_and_update_content.py ../quickstart/src --rename-files --replace-content
 
 ## 对于demo或者其他调用工程:
-# python3 rename_file_and_update_content.py ../quickstart/src  --replace-content
+# python3 rename_file_and_update_content.py ../quickstart/src  --replace-content --rename-files
 
 
 ## 其他:
