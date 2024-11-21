@@ -2,7 +2,7 @@ package com.hyphenate.easeui.feature.chat.interfaces
 
 import android.graphics.drawable.Drawable
 import android.widget.EditText
-import com.hyphenate.easeui.feature.chat.widgets.EaseInputMenuStyle
+import com.hyphenate.easeui.feature.chat.widgets.ChatUIKitInputMenuStyle
 
 /**
  * The base function of EasePrimaryMenu.
@@ -12,7 +12,7 @@ interface IChatPrimaryMenu {
      * Set menu display type
      * @param style
      */
-    fun setMenuShowType(style: EaseInputMenuStyle?)
+    fun setMenuShowType(style: ChatUIKitInputMenuStyle?)
 
     /**
      * Show EditText but hide soft keyboard.
@@ -88,7 +88,7 @@ interface IChatPrimaryMenu {
      * Set up monitoring
      * @param listener
      */
-    fun setEaseChatPrimaryMenuListener(listener: EaseChatPrimaryMenuListener?)
+    fun setEaseChatPrimaryMenuListener(listener: ChatUIKitPrimaryMenuListener?)
 
     /**
      * Set the menu visibility

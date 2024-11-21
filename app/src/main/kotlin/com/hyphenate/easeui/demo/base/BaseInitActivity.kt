@@ -4,10 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.viewbinding.ViewBinding
-import com.hyphenate.easeui.base.EaseBaseActivity
+import com.hyphenate.easeui.base.ChatUIKitBaseActivity
 import com.hyphenate.easeui.common.utils.StatusBarCompat.setFitSystemForTheme
 
-abstract class BaseInitActivity<B : ViewBinding> : EaseBaseActivity<B>() {
+abstract class BaseInitActivity<B : ViewBinding> : ChatUIKitBaseActivity<B>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initIntent(intent)

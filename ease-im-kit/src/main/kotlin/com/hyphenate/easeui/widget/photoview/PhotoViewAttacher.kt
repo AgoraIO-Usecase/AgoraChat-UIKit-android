@@ -119,7 +119,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, OnTouchListener,
      * when the ImageView is no longer used. A good example is from
      * [View.onDetachedFromWindow] or from
      * [android.app.Activity.onDestroy]. This is automatically called if
-     * you are using [EasePhotoView.co.senab.photoview.PhotoView].
+     * you are using [ChatUIKitPhotoView.co.senab.photoview.PhotoView].
      */
     @SuppressLint("NewApi")
     @Suppress("deprecation")
@@ -457,7 +457,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, OnTouchListener,
          * PhotoView's getScaleType() will just divert to this.getScaleType() so
          * only call if we're not attached to a PhotoView.
          */
-        if (null != imageView && imageView !is EasePhotoView) {
+        if (null != imageView && imageView !is ChatUIKitPhotoView) {
             check(imageView.scaleType == ScaleType.MATRIX) { "The ImageView's ScaleType has been changed since attaching a PhotoViewAttacher" }
         }
     }
@@ -810,7 +810,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, OnTouchListener,
          */
         private fun setImageViewScaleTypeMatrix(imageView: ImageView?) {
             if (null != imageView) {
-                if (imageView is EasePhotoView) {
+                if (imageView is ChatUIKitPhotoView) {
                     /**
                      * PhotoView sets it's own ScaleType to Matrix, then diverts all
                      * calls setScaleType to this.setScaleType. Basically we don't

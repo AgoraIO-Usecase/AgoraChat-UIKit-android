@@ -1,9 +1,9 @@
 package com.hyphenate.easeui.feature.contact.interfaces
 
-import com.hyphenate.easeui.feature.contact.adapter.EaseContactListAdapter
-import com.hyphenate.easeui.common.enums.EaseListViewType
+import com.hyphenate.easeui.feature.contact.adapter.ChatUIKitContactListAdapter
+import com.hyphenate.easeui.common.enums.ChatUIKitListViewType
 import com.hyphenate.easeui.common.interfaces.IRecyclerView
-import com.hyphenate.easeui.model.EaseUser
+import com.hyphenate.easeui.model.ChatUIKitUser
 import com.hyphenate.easeui.viewmodel.contacts.IContactListRequest
 import java.util.concurrent.ConcurrentHashMap
 
@@ -14,27 +14,27 @@ interface IContactListLayout : IRecyclerView {
      * Set custom list adapter
      * @param adapter
      */
-    fun setListAdapter(adapter: EaseContactListAdapter?)
+    fun setListAdapter(adapter: ChatUIKitContactListAdapter?)
 
     /**
      * Get data adapter
      * @return
      */
-    fun getListAdapter(): EaseContactListAdapter?
+    fun getListAdapter(): ChatUIKitContactListAdapter?
 
     /**
      * Get item data
      * @param position
      * @return
      */
-    fun getItem(position: Int): EaseUser?
+    fun getItem(position: Int): ChatUIKitUser?
 
     /**
      * Set List View Type
      * @param type
      * @return
      */
-    fun setListViewType(type: EaseListViewType?)
+    fun setListViewType(type: ChatUIKitListViewType?)
 
     /**
      * Set side bar view visible

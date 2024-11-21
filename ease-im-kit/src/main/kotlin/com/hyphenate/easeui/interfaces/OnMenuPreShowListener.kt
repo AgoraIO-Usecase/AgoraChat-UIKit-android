@@ -1,12 +1,12 @@
 package com.hyphenate.easeui.interfaces
 
-import com.hyphenate.easeui.menu.EaseMenuHelper
+import com.hyphenate.easeui.menu.ChatUIKitMenuHelper
 
 interface OnMenuPreShowListener {
     /**
      * Monitoring before popupMenu display, you can set PopupMenu
-     * @param menuHelper [EaseMenuHelper]
+     * @param menuHelper [ChatUIKitMenuHelper]
      * @param position item position
      */
-    fun onMenuPreShow(menuHelper: EaseMenuHelper?, position: Int)
+    fun onMenuPreShow(menuHelper: ChatUIKitMenuHelper?, position: Int)
 }

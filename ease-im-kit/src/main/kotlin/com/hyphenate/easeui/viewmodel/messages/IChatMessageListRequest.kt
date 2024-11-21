@@ -44,14 +44,14 @@ interface IChatMessageListRequest: IAttachView {
 
     /**
      * Load local messages from database.
-     * The method only works when the load data type is [EaseChatMessageListLayout.EaseLoadDataType.LOCAL].
+     * The method only works when the load data type is [ChatUIKitMessageListLayout.ChatUIKitLoadDataType.LOCAL].
      * @param direction The direction of loading. [ChatSearchDirection.UP] or [ChatSearchDirection.DOWN].
      */
     fun loadLocalMessages(direction: ChatSearchDirection = ChatSearchDirection.UP)
 
     /**
      * Load more local messages from database.
-     * The method only works when the load data type is [EaseChatMessageListLayout.EaseLoadDataType.LOCAL].
+     * The method only works when the load data type is [ChatUIKitMessageListLayout.ChatUIKitLoadDataType.LOCAL].
      * @param startMsgId The message id of the first message loaded last time.
      *                   If this parameter is null or "", it will load the first page of messages.
      * @param direction The direction of loading. [ChatSearchDirection.UP] or [ChatSearchDirection.DOWN].
@@ -60,14 +60,14 @@ interface IChatMessageListRequest: IAttachView {
 
     /**
      * Load remote messages from chat server.
-     * The method only works when the load data type is [EaseChatMessageListLayout.EaseLoadDataType.ROAM].
+     * The method only works when the load data type is [ChatUIKitMessageListLayout.ChatUIKitLoadDataType.ROAM].
      * @param direction The direction of loading. [ChatSearchDirection.UP] or [ChatSearchDirection.DOWN].
      */
     fun fetchRoamMessages(direction: ChatSearchDirection = ChatSearchDirection.UP)
 
     /**
      * Load more remote messages from chat server.
-     * The method only works when the load data type is [EaseChatMessageListLayout.EaseLoadDataType.ROAM].
+     * The method only works when the load data type is [ChatUIKitMessageListLayout.ChatUIKitLoadDataType.ROAM].
      * @param startMsgId The message id of the first message loaded last time.
      *                   If this parameter is null or "", it will load the first page of messages.
      * @param direction The direction of loading. [ChatSearchDirection.UP] or [ChatSearchDirection.DOWN].
@@ -76,7 +76,7 @@ interface IChatMessageListRequest: IAttachView {
 
     /**
      * Load local history messages from database.
-     * The method only works when the load data type is [EaseChatMessageListLayout.EaseLoadDataType.HISTORY].
+     * The method only works when the load data type is [ChatUIKitMessageListLayout.ChatUIKitLoadDataType.HISTORY].
      * @param startMsgId The message id of the first message loaded last time.
      *                   If this parameter is null or "", it will load the first page of messages.
      * @param direction The direction of loading. [ChatSearchDirection.UP] or [ChatSearchDirection.DOWN].

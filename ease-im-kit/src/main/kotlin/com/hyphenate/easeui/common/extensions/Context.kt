@@ -13,8 +13,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IntegerRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.lifecycleScope
-import com.hyphenate.easeui.EaseIM
-import com.hyphenate.easeui.model.EaseSize
+import com.hyphenate.easeui.ChatUIKitClient
+import com.hyphenate.easeui.model.ChatUIKitSize
 
 /**
  * Judge whether the current process is the main process.
@@ -133,11 +133,11 @@ fun Activity.hideSoftKeyboard() {
  * @param resId The resource id of the image.
  * @return The size of the image.
  */
-fun Context.getImageResourceSize(@DrawableRes resId: Int): EaseSize {
+fun Context.getImageResourceSize(@DrawableRes resId: Int): ChatUIKitSize {
     val options = BitmapFactory.Options()
     options.inJustDecodeBounds = true
     BitmapFactory.decodeResource(resources, resId, options)
-    return EaseSize(options.outWidth, options.outHeight)
+    return ChatUIKitSize(options.outWidth, options.outHeight)
 }
 
 /**
@@ -157,11 +157,11 @@ fun Context.showToast(@StringRes resId: Int) {
 /**
  * Get the maximum size of the image in UIKit.
  */
-internal fun Context.getImageMaxSize(): EaseSize {
-    val size = EaseSize(0, 0)
+internal fun Context.getImageMaxSize(): ChatUIKitSize {
+    val size = ChatUIKitSize(0, 0)
     val screenInfo = getScreenInfo()
-    size.width = (screenInfo[0] * (EaseIM.getConfig()?.chatConfig?.maxShowWidthRadio ?: 0.3f)).toInt()
-    size.height = (screenInfo[1] * (EaseIM.getConfig()?.chatConfig?.maxShowHeightRadio ?: 0.5f)).toInt()
+    size.width = (screenInfo[0] * (ChatUIKitClient.getConfig()?.chatConfig?.maxShowWidthRadio ?: 0.3f)).toInt()
+    size.height = (screenInfo[1] * (ChatUIKitClient.getConfig()?.chatConfig?.maxShowHeightRadio ?: 0.5f)).toInt()
     return size
 }
 

@@ -28,7 +28,7 @@ import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.hyphenate.easeui.base.EaseBaseFragment
+import com.hyphenate.easeui.base.ChatUIKitBaseFragment
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.extensions.catchChatException
@@ -36,7 +36,7 @@ import com.hyphenate.easeui.common.extensions.hideSoftKeyboard
 import com.hyphenate.easeui.demo.MainActivity
 import com.hyphenate.easeui.demo.R
 import com.hyphenate.easeui.demo.databinding.DemoFragmentLoginBinding
-import com.hyphenate.easeui.demo.utils.EaseEditTextUtils
+import com.hyphenate.easeui.demo.utils.ChatUIKitEditTextUtils
 import com.hyphenate.easeui.demo.utils.PhoneNumberUtils
 import com.hyphenate.easeui.demo.utils.ToastUtils.showToast
 import com.hyphenate.easeui.demo.viewmodel.LoginFragmentViewModel
@@ -45,7 +45,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClickListener, TextWatcher,
+class LoginFragment : ChatUIKitBaseFragment<DemoFragmentLoginBinding>(), View.OnClickListener, TextWatcher,
     CompoundButton.OnCheckedChangeListener, OnEditorActionListener {
     private var mUserPhone: String? = null
     private var mCode: String? = null
@@ -111,7 +111,7 @@ class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClick
         eyeOpen = ContextCompat.getDrawable(mContext, R.drawable.d_pwd_show)
         //切换密码可见不可见的两张图片
         clear = ContextCompat.getDrawable(mContext, R.drawable.d_clear)
-        EaseEditTextUtils.showRightDrawable(binding!!.etLoginPhone, clear)
+        ChatUIKitEditTextUtils.showRightDrawable(binding!!.etLoginPhone, clear)
         resetView(isDeveloperMode)
     }
 
@@ -239,9 +239,9 @@ class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClick
         binding?.run {
             mUserPhone = etLoginPhone.text.toString().trim { it <= ' ' }
             mCode = etLoginCode.text.toString().trim { it <= ' ' }
-            EaseEditTextUtils.showRightDrawable(etLoginPhone, clear)
+            ChatUIKitEditTextUtils.showRightDrawable(etLoginPhone, clear)
             if (isDeveloperMode) {
-                EaseEditTextUtils.showRightDrawable(etLoginCode, if (isTokenFlag) null else eyeClose)
+                ChatUIKitEditTextUtils.showRightDrawable(etLoginCode, if (isTokenFlag) null else eyeClose)
             }
             setButtonEnable(!TextUtils.isEmpty(mUserPhone) && !TextUtils.isEmpty(mCode))
         }
@@ -337,7 +337,7 @@ class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClick
                 etLoginPhone.setHint(R.string.em_login_name_hint)
                 tvGetCode.visibility = View.GONE
                 tvLoginDeveloper.visibility = View.VISIBLE
-                EaseEditTextUtils.changePwdDrawableRight(
+                ChatUIKitEditTextUtils.changePwdDrawableRight(
                     etLoginCode,
                 eyeClose,
                 eyeOpen,
@@ -352,8 +352,8 @@ class LoginFragment : EaseBaseFragment<DemoFragmentLoginBinding>(), View.OnClick
                 etLoginPhone.setHint(R.string.register_phone_number)
                 tvGetCode.visibility = View.VISIBLE
                 tvLoginDeveloper.visibility = View.GONE
-                EaseEditTextUtils.showRightDrawable(etLoginCode, null)
-                EaseEditTextUtils.clearEditTextListener(etLoginCode)
+                ChatUIKitEditTextUtils.showRightDrawable(etLoginCode, null)
+                ChatUIKitEditTextUtils.clearEditTextListener(etLoginCode)
             }
         }
     }

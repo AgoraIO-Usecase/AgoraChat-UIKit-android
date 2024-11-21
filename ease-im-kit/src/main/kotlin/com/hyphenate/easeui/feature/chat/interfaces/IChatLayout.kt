@@ -3,10 +3,10 @@ package com.hyphenate.easeui.feature.chat.interfaces
 import android.net.Uri
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageBody
-import com.hyphenate.easeui.feature.chat.widgets.EaseChatInputMenu
-import com.hyphenate.easeui.feature.chat.widgets.EaseChatMessageListLayout
+import com.hyphenate.easeui.feature.chat.widgets.ChatUIKitInputMenu
+import com.hyphenate.easeui.feature.chat.widgets.ChatUIKitMessageListLayout
 import com.hyphenate.easeui.feature.thread.interfaces.OnMessageChatThreadClickListener
-import com.hyphenate.easeui.feature.chat.widgets.EaseChatNotificationView
+import com.hyphenate.easeui.feature.chat.widgets.ChatUIKitNotificationView
 import com.hyphenate.easeui.viewmodel.messages.IChatViewRequest
 
 interface IChatLayout {
@@ -26,18 +26,18 @@ interface IChatLayout {
      * Get chat list
      * @return
      */
-    val chatMessageListLayout: EaseChatMessageListLayout?
+    val chatMessageListLayout: ChatUIKitMessageListLayout?
 
     /**
      * Get input menu
      * @return
      */
-    val chatInputMenu: EaseChatInputMenu?
+    val chatInputMenu: ChatUIKitInputMenu?
 
     /**
      * Get notification view
      */
-    val chatNotificationView: EaseChatNotificationView?
+    val chatNotificationView: ChatUIKitNotificationView?
 
     /**
      * Get input content

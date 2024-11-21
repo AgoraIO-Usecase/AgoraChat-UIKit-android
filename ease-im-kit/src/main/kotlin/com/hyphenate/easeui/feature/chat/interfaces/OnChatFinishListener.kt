@@ -1,6 +1,6 @@
 package com.hyphenate.easeui.feature.chat.interfaces
 
-import com.hyphenate.easeui.common.enums.EaseChatFinishReason
+import com.hyphenate.easeui.common.enums.ChatUIKitFinishReason
 
 interface OnChatFinishListener {
     /**
@@ -9,5 +9,5 @@ interface OnChatFinishListener {
      * @param reason
      * @param id
      */
-    fun onChatFinish(reason: EaseChatFinishReason, id: String?)
+    fun onChatFinish(reason: ChatUIKitFinishReason, id: String?)
 }

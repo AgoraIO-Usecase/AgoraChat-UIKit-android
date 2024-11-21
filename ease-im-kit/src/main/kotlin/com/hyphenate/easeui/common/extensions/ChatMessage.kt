@@ -3,7 +3,7 @@ package com.hyphenate.easeui.common.extensions
 import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatCustomMessageBody
@@ -20,24 +20,24 @@ import com.hyphenate.easeui.common.ChatNormalFileMessageBody
 import com.hyphenate.easeui.common.ChatTextMessageBody
 import com.hyphenate.easeui.common.ChatType
 import com.hyphenate.easeui.common.ChatVideoMessageBody
-import com.hyphenate.easeui.common.EaseConstant
-import com.hyphenate.easeui.common.EaseConstant.MESSAGE_EXT_USER_INFO_AVATAR_KEY
-import com.hyphenate.easeui.common.EaseConstant.MESSAGE_EXT_USER_INFO_NICKNAME_KEY
-import com.hyphenate.easeui.common.EaseConstant.MESSAGE_EXT_USER_INFO_REMARK_KEY
-import com.hyphenate.easeui.common.EaseConstant.MESSAGE_URL_PREVIEW_DESCRIPTION
-import com.hyphenate.easeui.common.EaseConstant.MESSAGE_URL_PREVIEW_IMAGE_URL
-import com.hyphenate.easeui.common.EaseConstant.MESSAGE_URL_PREVIEW_TITLE
-import com.hyphenate.easeui.common.EaseConstant.MESSAGE_URL_PREVIEW_URL
+import com.hyphenate.easeui.common.ChatUIKitConstant
+import com.hyphenate.easeui.common.ChatUIKitConstant.MESSAGE_EXT_USER_INFO_AVATAR_KEY
+import com.hyphenate.easeui.common.ChatUIKitConstant.MESSAGE_EXT_USER_INFO_NICKNAME_KEY
+import com.hyphenate.easeui.common.ChatUIKitConstant.MESSAGE_EXT_USER_INFO_REMARK_KEY
+import com.hyphenate.easeui.common.ChatUIKitConstant.MESSAGE_URL_PREVIEW_DESCRIPTION
+import com.hyphenate.easeui.common.ChatUIKitConstant.MESSAGE_URL_PREVIEW_IMAGE_URL
+import com.hyphenate.easeui.common.ChatUIKitConstant.MESSAGE_URL_PREVIEW_TITLE
+import com.hyphenate.easeui.common.ChatUIKitConstant.MESSAGE_URL_PREVIEW_URL
 import com.hyphenate.easeui.common.helper.DateFormatHelper
 import com.hyphenate.easeui.common.impl.CallbackImpl
 import com.hyphenate.easeui.common.impl.OnError
 import com.hyphenate.easeui.common.impl.OnProgress
 import com.hyphenate.easeui.common.impl.OnSuccess
-import com.hyphenate.easeui.configs.EaseDateFormatConfig
+import com.hyphenate.easeui.configs.ChatUIKitDateFormatConfig
 import com.hyphenate.easeui.feature.invitation.enums.InviteMessageStatus
-import com.hyphenate.easeui.model.EasePreview
-import com.hyphenate.easeui.model.EaseProfile
-import com.hyphenate.easeui.model.EaseSize
+import com.hyphenate.easeui.model.ChatUIKitPreview
+import com.hyphenate.easeui.model.ChatUIKitProfile
+import com.hyphenate.easeui.model.ChatUIKitSize
 import com.hyphenate.easeui.provider.getSyncUser
 import org.json.JSONObject
 
@@ -65,10 +65,10 @@ fun ChatMessage.send(onSuccess: OnSuccess = {}
 fun ChatMessage.setParentInfo(parentId: String?, parentMsgId: String?): Boolean {
     if (isChatThreadMessage && (parentId.isNullOrEmpty().not() || parentMsgId.isNullOrEmpty().not())) {
         if (parentId.isNullOrEmpty().not()) {
-            setAttribute(EaseConstant.MESSAGE_ATTR_THREAD_FLAG_PARENT_ID, parentId)
+            setAttribute(ChatUIKitConstant.MESSAGE_ATTR_THREAD_FLAG_PARENT_ID, parentId)
         }
         if (parentMsgId.isNullOrEmpty().not()) {
-            setAttribute(EaseConstant.MESSAGE_ATTR_THREAD_FLAG_PARENT_MSG_ID, parentMsgId)
+            setAttribute(ChatUIKitConstant.MESSAGE_ATTR_THREAD_FLAG_PARENT_MSG_ID, parentMsgId)
         }
         return true
     }
@@ -83,7 +83,7 @@ fun ChatMessage.getParentId(): String? {
     if (isChatThreadMessage.not()) {
         return null
     }
-    val parentId = getStringAttribute(EaseConstant.MESSAGE_ATTR_THREAD_FLAG_PARENT_ID, "")
+    val parentId = getStringAttribute(ChatUIKitConstant.MESSAGE_ATTR_THREAD_FLAG_PARENT_ID, "")
     return if (parentId.isNullOrEmpty()) {
         ChatClient.getInstance().chatManager().getMessage(getParentMessageId())?.conversationId()
     } else {
@@ -99,7 +99,7 @@ fun ChatMessage.getParentMessageId(): String? {
     if (isChatThreadMessage.not()) {
         return null
     }
-    return getStringAttribute(EaseConstant.MESSAGE_ATTR_THREAD_FLAG_PARENT_MSG_ID, "")
+    return getStringAttribute(ChatUIKitConstant.MESSAGE_ATTR_THREAD_FLAG_PARENT_MSG_ID, "")
 }
 
 internal fun ChatMessage.getMessageDigest(context: Context): String {
@@ -110,45 +110,45 @@ internal fun ChatMessage.getMessageDigest(context: Context): String {
                 getSyncUserFromProvider()?.let { profile ->
                     name = profile.getRemarkOrName()
                 }
-                context.getString(R.string.ease_location_recv, name)
+                context.getString(R.string.uikit_location_recv, name)
             } else {
-                context.getString(R.string.ease_location_prefix)
+                context.getString(R.string.uikit_location_prefix)
             }
         }
         ChatMessageType.IMAGE -> {
-            context.getString(R.string.ease_picture)
+            context.getString(R.string.uikit_picture)
         }
         ChatMessageType.VIDEO -> {
-            context.getString(R.string.ease_video)
+            context.getString(R.string.uikit_video)
         }
         ChatMessageType.VOICE -> {
-            context.getString(R.string.ease_voice)
+            context.getString(R.string.uikit_voice)
         }
         ChatMessageType.FILE -> {
             val body = body as ChatNormalFileMessageBody
             val filename = body.fileName
             if (filename.isNullOrEmpty()) {
-                context.getString(R.string.ease_file)
+                context.getString(R.string.uikit_file)
             } else {
-                "${context.getString(R.string.ease_file)} $filename"
+                "${context.getString(R.string.uikit_file)} $filename"
             }
         }
         ChatMessageType.CUSTOM -> {
             if (isUserCardMessage()) {
-                context.getString(R.string.ease_user_card, getUserCardInfo()?.getRemarkOrName() ?: "")
+                context.getString(R.string.uikit_user_card, getUserCardInfo()?.getRemarkOrName() ?: "")
             } else if (isAlertMessage()) {
-                (body as ChatCustomMessageBody).params[EaseConstant.MESSAGE_CUSTOM_ALERT_CONTENT]
-                    ?: context.getString(R.string.ease_custom)
+                (body as ChatCustomMessageBody).params[ChatUIKitConstant.MESSAGE_CUSTOM_ALERT_CONTENT]
+                    ?: context.getString(R.string.uikit_custom)
             } else {
-                context.getString(R.string.ease_custom)
+                context.getString(R.string.uikit_custom)
             }
         }
         ChatMessageType.TXT -> {
             (body as ChatTextMessageBody).let {
-                getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false).let { isBigExp ->
+                getBooleanAttribute(ChatUIKitConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false).let { isBigExp ->
                     if(isBigExp) {
                         if (it.message.isNullOrEmpty()) {
-                            context.getString(R.string.ease_dynamic_expression)
+                            context.getString(R.string.uikit_dynamic_expression)
                         } else {
                             it.message
                         }
@@ -159,7 +159,7 @@ internal fun ChatMessage.getMessageDigest(context: Context): String {
             }
         }
         ChatMessageType.COMBINE -> {
-            context.getString(R.string.ease_combine)
+            context.getString(R.string.uikit_combine)
         }
         else -> {
             ""
@@ -167,21 +167,21 @@ internal fun ChatMessage.getMessageDigest(context: Context): String {
     }
 }
 
-internal fun ChatMessage.getSyncUserFromProvider(): EaseProfile? {
+internal fun ChatMessage.getSyncUserFromProvider(): ChatUIKitProfile? {
     return if (chatType == ChatType.Chat) {
         if (direct() == ChatMessageDirection.RECEIVE) {
             // Get user info from user profile provider.
-            EaseIM.getUserProvider()?.getSyncUser(from)
+            ChatUIKitClient.getUserProvider()?.getSyncUser(from)
         } else {
-            EaseIM.getCurrentUser()
+            ChatUIKitClient.getCurrentUser()
         }
     } else if (chatType == ChatType.GroupChat) {
         if (direct() == ChatMessageDirection.RECEIVE) {
             // Get user info from cache first.
             // Then get user info from user provider.
-            EaseProfile.getGroupMember(conversationId(), from)
+            ChatUIKitProfile.getGroupMember(conversationId(), from)
         } else {
-            EaseIM.getCurrentUser()
+            ChatUIKitClient.getCurrentUser()
         }
     } else {
         null
@@ -199,10 +199,10 @@ internal fun ChatMessage.createUnsentMessage(isReceive: Boolean = false): ChatMe
     }
 
     val text: String = if (isSend()) {
-        EaseIM.getContext()?.resources?.getString(R.string.ease_msg_recall_by_self)
+        ChatUIKitClient.getContext()?.resources?.getString(R.string.uikit_msg_recall_by_self)
             ?: ""
     } else {
-        EaseIM.getContext()?.resources?.getString(R.string.ease_msg_recall_by_user, getUserInfo()?.getRemarkOrName() ?: from)
+        ChatUIKitClient.getContext()?.resources?.getString(R.string.uikit_msg_recall_by_user, getUserInfo()?.getRemarkOrName() ?: from)
             ?: ""
     }
     val txtBody = ChatTextMessageBody(
@@ -215,7 +215,7 @@ internal fun ChatMessage.createUnsentMessage(isReceive: Boolean = false): ChatMe
     msgNotification.msgTime = msgTime
     msgNotification.chatType = chatType
     msgNotification.setLocalTime(localTime())
-    msgNotification.setAttribute(EaseConstant.MESSAGE_TYPE_RECALL, true)
+    msgNotification.setAttribute(ChatUIKitConstant.MESSAGE_TYPE_RECALL, true)
     msgNotification.setStatus(ChatMessageStatus.SUCCESS)
     msgNotification.setIsChatThreadMessage(isChatThreadMessage)
     return msgNotification
@@ -225,8 +225,8 @@ internal fun ChatMessage.createUnsentMessage(isReceive: Boolean = false): ChatMe
  * Create a local message when pin message.
  */
 internal fun ChatMessage.createNotifyPinMessage(operationUser: String?): ChatMessage {
-    val userInfo = EaseIM.getUserProvider()?.getSyncUser(operationUser)
-    var msgNotification:ChatMessage?
+    val userInfo = ChatUIKitClient.getUserProvider()?.getSyncUser(operationUser)
+    val msgNotification:ChatMessage?
     if (TextUtils.equals(to, ChatClient.getInstance().currentUser)) {
         msgNotification= ChatMessage.createReceiveMessage(ChatMessageType.TXT)
     }else{
@@ -252,7 +252,8 @@ internal fun ChatMessage.createNotifyPinMessage(operationUser: String?): ChatMes
     msgNotification.isUnread = false
     msgNotification.msgTime = System.currentTimeMillis()
     msgNotification.setLocalTime(System.currentTimeMillis())
-    msgNotification.setAttribute(EaseConstant.MESSAGE_TYPE_RECALL, true)
+    msgNotification.setAttribute(ChatUIKitConstant.MESSAGE_PIN_NOTIFY,true)
+    msgNotification.setAttribute(ChatUIKitConstant.MESSAGE_TYPE_RECALL, true)
     msgNotification.setStatus(ChatMessageStatus.SUCCESS)
     msgNotification.setIsChatThreadMessage(isChatThreadMessage)
     return msgNotification
@@ -274,30 +275,30 @@ fun ChatMessage.getDateFormat(isChat: Boolean = false): String? {
     if (isChat) {
         return if (DateFormatHelper.isSameDay(timestamp)) {
             DateFormatHelper.timestampToDateString(timestamp
-                , EaseIM.getConfig()?.dateFormatConfig?.chatTodayFormat
-                ?: EaseDateFormatConfig.DEFAULT_CHAT_TODAY_FORMAT)
+                , ChatUIKitClient.getConfig()?.dateFormatConfig?.chatTodayFormat
+                ?: ChatUIKitDateFormatConfig.DEFAULT_CHAT_TODAY_FORMAT)
         } else if (DateFormatHelper.isSameYear(timestamp)) {
             DateFormatHelper.timestampToDateString(timestamp
-                , EaseIM.getConfig()?.dateFormatConfig?.chatOtherDayFormat
-                    ?: EaseDateFormatConfig.DEFAULT_CHAT_OTHER_DAY_FORMAT)
+                , ChatUIKitClient.getConfig()?.dateFormatConfig?.chatOtherDayFormat
+                    ?: ChatUIKitDateFormatConfig.DEFAULT_CHAT_OTHER_DAY_FORMAT)
         } else {
             DateFormatHelper.timestampToDateString(timestamp
-                , EaseIM.getConfig()?.dateFormatConfig?.chatOtherYearFormat
-                    ?: EaseDateFormatConfig.DEFAULT_CHAT_OTHER_YEAR_FORMAT)
+                , ChatUIKitClient.getConfig()?.dateFormatConfig?.chatOtherYearFormat
+                    ?: ChatUIKitDateFormatConfig.DEFAULT_CHAT_OTHER_YEAR_FORMAT)
         }
     } else {
         return if (DateFormatHelper.isSameDay(timestamp)) {
             DateFormatHelper.timestampToDateString(timestamp
-                , EaseIM.getConfig()?.dateFormatConfig?.convTodayFormat
-                    ?: EaseDateFormatConfig.DEFAULT_CONV_TODAY_FORMAT)
+                , ChatUIKitClient.getConfig()?.dateFormatConfig?.convTodayFormat
+                    ?: ChatUIKitDateFormatConfig.DEFAULT_CONV_TODAY_FORMAT)
         } else if (DateFormatHelper.isSameYear(timestamp)) {
             DateFormatHelper.timestampToDateString(timestamp
-                , EaseIM.getConfig()?.dateFormatConfig?.convOtherDayFormat
-                    ?: EaseDateFormatConfig.DEFAULT_CONV_OTHER_DAY_FORMAT)
+                , ChatUIKitClient.getConfig()?.dateFormatConfig?.convOtherDayFormat
+                    ?: ChatUIKitDateFormatConfig.DEFAULT_CONV_OTHER_DAY_FORMAT)
         } else {
             DateFormatHelper.timestampToDateString(timestamp
-                , EaseIM.getConfig()?.dateFormatConfig?.convOtherYearFormat
-                    ?: EaseDateFormatConfig.DEFAULT_CONV_OTHER_YEAR_FORMAT)
+                , ChatUIKitClient.getConfig()?.dateFormatConfig?.convOtherYearFormat
+                    ?: ChatUIKitDateFormatConfig.DEFAULT_CONV_OTHER_YEAR_FORMAT)
         }
     }
 }
@@ -307,7 +308,7 @@ fun ChatMessage.getDateFormat(isChat: Boolean = false): String? {
  */
 fun ChatMessage.isUserCardMessage(): Boolean {
     val event = (body as? ChatCustomMessageBody)?.event() ?: ""
-    return event == EaseConstant.USER_CARD_EVENT
+    return event == ChatUIKitConstant.USER_CARD_EVENT
 }
 
 /**
@@ -315,21 +316,21 @@ fun ChatMessage.isUserCardMessage(): Boolean {
  */
 fun ChatMessage.isAlertMessage(): Boolean {
     val event = (body as? ChatCustomMessageBody)?.event() ?: ""
-    return event == EaseConstant.MESSAGE_CUSTOM_ALERT
+    return event == ChatUIKitConstant.MESSAGE_CUSTOM_ALERT
 }
 
 /**
  * Get user card info from message.
  */
-fun ChatMessage.getUserCardInfo(): EaseProfile? {
+fun ChatMessage.getUserCardInfo(): ChatUIKitProfile? {
     if (isUserCardMessage()) {
         (body as? ChatCustomMessageBody)?.let {
             val params: Map<String, String> = it.params
-            val uId = params[EaseConstant.USER_CARD_ID]
-            val nickname = params[EaseConstant.USER_CARD_NICK]
-            val headUrl = params[EaseConstant.USER_CARD_AVATAR]
+            val uId = params[ChatUIKitConstant.USER_CARD_ID]
+            val nickname = params[ChatUIKitConstant.USER_CARD_NICK]
+            val headUrl = params[ChatUIKitConstant.USER_CARD_AVATAR]
             if (uId.isNullOrEmpty()) return null
-            return EaseProfile(uId, nickname, headUrl)
+            return ChatUIKitProfile(uId, nickname, headUrl)
         }
     }
     return null
@@ -361,36 +362,36 @@ internal fun ChatMessage.addUserInfo(nickname: String?, avatarUrl: String?, rema
     if (!nickname.isNullOrEmpty()) info.put(MESSAGE_EXT_USER_INFO_NICKNAME_KEY, nickname)
     if (!avatarUrl.isNullOrEmpty()) info.put(MESSAGE_EXT_USER_INFO_AVATAR_KEY, avatarUrl)
     if (!remark.isNullOrEmpty()) info.put(MESSAGE_EXT_USER_INFO_REMARK_KEY, remark)
-    setAttribute(EaseConstant.MESSAGE_EXT_USER_INFO_KEY, info)
+    setAttribute(ChatUIKitConstant.MESSAGE_EXT_USER_INFO_KEY, info)
 }
 
 /**
  * Parse userinfo from message when receiving a message.
  */
-internal fun ChatMessage.getUserInfo(updateCache: Boolean = false): EaseProfile? {
-    EaseIM.getUserProvider()?.getSyncUser(from)?.let {
+internal fun ChatMessage.getUserInfo(updateCache: Boolean = false): ChatUIKitProfile? {
+    ChatUIKitClient.getUserProvider()?.getSyncUser(from)?.let {
         return it
     }
-    var profile: EaseProfile? = EaseProfile(from)
+    var profile: ChatUIKitProfile? = ChatUIKitProfile(from)
     try {
-        getJSONObjectAttribute(EaseConstant.MESSAGE_EXT_USER_INFO_KEY)?.let { info ->
-            profile = EaseProfile(
+        getJSONObjectAttribute(ChatUIKitConstant.MESSAGE_EXT_USER_INFO_KEY)?.let { info ->
+            profile = ChatUIKitProfile(
                 id = from,
                 name = info.optString(MESSAGE_EXT_USER_INFO_NICKNAME_KEY),
                 avatar = info.optString(MESSAGE_EXT_USER_INFO_AVATAR_KEY),
                 remark = info.optString(MESSAGE_EXT_USER_INFO_REMARK_KEY)
             )
             profile?.setTimestamp(msgTime)
-            EaseIM.getCache().insertMessageUser(from, profile!!)
+            ChatUIKitClient.getCache().insertMessageUser(from, profile!!)
             profile
         } ?: kotlin.run {
-            EaseIM.getCache().getMessageUserInfo(from)
+            ChatUIKitClient.getCache().getMessageUserInfo(from)
         }
     } catch (e: ChatException) {
-        profile = EaseIM.getCache().getMessageUserInfo(from)
+        profile = ChatUIKitClient.getCache().getMessageUserInfo(from)
     }
     if (profile == null) {
-        profile = EaseProfile(from)
+        profile = ChatUIKitProfile(from)
     }
     return profile
 }
@@ -426,11 +427,11 @@ internal fun ChatMessage.getThumbnailLocalUri(context: Context): Uri? {
 /**
  * Get the size of image or video.
  */
-fun ChatMessage.getImageSize(context: Context): EaseSize? {
+fun ChatMessage.getImageSize(context: Context): ChatUIKitSize? {
     if (type != ChatMessageType.IMAGE && type != ChatMessageType.VIDEO) {
         return null
     }
-    val originalSize = EaseSize(0,0)
+    val originalSize = ChatUIKitSize(0,0)
     if (type == ChatMessageType.IMAGE) {
         (body as ChatImageMessageBody).let {
             originalSize.width = it.width
@@ -460,7 +461,7 @@ fun ChatMessage.getImageSize(context: Context): EaseSize? {
 /**
  * Get the show size of image or video according to the screen info.
  */
-fun ChatMessage.getImageShowSize(context: Context?): EaseSize? {
+fun ChatMessage.getImageShowSize(context: Context?): ChatUIKitSize? {
     if (context == null) return null
     val originalSize = getImageSize(context) ?: return null
     val maxSize = context.getImageMaxSize()
@@ -472,7 +473,7 @@ fun ChatMessage.getImageShowSize(context: Context?): EaseSize? {
     if (radio == 0f) {
         radio = 1f
     }
-    val showSize = EaseSize(0, 0)
+    val showSize = ChatUIKitSize(0, 0)
     when(radio) {
         // If radio is less than 1/10, the middle part will be cut off to display the 1/10 part.
         in 0f..1/10f -> {
@@ -508,7 +509,7 @@ fun ChatMessage.getImageShowSize(context: Context?): EaseSize? {
  *      (1) If thumbnailDownloadStatus is pending or downloading, set the placeholder size with thumbnail show size.
  *      (2) If thumbnailDownloadStatus is success or failed, set the placeholder size with thumbnail show size.
  */
-fun ChatMessage.getPlaceholderShowSize(context: Context?): EaseSize? {
+fun ChatMessage.getPlaceholderShowSize(context: Context?): ChatUIKitSize? {
     if (context == null) return null
     if (isSend()) {
         val imageUri = getThumbnailLocalUri(context)
@@ -545,7 +546,7 @@ internal fun ChatMessage.canEdit(): Boolean {
     return type == ChatMessageType.TXT
             && isSend()
             && isSuccess()
-            && EaseIM.getConfig()?.chatConfig?.enableModifyMessageAfterSent == true
+            && ChatUIKitClient.getConfig()?.chatConfig?.enableModifyMessageAfterSent == true
 }
 
 internal fun ChatMessage.isSuccess(): Boolean {
@@ -562,15 +563,15 @@ internal fun ChatMessage.inProgress(): Boolean {
 
 internal fun ChatMessage.isUnsentMessage(): Boolean {
     return if (type == ChatMessageType.TXT) {
-        getBooleanAttribute(EaseConstant.MESSAGE_TYPE_RECALL, false)
+        getBooleanAttribute(ChatUIKitConstant.MESSAGE_TYPE_RECALL, false)
     } else {
         false
     }
 }
 
 internal fun ChatMessage.getInviteMessageStatus(): InviteMessageStatus? {
-    if (conversationId() == EaseConstant.DEFAULT_SYSTEM_MESSAGE_ID) {
-        return InviteMessageStatus.valueOf(getStringAttribute(EaseConstant.SYSTEM_MESSAGE_STATUS))
+    if (conversationId() == ChatUIKitConstant.DEFAULT_SYSTEM_MESSAGE_ID) {
+        return InviteMessageStatus.valueOf(getStringAttribute(ChatUIKitConstant.SYSTEM_MESSAGE_STATUS))
     }
     return null
 }
@@ -579,13 +580,13 @@ internal fun ChatMessage.getInviteMessageStatus(): InviteMessageStatus? {
  * Judge whether the message is a reply message.
  */
 internal fun ChatMessage.isReplyMessage(jsonResult: (JSONObject) -> Unit = {}): Boolean {
-    if (ext() != null && !ext().containsKey(EaseConstant.QUOTE_MSG_QUOTE)) {
+    if (ext() != null && !ext().containsKey(ChatUIKitConstant.QUOTE_MSG_QUOTE)) {
         return false
     }
     val jsonObject: JSONObject? = try {
-        val msgQuote = getStringAttribute(EaseConstant.QUOTE_MSG_QUOTE, null)
+        val msgQuote = getStringAttribute(ChatUIKitConstant.QUOTE_MSG_QUOTE, null)
         if (msgQuote.isNullOrEmpty()) {
-            getJSONObjectAttribute(EaseConstant.QUOTE_MSG_QUOTE)
+            getJSONObjectAttribute(ChatUIKitConstant.QUOTE_MSG_QUOTE)
         } else {
             JSONObject(msgQuote)
         }
@@ -612,27 +613,27 @@ internal fun ChatMessage.hasThreadChat(): Boolean {
 }
 
 fun ChatMessage.isUrlPreviewMessage():Boolean{
-   return attributes.containsKey(EaseConstant.MESSAGE_URL_PREVIEW)
+   return attributes.containsKey(ChatUIKitConstant.MESSAGE_URL_PREVIEW)
 }
 
-fun ChatMessage.parseUrlPreview():EasePreview?{
-    EaseIM.getConfig()?.chatConfig?.enableUrlPreview?.let {
+fun ChatMessage.parseUrlPreview():ChatUIKitPreview?{
+    ChatUIKitClient.getConfig()?.chatConfig?.enableUrlPreview?.let {
         if (!it) {
             return null
         }
     }
-    var preview:EasePreview? = null
+    var preview:ChatUIKitPreview? = null
     if (isUrlPreviewMessage()){
         try {
-            getJSONObjectAttribute(EaseConstant.MESSAGE_URL_PREVIEW)?.let { info ->
-                preview = EasePreview(
+            getJSONObjectAttribute(ChatUIKitConstant.MESSAGE_URL_PREVIEW)?.let { info ->
+                preview = ChatUIKitPreview(
                     url = info.optString(MESSAGE_URL_PREVIEW_URL),
                     title = info.optString(MESSAGE_URL_PREVIEW_TITLE),
                     description = info.optString(MESSAGE_URL_PREVIEW_DESCRIPTION),
                     imageURL = info.optString(MESSAGE_URL_PREVIEW_IMAGE_URL)
                 )
                 preview?.let {
-                    EaseIM.getCache().saveUrlPreviewInfo(msgId,it)
+                    ChatUIKitClient.getCache().saveUrlPreviewInfo(msgId,it)
                 }
             }
         } catch (e: ChatException) {

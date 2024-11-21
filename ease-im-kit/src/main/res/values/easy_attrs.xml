@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="EasyVideoPlayer">
+    <declare-styleable name="UIKitVideoPlayer">
         <!--Play resources-->
         <attr name="easy_source" format="string" />
         <!--Play button-->

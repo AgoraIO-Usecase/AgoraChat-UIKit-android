@@ -1,9 +1,9 @@
 package com.hyphenate.easeui.common.helper
 
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.interfaces.UrlPreviewStatusCallback
-import com.hyphenate.easeui.model.EasePreview
+import com.hyphenate.easeui.model.ChatUIKitPreview
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,19 +15,19 @@ import java.net.URL
 
 object URLPreviewHelper {
 
-    fun matchHTMLContent(html: String): EasePreview {
-        val content = EasePreview()
+    fun matchHTMLContent(html: String): ChatUIKitPreview {
+        val content = ChatUIKitPreview()
 
         // Open Graph 协议的正则表达式模式
-        val titleOGPattern = EaseIM.getConfig()?.chatConfig?.titleOGPattern
-        val descriptionOGPattern = EaseIM.getConfig()?.chatConfig?.descriptionOGPattern
-        val imageOGPattern = EaseIM.getConfig()?.chatConfig?.imageOGPattern
+        val titleOGPattern = ChatUIKitClient.getConfig()?.chatConfig?.titleOGPattern
+        val descriptionOGPattern = ChatUIKitClient.getConfig()?.chatConfig?.descriptionOGPattern
+        val imageOGPattern = ChatUIKitClient.getConfig()?.chatConfig?.imageOGPattern
 
         // 非 Open Graph 协议的正则表达式模式
-        val titlePattern = EaseIM.getConfig()?.chatConfig?.titlePattern
-        val descriptionPattern = EaseIM.getConfig()?.chatConfig?.descriptionPattern
-        val imagePattern = EaseIM.getConfig()?.chatConfig?.imagePattern
-        val imageSrcPattern = EaseIM.getConfig()?.chatConfig?.imageSrcPattern
+        val titlePattern = ChatUIKitClient.getConfig()?.chatConfig?.titlePattern
+        val descriptionPattern = ChatUIKitClient.getConfig()?.chatConfig?.descriptionPattern
+        val imagePattern = ChatUIKitClient.getConfig()?.chatConfig?.imagePattern
+        val imageSrcPattern = ChatUIKitClient.getConfig()?.chatConfig?.imageSrcPattern
 
         // 提取 Open Graph 协议中的 title
         val titleOGMatch = titleOGPattern?.toRegex()?.find(html)

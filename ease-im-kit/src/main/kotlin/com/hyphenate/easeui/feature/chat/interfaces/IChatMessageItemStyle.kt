@@ -2,13 +2,13 @@ package com.hyphenate.easeui.feature.chat.interfaces
 
 import android.graphics.drawable.Drawable
 import androidx.annotation.ColorInt
-import com.hyphenate.easeui.feature.chat.widgets.EaseChatMessageListLayout
-import com.hyphenate.easeui.widget.EaseImageView
+import com.hyphenate.easeui.feature.chat.widgets.ChatUIKitMessageListLayout
+import com.hyphenate.easeui.widget.ChatUIKitImageView
 
 interface IChatMessageItemStyle {
     /**
      * Set default avatar.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param src
      */
@@ -16,15 +16,15 @@ interface IChatMessageItemStyle {
 
     /**
      * Set avatar shape.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param shapeType
      */
-    fun setAvatarShapeType(shapeType: EaseImageView.ShapeType)
+    fun setAvatarShapeType(shapeType: ChatUIKitImageView.ShapeType)
 
     /**
      * Whether to show nickname.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param showNickname
      */
@@ -32,7 +32,7 @@ interface IChatMessageItemStyle {
 
     /**
      * Set the background of the item sender.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param bgDrawable
      */
@@ -40,7 +40,7 @@ interface IChatMessageItemStyle {
 
     /**
      * Set the receiver's background.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param bgDrawable
      */
@@ -48,7 +48,7 @@ interface IChatMessageItemStyle {
 
     /**
      * Set text message font size.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param textSize
      */
@@ -56,7 +56,7 @@ interface IChatMessageItemStyle {
 
     /**
      * Set text message font color.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param textColor
      */
@@ -64,7 +64,7 @@ interface IChatMessageItemStyle {
 
     /**
      * Set the timeline text size.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param textSize
      */
@@ -72,7 +72,7 @@ interface IChatMessageItemStyle {
 
     /**
      * Set the timeline text color.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param textColor
      */
@@ -80,7 +80,7 @@ interface IChatMessageItemStyle {
 
     /**
      * Set the timeline background.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param bgDrawable
      */
@@ -88,15 +88,15 @@ interface IChatMessageItemStyle {
 
     /**
      * Set the display style of the chat list.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param type
      */
-    fun setItemShowType(type: EaseChatMessageListLayout.ShowType)
+    fun setItemShowType(type: ChatUIKitMessageListLayout.ShowType)
 
     /**
      * Hide receiver's avatar, default is false.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param hide
      */
@@ -104,7 +104,7 @@ interface IChatMessageItemStyle {
 
     /**
      * Hide sender's avatar, default is false.
-     * After setting the parameter, should call the method [EaseChatMessageListLayout.notifyDataSetChanged]
+     * After setting the parameter, should call the method [ChatUIKitMessageListLayout.notifyDataSetChanged]
      * to refresh the list.
      * @param hide
      */

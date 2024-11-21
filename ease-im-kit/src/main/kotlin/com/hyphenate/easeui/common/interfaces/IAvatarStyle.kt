@@ -1,7 +1,7 @@
 package com.hyphenate.easeui.common.interfaces
 
 import android.graphics.drawable.Drawable
-import com.hyphenate.easeui.widget.EaseImageView
+import com.hyphenate.easeui.widget.ChatUIKitImageView
 
 interface IAvatarStyle {
     /**
@@ -20,7 +20,7 @@ interface IAvatarStyle {
      * Set avatar style
      * @param shapeType
      */
-    fun setAvatarShapeType(shapeType: EaseImageView.ShapeType)
+    fun setAvatarShapeType(shapeType: ChatUIKitImageView.ShapeType)
 
     /**
      * Set avatar radius

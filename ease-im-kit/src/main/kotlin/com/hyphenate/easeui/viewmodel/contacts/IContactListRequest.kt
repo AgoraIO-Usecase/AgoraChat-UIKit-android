@@ -1,7 +1,7 @@
 package com.hyphenate.easeui.viewmodel.contacts
 
 import com.hyphenate.easeui.common.ChatConversationType
-import com.hyphenate.easeui.model.EaseUser
+import com.hyphenate.easeui.model.ChatUIKitUser
 import com.hyphenate.easeui.viewmodel.IAttachView
 
 interface IContactListRequest : IAttachView {
@@ -71,7 +71,7 @@ interface IContactListRequest : IAttachView {
     /**
      * Fetch contact information from user.
      */
-    fun fetchContactInfo(contactList: List<EaseUser>?)
+    fun fetchContactInfo(contactList: List<ChatUIKitUser>?)
 
     /**
      * Set the DND of the conversation.

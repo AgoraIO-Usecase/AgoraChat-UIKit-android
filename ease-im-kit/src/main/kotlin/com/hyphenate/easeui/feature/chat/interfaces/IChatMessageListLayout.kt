@@ -3,7 +3,7 @@ package com.hyphenate.easeui.feature.chat.interfaces
 import androidx.recyclerview.widget.RecyclerView
 import com.hyphenate.easeui.common.ChatConversation
 import com.hyphenate.easeui.common.ChatMessage
-import com.hyphenate.easeui.feature.chat.adapter.EaseMessagesAdapter
+import com.hyphenate.easeui.feature.chat.adapter.ChatUIKitMessagesAdapter
 import com.hyphenate.easeui.feature.chat.reply.interfaces.OnMessageReplyViewClickListener
 import com.hyphenate.easeui.common.interfaces.IRecyclerView
 import com.hyphenate.easeui.feature.thread.interfaces.OnMessageChatThreadClickListener
@@ -36,12 +36,12 @@ interface IChatMessageListLayout: IRecyclerView {
     /**
      * Set custom adapter.
      */
-    fun setMessagesAdapter(adapter: EaseMessagesAdapter?)
+    fun setMessagesAdapter(adapter: ChatUIKitMessagesAdapter?)
 
     /**
      * Get chat message adapter.
      */
-    fun getMessagesAdapter(): EaseMessagesAdapter?
+    fun getMessagesAdapter(): ChatUIKitMessagesAdapter?
 
     /**
      * Set the touch monitor in the chat area to determine whether the click is

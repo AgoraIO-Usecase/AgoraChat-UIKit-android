@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ChatUIKitTitleBar">
+        <!-- Set logo's size -->
+        <attr name="titleBarLogoSize" format="dimension"/>
+        <!-- Set menu item's title color -->
+        <attr name="titleBarMenuTitleColor" format="color"/>
+        <!-- Set menu icon tint -->
+        <attr name="titleBarMenuIconTint" format="color"/>
+        <!-- Whether to enable the home as up function -->
+        <attr name="titleBarDisplayHomeAsUpEnabled" format="boolean"/>
+        <!-- Whether to replace the action bar of activity -->
+        <attr name="titleBarReplaceActionBar" format="boolean"/>
+        <!-- Set the title text appearance -->
+        <attr format="reference" name="titleBarTitleTextAppearance"/>
+        <!-- Set the subtitle text appearance  -->
+        <attr format="reference" name="titleBarSubtitleTextAppearance"/>
+        <!-- Set the title text -->
+        <attr name="titleBarTitle" format="reference|string"/>
+        <!-- Set the subtitle text -->
+        <attr name="titleBarSubtitle" format="reference|string"/>
+        <!-- Set the title to the center position -->
+        <attr name="titleBarTitleCenter" format="boolean"/>
+        <!-- Refer to Toolbar's popupTheme -->
+        <attr name="titleBarPopupTheme" format="reference"/>
+        <!-- Refer to Toolbar's navigationIcon -->
+        <attr format="reference" name="titleBarNavigationIcon"/>
+        <!-- Refer to MaterialToolbar's navigationIconTint -->
+        <attr name="titleBarNavigationIconTint" format="reference|color"/>
+        <!-- Refer to Toolbar's navigationContentDescription -->
+        <attr format="string" name="titleBarNavigationContentDescription"/>
+        <!-- Set the logo  -->
+        <attr name="titleBarLogo" format="reference"/>
+        <!-- Set the logo description  -->
+        <attr format="string" name="titleBarLogoDescription"/>
+        <!-- Set the title text color  -->
+        <attr format="color" name="titleBarTitleTextColor"/>
+        <!-- Set the subtitle text color  -->
+        <attr format="color" name="titleBarSubtitleTextColor"/>
+        <!-- Refer to Toolbar's menu -->
+        <attr format="reference" name="titleBarMenu"/>
+    </declare-styleable>
+
+    <declare-styleable name="ChatUIKitImageView">
+        <attr name="ease_border_color" format="color" />
+        <attr name="ease_border_width" format="dimension" />
+        <attr name="ease_press_alpha" format="integer" />
+        <attr name="ease_press_color" format="color" />
+        <attr name="ease_radius" format="dimension" />
+        <attr name="image_shape_type" format="enum">
+            <enum name="none" value="0" />
+            <enum name="round" value="1" />
+            <enum name="rectangle" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="ChatUIKitSearchEditText">
+        <attr name="search_edit_drawable_left_width" format="dimension"/>
+        <attr name="search_edit_drawable_left_height" format="dimension"/>
+        <attr name="search_edit_drawable_right_width" format="dimension"/>
+        <attr name="search_edit_drawable_right_height" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="ChatUIKitSearchView">
+        <attr name="search_drawable_icon" format="reference"/>
+        <attr name="search_drawable_icon_tint" format="reference|color"/>
+        <attr name="search_drawable_padding" format="reference|dimension"/>
+        <attr name="search_text_hint" format="reference|string"/>
+        <attr name="search_text_color" format="reference|color"/>
+        <attr name="search_text_size" format="reference|dimension"/>
+        <attr name="search_text" format="reference|string"/>
+        <attr name="search_gravity">
+            <enum name="center" value="0x11"/>
+            <enum name="center_horizontal" value="0x01"/>
+            <enum name="center_vertical" value="0x10"/>
+            <enum name="start" value="0x00800003"/>
+            <enum name="end" value="0x00800005"/>
+            <enum name="top" value="0x30"/>
+            <enum name="bottom" value="0x50"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="ChatUIKitSidebar">
+        <attr name="ease_side_bar_top_text" format="reference|string"/>
+        <attr name="ease_side_bar_text_color" format="reference|color"/>
+        <attr name="ease_side_bar_text_size" format="dimension"/>
+        <attr name="ease_side_bar_background" format="reference|color"/>
+        <attr name="ease_side_bar_focus_bg_color" format="reference|color"/>
+        <attr name="ease_side_bar_delay_disappear_time" format="reference|integer"/>
+        <attr name="ease_side_bar_head_arrays" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ChatUIKitArrowItemView">
+        <attr name="arrowItemTitle" format="string|reference"/>
+        <attr name="arrowItemTitleColor" format="color|reference"/>
+        <attr name="arrowItemTitleSize" format="dimension|reference"/>
+        <attr name="arrowItemTitleStyle" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="bold" value="1"/>
+            <enum name="italic" value="2"/>
+        </attr>
+        <attr name="arrowItemSubTitle" format="string|reference"/>
+        <attr name="arrowItemSubTitleColor" format="color|reference"/>
+        <attr name="arrowItemSubTitleSize" format="dimension|reference"/>
+        <attr name="arrowItemShowSubTitle" format="boolean"/>
+        <attr name="arrowItemSubTitleStyle" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="bold" value="1"/>
+            <enum name="italic" value="2"/>
+        </attr>
+        <attr name="arrowItemContent" format="string|reference"/>
+        <attr name="arrowItemContentColor" format="color|reference"/>
+        <attr name="arrowItemContentSize" format="dimension|reference"/>
+        <attr name="arrowItemShowDivider" format="boolean"/>
+        <attr name="arrowItemShowArrow" format="boolean"/>
+        <attr name="arrowItemShowAvatar" format="boolean"/>
+        <attr name="arrowItemAvatarSrc" format="reference"/>
+        <attr name="arrowItemArrowSrc" format="reference"/>
+        <attr name="arrowItemAvatarHeight" format="dimension|reference"/>
+        <attr name="arrowItemAvatarWidth" format="dimension|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="SwitchItemView">
+        <attr name="switchItemTitle" format="string|reference"/>
+        <attr name="switchItemTitleColor" format="color|reference"/>
+        <attr name="switchItemTitleSize" format="dimension|reference"/>
+        <attr name="switchItemTitleStyle" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="bold" value="1"/>
+            <enum name="italic" value="2"/>
+        </attr>
+        <attr name="switchItemShowDivider" format="boolean"/>
+        <attr name="switchItemHint" format="string|reference"/>
+        <attr name="switchItemCheckEnable" format="boolean"/>
+        <attr name="switchItemClickable" format="boolean"/>
+        <attr name="switchItemShowAvatar" format="boolean"/>
+        <attr name="switchItemAvatarSrc" format="reference"/>
+        <attr name="switchItemAvatarHeight" format="dimension|reference"/>
+        <attr name="switchItemAvatarWidth" format="dimension|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ChatUIKitFlowLayout">
+        <attr name="horizontalMargin" format="dimension"/>
+        <attr name="alignRight" format="boolean"/>
+    </declare-styleable>
+</resources>

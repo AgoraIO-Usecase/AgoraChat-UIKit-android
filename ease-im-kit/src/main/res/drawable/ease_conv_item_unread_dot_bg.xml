@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-    <solid android:color="@color/ease_conv_item_unread_dot_bg"/>
-    <size android:height="@dimen/ease_size_8" android:width="@dimen/ease_size_8"/>
-</shape>

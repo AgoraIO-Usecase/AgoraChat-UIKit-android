@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.hyphenate.easeui.widget.ChatUIKitTitleBar
+        android:id="@+id/title_bar"
+        app:titleBarTitleCenter="false"
+        app:titleTextColor="@color/ease_color_on_background_low"
+        app:titleBarMenuIconTint="@color/ease_color_on_background_low"
+        app:titleBarMenuTitleColor="@color/ease_color_on_background_low"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ease_toolbar_height"/>
+
+    <FrameLayout
+        android:id="@+id/fl_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

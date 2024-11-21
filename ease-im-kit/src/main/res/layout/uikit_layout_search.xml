@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search_root"
+    android:orientation="horizontal"
+    style="@style/ease_widget_search_view_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/iv_search_icon"
+        android:layout_width="@dimen/ease_search_view_icon_size"
+        android:layout_height="@dimen/ease_search_view_icon_size"
+        style="@style/ease_search_view_drawable"/>
+
+    <TextView
+        android:id="@+id/tv_search_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ease_search_view_tv_text"
+        android:text="@string/uikit_search_text_hint"/>
+
+</LinearLayout>

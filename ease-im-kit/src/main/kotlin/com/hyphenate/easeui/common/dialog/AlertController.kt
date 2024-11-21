@@ -37,7 +37,7 @@ class AlertController(
         var listeners: SparseArray<View.OnClickListener?>
         var contentViewId = 0
         var contentView: View? = null
-        var customDialog: EaseAlertDialog? = null
+        var customDialog: ChatUIKitAlertDialog? = null
         var mWidth = ViewGroup.LayoutParams.WRAP_CONTENT
         var mHeight = ViewGroup.LayoutParams.WRAP_CONTENT
         var mAnimation = 0

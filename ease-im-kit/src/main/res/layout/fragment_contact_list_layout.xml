@@ -6,9 +6,9 @@
     android:background="@color/ease_color_background"
     android:orientation="vertical">
 
-    <com.hyphenate.easeui.widget.EaseTitleBar
+    <com.hyphenate.easeui.widget.ChatUIKitTitleBar
         android:id="@+id/title_contact"
-        app:titleBarTitle="@string/ease_contact_title"
+        app:titleBarTitle="@string/uikit_contact_title"
         app:titleBarTitleCenter="true"
         app:titleTextColor="@color/ease_color_on_background_low"
         app:titleBarMenuIconTint="@color/ease_color_on_background_low"
@@ -16,12 +16,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ease_toolbar_height"/>
 
-    <com.hyphenate.easeui.widget.EaseSearchView
+    <com.hyphenate.easeui.widget.ChatUIKitSearchView
         android:id="@+id/search_bar"
         style="@style/ease_widget_search_view"
-        app:search_text="@string/ease_contact_search"/>
+        app:search_text="@string/uikit_contact_search"/>
 
-    <com.hyphenate.easeui.feature.contact.widgets.EaseContactListLayout
+    <com.hyphenate.easeui.feature.contact.widgets.ChatUIKitContactListLayout
         android:id="@+id/list_contact"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

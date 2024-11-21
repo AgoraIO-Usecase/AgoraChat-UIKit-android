@@ -12,23 +12,23 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hyphenate.easeui.R
-import com.hyphenate.easeui.base.EaseBaseSheetFragmentDialog
+import com.hyphenate.easeui.base.ChatUIKitBaseSheetFragmentDialog
 import com.hyphenate.easeui.common.extensions.dpToIntPx
 import com.hyphenate.easeui.common.extensions.dpToPx
-import com.hyphenate.easeui.databinding.EaseLayoutSimpleSheetDialogBinding
+import com.hyphenate.easeui.databinding.UikitLayoutSimpleSheetDialogBinding
 import com.hyphenate.easeui.interfaces.SimpleListSheetItemClickListener
-import com.hyphenate.easeui.model.EaseMenuItem
+import com.hyphenate.easeui.model.ChatUIKitMenuItem
 
 class SimpleListSheetDialog(
     context: Context,
-    itemList: MutableList<EaseMenuItem>?,
+    itemList: MutableList<ChatUIKitMenuItem>?,
     val title:String? = null,
     val itemListener: SimpleListSheetItemClickListener ?= null,
     val type: SimpleSheetType? = SimpleSheetType.ITEM_LAYOUT_DIRECTION_CENTER
-):EaseBaseSheetFragmentDialog<EaseLayoutSimpleSheetDialogBinding>() {
+):ChatUIKitBaseSheetFragmentDialog<UikitLayoutSimpleSheetDialogBinding>() {
     private var mContext:Context
     private var sheetAdapter: SimpleSheetAdapter? = null
-    private var data:MutableList<EaseMenuItem>? = null
+    private var data:MutableList<ChatUIKitMenuItem>? = null
     private var listener:SimpleListSheetItemClickListener?=null
 
     init {
@@ -40,8 +40,8 @@ class SimpleListSheetDialog(
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): EaseLayoutSimpleSheetDialogBinding {
-        return EaseLayoutSimpleSheetDialogBinding.inflate(inflater)
+    ): UikitLayoutSimpleSheetDialogBinding {
+        return UikitLayoutSimpleSheetDialogBinding.inflate(inflater)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,7 +75,7 @@ class SimpleListSheetDialog(
 
     override fun initListener(){
         sheetAdapter?.setSimpleListSheetItemClickListener(object : SimpleListSheetItemClickListener{
-            override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
+            override fun onItemClickListener(position: Int, menu: ChatUIKitMenuItem) {
                 listener?.onItemClickListener(position,menu)
             }
         })
@@ -93,7 +93,7 @@ class SimpleListSheetDialog(
 
 
 class SimpleSheetAdapter(
-    private val dataList: MutableList<EaseMenuItem>?,
+    private val dataList: MutableList<ChatUIKitMenuItem>?,
     private val type: SimpleSheetType,
 ):RecyclerView.Adapter<SimpleSheetAdapter.ViewHolder>() {
     private lateinit var listener: SimpleListSheetItemClickListener
@@ -104,7 +104,7 @@ class SimpleSheetAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.ease_simple_sheet_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.uikit_simple_sheet_item, parent, false)
         return ViewHolder(view)
     }
 

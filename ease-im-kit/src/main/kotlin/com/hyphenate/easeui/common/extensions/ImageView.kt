@@ -10,7 +10,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import coil.load
 import coil.request.CachePolicy
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.R
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatImageMessageBody
@@ -18,23 +18,23 @@ import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatMessage
 import com.hyphenate.easeui.common.ChatMessageType
 import com.hyphenate.easeui.common.ChatVideoMessageBody
-import com.hyphenate.easeui.model.EaseProfile
-import com.hyphenate.easeui.model.EaseSize
-import com.hyphenate.easeui.widget.EaseImageView
+import com.hyphenate.easeui.model.ChatUIKitProfile
+import com.hyphenate.easeui.model.ChatUIKitSize
+import com.hyphenate.easeui.widget.ChatUIKitImageView
 
 
 /**
- * Load user avatar from EaseProfile.
- * @param profile EaseProfile
+ * Load user avatar from ChatUIKitProfile.
+ * @param profile ChatUIKitProfile
  * @param placeholder placeholder drawable
  * @param errorPlaceholder error placeholder drawable
  */
-internal fun ImageView.loadAvatar(profile: EaseProfile?,
+internal fun ImageView.loadAvatar(profile: ChatUIKitProfile?,
                                   placeholder: Drawable? = null,
                                   errorPlaceholder: Drawable? = null) {
 
-    val ph = placeholder ?: AppCompatResources.getDrawable(context, R.drawable.ease_default_avatar)
-    val ep = errorPlaceholder ?: AppCompatResources.getDrawable(context, R.drawable.ease_default_avatar)
+    val ph = placeholder ?: AppCompatResources.getDrawable(context, R.drawable.uikit_default_avatar)
+    val ep = errorPlaceholder ?: AppCompatResources.getDrawable(context, R.drawable.uikit_default_avatar)
     load(profile?.avatar ?: ph) {
         placeholder(ph)
         error(ep)
@@ -51,7 +51,7 @@ internal fun ImageView.loadAvatar(message: ChatMessage?,
                                   errorPlaceholder: Drawable? = null) {
 
     if (message == null) {
-        loadAvatar(EaseProfile(""), placeholder, errorPlaceholder)
+        loadAvatar(ChatUIKitProfile(""), placeholder, errorPlaceholder)
         return
     }
     loadAvatar(message.getUserInfo(), placeholder, errorPlaceholder)
@@ -59,7 +59,7 @@ internal fun ImageView.loadAvatar(message: ChatMessage?,
 
 internal fun ImageView.loadImageFromLocalOrUrl(localUri: Uri?
                                                , remoteUrl: String?
-                                               , showSize: EaseSize?
+                                               , showSize: ChatUIKitSize?
                                                , @DrawableRes placeholder: Int
                                                , onSuccess: () -> Unit = {}
                                                , onError: (Throwable) -> Unit = {}) {
@@ -115,8 +115,8 @@ fun ImageView.loadImageFromMessage(message: ChatMessage?
             loadImageFromLocalOrUrl(imageLocalUri
                 , null
                 , showSize
-                , if (msg.type == ChatMessageType.IMAGE) R.drawable.ease_default_image
-                else R.drawable.ease_default_video_thumbnail
+                , if (msg.type == ChatMessageType.IMAGE) R.drawable.uikit_default_image
+                else R.drawable.uikit_default_video_thumbnail
                 , onSuccess
                 , onError = {
                     layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
@@ -141,8 +141,8 @@ fun ImageView.loadImageFromMessage(message: ChatMessage?
             loadImageFromLocalOrUrl(null
                 , remoteUrl
                 , showSize
-                , if (msg.type == ChatMessageType.IMAGE) R.drawable.ease_default_image
-                else R.drawable.ease_default_video_thumbnail
+                , if (msg.type == ChatMessageType.IMAGE) R.drawable.uikit_default_image
+                else R.drawable.uikit_default_video_thumbnail
                 , onSuccess
                 , onError = {
                     layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
@@ -156,9 +156,9 @@ fun ImageView.loadImageFromMessage(message: ChatMessage?
 /**
  * Set avatar common config.
  */
-fun EaseImageView.setAvatarConfig() {
-    EaseIM.getConfig()?.avatarConfig?.let {
-        if (it.getAvatarShapeIncludeDefault() != EaseImageView.ShapeType.NONE) setShapeType(it.getAvatarShapeIncludeDefault())
+fun ChatUIKitImageView.setAvatarConfig() {
+    ChatUIKitClient.getConfig()?.avatarConfig?.let {
+        if (it.getAvatarShapeIncludeDefault() != ChatUIKitImageView.ShapeType.NONE) setShapeType(it.getAvatarShapeIncludeDefault())
         if (it.getAvatarRadiusIncludeDefault() != -1) setRadius(it.getAvatarRadiusIncludeDefault())
         if (it.getAvatarBorderWidthIncludeDefault() != -1) {
             setBorderWidth(it.getAvatarBorderWidthIncludeDefault())

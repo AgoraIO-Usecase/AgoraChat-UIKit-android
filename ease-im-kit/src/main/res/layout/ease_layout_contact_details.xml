@@ -7,7 +7,7 @@
     android:background="@color/ease_color_background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.hyphenate.easeui.widget.EaseTitleBar
+    <com.hyphenate.easeui.widget.ChatUIKitTitleBar
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ease_toolbar_height"
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.hyphenate.easeui.widget.EaseCustomAvatarView
+            <com.hyphenate.easeui.widget.ChatUIKitCustomAvatarView
                 android:id="@+id/ep_presence"
                 android:layout_marginTop="20dp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -49,10 +49,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <com.hyphenate.easeui.widget.EaseImageView
+            <com.hyphenate.easeui.widget.ChatUIKitImageView
                 android:id="@+id/ic_notice"
                 android:visibility="visible"
-                android:src="@drawable/ease_do_not_disturb"
+                android:src="@drawable/uikit_do_not_disturb"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintTop_toTopOf="@+id/tv_name"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_name"
@@ -105,29 +105,29 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <com.hyphenate.easeui.widget.EaseSwitchItemView
+            <com.hyphenate.easeui.widget.ChatUIKitSwitchItemView
                 android:id="@+id/switch_item_disturb"
                 android:layout_marginTop="20dp"
                 app:layout_constraintTop_toBottomOf="@+id/function_layout"
-                app:switchItemTitle="@string/ease_message_no_disturbance"
+                app:switchItemTitle="@string/uikit_message_no_disturbance"
                 style="@style/ease_contact_detail_switch_item"
                 app:switchItemClickable="false"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 />
 
-            <com.hyphenate.easeui.widget.EaseArrowItemView
+            <com.hyphenate.easeui.widget.ChatUIKitArrowItemView
                 android:id="@+id/item_clear"
                 app:layout_constraintTop_toBottomOf="@+id/switch_item_disturb"
-                app:arrowItemTitle="@string/ease_clear_history"
+                app:arrowItemTitle="@string/uikit_clear_history"
                 style="@style/ease_contact_detail_arrow_item"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"/>
 
-            <com.hyphenate.easeui.widget.EaseSwitchItemView
+            <com.hyphenate.easeui.widget.ChatUIKitSwitchItemView
                 android:id="@+id/switch_item_black"
                 app:layout_constraintTop_toBottomOf="@+id/item_clear"
-                app:switchItemTitle="@string/ease_switch_block_title"
+                app:switchItemTitle="@string/uikit_switch_block_title"
                 app:switchItemClickable="false"
                 style="@style/ease_contact_detail_switch_item"
                 android:layout_width="match_parent"

@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.FileHelper
-import com.hyphenate.easeui.common.helper.EasePreferenceManager
+import com.hyphenate.easeui.common.helper.ChatUIKitPreferenceManager
 
 
 /**
@@ -46,7 +46,7 @@ fun Uri.savePermission(context: Context?, intent: Intent?): Boolean {
         ChatLog.e("Uri", "saveUriPermission failed e: " + e.message)
     }
     if (!last.isNullOrEmpty()) {
-        EasePreferenceManager.getInstance().putString(last, toString())
+        ChatUIKitPreferenceManager.getInstance().putString(last, toString())
         return true
     }
     return false
@@ -64,7 +64,7 @@ fun Uri.takePersistablePermission(context: Context?): Uri? {
     }
     val last = getLastSub()
     if (!last.isNullOrEmpty()) {
-        val fileUri = EasePreferenceManager.getInstance().getString(last)
+        val fileUri = ChatUIKitPreferenceManager.getInstance().getString(last)
         if (!fileUri.isNullOrEmpty()) {
             return try {
                 context.contentResolver.takePersistableUriPermission(
@@ -73,7 +73,7 @@ fun Uri.takePersistablePermission(context: Context?): Uri? {
                 )
                 Uri.parse(fileUri)
             } catch (e: SecurityException) {
-                ChatLog.e("EaseFileUtils", "takePersistableUriPermission failed e: " + e.message)
+                ChatLog.e("ChatUIKitFileUtils", "takePersistableUriPermission failed e: " + e.message)
                 null
             }
         }
@@ -84,7 +84,7 @@ fun Uri.takePersistablePermission(context: Context?): Uri? {
             Intent.FLAG_GRANT_READ_URI_PERMISSION
         )
     } catch (e: SecurityException) {
-        ChatLog.e("EaseFileUtils", "takePersistableUriPermission failed e: " + e.message)
+        ChatLog.e("ChatUIKitFileUtils", "takePersistableUriPermission failed e: " + e.message)
         return null
     }
     return this

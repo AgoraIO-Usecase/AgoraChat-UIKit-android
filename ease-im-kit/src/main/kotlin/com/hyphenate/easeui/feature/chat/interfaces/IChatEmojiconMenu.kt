@@ -1,18 +1,18 @@
 package com.hyphenate.easeui.feature.chat.interfaces
 
-import com.hyphenate.easeui.model.EaseEmojiconGroupEntity
+import com.hyphenate.easeui.model.ChatUIKitEmojiconGroupEntity
 interface IChatEmojiconMenu {
     /**
      * Add emoticon group
      * @param groupEntity
      */
-    fun addEmojiconGroup(groupEntity: EaseEmojiconGroupEntity)
+    fun addEmojiconGroup(groupEntity: ChatUIKitEmojiconGroupEntity)
 
     /**
      * Add emoticons list
      * @param groupEntitieList
      */
-    fun addEmojiconGroup(groupEntitieList: List<EaseEmojiconGroupEntity>?)
+    fun addEmojiconGroup(groupEntitieList: List<ChatUIKitEmojiconGroupEntity>?)
 
     /**
      * Remove emoticon group
@@ -30,5 +30,5 @@ interface IChatEmojiconMenu {
      * Set up emoticon monitoring
      * @param listener
      */
-    fun setEmojiconMenuListener(listener: EaseEmojiconMenuListener?)
+    fun setEmojiconMenuListener(listener: ChatUIKitEmojiconMenuListener?)
 }

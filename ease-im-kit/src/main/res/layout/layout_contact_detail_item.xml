@@ -18,7 +18,7 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/itemIcon"
-            android:src="@drawable/ease_bubble_msg"
+            android:src="@drawable/uikit_bubble_msg"
             style="@style/ease_group_detail_custom_layout_item_icon_style" />
 
         <TextView

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00000000</color>
+    <color name="black">#ff000000</color>
+    <color name="white">#ffffffff</color>
+    <!-- 基础颜色 start -->
+    <color name="ease_primary_20">#003f66</color>
+    <color name="ease_primary_50">#33b1ff</color>
+    <color name="ease_primary_60">#009eff</color>
+    <color name="ease_primary_80">#99D8FF</color>
+    <color name="ease_primary_90">#ccecff</color>
+    <color name="ease_primary_95">#e6f5ff</color>
+    <color name="ease_secondary_40">#00cc77</color>
+    <color name="ease_secondary_60">#33ffaa</color>
+    <color name="ease_error_50">#ff002b</color>
+    <color name="ease_error_60">#ff3355</color>
+    <color name="ease_neutral_0">#000000</color>
+    <color name="ease_neutral_10">#171a1c</color>
+    <color name="ease_neutral_20">#2f3437</color>
+    <color name="ease_neutral_30">#464e53</color>
+    <color name="ease_neutral_40">#5e686e</color>
+    <color name="ease_neutral_50">#75828A</color>
+    <color name="ease_neutral_60">#919ba1</color>
+    <color name="ease_neutral_70">#acb4b9</color>
+    <color name="ease_neutral_80">#c8cdd0</color>
+    <color name="ease_neutral_90">#e3e6e8</color>
+    <color name="ease_neutral_95">#f1f2f3</color>
+    <color name="ease_neutral_98">#f9fafa</color>
+    <color name="ease_neutral_100">#ffffff</color>
+    <color name="ease_neutral_special_30">#314368</color>
+    <color name="ease_neutral_special_50">#415a8b</color>
+    <color name="ease_neutral_special_60">#748dbe</color>
+    <color name="ease_neutral_special_70">#97A9CE</color>
+    <color name="ease_neutral_special_80">#BAC6DE</color>
+    <color name="ease_neutral_special_90">#DCE2EF</color>
+    <color name="ease_neutral_special_98">#F8F9FC</color>
+    <!-- 基础颜色 end -->
+
+    <color name="ease_color_primary">@color/ease_primary_50</color>
+    <color name="ease_color_primary_container">@color/ease_primary_95</color>
+    <color name="ease_color_secondary">@color/ease_secondary_40</color>
+    <color name="ease_color_error">@color/ease_error_50</color>
+    <color name="ease_color_background_low">@color/ease_neutral_100</color>
+    <color name="ease_color_background">@color/ease_neutral_98</color>
+    <color name="ease_color_background_high">@color/ease_neutral_95</color>
+    <color name="ease_color_background_higher">@color/ease_neutral_90</color>
+    <color name="ease_color_background_container">@color/ease_neutral_90</color>
+    <color name="ease_color_on_background_low">@color/ease_neutral_10</color>
+    <color name="ease_color_on_background">@color/ease_neutral_30</color>
+    <color name="ease_color_on_background_high">@color/ease_neutral_70</color>
+    <color name="ease_color_on_background_higher">@color/ease_neutral_80</color>
+    <color name="ease_color_on_background_special">@color/ease_neutral_special_50</color>
+    <color name="ease_color_on_background_container">@color/ease_neutral_90</color>
+
+    <color name="ease_color_text_title">@color/ease_neutral_98</color>
+    <!-- For subtitle text -->
+    <color name="ease_color_text_subtitle">@color/ease_neutral_30</color>
+    <!-- For subtitle text high -->
+    <color name="ease_color_text_subtitle_high">@color/ease_neutral_30</color>
+    <!-- For primary text -->
+    <color name="ease_color_text_primary">@color/ease_neutral_98</color>
+    <!-- For on primary text -->
+    <color name="ease_color_text_on_primary">@color/ease_neutral_10</color>
+    <!-- For secondary text -->
+    <color name="ease_color_text_secondary">@color/ease_neutral_50</color>
+    <!-- For secondary text high -->
+    <color name="ease_color_text_secondary_high">@color/ease_neutral_50</color>
+    <!-- For text hint -->
+    <color name="ease_color_text_hint">@color/ease_neutral_60</color>
+    <!-- For text on container -->
+    <color name="ease_color_text_on_container">@color/ease_neutral_98</color>
+    <!-- For secondary Container text -->
+    <color name="ease_color_text_secondary_container">@color/ease_neutral_70</color>
+    <color name="ease_color_spacing_view">@color/ease_neutral_95</color>
+    <!-- For special -->
+    <color name="ease_color_text_special">@color/ease_neutral_special_50</color>
+    <!-- For special high-->
+    <color name="ease_color_text_special_high">@color/ease_neutral_special_50</color>
+    <!-- For special higher-->
+    <color name="ease_color_text_special_higher">@color/ease_neutral_special_90</color>
+    <!-- For on special -->
+    <color name="ease_color_text_on_special">@color/ease_neutral_95</color>
+    <!-- For container border -->
+    <color name="ease_color_outline">@color/ease_neutral_30</color>
+    <!-- For bubble divider line -->
+    <color name="ease_color_region_outline">@color/ease_primary_80</color>
+    <!-- For bubble divider line high -->
+    <color name="ease_color_region_outline_high">@color/ease_neutral_special_80</color>
+    <!-- For divider line -->
+    <color name="ease_color_outline_variant">@color/ease_neutral_90</color>
+    <!-- For not enable -->
+    <color name="ease_color_text_not_enable">@color/ease_neutral_70</color>
+    <!-- extend menu bg -->
+    <color name="ease_color_wx_style_extend_menu_tint">@color/ease_neutral_30</color>
+    <color name="ease_color_wx_style_extend_menu_text_tint">@color/ease_neutral_30</color>
+
+</resources>

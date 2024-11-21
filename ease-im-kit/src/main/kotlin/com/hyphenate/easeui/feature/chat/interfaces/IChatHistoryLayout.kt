@@ -1,7 +1,7 @@
 package com.hyphenate.easeui.feature.chat.interfaces
 
-import com.hyphenate.easeui.feature.chat.adapter.EaseMessagesAdapter
-import com.hyphenate.easeui.feature.chat.widgets.EaseChatMessageListLayout
+import com.hyphenate.easeui.feature.chat.adapter.ChatUIKitMessagesAdapter
+import com.hyphenate.easeui.feature.chat.widgets.ChatUIKitMessageListLayout
 import com.hyphenate.easeui.viewmodel.chathistory.IChatHistoryRequest
 
 interface IChatHistoryLayout {
@@ -14,7 +14,7 @@ interface IChatHistoryLayout {
     /**
      * Set custom adapter.
      */
-    fun setMessagesAdapter(adapter: EaseMessagesAdapter?)
+    fun setMessagesAdapter(adapter: ChatUIKitMessagesAdapter?)
 
     /**
      * Set the combine message download or parse callback.
@@ -24,5 +24,5 @@ interface IChatHistoryLayout {
     /**
      * Get the chat message list layout.
      */
-    fun getChatMessageListLayout(): EaseChatMessageListLayout
+    fun getChatMessageListLayout(): ChatUIKitMessageListLayout
 }

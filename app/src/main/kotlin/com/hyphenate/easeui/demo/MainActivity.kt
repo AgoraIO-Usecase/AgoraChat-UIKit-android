@@ -8,15 +8,15 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationBarView
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatError
-import com.hyphenate.easeui.common.EaseConstant
+import com.hyphenate.easeui.common.ChatUIKitConstant
 import com.hyphenate.easeui.common.extensions.showToast
 import com.hyphenate.easeui.demo.base.BaseInitActivity
 import com.hyphenate.easeui.demo.databinding.ActivityMainBinding
 import com.hyphenate.easeui.demo.login.AboutMeFragment
-import com.hyphenate.easeui.feature.contact.EaseContactsListFragment
-import com.hyphenate.easeui.feature.conversation.EaseConversationListFragment
+import com.hyphenate.easeui.feature.contact.ChatUIKitContactsListFragment
+import com.hyphenate.easeui.feature.conversation.ChatUIKitConversationListFragment
 import com.hyphenate.easeui.interfaces.OnEventResultListener
 
 
@@ -41,12 +41,12 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
     override fun initListener() {
         super.initListener()
         binding.navView.setOnItemSelectedListener(this)
-        EaseIM.addEventResultListener(this)
+        ChatUIKitClient.addEventResultListener(this)
     }
 
     private fun switchToHome() {
         if (mConversationListFragment == null) {
-            mConversationListFragment = EaseConversationListFragment.Builder()
+            mConversationListFragment = ChatUIKitConversationListFragment.Builder()
                 .useTitleBar(true)
                 .enableTitleBarPressBack(false)
                 .useSearchBar(true)
@@ -59,7 +59,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
 
     private fun switchToContacts() {
         if (mContactFragment == null) {
-            mContactFragment = EaseContactsListFragment.Builder()
+            mContactFragment = ChatUIKitContactsListFragment.Builder()
                 .useTitleBar(true)
                 .useSearchBar(true)
                 .enableTitleBarPressBack(false)
@@ -82,7 +82,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
 
     override fun onDestroy() {
         super.onDestroy()
-        EaseIM.removeEventResultListener(this)
+        ChatUIKitClient.removeEventResultListener(this)
     }
 
     private fun replace(fragment: Fragment, tag: String) {
@@ -156,7 +156,7 @@ class MainActivity : BaseInitActivity<ActivityMainBinding>(), NavigationBarView.
 
     override fun onEventResult(function: String, errorCode: Int, errorMessage: String?) {
         when(function){
-            EaseConstant.API_ASYNC_ADD_CONTACT -> {
+            ChatUIKitConstant.API_ASYNC_ADD_CONTACT -> {
                 if (errorCode == ChatError.EM_NO_ERROR){
                     runOnUiThread{
                         mContext.showToast(mContext.resources.getString(R.string.em_main_add_contact_success))

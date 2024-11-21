@@ -4,7 +4,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import com.hyphenate.easeui.interfaces.OnMenuDismissListener
 import com.hyphenate.easeui.interfaces.OnMenuItemClickListener
-import com.hyphenate.easeui.model.EaseMenuItem
+import com.hyphenate.easeui.model.ChatUIKitMenuItem
 
 interface IMenu {
 
@@ -39,7 +39,7 @@ interface IMenu {
     /**
      * Register menu item list.
      */
-    fun registerMenus(menuItems: List<EaseMenuItem>)
+    fun registerMenus(menuItems: List<ChatUIKitMenuItem>)
 
     /**
      * Set menu item click listener.

@@ -7,14 +7,14 @@ import com.hyphenate.easeui.common.dialog.CustomDialog
 import com.hyphenate.easeui.common.dialog.SimpleListSheetDialog
 import com.hyphenate.easeui.common.extensions.isAdmin
 import com.hyphenate.easeui.common.extensions.isOwner
-import com.hyphenate.easeui.feature.group.EaseGroupDetailEditActivity
+import com.hyphenate.easeui.feature.group.ChatUIKitGroupDetailEditActivity
 import com.hyphenate.easeui.feature.group.EditType
-import com.hyphenate.easeui.feature.thread.EaseChatThreadMemberActivity
-import com.hyphenate.easeui.feature.thread.fragment.EaseChatThreadFragment
+import com.hyphenate.easeui.feature.thread.ChatUIKitThreadMemberActivity
+import com.hyphenate.easeui.feature.thread.fragment.ChatUIKitThreadFragment
 import com.hyphenate.easeui.interfaces.SimpleListSheetItemClickListener
-import com.hyphenate.easeui.model.EaseMenuItem
+import com.hyphenate.easeui.model.ChatUIKitMenuItem
 
-class ChatThreadFragment:EaseChatThreadFragment() {
+class ChatThreadFragment:ChatUIKitThreadFragment() {
     private var moreDialog:SimpleListSheetDialog? = null
 
     companion object{
@@ -39,7 +39,7 @@ class ChatThreadFragment:EaseChatThreadFragment() {
      override fun showDialog(){
         context?.let {
             val menu = mutableListOf(
-                EaseMenuItem(
+                ChatUIKitMenuItem(
                     order = 0,
                     menuId = R.id.thread_more_edit,
                     title = resources.getString(R.string.thread_edit),
@@ -47,21 +47,21 @@ class ChatThreadFragment:EaseChatThreadFragment() {
                     titleColor = ContextCompat.getColor(mContext, R.color.em_color_on_background),
                     isVisible = (parentInfo?.isOwner() == true || parentInfo?.isAdmin() == true || mThread?.isOwner() == true)
                 ),
-                EaseMenuItem(
+                ChatUIKitMenuItem(
                     order = 1*10,
                     menuId = R.id.thread_more_member,
                     title = resources.getString(R.string.thread_member),
                     resourceId = R.drawable.icon_thread_member,
                     titleColor = ContextCompat.getColor(mContext, R.color.em_color_on_background)
                 ),
-                EaseMenuItem(
+                ChatUIKitMenuItem(
                     order = 2*10,
                     menuId = R.id.thread_more_leave,
                     title =  resources.getString(R.string.thread_leave),
                     resourceId = R.drawable.icon_thread_leave,
                     titleColor = ContextCompat.getColor(mContext, R.color.em_color_on_background),
                 ),
-                EaseMenuItem(
+                ChatUIKitMenuItem(
                     order = 3*10,
                     menuId = R.id.thread_more_destroy,
                     title =  resources.getString(R.string.thread_destroy) ,
@@ -74,10 +74,10 @@ class ChatThreadFragment:EaseChatThreadFragment() {
                 context = it,
                 itemList = menu,
                 itemListener = object : SimpleListSheetItemClickListener {
-                    override fun onItemClickListener(position: Int, menu: EaseMenuItem) {
+                    override fun onItemClickListener(position: Int, menu: ChatUIKitMenuItem) {
                         when(menu.menuId){
                             R.id.thread_more_edit -> {
-                                startActivity(EaseGroupDetailEditActivity.createIntent(
+                                startActivity(ChatUIKitGroupDetailEditActivity.createIntent(
                                     context = mContext,
                                     groupId = mThread?.parentId,
                                     type = EditType.ACTION_EDIT_THREAD_NAME,
@@ -88,7 +88,7 @@ class ChatThreadFragment:EaseChatThreadFragment() {
                             }
                             R.id.thread_more_member -> {
                                 chatThreadId?.let { threadId ->
-                                    EaseChatThreadMemberActivity.actionStart(mContext,parentId,threadId)
+                                    ChatUIKitThreadMemberActivity.actionStart(mContext,parentId,threadId)
                                 }
                                 moreDialog?.dismiss()
                             }
@@ -110,8 +110,8 @@ class ChatThreadFragment:EaseChatThreadFragment() {
     override fun showDestroyChatThreadDialog() {
         val clearDialog = CustomDialog(
             context = mContext,
-            title = mContext.resources.getString(com.hyphenate.easeui.R.string.ease_thread_delete_topic_title),
-            subtitle = mContext.resources.getString(com.hyphenate.easeui.R.string.ease_thread_delete_topic_subtitle),
+            title = mContext.resources.getString(com.hyphenate.easeui.R.string.uikit_thread_delete_topic_title),
+            subtitle = mContext.resources.getString(com.hyphenate.easeui.R.string.uikit_thread_delete_topic_subtitle),
             isEditTextMode = false,
             onLeftButtonClickListener = {
 

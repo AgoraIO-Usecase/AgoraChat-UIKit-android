@@ -17,6 +17,6 @@ internal fun Int.maxUnreadCount(context: Context): String {
     return if (this <= 99) {
         this.toString()
     } else {
-        context.getString(R.string.ease_message_unread_count_max)
+        context.getString(R.string.uikit_message_unread_count_max)
     }
 }

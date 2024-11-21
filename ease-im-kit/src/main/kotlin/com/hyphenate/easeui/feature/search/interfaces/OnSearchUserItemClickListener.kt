@@ -1,7 +1,7 @@
 package com.hyphenate.easeui.feature.search.interfaces
 
 import android.view.View
-import com.hyphenate.easeui.model.EaseUser
+import com.hyphenate.easeui.model.ChatUIKitUser
 
 interface OnSearchUserItemClickListener {
     /**
@@ -10,5 +10,5 @@ interface OnSearchUserItemClickListener {
      * @param position
      * @param user
      */
-    fun onSearchItemClick(view: View?, position: Int,user: EaseUser)
+    fun onSearchItemClick(view: View?, position: Int,user: ChatUIKitUser)
 }

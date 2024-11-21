@@ -1,8 +1,8 @@
 package com.hyphenate.easeui.interfaces
 
-import com.hyphenate.easeui.model.EaseMenuItem
+import com.hyphenate.easeui.model.ChatUIKitMenuItem
 
 interface SimpleListSheetItemClickListener {
-    fun onItemClickListener(position:Int,menu:EaseMenuItem){}
+    fun onItemClickListener(position:Int,menu:ChatUIKitMenuItem){}
 
 }

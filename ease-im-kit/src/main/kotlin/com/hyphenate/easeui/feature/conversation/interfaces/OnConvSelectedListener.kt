@@ -2,7 +2,7 @@ package com.hyphenate.easeui.feature.conversation.interfaces
 
 /**
  * Used to listener the conversation item selected event.
- * Used in [EaseConversation].
+ * Used in [ChatUIKitConversation].
  */
 internal interface OnConvSelectedListener {
 

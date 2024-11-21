@@ -15,7 +15,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
-import com.hyphenate.easeui.EaseIM
+import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.extensions.dpToPx
 import com.hyphenate.easeui.common.extensions.mainScope
 import com.hyphenate.easeui.demo.DemoApplication
@@ -217,7 +217,7 @@ object ToastUtils {
         if (TextUtils.isEmpty(message)) {
             return
         }
-        showToast(EaseIM.getContext(), title, message, type, duration, Gravity.CENTER)
+        showToast(ChatUIKitClient.getContext(), title, message, type, duration, Gravity.CENTER)
     }
 
     /**

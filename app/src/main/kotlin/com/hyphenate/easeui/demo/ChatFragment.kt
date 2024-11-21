@@ -2,16 +2,16 @@ package com.hyphenate.easeui.demo
 
 import android.os.Bundle
 import com.hyphenate.easeui.common.extensions.showToast
-import com.hyphenate.easeui.feature.chat.EaseChatFragment
-import com.hyphenate.easeui.feature.chat.enums.EaseChatType
-import com.hyphenate.easeui.feature.thread.EaseChatThreadListActivity
+import com.hyphenate.easeui.feature.chat.UIKitChatFragment
+import com.hyphenate.easeui.feature.chat.enums.ChatUIKitType
+import com.hyphenate.easeui.feature.thread.ChatUIKitThreadListActivity
 
-class ChatFragment: EaseChatFragment() {
+class ChatFragment: UIKitChatFragment() {
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
         binding?.titleBar?.inflateMenu(R.menu.demo_chat_menu)
-        if (chatType == EaseChatType.SINGLE_CHAT){
+        if (chatType == ChatUIKitType.SINGLE_CHAT){
             binding?.titleBar?.setMenuIconVisible(R.id.chat_menu_thread,false)
         }
         setMenuListener()
@@ -29,7 +29,7 @@ class ChatFragment: EaseChatFragment() {
                     true
                 }
                 R.id.chat_menu_thread -> {
-                    EaseChatThreadListActivity.actionStart(mContext,conversationId)
+                    ChatUIKitThreadListActivity.actionStart(mContext,conversationId)
                     true
                 }
                 else -> false

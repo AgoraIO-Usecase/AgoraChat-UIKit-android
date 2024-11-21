@@ -1,7 +1,7 @@
 package com.hyphenate.easeui.feature.chat.interfaces
 
 import com.hyphenate.easeui.interfaces.OnMenuChangeListener
-import com.hyphenate.easeui.menu.EaseMenuHelper
+import com.hyphenate.easeui.menu.ChatUIKitMenuHelper
 
 interface IChatMenu {
     /**
@@ -35,5 +35,5 @@ interface IChatMenu {
      * Return to the menu help category
      * @return
      */
-    fun getChatMenuHelper(): EaseMenuHelper?
+    fun getChatMenuHelper(): ChatUIKitMenuHelper?
 }
