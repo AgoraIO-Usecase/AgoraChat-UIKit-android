@@ -590,10 +590,10 @@ internal fun ChatMessage.isReplyMessage(jsonResult: (JSONObject) -> Unit = {}): 
         } else {
             JSONObject(msgQuote)
         }
-    } catch (e: ChatException) {
+    } catch (e: Exception) {
         ChatLog.e(
             "isReplyMessage",
-            "error message: " + e.description
+            "error message: " + e.message
         )
         null
     }
