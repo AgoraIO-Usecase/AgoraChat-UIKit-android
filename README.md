@@ -27,21 +27,21 @@ This guide provides an overview and usage examples of the chat_uikit framework i
     - [Log out of the UIKit](#log-out-of-the-uikit)
   - [Create pages](#create-pages)
     - [Create the chat page](#create-the-chat-page)
-      - [EaseChatActivity](#easechatactivity)
-      - [EaseChatFragment](#easechatfragment)
+      - [UIKitChatActivity](#UIKitChatActivity)
+      - [UIKitChatFragment](#UIKitChatFragment)
     - [Create the conversation list page](#create-the-conversation-list-page)
     - [Create the contact list page](#create-the-contact-list-page)
   - [Advanced customization](#advanced-customization)
     - [Chat page](#chat-page)
-      - [Customize with EaseChatFragment.Builder](#customize-with-easechatfragmentbuilder)
+      - [Customize with UIKitChatFragment.Builder](#Customize-with-UIKitChatFragmentbuilder)
       - [Add a custom message layout](#add-a-custom-message-layout)
-      - [Customize settings by inheriting EaseChatFragment](#customize-settings-by-inheriting-easechatfragment)
+      - [Customize settings by inheriting UIKitChatFragment](#customize-settings-by-inheriting-UIKitChatFragment)
     - [Conversation list page](#conversation-list-page)
-      - [Customize settings with EaseConversationListFragment.Builder](#customize-settings-with-easeconversationlistfragmentbuilder)
+      - [Customize settings with ChatUIKitConversationListFragment.Builder](#customize-settings-with-ChatUIKitConversationListFragmentbuilder)
       - [Add a custom conversation layout](#add-a-custom-conversation-layout)
-      - [Create a CustomConversationListFragment by inheriting EaseConversationListFragment](#create-a-customconversationlistfragment-by-inheriting-easeconversationlistfragment)
+      - [Create a CustomConversationListFragment by inheriting ChatUIKitConversationListFragment](#create-a-customconversationlistfragment-by-inheriting-ChatUIKitConversationListFragment)
     - [Contact list page](#contact-list-page)
-      - [Customize settings with EaseContactsListFragment.Builder](#customize-settings-with-easecontactslistfragmentbuilder)
+      - [Customize settings with ChatUIKitContactsListFragment.Builder](#customize-settings-with-ChatUIKitContactsListFragmentbuilder)
       - [Add a custom contact layout](#add-a-custom-contact-layout)
   - [Global configurations](#global-configurations)
   - [User information](#user-information)
@@ -155,14 +155,14 @@ Add the following lines to `app/proguard-rules.pro` to prevent code obfuscation.
 
 ```
 └── uikit
-    ├── EaseIM                                   // UIKit SDK entry
-    ├── EaseIMConfig                             // UIKit SDK configuration class
+    ├── ChatUIKitClient                                   // UIKit SDK entry
+    ├── ChatUIKitConfig                             // UIKit SDK configuration class
     ├── feature                                  // UIKit function module
     │   ├── chat                                   // Chat module
     │   │   ├── activities                            // Activity folder
-    │   │   │   └── EaseChatActivity                  // Chat page built in the UIKit
+    │   │   │   └── UIKitChatActivity                  // Chat page built in the UIKit
     │   │   ├── adapter                               // Adapter folder of the chat module
-    │   │   │   └── EaseMessagesAdapter               // Message list adapter
+    │   │   │   └── ChatUIKitMessagesAdapter               // Message list adapter
     │   │   ├── controllers                           // Controller of all functions of the chat module
     │   │   ├── pin                                   // Message pinning
     │   │   ├── urlpreview                            // URL preview
@@ -175,31 +175,31 @@ Add the following lines to `app/proguard-rules.pro` to prevent code obfuscation.
     │   │   ├── translation                           // Message translation
     │   │   ├── viewholders                           // Message type ViewHolder
     │   │   ├── widgets                               // Custom view of the chat module
-    │   │   └── EaseChatFragment                      // Chat fragment built in the UIKit
+    │   │   └── UIKitChatFragment                      // Chat fragment built in the UIKit
     │   ├── conversation                           // Conversation list module
     │   │   ├── adapter                               // Adapter folder
-    │   │   │   └── EaseConversationListAdapter       // Conversation list adapter
+    │   │   │   └── ChatUIKitConversationListAdapter       // Conversation list adapter
     │   │   ├── viewholders                           // Conversation ViewHolder
     │   │   ├── widgets                               // Custom view of the conversation list module
-    │   │   └── EaseConversationListFragment          // Conversation list fragment built in the UIKit
+    │   │   └── ChatUIKitConversationListFragment          // Conversation list fragment built in the UIKit
     │   ├── thread                                 // Message thread module
     │   │   ├── adapter                               // Adapter folder
-    │   │   │   └── EaseChatThreadListAdapter         // Message thread list adapter
+    │   │   │   └── ChatUIKitThreadListAdapter         // Message thread list adapter
     │   │   ├── viewholder                            // Message thread ViewHolder 
     │   │   ├── widgets                               // Custom view of the message thread module
-    │   │   └── EaseChatThreadActivity               // Thread chat page within the UIKit
+    │   │   └── ChatUIKitThreadActivity               // Thread chat page within the UIKit
     │   ├── contact                               // Contact list module
     │   │   ├── adapter                               // Contact list adapter folder 
-    │   │   │   └── EaseContactListAdapter            // Contact list adapter
+    │   │   │   └── ChatUIKitContactListAdapter            // Contact list adapter
     │   │   ├── viewholders                           // Contact ViewHolder
     │   │   ├── widgets                               // Custom view of the contact list module
-    │   │   └── EaseContactsListFragment              // Contact list fragment built in the UIKit
+    │   │   └── ChatUIKitContactsListFragment              // Contact list fragment built in the UIKit
     │   └── group                                 // Group module
     │       ├── fragments                             // Group fragment
     │       ├── adapter                               // Adapter folder 
-    │       │   └── EaseGroupListAdapter                // Group list adapter
+    │       │   └── ChatUIKitGroupListAdapter                // Group list adapter
     │       ├── viewholders                           // ViewHolder   Message ViewHolder
-    │       └── EaseGroupListActivity                 // Group list UI built in the UIKit
+    │       └── ChatUIKitGroupListActivity                 // Group list UI built in the UIKit
     ├── repository                               // UIKit SDK data repository
     ├── viewmodel                                // UIKit SDK ViewModel
     ├── provider                                 // UIKit SDK Provider
@@ -238,13 +238,13 @@ You need to initialize the UIKit before using it:
 ```kotlin
 val options = ChatOptions()
 options.appKey = "[Your appkey]"
-EaseIM.init(this, options)
+ChatUIKitClient.init(this, options)
 ```
 ### Log in to the UIKit
 
 ```kotlin
-val user = EaseProfile(userName, nickname, avatarUrl)
-EaseIM.login(user, token
+val user = ChatUIKitProfile(userName, nickname, avatarUrl)
+ChatUIKitClient.login(user, token
     , onSuccess = {
         // Add success logic
     }, onError = { code, error ->
@@ -256,7 +256,7 @@ EaseIM.login(user, token
 ### Log out of the UIKit
 
 ```kotlin
-EaseIM.logout(unbindDeviceToken
+ChatUIKitClient.logout(unbindDeviceToken
     , onSuccess = {
         // Add success logic
     }, onError = { code, error ->
@@ -269,21 +269,21 @@ EaseIM.logout(unbindDeviceToken
 
 ### Create the chat page
 
-#### EaseChatActivity
+#### UIKitChatActivity
 
-The UIKit provides the `EaseChatActivity` page. You can call the `EaseChatActivity#actionStart` method to create the chat page.
+The UIKit provides the `UIKitChatActivity` page. You can call the `UIKitChatActivity#actionStart` method to create the chat page.
 
 ```kotlin
 // conversationId: 1v1 is peer's userID, group chat is groupID
-// chatType can be EaseChatType#SINGLE_CHAT, EaseChatType#GROUP_CHAT
-EaseChatActivity.actionStart(mContext, conversationId, chatType)
+// chatType can be ChatUIKitType#SINGLE_CHAT, ChatUIKitType#GROUP_CHAT
+UIKitChatActivity.actionStart(mContext, conversationId, chatType)
 ```
 
-The EaseChatActivity page requests permissions, like camera permissions and voice permissions.
+The UIKitChatActivity page requests permissions, like camera permissions and voice permissions.
 
-#### EaseChatFragment
+#### UIKitChatFragment
 
-Alternatively, you can create the chat page with `EaseChatFragment`:
+Alternatively, you can create the chat page with `UIKitChatFragment`:
 
 ```kotlin
 class ChatActivity: AppCompatActivity() {
@@ -292,7 +292,7 @@ class ChatActivity: AppCompatActivity() {
         setContentView(R.layout.activity_chat)
         // conversationID: 1v1 is peer's userID, group chat is groupID
         // chatType can be ChatType#SINGLE_CHAT, ChatType#GROUP_CHAT
-        EaseChatFragment.Builder(conversationId, chatType)
+        UIKitChatFragment.Builder(conversationId, chatType)
                         .build()?.let { fragment ->
                             supportFragmentManager.beginTransaction()
                                 .replace(R.id.fl_fragment, fragment).commit()
@@ -303,7 +303,7 @@ class ChatActivity: AppCompatActivity() {
 
 ### Create the conversation list page
 
-UIKit provides `EaseConversationListFragment`.  You can create the conversation list page by adding `EaseConversationListFragment` to the `Activity`.
+UIKit provides `ChatUIKitConversationListFragment`.  You can create the conversation list page by adding `ChatUIKitConversationListFragment` to the `Activity`.
 
 ```kotlin
 class ConversationListActivity: AppCompatActivity() {
@@ -311,7 +311,7 @@ class ConversationListActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversation_list)
 
-        EaseConversationListFragment.Builder()
+        ChatUIKitConversationListFragment.Builder()
                         .build()?.let { fragment ->
                             supportFragmentManager.beginTransaction()
                                 .replace(R.id.fl_fragment, fragment).commit()
@@ -322,7 +322,7 @@ class ConversationListActivity: AppCompatActivity() {
 
 ### Create the contact list page
 
-UIKit provides `EaseContactsListFragment`. You can create the contact list page by adding `EaseContactsListFragment` to the `Activity`.
+UIKit provides `ChatUIKitContactsListFragment`. You can create the contact list page by adding `ChatUIKitContactsListFragment` to the `Activity`.
 
 ```kotlin
 class ContactListActivity: AppCompatActivity() {
@@ -330,7 +330,7 @@ class ContactListActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contact_list)
 
-        EaseContactsListFragment.Builder()
+        ChatUIKitContactsListFragment.Builder()
                         .build()?.let { fragment ->
                             supportFragmentManager.beginTransaction()
                                 .replace(R.id.fl_fragment, fragment).commit()
@@ -343,16 +343,16 @@ class ContactListActivity: AppCompatActivity() {
 
 ### Chat page
 
-#### Customize with EaseChatFragment.Builder
+#### Customize with UIKitChatFragment.Builder
 
-EaseChatFragment allows you to custom settings shown below with Builder:
+UIKitChatFragment allows you to custom settings shown below with Builder:
 
-EaseChatFragment
+UIKitChatFragment
 
 ```kotlin
 // conversationID: 1v1 is peer's userID, group chat is groupID
 // easeChatType: SINGLE_CHAT, GROUP_CHAT
-EaseChatFragment.Builder(conversationID, easeChatType)
+UIKitChatFragment.Builder(conversationID, easeChatType)
         .useTitleBar(true)
         .setTitleBarTitle("title")
         .setTitleBarSubTitle("subtitle")
@@ -391,16 +391,16 @@ EaseChatFragment.Builder(conversationID, easeChatType)
         .build()
 ```
 
-EaseChatFragment#Builder provides the following methods:
+UIKitChatFragment#Builder provides the following methods:
 
 | Method                                 | Description                                                         |
 | -------------------------------------- | ---------------------------------------------------- |
-| useTitleBar()                          | Sets to use the default title bar (EaseTitleBar):<br/> - true: Yes <br/> - (Default) false: No        |
+| useTitleBar()                          | Sets to use the default title bar (ChatUIKitTitleBar):<br/> - true: Yes <br/> - (Default) false: No        |
 | setTitleBarTitle()                     | Sets the title of the title bar.                                       |
 | setTitleBarSubTitle()                  | Sets the sub-title of the title bar.                                       |
 | enableTitleBarPressBack()              | Sets whether to show the back button in the title bar: <br/> - true: Yes <br/> - (Default) false: No           |
 | setTitleBarBackPressListener()         | Sets the event that occurs when clicking the the back button in the title bar.                           |
-| setSearchMessageId()                   | Sets the message ID for search. If a match is found, EaseChatFragment will display the target message as well as 10 messages following it.       |
+| setSearchMessageId()                   | Sets the message ID for search. If a match is found, UIKitChatFragment will display the target message as well as 10 messages following it.       |
 | getHistoryMessageFromServerOrLocal()   | Sets whether to preferentially get messages from the server or local storage.                           |
 | setOnChatExtendMenuItemClickListener() | Sets the listener for chat extension items.                            |
 | setOnChatInputChangeListener()         | Sets the listener for text changes on the menu.                                   |
@@ -429,16 +429,16 @@ EaseChatFragment#Builder provides the following methods:
 | setTargetTranslationList()             | Sets the list of target languages for translation. You need to enable the translation function before calling this method.                        |
 | setEmptyLayout()                       | Sets the empty page for the chat list.                                    |
 | setCustomAdapter()                     | Sets a custom adapter. By default, EaseMessageAdapter is used.  |
-| setCustomFragment()                    | Sets the custom chat fragment by inheriting EaseChatFragment.         |
+| setCustomFragment()                    | Sets the custom chat fragment by inheriting UIKitChatFragment.         |
 
 #### Add a custom message layout
 
-You can create a CustomMessageAdapter, CustomChatTypeViewViewHolder, and CustomTypeChatRow by inheriting EaseMessageAdapter, EaseChatRowViewHolder, and EaseChatRow, and then set CustomMessageAdapter to EaseChatFragment#Builder#setCustomAdapter.
+You can create a CustomMessageAdapter, CustomChatTypeViewViewHolder, and CustomTypeChatRow by inheriting EaseMessageAdapter, ChatUIKitRowViewHolder, and ChatUIKitRow, and then set CustomMessageAdapter to UIKitChatFragment#Builder#setCustomAdapter.
 
 (1) You can create a CustomMessageAdapter by inheriting EaseMessageAdapter and overwrite `getViewHolder` and `getItemNotEmptyViewType` methods.
 
 ```kotlin
-class CustomMessageAdapter: EaseMessagesAdapter() {
+class CustomMessageAdapter: ChatUIKitMessagesAdapter() {
 
     override fun getItemNotEmptyViewType(position: Int): Int {
         // Set your own itemViewType by message type.
@@ -454,7 +454,7 @@ class CustomMessageAdapter: EaseMessagesAdapter() {
 }
 ```
 
-(2) Create a CustomTypeChatRow by inheriting EaseChatRow.
+(2) Create a CustomTypeChatRow by inheriting ChatUIKitRow.
 
 ```kotlin
 class CustomTypeChatRow(
@@ -462,7 +462,7 @@ class CustomTypeChatRow(
     private val attrs: AttributeSet? = null,
     private val defStyle: Int = 0,
     isSender: Boolean = false
-): EaseChatRow(context, attrs, defStyle, isSender) {
+): ChatUIKitRow(context, attrs, defStyle, isSender) {
 
     override fun onInflateView() {
         inflater.inflate(if (!isSender) R.layout.layout_row_received_custom_type
@@ -478,12 +478,12 @@ class CustomTypeChatRow(
 }
 ```
 
-（3）Create a CustomChatTypeViewViewHolder by inheriting EaseChatRowViewHolder.
+（3）Create a CustomChatTypeViewViewHolder by inheriting ChatUIKitRowViewHolder.
 
 ```kotlin
 class CustomChatTypeViewViewHolder(
     itemView: View
-): EaseChatRowViewHolder(itemView) {
+): ChatUIKitRowViewHolder(itemView) {
 
     override fun onBubbleClick(message: EaseMessage?) {
         super.onBubbleClick(message)
@@ -495,7 +495,7 @@ class CustomChatTypeViewViewHolder(
 （4）Make improvement to CustomMessageAdapter.
 
 ```kotlin
-class CustomMessageAdapter: EaseMessagesAdapter() {
+class CustomMessageAdapter: ChatUIKitMessagesAdapter() {
 
     override fun getItemNotEmptyViewType(position: Int): Int {
         // Set your own itemViewType by message type.
@@ -533,15 +533,15 @@ class CustomMessageAdapter: EaseMessagesAdapter() {
 }
 ```
 
-（5）Add CustomMessageAdapter in EaseChatFragment#Builder.
+（5）Add CustomMessageAdapter in UIKitChatFragment#Builder.
 
 ```kotlin
 builder.setCustomAdapter(CustomMessageAdapter())
 ```
 
-#### Customize settings by inheriting EaseChatFragment
+#### Customize settings by inheriting UIKitChatFragment
 
-Create a CustomChatFragment by inheriting EaseChatFragment and set it in EaseChatFragment#Builder.
+Create a CustomChatFragment by inheriting UIKitChatFragment and set it in UIKitChatFragment#Builder.
 
 ```kotlin
 builder.setCustomFragment(customChatFragment)
@@ -549,18 +549,18 @@ builder.setCustomFragment(customChatFragment)
 
 (1) Set the functions of the list control
 
-Get the `EaseChatMessageListLayout` object:
+Get the `ChatUIKitMessageListLayout` object:
 
 ```kotlin
-val chatMessageListLayout:EaseChatMessageListLayout? = binding?.layoutChat?.chatMessageListLayout
+val chatMessageListLayout:ChatUIKitMessageListLayout? = binding?.layoutChat?.chatMessageListLayout
 ```
 
-EaseChatMessageListLayout provides the following methods:
+ChatUIKitMessageListLayout provides the following methods:
 
 | Method                       | Description                                                        |
 | ------------------------------ | ---------------------------------------------------- |
-| setViewModel()              | UIKit provides EaseMessageListViewModel. You can add your own data logic by inheriting IChatMessageListRequest. |
-| setMessagesAdapter()        | Sets the message list adapter that is a subclass of EaseMessagesAdapter.    |
+| setViewModel()              | UIKit provides ChatUIKitMessageListViewModel. You can add your own data logic by inheriting IChatMessageListRequest. |
+| setMessagesAdapter()        | Sets the message list adapter that is a subclass of ChatUIKitMessagesAdapter.    |
 | getMessagesAdapter()        | Returns the message list adapter.                                      |
 | addHeaderAdapter()          | Adds the adapter of the header adapter of the message list.     |
 | addFooterAdapter()          | Adds the adapter of the foot adapter of the message list.                                 |
@@ -569,17 +569,17 @@ EaseChatMessageListLayout provides the following methods:
 | removeItemDecoration()      | Removes the decorator of the message list.                                        |
 | setAvatarDefaultSrc()       | Sets the default avatar of an item.                                        |
 | setAvatarShapeType()        | Sets the avatar style: default style, round, and rectangular.  |
-| showNickname()              | Sets whether to display the nickname of the item. Also, EaseChatFragment#Builder provides the method for this function.  |
-| setItemSenderBackground()   | Sets the background of the sender. Also, EaseChatFragment#Builder provides the method for this function. |
-| setItemReceiverBackground() | Sets the background of the recipient. Also, EaseChatFragment#Builder provides a method for this function. |
+| showNickname()              | Sets whether to display the nickname of the item. Also, UIKitChatFragment#Builder provides the method for this function.  |
+| setItemSenderBackground()   | Sets the background of the sender. Also, UIKitChatFragment#Builder provides the method for this function. |
+| setItemReceiverBackground() | Sets the background of the recipient. Also, UIKitChatFragment#Builder provides a method for this function. |
 | setItemTextSize()           | Sets the font size of the text message.                                       |
 | setItemTextColor()          | Sets the font color of the text message.                                       |
-| setTimeTextSize()           | Sets the font size of the timeline text. Also, EaseChatFragment#Builder provides a method for this function. |
-| setTimeTextColor()          | Sets the color of the timeline text. Also, EaseChatFragment#Builder provides a method for this function. |
+| setTimeTextSize()           | Sets the font size of the timeline text. Also, UIKitChatFragment#Builder provides a method for this function. |
+| setTimeTextColor()          | Sets the color of the timeline text. Also, UIKitChatFragment#Builder provides a method for this function. |
 | setTimeBackground()         | Sets the background of the timeline.                                             |
-| hideChatReceiveAvatar()     | Sets not to display the recipient's avatar. Also, EaseChatFragment#Builder provides a method for this function.  |
-| hideChatSendAvatar()        | Sets not to display the sender's avatar. Also, EaseChatFragment#Builder provides a method for this function. |
-| setOnChatErrorListener()    | Sets the error listener for sending a message. Also, EaseChatFragment#Builder provides a method for this function. |
+| hideChatReceiveAvatar()     | Sets not to display the recipient's avatar. Also, UIKitChatFragment#Builder provides a method for this function.  |
+| hideChatSendAvatar()        | Sets not to display the sender's avatar. Also, UIKitChatFragment#Builder provides a method for this function. |
+| setOnChatErrorListener()    | Sets the error listener for sending a message. Also, UIKitChatFragment#Builder provides a method for this function. |
 
 （2）Set extension functions
 
@@ -599,7 +599,7 @@ IChatExtendMenu provides the following methods:
 
 - Listen for the extension item click event.
 
-You can use EaseChatFragment#Builder#setOnChatExtendMenuItemClickListener for listening for click events of extension items, or overwrite the onChatExtendMenuItemClick method in your custom fragment.
+You can use UIKitChatFragment#Builder#setOnChatExtendMenuItemClickListener for listening for click events of extension items, or overwrite the onChatExtendMenuItemClick method in your custom fragment.
 
 ```kotlin
 override fun onChatExtendMenuItemClick(view: View?, itemId: Int): Boolean {
@@ -622,24 +622,24 @@ binding?.let {
 }
 ```
 
-EaseChatLayout provides the following method that can be called upon long press
+ChatUIKitLayout provides the following method that can be called upon long press
 
 | Method                               | Description                                                        |
 | -------------------------------------- | ---------------------------------------------------- |
 | clearMenu()                         | Clears menu items.      |
 | addItemMenu()                       | Adds a new menu item.        |
 | findItemVisible()                   | Sets whether a menu item is visible by itemId.     |
-| setOnMenuChangeListener()           | Sets a listener for click events of menu items. This listener is already set in EaseChatFragment.  |
+| setOnMenuChangeListener()           | Sets a listener for click events of menu items. This listener is already set in UIKitChatFragment.  |
 
 - Handle events relating to the menu.
   Overwrite the following method in a custom fragment:
 
 ```kotlin
-override fun onPreMenu(helper: EaseChatMenuHelper?, message: ChatMessage?) {
+override fun onPreMenu(helper: ChatUIKitChatMenuHelper?, message: ChatMessage?) {
     // Callback event that occurs before the menu is displayed. Here you can set whether to display menu items by using the helper object.
 }
 
-override fun onMenuItemClick(item: EaseMenuItem?, message: ChatMessage?): Boolean {
+override fun onMenuItemClick(item: ChatUIKitMenuItem?, message: ChatMessage?): Boolean {
     // If you want to intercept a certain event, you need to set to return `true`.
     return false
 }
@@ -651,13 +651,13 @@ override fun onDismiss() {
 
 (4) Set the properties of the input menu.
 
-- Get the EaseChatInputMenu object.
+- Get the ChatUIKitInputMenu object.
 
 ```kotlin
-val chatInputMenu: EaseChatInputMenu? = binding?.layoutChat?.chatInputMenu
+val chatInputMenu: ChatUIKitInputMenu? = binding?.layoutChat?.chatInputMenu
 ```
 
-EaseChatInputMenu provides the following methods:
+ChatUIKitInputMenu provides the following methods:
 
 | Method                      | Description                                                        |
 | -------------------------- | ------------------------------------------------------------ |
@@ -714,12 +714,12 @@ binding?.let {
 
 ### Conversation list page
 
-#### Customize settings with EaseConversationListFragment.Builder
+#### Customize settings with ChatUIKitConversationListFragment.Builder
 
-EaseConversationListFragment allows you to customize settings shown below with Builder.
+ChatUIKitConversationListFragment allows you to customize settings shown below with Builder.
 
 ```kotlin
-EaseConversationListFragment.Builder()
+ChatUIKitConversationListFragment.Builder()
     .useTitleBar(true)
     .setTitleBarTitle("title")
     .enableTitleBarPressBack(true)
@@ -735,11 +735,11 @@ EaseConversationListFragment.Builder()
     .build()
 ```
 
-EaseConversationListFragment#Builder provides the following methods:
+ChatUIKitConversationListFragment#Builder provides the following methods:
 
 | Method                            | Description                                                         |
 | -------------------------------- | ------------------------------------------------------------ |
-| useTitleBar()                      | Sets whether to use the default title bar (EaseTitleBar): <br/> - true: Yes<br/> -(Default) false: No           |
+| useTitleBar()                      | Sets whether to use the default title bar (ChatUIKitTitleBar): <br/> - true: Yes<br/> -(Default) false: No           |
 | setTitleBarTitle()                 | Sets the title of the title bar.                                           |
 | enableTitleBarPressBack()          | Sets whether to display the back button: <br/> - true: Yes<br/> -(Default) false: No |
 | setTitleBarBackPressListener()     | Sets the listener for the click of the back button in the title bar.    |
@@ -748,24 +748,24 @@ EaseConversationListFragment#Builder provides the following methods:
 | setOnMenuItemClickListener()       | Sets the item click event listener.    |
 | setConversationChangeListener()    | Sets the conversation change listener.    |
 | setEmptyLayout()                   | Sets a blank page.        |
-| setCustomAdapter()                 | Sets a custom conversation list adapter by inheriting EaseConversationListAdapter.   |
-| setCustomFragment()                | Sets a custom chat fragment by inheriting EaseConversationListFragment.  |
+| setCustomAdapter()                 | Sets a custom conversation list adapter by inheriting ChatUIKitConversationListAdapter.   |
+| setCustomFragment()                | Sets a custom chat fragment by inheriting ChatUIKitConversationListFragment.  |
 
 #### Add a custom conversation layout
 
-You can add a CustomConversationListAdapter by inheriting EaseConversationListAdapter and set CustomConversationListAdapter to EaseConversationListFragment#Builder#setCustomAdapter.
+You can add a CustomConversationListAdapter by inheriting ChatUIKitConversationListAdapter and set CustomConversationListAdapter to ChatUIKitConversationListFragment#Builder#setCustomAdapter.
 
-(1) Create a CustomConversationListAdapter by inheriting EaseConversationListAdapter, and overwrite the getViewHolder and getItemNotEmptyViewType methods.
+(1) Create a CustomConversationListAdapter by inheriting ChatUIKitConversationListAdapter, and overwrite the getViewHolder and getItemNotEmptyViewType methods.
 
 ```kotlin
-class CustomConversationListAdapter : EaseConversationListAdapter() {
+class CustomConversationListAdapter : ChatUIKitConversationListAdapter() {
     override fun getItemNotEmptyViewType(position: Int): Int {
         // Set a custom itemViewType by message type.
         // If the default itemViewTyp is used, return super.getItemNotEmptyViewType(position).
         return CUSTOM_YOUR_CONVERSATION_TYPE
     }
 
-    override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<EaseConversation> {
+    override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<ChatUIKitConversation> {
         // Return the ViewHolder by reference to the returned viewType.
         // Return the custom ViewHolder or use the default super.getViewHolder(parent, viewType).
         return CUSTOM_YOUR_VIEW_HOLDER()
@@ -773,27 +773,27 @@ class CustomConversationListAdapter : EaseConversationListAdapter() {
 }
 ```
 
-（2）Add CustomConversationListAdapter in EaseConversationListFragment#Builder.
+（2）Add CustomConversationListAdapter in ChatUIKitConversationListFragment#Builder.
 
 ```kotlin
 builder.setCustomAdapter(customConversationListAdapter);
 ```
 
-#### Create a CustomConversationListFragment by inheriting EaseConversationListFragment
+#### Create a CustomConversationListFragment by inheriting ChatUIKitConversationListFragment
 
-Create a CustomConversationListFragment by inheriting EaseConversationListFragment and set it to EaseConversationListFragment#Builder.
+Create a CustomConversationListFragment by inheriting ChatUIKitConversationListFragment and set it to ChatUIKitConversationListFragment#Builder.
 
 ```kotlin
 builder.setCustomFragment(customConversationListFragment);
 ```
 
-You can gets the EaseConversationListLayout object from CustomConversationListFragment and configure custom settings.
+You can gets the ChatUIKitConversationListLayout object from CustomConversationListFragment and configure custom settings.
 
-EaseConversationListLayout provides the following methods:
+ChatUIKitConversationListLayout provides the following methods:
 
 | Method                                   | Description                                                            |
 | -------------------------------------- | ---------------------------------------------------------------- |
-| setViewModel()                    | UIKit provides the EaseConversationListViewModel. You can inherit IConversationListRequest and then add your own data logic. |
+| setViewModel()                    | UIKit provides the ChatUIKitConversationListViewModel. You can inherit IConversationListRequest and then add your own data logic. |
 | setListAdapter()                  | Sets a custom conversation list adapter.    |
 | getListAdapter()                  | Gets a conversation list adapter.     |
 | getItem()                         | Gets the data at the specific position.     |
@@ -801,13 +801,13 @@ EaseConversationListLayout provides the following methods:
 | makeConversationTop()             | Pins a conversation.  |
 | cancelConversationTop()           | Unpins a conversation.  |
 | deleteConversation()              | Deletes a pinned conversation.                                          |
-| setOnConversationChangeListener() | Sets a conversation change listener. Also, EaseConversationListFragment#Builder provides a method to set the listener. |
+| setOnConversationChangeListener() | Sets a conversation change listener. Also, ChatUIKitConversationListFragment#Builder provides a method to set the listener. |
 | addHeaderAdapter()                | Adds an adapter for the header layout of the conversation list.     |
 | addFooterAdapter()                | Adds an adapter for the footer layout of the conversation list.     |
 | removeAdapter()                   | Removes an adapter.                                              |
 | addItemDecoration()               | Adds a conversation list decorator.                                       |
 | removeItemDecoration()            | Removes a conversation list decorator.                                         |
-| setOnItemClickListener()          | Sets an item click listener. Also, EaseConversationListFragment#Builder provides a method to set the listener. |
+| setOnItemClickListener()          | Sets an item click listener. Also, ChatUIKitConversationListFragment#Builder provides a method to set the listener. |
 | setOnItemLongClickListener()      | Sets an item long-press listener.                                   |
 | setItemBackGround()               | Sets the item background.                                               |
 | setItemHeight()                   | Sets the item height.                                               |
@@ -829,23 +829,23 @@ EaseConversationListLayout provides the following methods:
 
 ### Contact list page
 
-#### Customize settings with EaseContactsListFragment.Builder
+#### Customize settings with ChatUIKitContactsListFragment.Builder
 
-EaseContactsListFragment allows you to customize the settings shown below with Builder:
+ChatUIKitContactsListFragment allows you to customize the settings shown below with Builder:
 
 ```kotlin
-EaseContactsListFragment.Builder()
+ChatUIKitContactsListFragment.Builder()
   .useTitleBar(true)
   .setTitleBarTitle("title")
   .enableTitleBarPressBack(true)
   .setTitleBarBackPressListener(onBackPressListener)
   .useSearchBar(false)
-  .setSearchType(EaseSearchType.USER)
-  .setListViewType(EaseListViewType.VIEW_TYPE_LIST_CONTACT)
+  .setSearchType(ChatUIKitSearchType.USER)
+  .setListViewType(ChatUIKitListViewType.VIEW_TYPE_LIST_CONTACT)
   .setSideBarVisible(true)
   .setDefaultMenuVisible(true)
   .setHeaderItemVisible(true)
-  .setHeaderItemList(mutableListOf<EaseCustomHeaderItem>())
+  .setHeaderItemList(mutableListOf<ChatUIKitCustomHeaderItem>())
   .setOnHeaderItemClickListener(OnHeaderItemClickListener)
   .setOnUserListItemClickListener(OnUserListItemClickListener)
   .setOnItemLongClickListener(onItemLongClickListener)
@@ -856,17 +856,17 @@ EaseContactsListFragment.Builder()
   .build()
 ```
 
-EaseContactsListFragment#Builder provides the following methods:
+ChatUIKitContactsListFragment#Builder provides the following methods:
 
 | Method                              | Description                                                                                                  |
 |----------------------------------|------------------------------------------------------------------------------------------------------|
-| useTitleBar()                    | Whether to use the default title bar (EaseTitleBar): <br/> - true: Yes <br/> - (Default) false: No                                 |
+| useTitleBar()                    | Whether to use the default title bar (ChatUIKitTitleBar): <br/> - true: Yes <br/> - (Default) false: No                                 |
 | setTitleBarTitle()               | Sets the title in the title bar.   |
 | enableTitleBarPressBack()        | Sets whether to display the back button: <br/> - true: Yes <br/> - (Default) false: No                                     |
 | setTitleBarBackPressListener()   | Sets the listener for the click of the back button of the title bar.     |
 | useSearchBar()                   | Sets whether to use the search bar: <br/> - true: Yes <br/> - (Default) false: No                                            |
-| setSearchType()                  | Sets the search type EaseSearchType: <br/> - USER  <br/> - SELECT_USER <br/> - CONVERSATION                      |
-| setListViewType()                | Sets the contact list type EaseListViewType <br/> - LIST_CONTACT (contact list by default) <br/> - LIST_SELECT_CONTACT (contact list with checkboxes) |
+| setSearchType()                  | Sets the search type ChatUIKitSearchType: <br/> - USER  <br/> - SELECT_USER <br/> - CONVERSATION                      |
+| setListViewType()                | Sets the contact list type ChatUIKitListViewType <br/> - LIST_CONTACT (contact list by default) <br/> - LIST_SELECT_CONTACT (contact list with checkboxes) |
 | setSideBarVisible()              | Sets whether to display the initial index toolbar <br/> - (Default) true: Yes <br/> - false: No                                   |
 | setDefaultMenuVisible()          | Sets whether to show the default menu: <br/> - (Default) true: Yes  <br/> - false: No                                            |
 | setHeaderItemVisible()           | Sets whether to show the contact list header layout: <br/> - true: Yes  <br/> - (Default) false: No                                 |
@@ -876,24 +876,24 @@ EaseContactsListFragment#Builder provides the following methods:
 | setOnItemLongClickListener()     | Sets the contact item long-press event listener.  |
 | setOnContactSelectedListener()   | Sets the contact item selection event listener.   |
 | setEmptyLayout()                 | Sets the blank page.    |
-| setCustomAdapter()               | Sets a custom adapter by inheriting EaseContactListAdapter.     |
+| setCustomAdapter()               | Sets a custom adapter by inheriting ChatUIKitContactListAdapter.     |
 | setCustomFragment()              | Sets a custom chat fragment by inheriting EaseContactListFragment.       |
 
 #### Add a custom contact layout
 
-You can create a CustomContactListAdapter by inheriting EaseContactListAdapter and set CustomContactListAdapter in  EaseContactsListFragment#Builder#setCustomAdapter.
+You can create a CustomContactListAdapter by inheriting ChatUIKitContactListAdapter and set CustomContactListAdapter in  ChatUIKitContactsListFragment#Builder#setCustomAdapter.
 
-(1) Create a CustomContactListAdapter by inheriting EaseContactListAdapter to overwrite getViewHolder and getItemNotEmptyViewType methods.
+(1) Create a CustomContactListAdapter by inheriting ChatUIKitContactListAdapter to overwrite getViewHolder and getItemNotEmptyViewType methods.
 
 ```kotlin
-class CustomContactListAdapter : EaseContactListAdapter() {
+class CustomContactListAdapter : ChatUIKitContactListAdapter() {
     override fun getItemNotEmptyViewType(position: Int): Int {
         //Set a custom itemViewType by message type.
         // If the default itemViewTyp is used, return super.getItemNotEmptyViewType(position).
         return CUSTOM_YOUR_CONTACT_TYPE
     }
 
-    override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<EaseUser> {
+    override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<ChatUIKitUser> {
         // Return ViewHolder by reference to the returned viewType. 
         // Return the custom ViewHolder or use the default super.getViewHolder(parent, viewType)
         return CUSTOM_YOUR_VIEW_HOLDER()
@@ -901,19 +901,19 @@ class CustomContactListAdapter : EaseContactListAdapter() {
 }
 ```
 
-(2) Add CustomContactListAdapter to EaseContactsListFragment#Builder.
+(2) Add CustomContactListAdapter to ChatUIKitContactsListFragment#Builder.
 
 ```kotlin
 builder.setCustomAdapter(CustomContactListAdapter)
 ```
 
-You can get the EaseContactsListFragment object from CustomContactListFragment and configure specific custom settings.
+You can get the ChatUIKitContactsListFragment object from CustomContactListFragment and configure specific custom settings.
 
-EaseContactListLayout provides the following methods:
+ChatUIKitContactListLayout provides the following methods:
 
 | Method                                  | Description                                                           |
 | -------------------------------------- | ---------------------------------------------------------------- |
-| setViewModel()                    | The UIKit provides EaseContactListViewModel. You can inherit IConversationListRequest to add your own data logic. |
+| setViewModel()                    | The UIKit provides ChatUIKitContactListViewModel. You can inherit IConversationListRequest to add your own data logic. |
 | setListAdapter()                  | Sets a custom contact list adapter.                                    |
 | getListAdapter()                  | Gets the contact list adapter.                                         |
 | getItem()                         | Gets the data at a specific location.      |
@@ -930,14 +930,14 @@ EaseContactListLayout provides the following methods:
 The UIKit provides global configurations which can be set during the initialization:
 
 ```kotlin
-val avatarConfig = EaseAvatarConfig()
+val avatarConfig = ChatUIKitAvatarConfig()
 // Set the avatars are round shape
-avatarConfig.avatarShape = EaseImageView.ShapeType.ROUND
-val config = EaseIMConfig(avatarConfig = avatarConfig)
-EaseIM.init(this, options, config)
+avatarConfig.avatarShape = ChatUIKitImageView.ShapeType.ROUND
+val config = ChatUIKitConfig(avatarConfig = avatarConfig)
+ChatUIKitClient.init(this, options, config)
 ```
 
-EaseAvatarConfig provides the following properties:
+ChatUIKitAvatarConfig provides the following properties:
 
 | Property                                  | Description                                                             |
 | -------------------------------------- | ---------------------------------------------------------------- |
@@ -947,7 +947,7 @@ EaseAvatarConfig provides the following properties:
 | avatarBorderWidth                      | The width of the avatar frame.                                                   |
 
 
-EaseChatConfig provides the following properties:
+ChatUIKitConfig provides the following properties:
 
 | Property                                  | Description                                                          |
 | -------------------------------------- | ---------------------------------------------------------------- |
@@ -956,7 +956,7 @@ EaseChatConfig provides the following properties:
 | timePeriodCanRecallMessage             | The message recall duration, which is 2 minutes by default. |
 
 
-EaseDateFormatConfig provides the following properties:
+ChatUIKitDateFormatConfig provides the following properties:
 
 | Property                                 | Description                                                            |
 | -------------------------------------- | ---------------------------------------------------------------- |
@@ -965,14 +965,14 @@ EaseDateFormatConfig provides the following properties:
 | convOtherYearFormat                   | The date format of other years than this year on the conversation list. The default format is "MMM dd, yyyy" in the English context.    |
 
 
-EaseSystemMsgConfig provides the following property:
+ChatUIKitSystemMsgConfig provides the following property:
 
 | Property                                    | Description                                                           |
 | -------------------------------------- | ---------------------------------------------------------------- |
 | useDefaultContactInvitedSystemMsg      | Whether to enable the system message function: <br/> (Default) - true： Yes  <br/> - false： No                                        |
 
 
-EaseMultiDeviceEventConfig provides the following properties:
+ChatUIKitMultiDeviceEventConfig provides the following properties:
 
 | Property                                    | Description            |
 |--------------------------------------|-------------------|
@@ -985,38 +985,38 @@ User information is used in many places in UIKit and needs to be provided by dev
 
 ### Information of the current login user
 
-During a call to the login API `EaseIM.login`, the user needs to pass in an `EaseProfile` object. This object contains the following attributes:
+During a call to the login API `ChatUIKitClient.login`, the user needs to pass in an `ChatUIKitProfile` object. This object contains the following attributes:
 - `id`: The user ID. This parameter is required.
-- `name` and `avatar`: Used to display the nickname and avatar of the current user. When sending a message, you can set the two parameters to the `ext` field of the message to allow other users to present the two parameters. If you fail to pass in the two parameters during login, you can call `EaseIM.updateCurrentUser` to update the current user's information after login.
+- `name` and `avatar`: Used to display the nickname and avatar of the current user. When sending a message, you can set the two parameters to the `ext` field of the message to allow other users to present the two parameters. If you fail to pass in the two parameters during login, you can call `ChatUIKitClient.updateCurrentUser` to update the current user's information after login.
 
 ### User information providing
 
-UIKit provides `EaseIM.setUserProfileProvider` to provide user information.
+UIKit provides `ChatUIKitClient.setUserProfileProvider` to provide user information.
 
-`EaseUserProfileProvider` API is as follows:
+`ChatUIKitUserProfileProvider` API is as follows:
 
 ```kotlin
-interface EaseUserProfileProvider {
+interface ChatUIKitUserProfileProvider {
     // Gets user information synchronously
-    fun getUser(userId: String?): EaseProfile?
+    fun getUser(userId: String?): ChatUIKitProfile?
 
     // Gets user information asynchronously
-    fun fetchUsers(userIds: List<String>, onValueSuccess: OnValueSuccess<List<EaseProfile>>)
+    fun fetchUsers(userIds: List<String>, onValueSuccess: OnValueSuccess<List<ChatUIKitProfile>>)
 }
 ```
 
 This API is used as follows:
 
 ```kotlin
-EaseIM.setUserProfileProvider(object : EaseUserProfileProvider {
+ChatUIKitClient.setUserProfileProvider(object : ChatUIKitUserProfileProvider {
     // Gets user information synchronously
-    override fun getUser(userId: String?): EaseProfile? {
+    override fun getUser(userId: String?): ChatUIKitProfile? {
         return getLocalUserInfo(userId)
     }
 
     override fun fetchUsers(
         userIds: List<String>,
-        onValueSuccess: OnValueSuccess<List<EaseProfile>>
+        onValueSuccess: OnValueSuccess<List<ChatUIKitProfile>>
     ) {
         fetchUserInfoFromServer(idsMap, onValueSuccess)
     }
@@ -1027,35 +1027,35 @@ EaseIM.setUserProfileProvider(object : EaseUserProfileProvider {
 
 ### Group information providing
 
-UIKit provides the `EaseIM.setGroupProfileProvider` to provide the user information.
+UIKit provides the `ChatUIKitClient.setGroupProfileProvider` to provide the user information.
 
-`EaseGroupProfileProvider` is as follows:
+`ChatUIKitGroupProfileProvider` is as follows:
 
 ```kotlin
-interface EaseGroupProfileProvider {
+interface ChatUIKitGroupProfileProvider {
     // Gets user information synchronously
-    fun getGroup(userId: String?): EaseGroupProfile?
+    fun getGroup(userId: String?): ChatUIKitGroupProfile?
 
     // Gets user information asynchronously
-    fun fetchGroups(userIds: List<String>, onValueSuccess: OnValueSuccess<List<EaseGroupProfile>>)
+    fun fetchGroups(userIds: List<String>, onValueSuccess: OnValueSuccess<List<ChatUIKitGroupProfile>>)
 }
 ```
 
 This API is used as follows:
 
 ```kotlin
-EaseIM.setGroupProfileProvider(object : EaseGroupProfileProvider {
+ChatUIKitClient.setGroupProfileProvider(object : ChatUIKitGroupProfileProvider {
     // Gets group information synchronously
-    override fun getGroup(groupId: String?): EaseGroupProfile? {
+    override fun getGroup(groupId: String?): ChatUIKitGroupProfile? {
       ChatClient.getInstance().groupManager().getGroup(id)?.let {
-        return EaseGroupProfile(it.groupId, it.groupName, it.extension)
+        return ChatUIKitGroupProfile(it.groupId, it.groupName, it.extension)
       }
       return null
     }
 
     override fun fetchGroups(
       groupIds: List<String>,
-      onValueSuccess: OnValueSuccess<List<EaseGroupProfile>>
+      onValueSuccess: OnValueSuccess<List<ChatUIKitGroupProfile>>
     ) {
   
     }
@@ -1075,15 +1075,15 @@ EaseIM.setGroupProfileProvider(object : EaseGroupProfileProvider {
 As information is cached in the UIKit, the UIKit will update the cached information via the `update` methods if the user information is changed.
 
 ```kotlin
-// First call EaseIM.getCache().getUser ｜ EaseIM.getCache().getGroup to get the local cached object, and then call the update methods:
-// Updates current user information  user: EaseProfile
-EaseIM.updateCurrentUser(user)
-// Updates user information in batches  list: List<EaseProfile>
-EaseIM.updateUsersInfo(list)
-// Updates group information in batches  groups: List<EaseGroupProfile>
-EaseIM.updateGroupInfo(groups)
+// First call ChatUIKitClient.getCache().getUser ｜ ChatUIKitClient.getCache().getGroup to get the local cached object, and then call the update methods:
+// Updates current user information  user: ChatUIKitProfile
+ChatUIKitClient.updateCurrentUser(user)
+// Updates user information in batches  list: List<ChatUIKitProfile>
+ChatUIKitClient.updateUsersInfo(list)
+// Updates group information in batches  groups: List<ChatUIKitGroupProfile>
+ChatUIKitClient.updateGroupInfo(groups)
 ```
 
 ## Support for dark and light themes
 
-UIKit supports both light and dark themes, with the theme colors changing with the system theme. To adjust the theme colors, you can create a new `values-night` folder in the app module, copy `ease_colors.xml` to this folder, and then modify the basic colors in it. Under the dark theme, the corresponding colors will also be changed.
+UIKit supports both light and dark themes, with the theme colors changing with the system theme. To adjust the theme colors, you can create a new `values-night` folder in the app module, copy `uikit_colors.xml` to this folder, and then modify the basic colors in it. Under the dark theme, the corresponding colors will also be changed.
