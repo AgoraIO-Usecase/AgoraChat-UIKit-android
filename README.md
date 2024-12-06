@@ -120,7 +120,7 @@ Add the following dependency to `build.gradle.kts` of the app project:
 
 ```kotlin
 
-implementation("io.hyphenate:ease-chat-kit:4.8.1")
+implementation("io.hyphenate:ease-chat-kit:4.11.1")
 
 ```
 

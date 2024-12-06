@@ -119,7 +119,7 @@ dependencyResolutionManagement {
 
 ```kotlin
 
-implementation("io.hyphenate:ease-chat-kit:4.8.1")
+implementation("io.hyphenate:ease-chat-kit:4.11.1")
 
 ```
 
