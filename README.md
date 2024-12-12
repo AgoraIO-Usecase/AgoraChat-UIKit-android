@@ -1,6 +1,25 @@
 # Agora Chat UIKit Readme
 
 
+## [Change log](CHANGE_LOG.md)
+
+## Important features
+- Message extension functions  
+    - Reactions
+    - Message threading
+    - Reply messages
+    - Chat group @ mentions
+    - Modify sent messages
+    - Recall sent messages
+    - Forward messages
+- Common functions
+    - Conversation list
+    - Chatting in a conversation
+    - Voice message
+    - Typing indicator
+    - Delivery receipt
+    - Read receipt
+
 ## Sample project
 
 Agora provides an open-source [AgoraChat-android](https://github.com/AgoraIO-Usecase/AgoraChat-android) sample project on GitHub. You can download the sample to try it out or view the source code.

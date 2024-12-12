@@ -194,6 +194,9 @@ public class EaseUIKit {
     }
 
     public void addChatPresenter(EaseChatPresenter presenter) {
+        if(this.presenter != null) {
+            this.presenter.clear();
+        }
         this.presenter = presenter;
         this.presenter.attachApp(appContext);
     }
