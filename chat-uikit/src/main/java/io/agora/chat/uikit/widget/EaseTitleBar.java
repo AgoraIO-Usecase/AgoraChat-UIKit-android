@@ -301,10 +301,16 @@ public class EaseTitleBar extends RelativeLayout implements View.OnClickListener
     public void setLeftImageResource(int resId) {
         Drawable drawable = ContextCompat.getDrawable(getContext(), resId);
         if(drawable != null) {
-            if(mArrowColorId != -1) {
-                StatusBarCompat.setToolbarCustomColor(getContext(), mArrowColorId, drawable);
+            if(getContext() instanceof AppCompatActivity) {
+                if(mArrowColorId != -1) {
+                    StatusBarCompat.setToolbarCustomColor(getContext(), mArrowColorId, drawable);
+                }else {
+                    StatusBarCompat.setToolbarCustomColorDefault(getContext(), mArrowColor, drawable);
+                }
             }else {
-                StatusBarCompat.setToolbarCustomColorDefault(getContext(), mArrowColor, drawable);
+                leftImage.setImageDrawable(drawable);
+                leftImage.setVisibility(VISIBLE);
+                leftLayout.setVisibility(VISIBLE);
             }
         }
     }
