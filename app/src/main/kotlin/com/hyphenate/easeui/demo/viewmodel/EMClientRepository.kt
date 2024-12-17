@@ -1,12 +1,11 @@
 package com.hyphenate.easeui.demo.viewmodel
 
-import com.hyphenate.EMError
-import com.hyphenate.chat.EMClient
-import com.hyphenate.cloud.HttpClientManager
 import com.hyphenate.easeui.ChatUIKitClient
 import com.hyphenate.easeui.common.ChatClient
 import com.hyphenate.easeui.common.ChatError
 import com.hyphenate.easeui.common.ChatException
+import com.hyphenate.easeui.common.ChatHttpClientManager
+import com.hyphenate.easeui.common.ChatLog
 import com.hyphenate.easeui.common.ChatValueCallback
 import com.hyphenate.easeui.demo.BuildConfig
 import com.hyphenate.easeui.demo.DemoApplication
@@ -15,8 +14,6 @@ import com.hyphenate.easeui.demo.base.ErrorCode
 import com.hyphenate.easeui.demo.bean.LoginResult
 import com.hyphenate.easeui.model.ChatUIKitProfile
 import com.hyphenate.easeui.model.ChatUIKitUser
-import com.hyphenate.exceptions.HyphenateException
-import com.hyphenate.util.EMLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONException
@@ -65,9 +62,9 @@ class EMClientRepository {
         withContext(Dispatchers.IO) {
             suspendCoroutine { continuation ->
                 try {
-                    EMClient.getInstance().createAccount(userName, pwd)
+                    ChatClient.getInstance().createAccount(userName, pwd)
                     continuation.resume(userName)
-                } catch (e: HyphenateException) {
+                } catch (e: ChatException) {
                     continuation.resumeWithException(ChatException(e.errorCode, e.message))
                 }
             }
@@ -121,7 +118,7 @@ class EMClientRepository {
 
     private fun successForCallBack(continuation: Continuation<ChatUIKitUser>) {
         // get current user id
-        val currentUser = EMClient.getInstance().currentUser
+        val currentUser = ChatClient.getInstance().currentUser
         val user = ChatUIKitUser(currentUser)
         continuation.resume(user)
 
@@ -157,17 +154,17 @@ class EMClientRepository {
             request.putOpt("smsCode", userPassword)
             val url: String =
                 BuildConfig.APP_SERVER_PROTOCOL + "://" + BuildConfig.APP_SERVER_DOMAIN + BuildConfig.APP_BASE_USER + BuildConfig.APP_SERVER_LOGIN
-            EMLog.d("LoginToAppServer url : ", url)
-            val response = HttpClientManager.httpExecute(
+            ChatLog.d("LoginToAppServer url : ", url)
+            val response = ChatHttpClientManager.httpExecute(
                 url,
                 headers,
                 request.toString(),
-                HttpClientManager.Method_POST
+                ChatHttpClientManager.Method_POST
             )
             val code = response.code
             val responseInfo = response.content
             if (code == 200) {
-                EMLog.d("LoginToAppServer success : ", responseInfo)
+                ChatLog.d("LoginToAppServer success : ", responseInfo)
                 val `object` = JSONObject(responseInfo)
                 val result = LoginResult()
                 val phoneNumber = `object`.getString("phoneNumber")
@@ -200,7 +197,7 @@ class EMClientRepository {
                 }
             }
         } catch (e: Exception) {
-            callBack.onError(EMError.NETWORK_ERROR, e.message)
+            callBack.onError(ChatError.NETWORK_ERROR, e.message)
         }
     }
 }
