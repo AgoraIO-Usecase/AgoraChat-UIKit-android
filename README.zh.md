@@ -115,11 +115,11 @@ dependencyResolutionManagement {
 
 ### Module 远程依赖
 
-在 app 项目 build.gradle.kts 中添加以下依赖,其中 `x.y.z` 表示[最新版本号](https://central.sonatype.com/artifact/io.hyphenate/ease-chat-kit/versions):
+在 app 项目 build.gradle.kts 中添加以下依赖,其中 `x.y.z` 表示[最新版本号](https://central.sonatype.com/artifact/io.agora.rtc/chat-uikit/versions):
 
 ```kotlin
 
-implementation("io.hyphenate:ease-chat-kit:x.y.z")
+implementation("io.agora.rtc:chat-uikit:x.y.z")
 
 ```
 
@@ -146,8 +146,8 @@ implementation(project(mapOf("path" to ":ease-chat-kit")))
 在 `app/proguard-rules.pro` 文件中添加如下行，防止代码混淆：
 
 ```kotlin
--keep class com.hyphenate.** {*;}
--dontwarn  com.hyphenate.**
+-keep class io.agora.** {*;}
+-dontwarn  io.agora.**
 ```
 
 ## UIKit 基本项目结构

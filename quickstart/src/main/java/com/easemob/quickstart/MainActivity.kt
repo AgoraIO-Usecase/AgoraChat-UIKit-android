@@ -4,13 +4,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.easemob.quickstart.databinding.ActivityMainBinding
-import com.hyphenate.easeui.ChatUIKitClient
-import com.hyphenate.easeui.common.ChatLog
-import com.hyphenate.easeui.common.ChatOptions
-import com.hyphenate.easeui.common.extensions.showToast
-import com.hyphenate.easeui.feature.chat.enums.ChatUIKitType
-import com.hyphenate.easeui.feature.chat.activities.UIKitChatActivity
-import com.hyphenate.easeui.interfaces.ChatUIKitConnectionListener
+import io.agora.chat.uikit.ChatUIKitClient
+import io.agora.chat.uikit.common.ChatLog
+import io.agora.chat.uikit.common.ChatOptions
+import io.agora.chat.uikit.common.extensions.showToast
+import io.agora.chat.uikit.feature.chat.enums.ChatUIKitType
+import io.agora.chat.uikit.feature.chat.activities.UIKitChatActivity
+import io.agora.chat.uikit.interfaces.ChatUIKitConnectionListener
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }

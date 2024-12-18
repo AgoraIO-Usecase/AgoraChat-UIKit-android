@@ -116,11 +116,11 @@ dependencyResolutionManagement {
 
 ### Module remote dependency
 
-Add the following dependency to `build.gradle.kts` of the app project,where `x.y.z` indicates the [latest version](https://central.sonatype.com/artifact/io.hyphenate/ease-chat-kit/versions):
+Add the following dependency to `build.gradle.kts` of the app project,where `x.y.z` indicates the [latest version](https://central.sonatype.com/artifact/io.agora.rtc/chat-uikit/versions):
 
 ```kotlin
 
-implementation("io.hyphenate:ease-chat-kit:x.y.z")
+implementation("io.agora.rtc:chat-uikit:x.y.z")
 
 ```
 
@@ -147,8 +147,8 @@ implementation(project(mapOf("path" to ":chat-uikit")))
 Add the following lines to `app/proguard-rules.pro` to prevent code obfuscation.
 
 ```kotlin
--keep class com.hyphenate.** {*;}
--dontwarn  com.hyphenate.**
+-keep class io.agora.** {*;}
+-dontwarn  io.agora.**
 ```
 
 ## Basic project structure of chat_uikit
