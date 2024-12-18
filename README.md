@@ -147,8 +147,8 @@ implementation(project(mapOf("path" to ":chat-uikit")))
 Add the following lines to `app/proguard-rules.pro` to prevent code obfuscation.
 
 ```kotlin
--keep class com.hyphenate.** {*;}
--dontwarn  com.hyphenate.**
+-keep class io.agora.** {*;}
+-dontwarn  io.agora.**
 ```
 
 ## Basic project structure of chat_uikit

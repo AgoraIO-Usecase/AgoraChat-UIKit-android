@@ -146,8 +146,8 @@ implementation(project(mapOf("path" to ":ease-chat-kit")))
 在 `app/proguard-rules.pro` 文件中添加如下行，防止代码混淆：
 
 ```kotlin
--keep class com.hyphenate.** {*;}
--dontwarn  com.hyphenate.**
+-keep class io.agora.** {*;}
+-dontwarn  io.agora.**
 ```
 
 ## UIKit 基本项目结构
