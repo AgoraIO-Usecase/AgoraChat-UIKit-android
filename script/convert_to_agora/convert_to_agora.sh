@@ -32,9 +32,12 @@ python3 script/convert_to_agora/rename_file_and_update_content.py ./ --replace-c
 
 #处理settings.gradle.kts
 $SED -i '/.*maven\.aliyun\.com.*/s/^/\/\// ' settings.gradle.kts
+#处理Readme.md
+$SED -i 's/io\.hyphenate\/ease-chat-kit/io\.agora\.rtc\/chat-uikit/g' README.md
+$SED -i 's/io\.hyphenate\:ease-chat-kit/io\.agora\.rtc\:chat-uikit/g' README.md
+$SED -i 's/io\.hyphenate\/ease-chat-kit/io\.agora\.rtc\/chat-uikit/g' README.zh.md
+$SED -i 's/io\.hyphenate\:ease-chat-kit/io\.agora\.rtc\:chat-uikit/g' README.zh.md
 
-#$SED -i 's/\*English | \[中文\](ChatroomUIKit_zh.md)\*/\*English | \[中文\](document\/ChatroomUIKit_zh.md)\*/' README.md
-#$SED -i 's/\.\.\//.\//g' README.md
 
 git add . ; git commit -m "convert to agora"
 

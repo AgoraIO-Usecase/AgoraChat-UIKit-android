@@ -115,11 +115,11 @@ dependencyResolutionManagement {
 
 ### Module 远程依赖
 
-在 app 项目 build.gradle.kts 中添加以下依赖
+在 app 项目 build.gradle.kts 中添加以下依赖,其中 `x.y.z` 表示[最新版本号](https://central.sonatype.com/artifact/io.hyphenate/ease-chat-kit/versions):
 
 ```kotlin
 
-implementation("io.hyphenate:ease-chat-kit:4.11.1")
+implementation("io.hyphenate:ease-chat-kit:x.y.z")
 
 ```
 
