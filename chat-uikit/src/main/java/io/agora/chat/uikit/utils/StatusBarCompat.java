@@ -20,8 +20,6 @@ import androidx.core.content.ContextCompat;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import io.agora.chat.uikit.R;
-
 public class StatusBarCompat {
 
     private static final int INVALID_VAL = -1;
@@ -227,7 +225,7 @@ public class StatusBarCompat {
             return;
         }
         if(leftArrow == null) {
-            leftArrow = ContextCompat.getDrawable(context, R.drawable.abc_ic_ab_back_material);
+            leftArrow = ContextCompat.getDrawable(context, androidx.appcompat.R.drawable.abc_ic_ab_back_material);
         }
         if(leftArrow != null) {
             leftArrow.setColorFilter(colorId, PorterDuff.Mode.SRC_ATOP);

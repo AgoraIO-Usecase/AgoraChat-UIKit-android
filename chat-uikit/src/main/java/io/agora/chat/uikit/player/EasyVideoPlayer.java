@@ -167,7 +167,7 @@ public class EasyVideoPlayer extends FrameLayout
                 mThemeColor =
                         a.getColor(
                                 R.styleable.EasyVideoPlayer_easy_themeColor,
-                                Util.resolveColor(context, R.attr.colorPrimary));
+                                Util.resolveColor(context, androidx.appcompat.R.attr.colorPrimary));
 
                 mAutoFullscreen = a.getBoolean(R.styleable.EasyVideoPlayer_easy_autoFullscreen, false);
                 mLoop = a.getBoolean(R.styleable.EasyVideoPlayer_easy_loop, false);
@@ -178,7 +178,7 @@ public class EasyVideoPlayer extends FrameLayout
             mHideControlsOnPlay = true;
             mAutoPlay = false;
             mControlsDisabled = false;
-            mThemeColor = Util.resolveColor(context, R.attr.colorPrimary);
+            mThemeColor = Util.resolveColor(context, androidx.appcompat.R.attr.colorPrimary);
             mAutoFullscreen = false;
             mLoop = false;
         }
