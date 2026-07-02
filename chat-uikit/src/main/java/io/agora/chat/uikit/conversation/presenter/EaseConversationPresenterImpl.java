@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.agora.CallBack;
 import io.agora.ValueCallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chat.Conversation;
@@ -23,6 +24,7 @@ import io.agora.exceptions.ChatException;
 import io.agora.util.EMLog;
 
 public class EaseConversationPresenterImpl extends EaseConversationPresenter {
+    private static final String TAG = EaseConversationPresenterImpl.class.getSimpleName();
 
     private final List<Conversation> list = new ArrayList<>();
     /**
@@ -91,6 +93,17 @@ public class EaseConversationPresenterImpl extends EaseConversationPresenter {
                 // Should update from server first.
                 if(fetchConfig) {
                     pushManager.getPushConfigsFromServer();
+                    pushManager.syncSilentModeConversationsFromServer(new CallBack() {
+                        @Override
+                        public void onSuccess() {
+                            EMLog.d(TAG, "syncSilentModeConversationsFromServer onSuccess");
+                        }
+
+                        @Override
+                        public void onError(int code, String error) {
+                            EMLog.e(TAG, "syncSilentModeConversationsFromServer onError: code=" + code + ", error=" + error);
+                        }
+                    });
                     if (list.size() > 0){
                         pushManager.getSilentModeForConversations(list, new ValueCallBack<Map<String, SilentModeResult>>() {
                             @Override
