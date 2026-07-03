@@ -1,49 +1,49 @@
-# Maven Publish Migration Design
+# Maven Publish 迁移设计
 
-## Context
+## 背景
 
-The project uses Gradle 8.7 and Android Gradle Plugin 8.6.1. The existing publishing script, `maven-push-release.gradle`, applies the legacy `maven` plugin and configures publishing through `uploadArchives`, `mavenDeployer`, and `MavenDeployment`. That plugin path is no longer supported by the current Gradle version.
+当前工程使用 Gradle 8.7 和 Android Gradle Plugin 8.6.1。现有发布脚本 `maven-push-release.gradle` 依赖旧的 `maven` 插件，并通过 `uploadArchives`、`mavenDeployer`、`MavenDeployment` 配置发布流程。这个插件路径已经不被当前 Gradle 版本支持。
 
-The library module has this publishing script referenced from `chat-uikit/build.gradle`, but the line is currently commented:
+库模块在 `chat-uikit/build.gradle` 中保留了发布脚本引用，但这一行当前是注释状态：
 
 ```gradle
 //apply from: "../maven-push-release.gradle"
 ```
 
-That commented state is intentional. Other release scripts control whether publishing is enabled by toggling or applying this script. The migration must not change that switch behavior.
+这个注释状态是有意保留的。现有发布流程会通过其他脚本控制是否启用发布脚本。因此本次迁移不能改变这个开关行为。
 
-## Goals
+## 目标
 
-- Replace the legacy `maven` plugin usage with Gradle's `maven-publish` plugin.
-- Keep the existing Maven coordinates:
+- 将旧的 `maven` 插件迁移为 Gradle 标准 `maven-publish` 插件。
+- 保持现有 Maven 坐标：
   - groupId: `io.agora.rtc`
   - artifactId: `chat-uikit`
   - version: `project.sdkVersion`
-- Publish the Android release AAR from the `release` component.
-- Keep sources and javadoc artifacts.
-- Keep current POM metadata.
-- Keep current OSSRH credential and signing property sources.
-- Use standard `maven-publish` task names only, without adding an `uploadArchives` compatibility alias.
-- Leave `chat-uikit/build.gradle` publishing switch behavior unchanged.
+- 发布 Android `release` component 产出的 AAR。
+- 保留 sources 和 javadoc 附加 artifact。
+- 保留现有 POM 元数据。
+- 保留现有 OSSRH 凭据和签名配置来源。
+- 只使用 `maven-publish` 标准任务名，不新增 `uploadArchives` 兼容别名。
+- 保持 `chat-uikit/build.gradle` 中发布开关的行为不变。
 
-## Non-Goals
+## 非目标
 
-- Do not migrate credentials to environment variables or Gradle properties.
-- Do not introduce a convention plugin, `buildSrc`, or publishing module abstraction.
-- Do not change the Nexus staging plugin setup beyond what is required by this script.
-- Do not force-enable publishing from `chat-uikit/build.gradle`.
-- Do not change dependency versions or Android build configuration.
+- 不把凭据迁移到环境变量或 Gradle properties。
+- 不引入 convention plugin、`buildSrc` 或新的发布抽象层。
+- 不做 Nexus staging 插件相关重构，除非当前脚本必须调整。
+- 不在 `chat-uikit/build.gradle` 中强制启用发布脚本。
+- 不修改依赖版本或 Android 构建配置。
 
-## Proposed Implementation
+## 实现方案
 
-Update `maven-push-release.gradle` so it applies:
+更新 `maven-push-release.gradle`，改为应用：
 
 ```gradle
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 ```
 
-The script will continue to set:
+脚本继续设置：
 
 ```gradle
 group = "io.agora.rtc"
@@ -51,29 +51,29 @@ archivesBaseName = "chat-uikit"
 version = project.sdkVersion
 ```
 
-Credential loading will remain compatible with the existing release environment:
+凭据读取方式保持兼容现有发布环境：
 
-1. Read `local.properties`.
-2. Read `maven.dir` from `local.properties`.
-3. Read `${maven.dir}/project.properties`.
-4. Load `ossrhUsername`, `ossrhPassword`, `signing.keyId`, `signing.secretKeyRingFile`, and `signing.password` from that properties file.
+1. 读取 `local.properties`。
+2. 从 `local.properties` 读取 `maven.dir`。
+3. 读取 `${maven.dir}/project.properties`。
+4. 从该 properties 文件中读取 `ossrhUsername`、`ossrhPassword`、`signing.keyId`、`signing.secretKeyRingFile`、`signing.password`。
 
-Configure `publishing` after the Android release component exists. The `release` publication will:
+在 Android release component 可用后配置 `publishing`。`release` publication 需要：
 
-- Use `from components.release`.
-- Set `groupId`, `artifactId`, and `version`.
-- Attach `sourcesJar`.
-- Attach `javadocJar`.
-- Define POM metadata equivalent to the legacy `pom.project` block.
+- 使用 `from components.release`。
+- 设置 `groupId`、`artifactId`、`version`。
+- 附加 `sourcesJar`。
+- 附加 `javadocJar`。
+- 定义与旧 `pom.project` 块等价的 POM 元数据。
 
-Configure the Maven repository with the existing Sonatype URLs:
+Maven 仓库继续使用现有 Sonatype 地址：
 
 - Release URL: `https://oss.sonatype.org/service/local/staging/deploy/maven2/`
 - Snapshot URL: `https://oss.sonatype.org/content/repositories/snapshots/`
 
-The repository URL will be selected from the version suffix. Versions ending in `SNAPSHOT` publish to the snapshot repository; all other versions publish to the staging deploy repository.
+仓库 URL 按版本后缀选择。版本以 `SNAPSHOT` 结尾时发布到 snapshot 仓库；其他版本发布到 staging deploy 仓库。
 
-Configure signing for the `release` publication:
+签名配置改为签名 `release` publication：
 
 ```gradle
 signing {
@@ -81,33 +81,33 @@ signing {
 }
 ```
 
-Signing properties will preserve the existing secret key ring file behavior, including resolving `signing.secretKeyRingFile` relative to `maven.dir`.
+签名属性继续保持原来的 secret key ring file 方式，包括将 `signing.secretKeyRingFile` 按 `maven.dir` 进行路径拼接。
 
-## Task Names
+## 任务名
 
-The migration intentionally adopts Gradle standard publishing tasks. Expected task names include:
+迁移后采用 Gradle 标准发布任务。预期任务包括：
 
 - `generatePomFileForReleasePublication`
 - `signReleasePublication`
 - `publishReleasePublicationToOssrhRepository`
 - `publish`
 
-There will be no `uploadArchives` compatibility task.
+不会新增 `uploadArchives` 兼容任务。
 
-## Error Handling
+## 错误处理
 
-The script should fail clearly if publishing is enabled but the expected local publishing configuration is missing. Missing `local.properties`, missing `maven.dir`, or missing `project.properties` should surface as configuration errors during publishing setup, matching the current local-release assumption.
+如果启用了发布脚本，但本地发布配置缺失，脚本应清晰失败。缺少 `local.properties`、缺少 `maven.dir` 或缺少 `project.properties` 时，应在发布配置阶段暴露为配置错误。这与当前脚本依赖本地发布配置的假设保持一致。
 
-Normal development builds are unaffected while `apply from: "../maven-push-release.gradle"` remains disabled.
+当 `apply from: "../maven-push-release.gradle"` 仍保持禁用时，普通开发构建不应要求 OSSRH 或签名属性，也不应受发布脚本影响。
 
-## Verification
+## 验证
 
-After implementation:
+实现后需要验证：
 
-1. Enable the publishing script in the same way existing release scripts do.
-2. Run a Gradle task listing or dry configuration command that includes publishing tasks.
-3. Confirm Gradle 8.7 no longer fails on `apply plugin: 'maven'`, `uploadArchives`, `mavenDeployer`, or `MavenDeployment`.
-4. Confirm standard `maven-publish` tasks are registered.
-5. If credentials and signing files are available, run the publish task expected by the release flow.
+1. 用现有发布脚本相同的方式启用 `maven-push-release.gradle`。
+2. 运行 Gradle 任务列表或配置阶段命令，确认发布任务可注册。
+3. 确认 Gradle 8.7 不再因为 `apply plugin: 'maven'`、`uploadArchives`、`mavenDeployer` 或 `MavenDeployment` 失败。
+4. 确认标准 `maven-publish` 任务已注册。
+5. 如果本地具备凭据和签名文件，再运行发布流程实际使用的 publish 任务。
 
-When publishing remains disabled in `chat-uikit/build.gradle`, normal project configuration should continue to work without requiring OSSRH or signing properties.
+当发布脚本在 `chat-uikit/build.gradle` 中保持禁用时，普通工程配置应继续正常工作，不需要 OSSRH 或签名配置。
