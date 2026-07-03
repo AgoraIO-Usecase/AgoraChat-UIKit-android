@@ -96,6 +96,10 @@ afterEvaluate {
                     password = ossrhPassword
                 }
             }
+            maven {
+                name = 'manual'
+                url = uri("${rootProject.buildDir}/manual-maven")
+            }
         }
     }
 
