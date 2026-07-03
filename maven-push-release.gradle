@@ -1,127 +1,115 @@
 group = "io.agora.rtc"
 archivesBaseName = "chat-uikit"
-version = project.sdkVersion//发布aar的库版本
-apply plugin: 'maven'
+version = project.sdkVersion //发布aar的库版本
+
+apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 def repositoryId = project.stagingRepositoryId
 
 def localProperties = new Properties()
-localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+def localPropertiesFile = project.rootProject.file('local.properties')
+localPropertiesFile.withInputStream { localProperties.load(it) }
 
 Properties properties = new Properties()
-properties.load(file(localProperties.getProperty('maven.dir')+"./project.properties").newDataInputStream())
+def mavenDir = localProperties.getProperty('maven.dir')
+def mavenPropertiesFile = project.file("${mavenDir}/project.properties")
+mavenPropertiesFile.withInputStream { properties.load(it) }
 
 def ossrhUsername = properties.getProperty('ossrhUsername')
 def ossrhPassword = properties.getProperty('ossrhPassword')
 
-//指定singing的相关信息
-gradle.taskGraph.whenReady { taskGraph ->
-    if (taskGraph.allTasks.any { it instanceof Sign }) {
-        def id = properties.getProperty("signing.keyId")
-        def file = localProperties.getProperty('maven.dir')+properties.getProperty("signing.secretKeyRingFile")
-        def password = properties.getProperty("signing.password")
+def signingKeyId = properties.getProperty("signing.keyId")
+def signingKeyRingFile = project.file("${mavenDir}/${properties.getProperty("signing.secretKeyRingFile")}")
+def signingPassword = properties.getProperty("signing.password")
 
-        allprojects { ext."signing.keyId" = id }
-        allprojects { ext."signing.secretKeyRingFile" = file }
-        allprojects { ext."signing.password" = password }
-    }
-}
+ext."signing.keyId" = signingKeyId
+ext."signing.secretKeyRingFile" = signingKeyRingFile.absolutePath
+ext."signing.password" = signingPassword
 
-configurations {
-    deployerJars
-}
-
-task javadoc(type: Javadoc) {
-    options {
-        encoding 'UTF-8'
-        charSet 'UTF-8'
-    }
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    android.libraryVariants.all { variant ->
-        if (variant.name == 'release') {
-            owner.source = variant.javaCompiler.source
-            owner.classpath = files(android.bootClasspath.join(File.pathSeparator))
-            owner.classpath += variant.javaCompiler.classpath
-        }
-    }
-    failOnError false
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
-signing {
-    sign configurations.archives
-}
-
-nexusStaging {
-    packageGroup = "$group" //optional if packageGroup == project.getGroup()
-    stagingProfileId = "$group" //when not defined will be got from server using "packageGroup"
-    username = ossrhUsername
-    password = ossrhPassword
-    stagingRepositoryId = repositoryId
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                //version version
-                name archivesBaseName
-                packaging 'aar'
-                // optionally artifactId can be defined here
-                //println "current groupId:$group"
-                //groupId group
-                //artifactId archivesBaseName
-                description 'Agora SDK UIKit'
-                url 'http://maven.apache.org'
-
-                scm {
-                    connection 'scm:git:https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-android.git'
-                    developerConnection 'scm:git:https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-android.git'
-                    url 'https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-android'
-                }
-
-                licenses {
-                    license {
-                        name 'AGORA SDK License'
-                        url 'https://github.com/AgoraIO/full-sdk/blob/master/LICENSE'
-                    }
-                }
-
-                developers {
-                    developer {
-                        name 'agorabuilder'
-                        email 'zhaoliang@agora.io'
-                        organization 'https://github.com/AgoraIO'
-                        url 'https://www.agora.io/cn'
-                    }
-                }
-            }
+android {
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
         }
     }
 }
 
+tasks.register('sourcesJar') {
+    dependsOn tasks.named('sourceReleaseJar')
+}
+
+tasks.register('javadocJar') {
+    dependsOn tasks.named('javaDocReleaseJar')
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = project.group
+                artifactId = project.archivesBaseName
+                version = project.version
+
+                pom {
+                    name = project.archivesBaseName
+                    packaging = 'aar'
+                    description = 'Agora SDK UIKit'
+                    url = 'http://maven.apache.org'
+
+                    scm {
+                        connection = 'scm:git:https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-android.git'
+                        developerConnection = 'scm:git:https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-android.git'
+                        url = 'https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-android'
+                    }
+
+                    licenses {
+                        license {
+                            name = 'AGORA SDK License'
+                            url = 'https://github.com/AgoraIO/full-sdk/blob/master/LICENSE'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            name = 'agorabuilder'
+                            email = 'zhaoliang@agora.io'
+                            organization = 'https://github.com/AgoraIO'
+                            url = 'https://www.agora.io/cn'
+                        }
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = 'Ossrh'
+                url = version.toString().endsWith('SNAPSHOT')
+                        ? uri('https://oss.sonatype.org/content/repositories/snapshots/')
+                        : uri('https://oss.sonatype.org/service/local/staging/deploy/maven2/')
+                credentials {
+                    username = ossrhUsername
+                    password = ossrhPassword
+                }
+            }
+        }
+    }
+
+    signing {
+        sign publishing.publications.release
+    }
+}
+
+if (project.plugins.hasPlugin('io.codearte.nexus-staging')) {
+    nexusStaging {
+        packageGroup = "$group"
+        stagingProfileId = "$group"
+        username = ossrhUsername
+        password = ossrhPassword
+        stagingRepositoryId = repositoryId
+    }
+}
