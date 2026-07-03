@@ -3,6 +3,7 @@ plugins {
 }
 
 android {
+    namespace "io.agora.chat.uikit.simple"
     compileSdk 35
     buildToolsVersion '35.0.0'
 
